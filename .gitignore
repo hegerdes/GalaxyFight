@@ -1,0 +1,18 @@
+#Ignore all Files in heare
+
+#CPP - Files
+*.o
+*.out
+*.snip
+
+#Build Folder
+**/Build/**
+**/build/**
+
+
+#Test-Files
+*Test*.cpp
+*test*.cpp
+
+#Individual Files
+
