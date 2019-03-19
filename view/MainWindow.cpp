@@ -29,6 +29,7 @@ MainWindow::MainWindow(const std::string& file, QWidget* parent) :
     // Setup user interface
     ui->setupUi(this);
     m_widget = ui->centralWidget->findChild<GLWidget*>(QString("openGLWidget"));
+
     m_startscreen = new StartScreen();
 
     ui->centralWidget->layout()->addWidget(m_startscreen);
