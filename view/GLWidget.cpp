@@ -123,6 +123,11 @@ void GLWidget::initializeGL()
         PhysicalObject::Ptr p = std::static_pointer_cast<PhysicalObject>(*it);
         m_physicsEngine->addDestroyable(p);
     }
+
+    // @ahaker
+    socket.connectToHost(QHostAddress::LocalHost, 38291);
+    std::cerr << socket.waitForConnected() << ": socket.waitForConnected\n";
+
 }
 
 void GLWidget::paintGL()
@@ -139,6 +144,15 @@ void GLWidget::paintGL()
     m_physicsEngine->render();
 
     m_actor->render();
+}
+
+QByteArray IntToArray(qint32 source) //Use qint32 to ensure that the number have 4 bytes
+{
+    //Avoid use of cast, this is the Qt way to serialize objects
+    QByteArray temp;
+    QDataStream data(&temp, QIODevice::ReadWrite);
+    data << source;
+    return temp;
 }
 
 void GLWidget::step(map<Qt::Key, bool>& keyStates)
@@ -188,6 +202,40 @@ void GLWidget::step(map<Qt::Key, bool>& keyStates)
     }
 
     // Trigger update, i.e., redraw via paintGL()
+    // @ahaker
+    auto start = chrono::high_resolution_clock::now();
+    if(socket.state() == QAbstractSocket::ConnectedState)
+    {
+        // wenn socket verbunden -> sende deine eigenen daten
+        std::cout << "write data\n";
+        QByteArray data;
+        data.append("3,1415926");
+        //data.append((char*)(&position),(sizeof(position[0]*3)));
+        socket.write(IntToArray(data.size())); //write size of data
+        socket.write(data);
+        // empfange die positionen des anderen
+        QByteArray answer = socket.readAll();
+        std::cerr << socket.waitForBytesWritten() << "; waitForBytesWritten\n";
+        float* position_temp = (float*) answer.data();
+        asteroids::Vector<float,3> position = m_actor->getPosition();
+        // checke ob die empfangene positionen zu weit von den vorheriegen
+        // positionen abweichen, wenn ja nutze die alte
+        for(int count {0}; count < 3; count++)
+        {
+           if(((position[count]-position_temp[count]) < -5.0f) |
+              ((position[count]-position_temp[count]) > 5.0f))
+           {
+               position_temp[count] = position[count];
+               std::cout << "---------------------------------\n";
+           }
+        }
+        m_actor->setPosition({position_temp[0],
+                              position_temp[1],
+                              position_temp[2]});
+        std::cout<<position_temp[0]<<","<<position_temp[1]<<","<<position_temp[2]<<"; ";
+    }
+    cout << chrono::duration<double, milli>
+                    (chrono::high_resolution_clock::now()-start).count() << "; round time\n";
     this->update();
 }
 

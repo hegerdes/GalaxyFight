@@ -88,6 +88,7 @@ set( QT_USE_QTOPENGL TRUE )
 find_package( Qt5
     COMPONENTS
     Core
+    Network
     Widgets
     OpenGL
     REQUIRED
@@ -95,6 +96,7 @@ find_package( Qt5
 
 include_directories(${Qt5Widgets_INCLUDE_DIRS})
 include_directories(${Qt5Core_INCLUDE_DIRS})
+include_directories(${Qt5Network_INCLUDE_DIRS})
 include_directories(${Qt5OpenGL_INCLUDE_DIRS})
 
 
@@ -174,6 +176,7 @@ set(ASTEROID_DEPENDS
     ${SDL2_LIBRARY}
     ${JPEG_LIBRARIES}
     ${Qt5Widgets_LIBRARIES}
+    ${Qt5Network_LIBRARIES}
     c3dsreader
 )
 
