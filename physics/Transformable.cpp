@@ -139,6 +139,7 @@ void Transformable::computeMatrix()
     // Compute the transformation matrix for this object
     // according to the current position and rotation
     // state
+    /*
     m_transformation[0]  = m_yAxis[0];
     m_transformation[1]  = m_yAxis[1];
     m_transformation[2]  = m_yAxis[2];
@@ -154,6 +155,7 @@ void Transformable::computeMatrix()
     m_transformation[12] = m_position[0];
     m_transformation[13] = m_position[1];
     m_transformation[14] = m_position[2];
+    */
 
 
 }

@@ -123,6 +123,9 @@ public:
     Vector<float> getZAxis() { return m_zAxis;}
     Matrix   m_transformation;
     Vector<float>    m_position;
+    Vector<float>    m_xAxis;
+    Vector<float>    m_yAxis;
+    Vector<float>    m_zAxis;
 
 protected:
 
@@ -138,17 +141,14 @@ protected:
     /**
      * @brief   The current orientation of the x axis
      */
-    Vector<float>    m_xAxis;
 
     /**
      * @brief   The current orientation of the y axis
      */
-    Vector<float>    m_yAxis;
 
     /**
      * @brief   The current orientation of the z axis
      */
-    Vector<float>    m_zAxis;
 
 
     /**

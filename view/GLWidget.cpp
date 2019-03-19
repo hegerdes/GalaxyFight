@@ -212,58 +212,71 @@ void GLWidget::step(map<Qt::Key, bool>& keyStates)
         std::cout << "write data\n";
         QByteArray data;
 
-        char * position_chars = (char*)&m_actor->m_position;
-        char * transformation_temp = (char*)&m_actor->m_transformation;
+        /*
+            char * position_chars = (char*)&m_actor->m_position;
+            char * transformation_temp = (char*)&m_actor->m_transformation;
+            data.append(position_chars, 3*4);
+            data.append(transformation_temp, 16*4);
+        */
 
-        data.append(position_chars, 3*4);
-        data.append(transformation_temp, 16*4);
-
-        float * flt_prt = (float*)data.data();
-        cout << "Data: ";
-        for(size_t count{0}; count < 19; count++)
-        {
-            cout << flt_prt[count] << ",";
-        }
-        cout << "\n";
+        float float_temp [19] = {0};
+        char * float_char = (char*)float_temp;
+        data.append(float_char, 19*4);
+        /*
+            float * flt_prt = (float*)data.data();
+            cout << "Data: ";
+            for(size_t count{0}; count < 19; count++)
+            {
+                cout << flt_prt[count] << ",";
+            }
+            cout << "\n";
+        */
 
         //data.append((char*)(&position),(sizeof(position[0]*3)));
         socket.write(IntToArray(data.size())); //write size of data
         socket.write(data);
         // empfange die positionen des anderen
-        QByteArray answer = socket.readAll();
-        std::cerr << socket.waitForBytesWritten() << "; waitForBytesWritten\n";
-        float* position_temp = (float*) answer.data();
-        asteroids::Vector<float,3> position = m_actor->getPosition();
-        // checke ob die empfangene positionen zu weit von den vorheriegen
-        // positionen abweichen, wenn ja nutze die alte
-        /*
-        for(int count {0}; count < 3; count++)
-            {
-               if(((position[count]-position_temp[count]) < -5.0f) |
-                  ((position[count]-position_temp[count]) > 5.0f))
-               {
-                   position_temp[count] = position[count];
-                   std::cout << "---------------------------------\n";
-               }
-            }
-        */
-        asteroids::Matrix m_neu;
-        cout << "Received: ";
-        for(int count{0}; count < 16+3; count++){
-            cout << position_temp[count] << ",";
-            //m_neu[count] = position_temp[count];
-        }
-        cout << "\n";
-        /*
-        m_actor->m_transformation = m_neu;
-        for(int count{0}; count < 16; count++){
-            cout << m_actor->m_transformation[count] << "," ;
-        }
-        cout << "\n";
 
-        m_actor->setPosition({position_temp[0], position_temp[1], position_temp[2]});
-        std::cout<<position_temp[0]<<","<<position_temp[1]<<","<<position_temp[2]<<"; ";
-        */
+        //#########computeMatrix ist nocht auskommentiert
+        QByteArray answer = socket.readAll();
+        if( 19*4 == answer.length()){
+            std::cerr << socket.waitForBytesWritten() << "; waitForBytesWritten\n";
+            float* position_temp = (float*) answer.data();
+            asteroids::Vector<float,3> position = m_actor->getPosition();
+            // checke ob die empfangene positionen zu weit von den vorheriegen
+            // positionen abweichen, wenn ja nutze die alte
+            /*
+            for(int count {0}; count < 3; count++)
+                {
+                   if(((position[count]-position_temp[count]) < -5.0f) |
+                      ((position[count]-position_temp[count]) > 5.0f))
+                   {
+                       position_temp[count] = position[count];
+                       std::cout << "---------------------------------\n";
+                   }
+                }
+            */
+            asteroids::Matrix m_neu;
+            cout << "Received: ";
+            for(int count{0}; count < 16+3; count++){
+                cout << position_temp[count] << ",";
+            }
+            cout << "\n";
+
+            for(int count{3}; count < 16+3; count++){
+                m_neu[count-3] = position_temp[count];
+            }
+            m_actor->m_transformation = m_neu;
+            cout << "m_transformation: ";
+            std::cout<<position_temp[0]<<","<<position_temp[1]<<","<<position_temp[2]<<"; ";
+            //m_actor->m_xAxis[0] = m_actor->m_transformation[0];
+            for(int count{0}; count < 16; count++){
+                cout << m_actor->m_transformation[count] << "," ;
+            }
+            cout << "\n";
+
+            m_actor->setPosition({position_temp[0], position_temp[1], position_temp[2]});
+        }
     }
     cout << chrono::duration<double, milli>
                     (chrono::high_resolution_clock::now()-start).count() << "; round time\n";
