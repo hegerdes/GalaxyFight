@@ -148,11 +148,11 @@ void GLWidget::step(map<Qt::Key, bool>& keyStates)
 
     if (keyStates[Qt::Key_Up])
     {
-        m_actor->rotate(Transformable::YAW_LEFT, m_rotationSpeed);
+        m_actor->rotate(Transformable::PITCH_RIGHT, m_rotationSpeed);
     }
     if (keyStates[Qt::Key_Down])
     {
-        m_actor->rotate(Transformable::YAW_RIGHT, m_rotationSpeed);
+        m_actor->rotate(Transformable::PITCH_LEFT, m_rotationSpeed);
     }
        if (keyStates[Qt::Key_Left])
     {
@@ -201,25 +201,25 @@ void GLWidget::mouseMoveEvent(QMouseEvent* event)
 
     // Handle motion for pressed L button while R is not
     // pressed
-    if (l_pressed & !r_pressed)
-    {
-        if (delta.x() > -3)
-        {
-            m_camera.turn(Camera::RIGHT);
-        }
-        if (delta.x() < 3)
-        {
-            m_camera.turn(Camera::LEFT);
-        }
-        if (delta.y() > 3)
-        {
-            m_camera.turn(Camera::UP);
-        }
-        if (delta.y() < -3)
-        {
-            m_camera.turn(Camera::DOWN);
-        }
-    }
+    // if (l_pressed & !r_pressed)
+    // {
+    //     if (delta.x() > -3)
+    //     {
+    //         m_camera.turn(Camera::RIGHT);
+    //     }
+    //     if (delta.x() < 3)
+    //     {
+    //         m_camera.turn(Camera::LEFT);
+    //     }
+    //     if (delta.y() > 3)
+    //     {
+    //         m_camera.turn(Camera::UP);
+    //     }
+    //     if (delta.y() < -3)
+    //     {
+    //         m_camera.turn(Camera::DOWN);
+    //     }
+    // }
 
     // Handle motion for pressed R button while L is not
     // pressed
