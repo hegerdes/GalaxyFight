@@ -34,7 +34,7 @@ MainWindow::MainWindow(const std::string& file, QWidget* parent) :
 
     // Create a timer object to trigger the main loop
     connect(m_timer.get(), SIGNAL(timeout()), this, SLOT(handleInput()));
-    m_timer->start(1000 / 60.0);
+    m_timer->start(1000 / 20.0);
 }
 
 int MainWindow::width()

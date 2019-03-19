@@ -121,6 +121,8 @@ public:
      * @brief   Returns the orientation of the z in the global coordinate system
      */
     Vector<float> getZAxis() { return m_zAxis;}
+    Matrix   m_transformation;
+    Vector<float>    m_position;
 
 protected:
 
@@ -132,7 +134,6 @@ protected:
     /**
      * @brief   The transformation matrix for this object
      */
-    Matrix   m_transformation;
 
     /**
      * @brief   The current orientation of the x axis
@@ -153,7 +154,6 @@ protected:
     /**
      * @brief   The current position of the mesh object
      */
-    Vector<float>    m_position;
 
     /**
      * @brief   A quaternion representing the current rotation

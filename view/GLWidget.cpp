@@ -3,6 +3,7 @@
 #include "io/LevelParser.hpp"
 #include "io/TextureFactory.hpp"
 #include <QMouseEvent>
+//#include "global_socket.h"
 
 #include <SDL2/SDL.h>
 
@@ -125,7 +126,8 @@ void GLWidget::initializeGL()
     }
 
     // @ahaker
-    socket.connectToHost(QHostAddress::LocalHost, 38291);
+    //socket.connectToHost(QHostAddress::LocalHost, 38291);
+    socket.connectToHost("lennartkaiser.de", 38291);
     std::cerr << socket.waitForConnected() << ": socket.waitForConnected\n";
 
 }
@@ -209,7 +211,21 @@ void GLWidget::step(map<Qt::Key, bool>& keyStates)
         // wenn socket verbunden -> sende deine eigenen daten
         std::cout << "write data\n";
         QByteArray data;
-        data.append("3,1415926");
+
+        char * position_chars = (char*)&m_actor->m_position;
+        char * transformation_temp = (char*)&m_actor->m_transformation;
+
+        data.append(position_chars, 3*4);
+        data.append(transformation_temp, 16*4);
+
+        float * flt_prt = (float*)data.data();
+        cout << "Data: ";
+        for(size_t count{0}; count < 19; count++)
+        {
+            cout << flt_prt[count] << ",";
+        }
+        cout << "\n";
+
         //data.append((char*)(&position),(sizeof(position[0]*3)));
         socket.write(IntToArray(data.size())); //write size of data
         socket.write(data);
@@ -220,19 +236,34 @@ void GLWidget::step(map<Qt::Key, bool>& keyStates)
         asteroids::Vector<float,3> position = m_actor->getPosition();
         // checke ob die empfangene positionen zu weit von den vorheriegen
         // positionen abweichen, wenn ja nutze die alte
+        /*
         for(int count {0}; count < 3; count++)
-        {
-           if(((position[count]-position_temp[count]) < -5.0f) |
-              ((position[count]-position_temp[count]) > 5.0f))
-           {
-               position_temp[count] = position[count];
-               std::cout << "---------------------------------\n";
-           }
+            {
+               if(((position[count]-position_temp[count]) < -5.0f) |
+                  ((position[count]-position_temp[count]) > 5.0f))
+               {
+                   position_temp[count] = position[count];
+                   std::cout << "---------------------------------\n";
+               }
+            }
+        */
+        asteroids::Matrix m_neu;
+        cout << "Received: ";
+        for(int count{0}; count < 16+3; count++){
+            cout << position_temp[count] << ",";
+            //m_neu[count] = position_temp[count];
         }
-        m_actor->setPosition({position_temp[0],
-                              position_temp[1],
-                              position_temp[2]});
+        cout << "\n";
+        /*
+        m_actor->m_transformation = m_neu;
+        for(int count{0}; count < 16; count++){
+            cout << m_actor->m_transformation[count] << "," ;
+        }
+        cout << "\n";
+
+        m_actor->setPosition({position_temp[0], position_temp[1], position_temp[2]});
         std::cout<<position_temp[0]<<","<<position_temp[1]<<","<<position_temp[2]<<"; ";
+        */
     }
     cout << chrono::duration<double, milli>
                     (chrono::high_resolution_clock::now()-start).count() << "; round time\n";
