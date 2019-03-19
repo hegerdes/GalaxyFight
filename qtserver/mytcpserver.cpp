@@ -10,7 +10,7 @@ Server::Server(QObject *parent) : QObject(parent)
 {
     server = new QTcpServer(this);
     connect(server, SIGNAL(newConnection()), this, SLOT(newConnection()));
-    qDebug() << "Listening:" << server->listen(QHostAddress::LocalHost, 38291);
+    qDebug() << "Listening:" << server->listen(QHostAddress::Any, 38291);
     std::cout << server->serverAddress().toString().toUtf8().constData() << "; serverAdress\n";
     std::cout << server->serverPort() << "; serverPort\n";
     //qDebug() << "Listening:" << server->listen(QHostAddress::LocalHost, 1024);
@@ -57,7 +57,9 @@ bool Server::writeData(QByteArray)
     //std::cout << "write data\n";
     QByteArray message;
     //message.append(std::to_string(count).c_str());
-    if(200 <= count)
+
+    /*
+     * if(200 <= count)
     {
         count = 200;
         factor = -1;
@@ -66,15 +68,32 @@ bool Server::writeData(QByteArray)
         factor = 1;
     }
     count += factor;
-    const size_t number {3};
-    float position_temp [number] = {count,count,count};
+    */
+
+    /*
+    float position_temp [19] = {count,count,count,
+
+
+                                (count/100)-1,(count/100)-1,(count/100)-1,(count/100)-1,
+                                (count/100)-1,(count/100)-1,(count/100)-1,(count/100)-1,
+                                (count/100)-1,(count/100)-1,(count/100)-1,(count/100)-1,
+                                0,0,0,1
+                               };
+                               */
     //float position_temp [3] = {50,60,70};
-    message.append((char*)&position_temp[0],
-                   (sizeof(position_temp[0])*number));
-                   //(sizeof(position_temp[0])*std::size(position_temp)));
+    message.append((char*)&position_temp[0],(4*19));
     //message.append(std::to_string(0).c_str());
     //message.append(std::to_string(0).c_str());
     //message.append(" server");
+
+    std::cout << "Send:";
+    float* temp = (float*) message.data();
+    for(int i {0}; i < 19; i++){
+        std::cout << temp[i] << ", ";
+    }
+    std::cout << std::endl;
+
+
     if(socket->state() == QAbstractSocket::ConnectedState)
     {
         //socket->write(IntToArray(message.size())); //write size of data
@@ -112,7 +131,29 @@ void Server::readyRead()
                 buffer->remove(0, size);
                 size = 0;
                 *s = size;
-                std::cout << data.toStdString() << "\n";
+
+
+                //Interprete the packet-type:
+                //PacketType type = data[0];
+
+                std::cout << "Received:";
+                float* temp = (float*) data.data();
+
+                bool otherThanZero = false;
+                for(int i {0}; i < 19 && !otherThanZero; i++){
+                    if(temp[i] != 0) otherThanZero = true;
+                }
+
+                if(otherThanZero){
+
+                    for(int i {0}; i < 19; i++){
+                        position_temp[i] = temp[i];
+                        std::cout << position_temp[i] << ", ";
+                    }
+                    std::cout << std::endl;
+                }
+
+                //std::cout << data.toStdString() << "\n";
                 std::cerr << this->writeData(data) << ": writeData\n";
                 //emit dataReceived(data);
             }
