@@ -1,0 +1,19 @@
+#Ignore all Files in here
+
+#CPP - Files
+*.o
+*.out
+*.snip
+
+#Build Folder
+**/Build/**
+**/build/**
+
+
+#Test-Files
+*Test*.cpp
+*test*.cpp
+
+#Individual Files
+CMakeLists.txt.user
+run_build.sh
