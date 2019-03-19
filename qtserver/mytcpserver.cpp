@@ -66,10 +66,12 @@ bool Server::writeData(QByteArray)
         factor = 1;
     }
     count += factor;
-    float position_temp [3] = {count,count,count};
+    const size_t number {3};
+    float position_temp [number] = {count,count,count};
     //float position_temp [3] = {50,60,70};
     message.append((char*)&position_temp[0],
-                   (sizeof(position_temp[0])*std::size(position_temp)));
+                   (sizeof(position_temp[0])*number));
+                   //(sizeof(position_temp[0])*std::size(position_temp)));
     //message.append(std::to_string(0).c_str());
     //message.append(std::to_string(0).c_str());
     //message.append(" server");
