@@ -34,7 +34,7 @@ public:
     //unsigned int count {0};
     float count {0};
     float factor {1};
-    float position_temp[19];
+    float position_temp[12];
 };
 
 #endif // MYTCPSERVER_H

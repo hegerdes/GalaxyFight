@@ -81,14 +81,14 @@ bool Server::writeData(QByteArray)
                                };
                                */
     //float position_temp [3] = {50,60,70};
-    message.append((char*)&position_temp[0],(4*19));
+    message.append((char*)&position_temp[0],(4*12));
     //message.append(std::to_string(0).c_str());
     //message.append(std::to_string(0).c_str());
     //message.append(" server");
 
     std::cout << "Send:";
     float* temp = (float*) message.data();
-    for(int i {0}; i < 19; i++){
+    for(int i {0}; i < 12; i++){
         std::cout << temp[i] << ", ";
     }
     std::cout << std::endl;
@@ -140,13 +140,13 @@ void Server::readyRead()
                 float* temp = (float*) data.data();
 
                 bool otherThanZero = false;
-                for(int i {0}; i < 19 && !otherThanZero; i++){
+                for(int i {0}; i < 12 && !otherThanZero; i++){
                     if(temp[i] != 0) otherThanZero = true;
                 }
 
                 if(otherThanZero){
 
-                    for(int i {0}; i < 19; i++){
+                    for(int i {0}; i < 12; i++){
                         position_temp[i] = temp[i];
                         std::cout << position_temp[i] << ", ";
                     }

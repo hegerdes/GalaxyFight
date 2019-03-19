@@ -235,9 +235,11 @@ void GLWidget::step(map<Qt::Key, bool>& keyStates)
             data.append(zaxis_temp, 3*4);
         */
 
+            /*
         float float_temp [12] = {0};
         char * float_char = (char*)float_temp;
         data.append(float_char, 12*4);
+        */
         /*
             float * flt_prt = (float*)data.data();
             cout << "Data: ";
@@ -272,7 +274,9 @@ void GLWidget::step(map<Qt::Key, bool>& keyStates)
                    }
                 }
             */
+            /*
             m_enemyPlayer->setPosition({position_temp[0], position_temp[1], position_temp[2]});
+
             m_enemyPlayer->m_xAxis[0] = position_temp[3];
             m_enemyPlayer->m_xAxis[1] = position_temp[4];
             m_enemyPlayer->m_xAxis[2] = position_temp[5];
@@ -284,6 +288,7 @@ void GLWidget::step(map<Qt::Key, bool>& keyStates)
             m_enemyPlayer->m_zAxis[0] = position_temp[9];
             m_enemyPlayer->m_zAxis[1] = position_temp[10];
             m_enemyPlayer->m_zAxis[2] = position_temp[11];
+            */
 
             /*
                 asteroids::Matrix m_neu;
