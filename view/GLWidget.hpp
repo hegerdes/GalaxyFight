@@ -48,6 +48,9 @@ protected:
     /// Init OpenGL
     virtual void initializeGL() override;
 
+    /// Initialize Level
+    void loadLevel();
+
     /// Render scene
     virtual void paintGL() override;
 
@@ -85,6 +88,9 @@ private:
 
     /// Last set mouse position
     QPoint                      m_mousePos;
+
+    /// Determines whether game should be loaded
+    bool active;
 };
 
 #endif

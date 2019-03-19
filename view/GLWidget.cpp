@@ -10,7 +10,8 @@ GLWidget::GLWidget(QWidget* parent)
     : QOpenGLWidget(parent),
       m_camera(Vector3f(0.0f, 0.0f, -700.0f), 0.05f, 5.0f),
       m_rotationSpeed(0.02),
-      m_moveSpeed(1.0)
+      m_moveSpeed(1.0),
+      active(false)
 {
 }
 
@@ -109,7 +110,13 @@ void GLWidget::initializeGL()
     // This makes our buffer swap syncronized with the monitor's vertical refresh
     SDL_GL_SetSwapInterval(1);
 
-    // Load level
+ 
+}
+
+
+void GLWidget::loadLevel()
+{
+      // Load level
     LevelParser lp(m_levelFile, m_actor, m_skybox, m_asteroidField);
 
     // Setup physics
@@ -122,73 +129,79 @@ void GLWidget::initializeGL()
     {
         PhysicalObject::Ptr p = std::static_pointer_cast<PhysicalObject>(*it);
         m_physicsEngine->addDestroyable(p);
-    }
+    } 
 }
 
 void GLWidget::paintGL()
 {
-    // Clear bg color and enable depth test (z-Buffer)
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    if(active)
+    {
+        // Clear bg color and enable depth test (z-Buffer)
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    m_camera.apply();
+        m_camera.apply();
 
-    // Render stuff
-    m_skybox->render(m_camera);
+        // Render stuff
+        m_skybox->render(m_camera);
 
-    // Render all physical objects
-    m_physicsEngine->render();
+        // Render all physical objects
+        m_physicsEngine->render();
 
-    m_actor->render();
+        m_actor->render();
+    }
 }
 
 void GLWidget::step(map<Qt::Key, bool>& keyStates)
 {
     // Get keyboard states and handle model movement
-    m_physicsEngine->process();
+    if(active)
+    {
+        m_physicsEngine->process();
 
-    if (keyStates[Qt::Key_Up])
-    {
-        m_actor->rotate(Transformable::YAW_LEFT, m_rotationSpeed);
-    }
-    if (keyStates[Qt::Key_Down])
-    {
-        m_actor->rotate(Transformable::YAW_RIGHT, m_rotationSpeed);
-    }
-       if (keyStates[Qt::Key_Left])
-    {
-        m_actor->rotate(Transformable::ROLL_LEFT, m_rotationSpeed);
-    }
-    if (keyStates[Qt::Key_Right])
-    {
-        m_actor->rotate(Transformable::ROLL_RIGHT, m_rotationSpeed);
-    }
-   
-    if (keyStates[Qt::Key_W])
-    {
-        m_actor->move(Transformable::FORWARD, m_moveSpeed);
-    }
-    if (keyStates[Qt::Key_S])
-    {
-        m_actor->move(Transformable::BACKWARD, m_moveSpeed);
-    }
-    if (keyStates[Qt::Key_A])
-    {
-        m_actor->move(Transformable::STRAFE_LEFT, m_moveSpeed);
-    }
-    if (keyStates[Qt::Key_D])
-    {
-        m_actor->move(Transformable::STRAFE_RIGHT, m_moveSpeed);
-    }
+        if (keyStates[Qt::Key_Up])
+        {
+            m_actor->rotate(Transformable::YAW_LEFT, m_rotationSpeed);
+        }
+        if (keyStates[Qt::Key_Down])
+        {
+            m_actor->rotate(Transformable::YAW_RIGHT, m_rotationSpeed);
+        }
+        if (keyStates[Qt::Key_Left])
+        {
+            m_actor->rotate(Transformable::ROLL_LEFT, m_rotationSpeed);
+        }
+        if (keyStates[Qt::Key_Right])
+        {
+            m_actor->rotate(Transformable::ROLL_RIGHT, m_rotationSpeed);
+        }
+    
+        if (keyStates[Qt::Key_W])
+        {
+            m_actor->move(Transformable::FORWARD, m_moveSpeed);
+        }
+        if (keyStates[Qt::Key_S])
+        {
+            m_actor->move(Transformable::BACKWARD, m_moveSpeed);
+        }
+        if (keyStates[Qt::Key_A])
+        {
+            m_actor->move(Transformable::STRAFE_LEFT, m_moveSpeed);
+        }
+        if (keyStates[Qt::Key_D])
+        {
+            m_actor->move(Transformable::STRAFE_RIGHT, m_moveSpeed);
+        }
 
-    // Add a bullet to physics engine
-    if(keyStates[Qt::Key_Space])
-    {
-        Bullet::Ptr bullet = make_shared<Bullet>(Bullet(m_actor->getPosition(), m_actor->getDirection()));
-        m_physicsEngine->addBullet(bullet);
-    }
+        // Add a bullet to physics engine
+        if(keyStates[Qt::Key_Space])
+        {
+            Bullet::Ptr bullet = make_shared<Bullet>(Bullet(m_actor->getPosition(), m_actor->getDirection()));
+            m_physicsEngine->addBullet(bullet);
+        }
 
-    // Trigger update, i.e., redraw via paintGL()
-    this->update();
+        // Trigger update, i.e., redraw via paintGL()
+        this->update();
+    }
 }
 
 void GLWidget::mouseMoveEvent(QMouseEvent* event)
