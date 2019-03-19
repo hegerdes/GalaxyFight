@@ -1,4 +1,5 @@
- #include "GLWidget.hpp" #include "../io/LevelParser.hpp"
+#include "GLWidget.hpp"
+#include "../io/LevelParser.hpp"
 #include "io/TextureFactory.hpp"
 #include <QMouseEvent>
 //#include "global_socket.h"
@@ -223,6 +224,7 @@ void GLWidget::step(map<Qt::Key, bool>& keyStates)
         std::cout << "write data\n";
         QByteArray data;
 
+        /*
             char * position_chars = (char*)&m_actor->m_position;
             char * xaxis_temp = (char*)&m_actor->m_xAxis;
             char * yaxis_temp = (char*)&m_actor->m_yAxis;
@@ -231,6 +233,7 @@ void GLWidget::step(map<Qt::Key, bool>& keyStates)
             data.append(xaxis_temp, 3*4);
             data.append(yaxis_temp, 3*4);
             data.append(zaxis_temp, 3*4);
+        */
 
         float float_temp [12] = {0};
         char * float_char = (char*)float_temp;
