@@ -86,6 +86,11 @@ void Camera::move(const CameraMovement& dir)
     }
 }
 
+void Camera::follow(asteroids::SpaceCraft::Ptr s)
+{
+    m_initial = s->getPosition();
+    m_l = s->getPosition() + s->getDirection(); //Kamera richtig drehen
+}
 
 void Camera::turn(const CameraMovement& dir)
 {
@@ -117,9 +122,9 @@ void Camera::turn(const CameraMovement& dir)
 void Camera::apply()
 {
     /* Calc look at vector based on rotation state */
-    m_l[0] =  m_initial[0] + m_trans[0] + sin(m_rot[1]);
-    m_l[2] = -m_initial[2] - m_trans[2] - cos(m_rot[1]);
-    m_l[1] =  m_initial[1] + m_trans[1] + sin(m_rot[0]);
+    // m_l[0] =  m_initial[0] + m_trans[0] + sin(m_rot[1]);
+    // m_l[2] = -m_initial[2] - m_trans[2] - cos(m_rot[1]);
+    // m_l[1] =  m_initial[1] + m_trans[1] + sin(m_rot[0]);
 
     /* Clear matrix stack */
     glLoadIdentity();

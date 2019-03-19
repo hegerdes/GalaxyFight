@@ -13,6 +13,7 @@
 #define __CAMERA_HPP__
 
 #include "math/Vector.hpp"
+#include "rendering/SpaceCraft.hpp"
 
 #define PI 3.14159265
 #define PH 1.57079632
@@ -64,6 +65,13 @@ public:
      * @param dir           Moving direction
      */
     void move(const CameraMovement& dir);
+
+    /**
+     * @brief Moves the camera behind the given spacecraft
+     * 
+     * @param s The spacecraft to be followed
+     */ 
+     void follow(SpaceCraft::Ptr s);
 
      /**
      * @brief turns the camera according to given direction
