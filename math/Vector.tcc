@@ -116,5 +116,45 @@ void Vector<T, L>::operator+=(const Vector<T, L>& v)
 		m[i] += v.m[i];
 	}
 }
+
+
+template<typename T, int L>
+float Vector<T, L>::dist(const Vector<T,L> &vec) const 
+{
+	float dist = 0;
+	for(int i = 0; i < L; i++)
+	{
+		dist += pow(this->m[i] - vec.m[i], 2);
+	}
+
+	return std::sqrt(dist);
+
+
+}
+
+template<typename T, int L>
+float Vector<T, L>::dist2d(const Vector<T,L> &vec) const 
+{
+	float dist = 0;
+	for(int i = 0; i < 2; i++)
+	{
+		dist += pow(this->m[i] - vec.m[i], 2);
+	}
+
+	return std::sqrt(dist);
+
+
+}
+
+template<typename T, int L> 
+void Vector<T,L>::printVector()
+{
+	std::cout << "Vector-Daten: " << std::flush;
+	for(int i = 0; i < L; i++)
+	{
+	    std::cout << m[i] << " " << std::flush;
+	}
+	std::cout << std::endl;
+}
     
 } // namespace asteroids
