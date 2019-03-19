@@ -20,8 +20,9 @@
 #include <GL/glew.h>
 
 #include "GLWidget.hpp"
+#include "startscreen.h"
 
-#include "../view/build/ui_MainWindow.h"
+#include "ui_MainWindow.h"
 
 namespace asteroids
 {
@@ -75,6 +76,9 @@ private:
 
     /// gl widget
     GLWidget*       m_widget;
+
+    /// StartScreen widget
+    StartScreen* m_startscreen;
 
     /// map with the keys and their states
     map<Qt::Key, bool>          m_keyStates;

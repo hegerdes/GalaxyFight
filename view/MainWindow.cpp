@@ -16,6 +16,7 @@
 #include <iostream>
 #include <QTimer>
 #include <QKeyEvent>
+#include <QStackedWidget>
 
 namespace asteroids
 {
@@ -28,7 +29,9 @@ MainWindow::MainWindow(const std::string& file, QWidget* parent) :
     // Setup user interface
     ui->setupUi(this);
     m_widget = ui->centralWidget->findChild<GLWidget*>(QString("openGLWidget"));
+    m_startscreen = new StartScreen();
 
+    ui->centralWidget->layout()->addWidget(m_startscreen);
     // Set level
     m_widget->setLevelFile(file);
 

@@ -14,7 +14,7 @@
    <string>MainWindow</string>
   </property>
   <widget class="QWidget" name="centralWidget">
-   <layout class="QVBoxLayout" name="verticalLayout">
+   <layout class="QVBoxLayout" name="stackedLayout">
     <property name="spacing">
      <number>0</number>
     </property>
@@ -39,6 +39,9 @@
        </sizepolicy>
       </property>
      </widget>
+    </item>
+    <item>
+     <widget class="QWidget" name="startscreen" native="true"/>
     </item>
    </layout>
   </widget>
