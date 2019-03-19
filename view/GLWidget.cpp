@@ -279,16 +279,16 @@ void GLWidget::step(map<Qt::Key, bool>& keyStates)
             for(int count{3}; count < 16+3; count++){
                 m_neu[count-3] = position_temp[count];
             }
-            m_actor->m_transformation = m_neu;
+            m_enemyPlayer->m_transformation = m_neu;
             cout << "m_transformation: ";
             std::cout<<position_temp[0]<<","<<position_temp[1]<<","<<position_temp[2]<<"; ";
-            //m_actor->m_xAxis[0] = m_actor->m_transformation[0];
+            //m_enemyPlayer->m_xAxis[0] = m_enemyPlayer->m_transformation[0];
             for(int count{0}; count < 16; count++){
-                cout << m_actor->m_transformation[count] << "," ;
+                cout << m_enemyPlayer->m_transformation[count] << "," ;
             }
             cout << "\n";
 
-            m_actor->setPosition({position_temp[0], position_temp[1], position_temp[2]});
+            m_enemyPlayer->setPosition({position_temp[0], position_temp[1], position_temp[2]});
         }
     }
     cout << chrono::duration<double, milli>
