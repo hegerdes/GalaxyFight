@@ -25,7 +25,7 @@ using namespace boost::property_tree;
 namespace asteroids
 {
 
-LevelParser::LevelParser(const std::string& file, SpaceCraft::Ptr& spaceCraft, Skybox::Ptr& sky, AsteroidField::Ptr& af)
+LevelParser::LevelParser(const std::string& file, SpaceCraft::Ptr& spaceCraft, SpaceCraft::Ptr& enemy, Skybox::Ptr& sky, AsteroidField::Ptr& af)
 {
     // Create empty property tree object
     ptree tree;
@@ -70,6 +70,15 @@ LevelParser::LevelParser(const std::string& file, SpaceCraft::Ptr& spaceCraft, S
         else if (v.first == "actor")
         {
             spaceCraft = make_shared<SpaceCraft>(SpaceCraft(path + v.second.get<std::string>("<xmlattr>.filename", "error"),
+                Vector3f(v.second.get<int>("spawn_x", 0),
+                    v.second.get<int>("spawn_y", 0),
+                    v.second.get<int>("spawn_z", 0)),
+                v.second.get<float>("move_speed", 3),
+                v.second.get<float>("rotate_speed", 0.05)
+            ));
+            //Ernmöglicht rendern von zwei Raumschiffen
+            //Beide Spieler besitztn das selbe Modell
+            enemy = make_shared<SpaceCraft>(SpaceCraft(path + v.second.get<std::string>("<xmlattr>.filename", "error"),
                 Vector3f(v.second.get<int>("spawn_x", 0),
                     v.second.get<int>("spawn_y", 0),
                     v.second.get<int>("spawn_z", 0)),

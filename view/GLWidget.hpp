@@ -68,6 +68,9 @@ private:
     /// A pointer to the Actor
     SpaceCraft::Ptr  	        m_actor;
 
+    /// Zweiter Spieler
+    SpaceCraft::Ptr             m_enemyPlayer;
+
     /// A skybox for the scene
     Skybox::Ptr			        m_skybox;
 
@@ -80,7 +83,7 @@ private:
     /// Rotation speed of the actor
     float                       m_rotationSpeed;
 
-    /// Translation speed of the actor
+    /// Translation speed of the actor  LevelParser np(m_)s
     float                       m_moveSpeed;
 
     /// Last set mouse position

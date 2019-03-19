@@ -103,6 +103,14 @@ void Transformable::rotate(RotationTransfrom axis, float s)
     m_direction = m_xAxis * -1.0;
 }
 
+void Transformable::setTransformationMatrix(Vector3f xAxis, Vector3f yAxis, Vector3f zAxis, Vector3f position)
+{
+    m_xAxis = xAxis;
+    m_yAxis = yAxis;
+    m_zAxis = zAxis;
+    m_position = position;
+}
+
 void Transformable::move(MoveTransform axis, float speed)
 {
     Vector<float> direction;
