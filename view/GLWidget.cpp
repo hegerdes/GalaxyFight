@@ -1,6 +1,4 @@
-
-#include "GLWidget.hpp"
-#include "../io/LevelParser.hpp"
+ #include "GLWidget.hpp" #include "../io/LevelParser.hpp"
 #include "io/TextureFactory.hpp"
 #include <QMouseEvent>
 //#include "global_socket.h"
@@ -225,16 +223,18 @@ void GLWidget::step(map<Qt::Key, bool>& keyStates)
         std::cout << "write data\n";
         QByteArray data;
 
-        /*
             char * position_chars = (char*)&m_actor->m_position;
-            char * transformation_temp = (char*)&m_actor->m_transformation;
+            char * xaxis_temp = (char*)&m_actor->m_xAxis;
+            char * yaxis_temp = (char*)&m_actor->m_yAxis;
+            char * zaxis_temp = (char*)&m_actor->m_zAxis;
             data.append(position_chars, 3*4);
-            data.append(transformation_temp, 16*4);
-        */
+            data.append(xaxis_temp, 3*4);
+            data.append(yaxis_temp, 3*4);
+            data.append(zaxis_temp, 3*4);
 
-        float float_temp [19] = {0};
+        float float_temp [12] = {0};
         char * float_char = (char*)float_temp;
-        data.append(float_char, 19*4);
+        data.append(float_char, 12*4);
         /*
             float * flt_prt = (float*)data.data();
             cout << "Data: ";
@@ -252,7 +252,7 @@ void GLWidget::step(map<Qt::Key, bool>& keyStates)
 
         //#########computeMatrix ist nocht auskommentiert
         QByteArray answer = socket.readAll();
-        if( 19*4 == answer.length()){
+        if( 12*4 == answer.length()){
             std::cerr << socket.waitForBytesWritten() << "; waitForBytesWritten\n";
             float* position_temp = (float*) answer.data();
             asteroids::Vector<float,3> position = m_actor->getPosition();
@@ -269,26 +269,40 @@ void GLWidget::step(map<Qt::Key, bool>& keyStates)
                    }
                 }
             */
-            asteroids::Matrix m_neu;
-            cout << "Received: ";
-            for(int count{0}; count < 16+3; count++){
-                cout << position_temp[count] << ",";
-            }
-            cout << "\n";
-
-            for(int count{3}; count < 16+3; count++){
-                m_neu[count-3] = position_temp[count];
-            }
-            m_enemyPlayer->m_transformation = m_neu;
-            cout << "m_transformation: ";
-            std::cout<<position_temp[0]<<","<<position_temp[1]<<","<<position_temp[2]<<"; ";
-            //m_enemyPlayer->m_xAxis[0] = m_enemyPlayer->m_transformation[0];
-            for(int count{0}; count < 16; count++){
-                cout << m_enemyPlayer->m_transformation[count] << "," ;
-            }
-            cout << "\n";
-
             m_enemyPlayer->setPosition({position_temp[0], position_temp[1], position_temp[2]});
+            m_enemyPlayer->m_xAxis[0] = position_temp[3];
+            m_enemyPlayer->m_xAxis[1] = position_temp[4];
+            m_enemyPlayer->m_xAxis[2] = position_temp[5];
+
+            m_enemyPlayer->m_yAxis[0] = position_temp[6];
+            m_enemyPlayer->m_yAxis[1] = position_temp[7];
+            m_enemyPlayer->m_yAxis[2] = position_temp[8];
+
+            m_enemyPlayer->m_zAxis[0] = position_temp[9];
+            m_enemyPlayer->m_zAxis[1] = position_temp[10];
+            m_enemyPlayer->m_zAxis[2] = position_temp[11];
+
+            /*
+                asteroids::Matrix m_neu;
+                cout << "Received: ";
+                for(int count{0}; count < 16+3; count++){
+                    cout << position_temp[count] << ",";
+                }
+                cout << "\n";
+
+                for(int count{3}; count < 16+3; count++){
+                    m_neu[count-3] = position_temp[count];
+                }
+                m_enemyPlayer->m_transformation = m_neu;
+                cout << "m_transformation: ";
+                std::cout<<position_temp[0]<<","<<position_temp[1]<<","<<position_temp[2]<<"; ";
+                //m_enemyPlayer->m_xAxis[0] = m_enemyPlayer->m_transformation[0];
+                for(int count{0}; count < 16; count++){
+                    cout << m_enemyPlayer->m_transformation[count] << "," ;
+                }
+                cout << "\n";
+            */
+
         }
     }
     cout << chrono::duration<double, milli>
