@@ -16,44 +16,35 @@
 #include <iostream>
 #include <QTimer>
 #include <QKeyEvent>
-#include <QStackedWidget>
+#include <QStackedLayout>
 
 namespace asteroids
 {
 
 MainWindow::MainWindow(const std::string& file, QWidget* parent) :
     QMainWindow(parent),
-    ui(new Ui::MainWindow()),
     m_timer(new QTimer())
 {
     // Setup user interface
-    ui->setupUi(this);
-    m_widget = ui->centralWidget->findChild<GLWidget*>(QString("openGLWidget"));
+    m_startscreen = new StartScreen(this);
 
-    m_startscreen = new StartScreen();
+    auto mainLayout = new QStackedLayout;
 
-    ui->centralWidget->layout()->addWidget(m_startscreen);
+    mainLayout->addWidget(m_startscreen);
+
+    setLayout(mainLayout);
+
     // Set level
-    m_widget->setLevelFile(file);
+//    m_widget->setLevelFile(file);
 
     // Create a timer object to trigger the main loop
     connect(m_timer.get(), SIGNAL(timeout()), this, SLOT(handleInput()));
     m_timer->start(1000 / 60.0);
 }
 
-int MainWindow::width()
-{
-    return m_widget->width();
-}
-
-int MainWindow::height()
-{
-    return m_widget->height();
-}
-
 void MainWindow::handleInput()
 {
-    m_widget->step(m_keyStates);
+//    m_widget->step(m_keyStates);
 }
 
 void MainWindow::keyPressEvent(QKeyEvent* event)
@@ -71,10 +62,4 @@ void MainWindow::keyReleaseEvent(QKeyEvent* event)
     // Save which key was released
     m_keyStates[(Qt::Key)event->key()] = false;
 }
-
-MainWindow::~MainWindow()
-{
-    delete ui;
-}
-
 } // namespace asteroids

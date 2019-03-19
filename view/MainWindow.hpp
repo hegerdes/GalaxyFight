@@ -22,8 +22,6 @@
 #include "GLWidget.hpp"
 #include "startscreen.h"
 
-#include "ui_MainWindow.h"
-
 namespace asteroids
 {
 /**
@@ -45,18 +43,6 @@ public:
      */
     MainWindow(const std::string& plyname, QWidget* parent = NULL);
 
-    /**
-     * @brief Destroys the Main Window object
-     *
-     */
-    ~MainWindow();
-
-    /// Returns the width of the window
-    int width();
-
-    /// Returns the height of the windows
-    int height();
-
 public Q_SLOTS:
     /// Handle input
     void handleInput();
@@ -71,11 +57,8 @@ protected:
 
 private:
 
-    /// QT UI of the window
-    Ui::MainWindow* ui;
-
     /// gl widget
-    GLWidget*       m_widget;
+//    GLWidget*       m_widget;
 
     /// StartScreen widget
     StartScreen* m_startscreen;
