@@ -42,6 +42,15 @@ public:
     void rotate(RotationTransfrom axis);
 
     /**
+     * @brief Setzt die Transformationsmatrix des Raumschiffes 
+     * @param xAxis zum verändern der x-Achse
+     * @param yAxis zum verändern der y-Achse
+     * @param zAxis zum verändern der z-Achse
+     * @param position zum verändern der Position
+     */
+    void setTransformationMatrix(Vector3f xAxis, Vector3f yAxis, Vector3f zAxis, Vector3f position);
+
+    /**
      * @brief   Moves a triangle mesh at the given axis with the given speed
      * @param axis axis to move
      * @param speed speed of movement
@@ -52,6 +61,8 @@ public:
 
     virtual void move();
 
+    
+    
     /**
      * @brief Sets a new flight direction
      * @param dir   The new direction
@@ -106,6 +117,7 @@ public:
     {
         m_speed = s;
     }
+
 
     /**
      * @brief   Returns the orientation of the x in the global coordinate system

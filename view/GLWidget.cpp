@@ -1,6 +1,6 @@
 
 #include "GLWidget.hpp"
-#include "io/LevelParser.hpp"
+#include "../io/LevelParser.hpp"
 #include "io/TextureFactory.hpp"
 #include <QMouseEvent>
 //#include "global_socket.h"
@@ -111,7 +111,7 @@ void GLWidget::initializeGL()
     SDL_GL_SetSwapInterval(1);
 
     // Load level
-    LevelParser lp(m_levelFile, m_actor, m_skybox, m_asteroidField);
+    LevelParser lp(m_levelFile, m_actor, m_enemyPlayer, m_skybox, m_asteroidField);
 
     // Setup physics
     m_physicsEngine = make_shared<PhysicsEngine>();
@@ -146,6 +146,9 @@ void GLWidget::paintGL()
     m_physicsEngine->render();
 
     m_actor->render();
+
+    m_enemyPlayer->render();
+    m_enemyPlayer->setPosition(Vector<float>(10,100,10));
 }
 
 QByteArray IntToArray(qint32 source) //Use qint32 to ensure that the number have 4 bytes
@@ -164,7 +167,17 @@ void GLWidget::step(map<Qt::Key, bool>& keyStates)
 
     if (keyStates[Qt::Key_Up])
     {
+        // Quaternion nq;
+        // float s = m_enemyPlayer->getSpeed();
+        // Vector3f xAxis = m_enemyPlayer->getXAxis();
+        // Vector3f yAxis = m_enemyPlayer->getYAxis();
+        // Vector3f zAxis = m_enemyPlayer->getZAxis();
+        // nq.fromAxis(xAxis, s);
+        // yAxis = nq * yAxis;
+        // zAxis = nq * zAxis;
+
         m_actor->rotate(Transformable::YAW_LEFT, m_rotationSpeed);
+        // m_enemyPlayer->setTransformationMatrix(xAxis,yAxis,zAxis,m_enemyPlayer->getPosition());
     }
     if (keyStates[Qt::Key_Down])
     {
