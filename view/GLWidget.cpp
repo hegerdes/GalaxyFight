@@ -10,9 +10,9 @@ GLWidget::GLWidget(QWidget* parent)
     : QOpenGLWidget(parent),
       m_camera(Vector3f(0.0f, 0.0f, -700.0f), 0.05f, 5.0f),
       m_rotationSpeed(0.02),
-      m_moveSpeed(1.0),
-      client_local{QHostAddress{"lennartkaiser.de"}, 38291}
+      m_moveSpeed(1.0)
 {
+    client_local.connect("lennartkaiser.de", 38291);
 }
 
 void GLWidget::setLevelFile(const std::string& file)
