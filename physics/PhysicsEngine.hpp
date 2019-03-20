@@ -77,6 +77,11 @@ public:
      */ 
     void addSpaceCraft(SpaceCraft::Ptr spacecraft);
 
+    /**
+     * @brief Fügt das Gegenspielerraumschiff hinzu welches explodieren soll.
+     */ 
+    void addEnemyPlayer(SpaceCraft::Ptr enemyPlayer);
+
 private:
 
     /// List of destroyable objects
@@ -87,6 +92,8 @@ private:
 
     ///Raumschiff das explodieren soll
     SpaceCraft::Ptr              m_spacecraft;
+
+    SpaceCraft::Ptr              m_enemyPlayer;
 
     ParticleEngine               m_particles;
 

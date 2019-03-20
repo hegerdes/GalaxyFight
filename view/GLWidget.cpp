@@ -129,6 +129,7 @@ void GLWidget::initializeGL()
 
     //Fügt das Raumschiff der Engine hinzu, damit es richtig explodieren kann
     m_physicsEngine->addSpaceCraft(m_actor);
+    m_physicsEngine->addEnemyPlayer(m_enemyPlayer);
 }
 
 void GLWidget::paintGL()
@@ -147,6 +148,8 @@ void GLWidget::paintGL()
     m_actor->render();
 
     m_enemyPlayer->render();
+
+    //Debug/Testline
     m_enemyPlayer->setPosition(Vector<float>(10,100,10));
 }
 
@@ -191,7 +194,12 @@ void GLWidget::step(map<Qt::Key, bool>& keyStates)
             m_actor->move(Transformable::STRAFE_RIGHT, m_moveSpeed);
         }
         if(keyStates[Qt::Key_X]){
+            //Debug/Tesline für Explosion eigenes Raumschiff
             m_actor->destroySpaceCraft();
+        }
+        if(keyStates[Qt::Key_Y]){
+            //Debug/Tesline für Explosion eigenes Raumschiff
+            m_enemyPlayer->destroySpaceCraft();
         }
 
         // Add a bullet to physics engine
