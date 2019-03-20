@@ -69,19 +69,44 @@ void Server::disconnected()
 bool Server::writeData(QByteArray)
 {
     QTcpSocket *socket = static_cast<QTcpSocket*>(sender());
-    QByteArray message;
 
-    if(socket_1 == socket) {
-        message.append((char*)&position_temp_2[0],(4*12));
-    } else if(socket_2 == socket) {
-        message.append((char*)&position_temp[0],(4*12));
-    } else {
-        //ERROR
+    QByteArray response;
+
+    client_data client_data_temp;
+    if(socket_1 == socket){
+       client_data_temp = user_data_2;
+    }else if(socket_2 == socket){
+       client_data_temp = user_data_1;
+    }else{
+        std::cerr << "client socket not recognized\n";
     }
+
+    response.append(PacketType::update_3D_S);
+    //std::cout << "Packettype out: " << response.data()[0] << std::endl;
+    std::cout << "----------------" << std::endl;
+
+    response.append((char*)&client_data_temp.position, 3*4);
+    std::cout << client_data_temp.position << std::endl;
+
+    response.append((char*)&client_data_temp.xAxis, 3*4);
+    std::cout << client_data_temp.xAxis << std::endl;
+
+    response.append((char*)&client_data_temp.yAxis, 3*4);
+    std::cout << client_data_temp.yAxis << std::endl;
+
+    response.append((char*)&client_data_temp.zAxis, 3*4);
+    std::cout << client_data_temp.zAxis << std::endl;
+
+    response.append(char{0}, 2); // anzahl zerstörter asteroidend short eine shor null
+    // Asteroiden ids wenn nötig > 0
+    response.append(client_data_temp.shot);
+    response.append((char*)&client_data_temp.bullet_id, 4);
+    response.append(char{0}, 4); // zerstörte bullets
+    // Bullet ids wenn nötig > 0
 
     if(socket->state() == QAbstractSocket::ConnectedState)
     {
-        socket->write(message); //write the data itself
+        socket->write(response); //write the data itself
         return socket->waitForBytesWritten();
     }
     else{
@@ -134,13 +159,19 @@ void Server::readyRead()
                     client_data_temp.xAxis[1] = getFloat(&data);
                     client_data_temp.xAxis[2] = getFloat(&data);
 
+                    std::cout << client_data_temp.xAxis << std::endl;
+
                     client_data_temp.yAxis[0] = getFloat(&data);
                     client_data_temp.yAxis[1] = getFloat(&data);
                     client_data_temp.yAxis[2] = getFloat(&data);
 
+                    std::cout << client_data_temp.yAxis << std::endl;
+
                     client_data_temp.zAxis[0] = getFloat(&data);
                     client_data_temp.zAxis[1] = getFloat(&data);
                     client_data_temp.zAxis[2] = getFloat(&data);
+
+                    std::cout << client_data_temp.zAxis << std::endl;
 
                     client_data_temp.shot = (Bullet_shot) getChar(&data);
                     client_data_temp.bullet_id = getInt(&data);
@@ -174,28 +205,7 @@ void Server::readyRead()
                     }
                 */
 
-                QByteArray response;
-                client_data client_data_temp;
-                if(socket_1 == socket){
-                   client_data_temp = user_data_2;
-                }else if(socket_2 == socket){
-                   client_data_temp = user_data_1;
-                }else{
-                    std::cerr << "client socket not recognized\n";
-                }
-                response.append(PacketType::update_3D_S);
-                response.append(PacketType::update_3D_S);
-                response.append((char*)&client_data_temp.position, 3*4);
-                response.append((char*)&client_data_temp.xAxis, 3*4);
-                response.append((char*)&client_data_temp.yAxis, 3*4);
-                response.append((char*)&client_data_temp.zAxis, 3*4);
-                response.append(char{0}, 2); // anzahl zerstörter asteroidend short eine shor null
-                // Asteroiden ids wenn nötig > 0
-                response.append(client_data_temp.shot);
-                response.append((char*)&client_data_temp.bullet_id, 4);
-                response.append(char{0}, 4); // zerstörte bullets
-                // Bullet ids wenn nötig > 0
-                this->writeData(response);
+                this->writeData(nullptr);
             }
         }
     }
