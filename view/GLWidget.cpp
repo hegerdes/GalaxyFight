@@ -203,7 +203,7 @@ void GLWidget::step(map<Qt::Key, bool>& keyStates)
         {
             m_actor->move(Transformable::STRAFE_RIGHT, m_moveSpeed);
         }
-
+        //Ermöglicht YAW mit Q und E
         if(keyStates[Qt::Key_E])
         {
            m_actor->rotate(Transformable::YAW_LEFT, m_rotationSpeed);
