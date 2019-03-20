@@ -191,15 +191,16 @@ void GLWidget::step(map<Qt::Key, bool>& keyStates)
         auto now_ms = std::chrono::time_point_cast<std::chrono::milliseconds>(now);
         auto value = now_ms.time_since_epoch();
         long bulletShot = value.count();
-        ///Ermittelt, wann die letzte Kugel abgeschoßen wurde und erlaubt erst nach
+        //Ermittelt, wann die letzte Kugel abgeschoßen wurde und erlaubt erst nach
         if(bulletShot - m_lastBullet > m_schussFrequenz){
-            Bullet::Ptr bullet = make_shared<Bullet>(Bullet(m_actor->getPosition(), m_actor->getDirection()));
+
+            //Lässt Bullet bei der Kanone des Raumschiffes erscheinen
+            Vector3f shipPosition = m_actor->getPosition() + m_actor->getZAxis() * -50 + m_actor->getXAxis() * -140;
+            Bullet::Ptr bullet = make_shared<Bullet>(Bullet(shipPosition, m_actor->getDirection()));
             m_physicsEngine->addBullet(bullet);
             m_lastBullet = bulletShot;
         }
         
-      
-        std::cout << m_lastBullet << std::endl;
     }
 
     // Trigger update, i.e., redraw via paintGL()
