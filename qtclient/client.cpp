@@ -106,6 +106,7 @@ namespace asteroids {
 
                 } else if(pt == PacketType::update_3D_S){
                     std::cout << "packtetype_udpate_3d_s\n";
+
                     enemyPos[0] = getFloat(&data);
                     enemyPos[1] = getFloat(&data);
                     enemyPos[2] = getFloat(&data);
@@ -157,12 +158,14 @@ namespace asteroids {
     }
 
     float Client::getFloat(char** ptr){
-        float f = **ptr;
+        float * jo = (float*)*ptr;
+        float f = *jo;
         *ptr += 4;
         return f;
     }
 
     short Client::getShort(char** ptr){
+        short * jo = (short*)*ptr;
         short f = **ptr;
         *ptr += 2;
         return f;
@@ -175,6 +178,7 @@ namespace asteroids {
     }
 
     int Client::getInt(char** ptr){
+        int * jo = (int*)*ptr;
         int f = **ptr;
         *ptr += 4;
         return f;
