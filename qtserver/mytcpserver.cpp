@@ -212,12 +212,14 @@ void Server::readyRead()
 }
 
 float Server::getFloat(char** ptr){
-    float f = **ptr;
+    float * jo = (float*)*ptr;
+    float f = *jo;
     *ptr += 4;
     return f;
 }
 
 short Server::getShort(char** ptr){
+    short * jo = (short*)*ptr;
     short f = **ptr;
     *ptr += 2;
     return f;
@@ -230,6 +232,7 @@ char Server::getChar(char** ptr){
 }
 
 int Server::getInt(char** ptr){
+    int * jo = (int*)*ptr;
     int f = **ptr;
     *ptr += 4;
     return f;
