@@ -38,6 +38,8 @@ MainWindow::MainWindow(QWidget* parent) :
     m_screenStack->addWidget(m_scene2d);
     m_screenStack->addWidget(m_3DScene);
 
+//    m_screenStack->setCurrentWidget(m_scene2d);
+
     setLayout(m_screenStack);
 
     // Create a timer object to trigger the main loop
