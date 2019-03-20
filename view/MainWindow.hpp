@@ -15,12 +15,14 @@
 #include <string>
 
 #include <QMainWindow>
+#include <QStackedLayout>
 
 #define GL3_PROTOTYPES 1
 #include <GL/glew.h>
 
 #include "GLWidget.hpp"
 #include "startscreen.h"
+
 
 namespace asteroids
 {
@@ -59,6 +61,9 @@ private:
 
     /// gl widget
     GLWidget*       m_3DScene;
+
+    /// Layout stack used to navigate through the different Screens
+    QStackedLayout* m_screenStack;
 
     /// StartScreen widget
     StartScreen* m_startscreen;

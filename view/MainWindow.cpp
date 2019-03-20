@@ -16,7 +16,6 @@
 #include <iostream>
 #include <QTimer>
 #include <QKeyEvent>
-#include <QStackedLayout>
 
 namespace asteroids
 {
@@ -27,16 +26,17 @@ MainWindow::MainWindow(const std::string& file, QWidget* parent) :
 {
     // Setup user interface
     m_startscreen = new StartScreen(this);
-    m_3DScene = new GLWidget;
+    m_3DScene = new GLWidget(this);
 
     //create and config layout
-    auto mainLayout = new QStackedLayout;
+    m_screenStack = new QStackedLayout;
 
-    mainLayout->addWidget(m_startscreen);
-    mainLayout->addWidget(m_3DScene);
+    m_screenStack->addWidget(m_startscreen);
+    m_screenStack->addWidget(m_3DScene);
 
-    setLayout(mainLayout);
+    m_screenStack->setCurrentIndex(1);
 
+    setLayout(m_screenStack);
 
 
     // Create a timer object to trigger the main loop
