@@ -37,11 +37,11 @@ namespace asteroids{
             //end_3D
             char winner_no;
             //start_2D
+            void sendUpdate_3D_C(Vector<float> pos, Vector<float> xAxis, Vector<float> yAxis, Vector<float> zAxis, Bullet_shot shot, Living living, int bullet_id);
+            void readData();
 
         private:
-            void sendUpdate_3D_C(Vector<float> pos, Vector<float> xAxis, Vector<float> yAxis, Vector<float> zAxis, Bullet_shot shot, Living living, int bullet_id);
             void writeData(QByteArray const & data);
-            void readData();
 
             QTcpSocket socket;
             float getFloat(char **ptr);

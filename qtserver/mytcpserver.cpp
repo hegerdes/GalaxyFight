@@ -6,6 +6,7 @@
 static inline QByteArray IntToArray(qint32 source);
 static inline qint32 ArrayToInt(QByteArray source);
 
+
 Server::Server(QObject *parent) : QObject(parent)
 {
     server = new QTcpServer(this);
@@ -110,32 +111,114 @@ void Server::readyRead()
             }
             if (size > 0 && buffer->size() >= size) // If data has received completely, then emit our SIGNAL with the data
             {
-                QByteArray data = buffer->mid(0, size);
+                QByteArray answer = buffer->mid(0, size);
                 buffer->remove(0, size);
                 size = 0;
                 *s = size;
 
 
                 //Interprete the packet-type:
-                //PacketType type = data[0];
+                char* data = (char*) answer.data();
+                PacketType pt = (PacketType) getChar(&data);
+                if(pt == PacketType::update_3D_C){
+                    client_data client_data_temp;
+                    client_data_temp.position[0] = getFloat(&data);
+                    client_data_temp.position[1] = getFloat(&data);
+                    client_data_temp.position[2] = getFloat(&data);
 
-                //get packet and
-                float* temp = (float*) data.data();
+                    client_data_temp.xAxis[0] = getFloat(&data);
+                    client_data_temp.xAxis[1] = getFloat(&data);
+                    client_data_temp.xAxis[2] = getFloat(&data);
 
-                for(int i {0}; i < 12; i++){
+                    client_data_temp.yAxis[0] = getFloat(&data);
+                    client_data_temp.yAxis[1] = getFloat(&data);
+                    client_data_temp.yAxis[2] = getFloat(&data);
+
+                    client_data_temp.zAxis[0] = getFloat(&data);
+                    client_data_temp.zAxis[1] = getFloat(&data);
+                    client_data_temp.zAxis[2] = getFloat(&data);
+
+                    client_data_temp.shot = (Bullet_shot) getChar(&data);
+                    client_data_temp.bullet_id = getInt(&data);
+                    client_data_temp.living = (Living) getChar(&data);
+
                     if(socket_1 == socket){
-                        position_temp[i] = temp[i];
+                       user_data_1 = client_data_temp;
                     }else if(socket_2 == socket){
-                        position_temp_2[i] = temp[i];
+                       user_data_2 = client_data_temp;
                     }else{
-                        //ERROR
+                        std::cerr << "client socket not recognized\n";
                     }
                 }
 
-                this->writeData(data);
+
+
+
+                //PacketType type = data[0];
+                //get packet and
+                /*
+                    float* temp = (float*) data.data();
+
+                    for(int i {0}; i < 12; i++){
+                        if(socket_1 == socket){
+                            position_temp[i] = temp[i];
+                        }else if(socket_2 == socket){
+                            position_temp_2[i] = temp[i];
+                        }else{
+                            //ERROR
+                        }
+                    }
+                */
+
+                QByteArray response;
+                client_data client_data_temp;
+                if(socket_1 == socket){
+                   client_data_temp = user_data_2;
+                }else if(socket_2 == socket){
+                   client_data_temp = user_data_1;
+                }else{
+                    std::cerr << "client socket not recognized\n";
+                }
+                response.append(PacketType::update_3D_S);
+                response.append(PacketType::update_3D_S);
+                response.append((char*)&client_data_temp.position, 3*4);
+                response.append((char*)&client_data_temp.xAxis, 3*4);
+                response.append((char*)&client_data_temp.yAxis, 3*4);
+                response.append((char*)&client_data_temp.zAxis, 3*4);
+                response.append(char{0}, 2); // anzahl zerstörter asteroidend short eine shor null
+                // Asteroiden ids wenn nötig > 0
+                response.append(client_data_temp.shot);
+                response.append((char*)&client_data_temp.bullet_id, 4);
+                response.append(char{0}, 4); // zerstörte bullets
+                // Bullet ids wenn nötig > 0
+                this->writeData(response);
             }
         }
     }
+}
+
+float Server::getFloat(char** ptr){
+    float f = **ptr;
+    ptr += 4;
+    return f;
+}
+
+short Server::getShort(char** ptr){
+    short f = **ptr;
+    ptr += 2;
+    return f;
+}
+
+char Server::getChar(char** ptr){
+    char f = **ptr;
+    *ptr += 1;
+    return f;
+}
+
+int Server::getInt(char** ptr){
+    int f = **ptr;
+    ptr += 4;
+    return f;
 }
 
 qint32 ArrayToInt(QByteArray source)

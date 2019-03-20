@@ -7,6 +7,8 @@
 #include <QDebug>
 #include <QtCore>
 #include <QtNetwork>
+#include "../math/Vector.hpp"
+#include "flags.h"
 
 #include "packettypes.h"
 
@@ -39,6 +41,24 @@ public:
 
     QTcpSocket *socket_1 = nullptr;
     QTcpSocket *socket_2 = nullptr;
+    float getFloat(char** ptr);
+    short getShort(char** ptr);
+    char getChar(char** ptr);
+    int getInt(char** ptr);
+
+
+    struct client_data{
+        asteroids::Vector<float> position;
+        asteroids::Vector<float> xAxis;
+        asteroids::Vector<float> yAxis;
+        asteroids::Vector<float> zAxis;
+        Bullet_shot shot;
+        int bullet_id;
+        Living living;
+    };
+
+    client_data user_data_1;
+    client_data user_data_2;
 };
 
 #endif // MYTCPSERVER_H

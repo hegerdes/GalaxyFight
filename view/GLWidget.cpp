@@ -10,7 +10,8 @@ GLWidget::GLWidget(QWidget* parent)
     : QOpenGLWidget(parent),
       m_camera(Vector3f(0.0f, 0.0f, -700.0f), 0.05f, 5.0f),
       m_rotationSpeed(0.02),
-      m_moveSpeed(1.0)
+      m_moveSpeed(1.0),
+      client_local{QHostAddress{"lennartkaiser.de"}, 38291}
 {
 }
 
@@ -191,6 +192,15 @@ void GLWidget::step(map<Qt::Key, bool>& keyStates)
     }
 
     // Trigger update, i.e., redraw via paintGL()
+    client_local.sendUpdate_3D_C(m_actor->m_position, m_actor->m_xAxis,
+                                 m_actor->m_yAxis, m_actor->m_zAxis,
+                                 Bullet_shot::shot, Living::alive, 0);
+    client_local.readData();
+    m_enemyPlayer->m_position = client_local.enemyPos;
+    m_enemyPlayer->m_xAxis = client_local.enemyxAxis;
+    m_enemyPlayer->m_yAxis = client_local.enemyyAxis;
+    m_enemyPlayer->m_zAxis = client_local.enemyzAxis;
+
     this->update();
 }
 
