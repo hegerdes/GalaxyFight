@@ -71,14 +71,6 @@ bool Server::writeData(QByteArray)
     QTcpSocket *socket = static_cast<QTcpSocket*>(sender());
     QByteArray message;
 
-    if(socket_1 == socket) {
-        message.append((char*)&position_temp_2[0],(4*12));
-    } else if(socket_2 == socket) {
-        message.append((char*)&position_temp[0],(4*12));
-    } else {
-        //ERROR
-    }
-
     if(socket->state() == QAbstractSocket::ConnectedState)
     {
         socket->write(message); //write the data itself
@@ -183,7 +175,6 @@ void Server::readyRead()
                 }else{
                     std::cerr << "client socket not recognized\n";
                 }
-                response.append(PacketType::update_3D_S);
                 response.append(PacketType::update_3D_S);
                 response.append((char*)&client_data_temp.position, 3*4);
                 response.append((char*)&client_data_temp.xAxis, 3*4);

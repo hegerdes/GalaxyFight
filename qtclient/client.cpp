@@ -52,16 +52,17 @@ namespace asteroids {
 
     void Client::readData(){
         // @ahaker
+        std::cerr << "read data\n";
         if(socket.state() == QAbstractSocket::ConnectedState)
         {
             // empfange die positionen des anderen
             QByteArray answer = socket.readAll();
             if(answer.length() > 0){
                 std::cerr << socket.waitForBytesWritten() << "; waitForBytesWritten\n";
-
                 char* data = (char*) answer.data();
 
                 PacketType pt = (PacketType) getChar(&data);
+                std::cout << "pid: " << pt << ", length" << answer.length() << "\n";
                 if(pt == PacketType::init_3D){
                     //Own
 
@@ -76,7 +77,6 @@ namespace asteroids {
                     ownyAxis[0] = getFloat(&data);
                     ownyAxis[1] = getFloat(&data);
                     ownyAxis[2] = getFloat(&data);
-
                     ownzAxis[0] = getFloat(&data);
                     ownzAxis[1] = getFloat(&data);
                     ownzAxis[2] = getFloat(&data);
@@ -105,26 +105,31 @@ namespace asteroids {
                     }
 
                 } else if(pt == PacketType::update_3D_S){
+                    std::cout << "packtetype_udpate_3d_s\n";
                     enemyPos[0] = getFloat(&data);
                     enemyPos[1] = getFloat(&data);
                     enemyPos[2] = getFloat(&data);
+                    std::cout <<"enemy_pos: " << enemyPos[0] << "," << enemyPos[1] << "," << enemyPos[2] << "\n";
 
                     enemyxAxis[0] = getFloat(&data);
                     enemyxAxis[1] = getFloat(&data);
                     enemyxAxis[2] = getFloat(&data);
+                    std::cout << enemyxAxis[0] << "," << enemyxAxis[1] << "," << enemyxAxis[2] << "\n";
 
                     enemyyAxis[0] = getFloat(&data);
                     enemyyAxis[1] = getFloat(&data);
                     enemyyAxis[2] = getFloat(&data);
+                    std::cout << enemyyAxis[0] << "," << enemyyAxis[1] << "," << enemyyAxis[2] << "\n";
 
                     enemyzAxis[0] = getFloat(&data);
                     enemyzAxis[1] = getFloat(&data);
                     enemyzAxis[2] = getFloat(&data);
+                    std::cout << enemyzAxis[0] << "," << enemyzAxis[1] << "," << enemyzAxis[2] << "\n";
 
                     short count_astr = getShort(&data);
 
                     asteroids_deleted.clear();
-                    asteroids_deleted.reserve(count_astr);
+                    //asteroids_deleted.reserve(count_astr);
                     for(int i {0}; i < count_astr; i++){
                         asteroids_deleted.push_back(getInt(&data));
                     }
@@ -137,7 +142,7 @@ namespace asteroids {
                     int count_bullet = getInt(&data);
 
                     bullet_deleted.clear();
-                    bullet_deleted.reserve(count_bullet);
+                    //bullet_deleted.reserve(count_bullet);
                     for(int i {0}; i < count_bullet; i++){
                         bullet_deleted.push_back(getInt(&data));
                     }
