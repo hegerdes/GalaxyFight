@@ -120,11 +120,15 @@ void Server::readyRead()
                 //Interprete the packet-type:
                 char* data = (char*) answer.data();
                 PacketType pt = (PacketType) getChar(&data);
+                std::cout << pt << std::endl;
+
                 if(pt == PacketType::update_3D_C){
                     client_data client_data_temp;
                     client_data_temp.position[0] = getFloat(&data);
                     client_data_temp.position[1] = getFloat(&data);
                     client_data_temp.position[2] = getFloat(&data);
+
+                    std::cout << client_data_temp.position << std::endl;
 
                     client_data_temp.xAxis[0] = getFloat(&data);
                     client_data_temp.xAxis[1] = getFloat(&data);
@@ -199,13 +203,13 @@ void Server::readyRead()
 
 float Server::getFloat(char** ptr){
     float f = **ptr;
-    ptr += 4;
+    *ptr += 4;
     return f;
 }
 
 short Server::getShort(char** ptr){
     short f = **ptr;
-    ptr += 2;
+    *ptr += 2;
     return f;
 }
 
@@ -217,7 +221,7 @@ char Server::getChar(char** ptr){
 
 int Server::getInt(char** ptr){
     int f = **ptr;
-    ptr += 4;
+    *ptr += 4;
     return f;
 }
 
