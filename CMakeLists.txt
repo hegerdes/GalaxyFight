@@ -140,6 +140,8 @@ set(ASTEROID_SOURCES
     rendering/Skybox.cpp
     rendering/SpaceCraft.cpp
     rendering/Asteroid.cpp
+    rendering/2D/CreateMap.cpp
+    rendering/2D/Planet.cpp
     util/AsteroidField.cpp
     util/ColorMap.cpp
     util/Util.cpp
