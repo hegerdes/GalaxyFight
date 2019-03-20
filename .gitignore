@@ -15,4 +15,8 @@
 *test*.cpp
 
 #Individual Files
+*.user
+*.sh
+*.pro.*
+*.save
 
