@@ -98,5 +98,6 @@ void MainWindow::keyReleaseEvent(QKeyEvent* event)
 void MainWindow::setupConnections()
 {
   connect(m_startscreen, &StartScreen::closeProgramm , this, &MainWindow::closeWindow);
+  connect(m_startscreen, &StartScreen::goToLoading, this, &MainWindow::gotoLoadingScreen);
 }
 } // namespace asteroids

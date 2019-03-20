@@ -31,10 +31,10 @@
   <widget class="QPushButton" name="pushButton">
    <property name="geometry">
     <rect>
-     <x>860</x>
-     <y>180</y>
-     <width>201</width>
-     <height>61</height>
+     <x>790</x>
+     <y>240</y>
+     <width>351</width>
+     <height>131</height>
     </rect>
    </property>
    <property name="sizePolicy">
@@ -43,12 +43,15 @@
      <verstretch>0</verstretch>
     </sizepolicy>
    </property>
+   <property name="cursor">
+    <cursorShape>ArrowCursor</cursorShape>
+   </property>
    <property name="layoutDirection">
     <enum>Qt::LeftToRight</enum>
    </property>
    <property name="styleSheet">
-    <string notr="true">background-color: blue;
-font: oblique 11pt &quot;Waree&quot;;
+    <string notr="true">background-color: rgb(114, 159, 207);
+font: oblique 30pt &quot;Waree&quot;;
 </string>
    </property>
    <property name="text">
@@ -58,15 +61,15 @@ font: oblique 11pt &quot;Waree&quot;;
   <widget class="QPushButton" name="pushButton_2">
    <property name="geometry">
     <rect>
-     <x>860</x>
-     <y>270</y>
-     <width>201</width>
-     <height>61</height>
+     <x>790</x>
+     <y>380</y>
+     <width>351</width>
+     <height>131</height>
     </rect>
    </property>
    <property name="styleSheet">
-    <string notr="true">background-color: blue;
-font: oblique 11pt &quot;Waree&quot;;</string>
+    <string notr="true">background-color: rgb(114, 159, 207);
+font: oblique 30pt &quot;Waree&quot;;</string>
    </property>
    <property name="text">
     <string>Spiel erstellen</string>
@@ -75,15 +78,15 @@ font: oblique 11pt &quot;Waree&quot;;</string>
   <widget class="QPushButton" name="pushButton_3">
    <property name="geometry">
     <rect>
-     <x>860</x>
-     <y>500</y>
-     <width>201</width>
-     <height>61</height>
+     <x>790</x>
+     <y>680</y>
+     <width>351</width>
+     <height>121</height>
     </rect>
    </property>
    <property name="styleSheet">
-    <string notr="true">background-color: red;
-font: oblique 11pt &quot;Waree&quot;;</string>
+    <string notr="true">background-color: rgb(239, 41, 41);
+font: oblique 30pt &quot;Waree&quot;;</string>
    </property>
    <property name="text">
     <string>Beenden</string>
@@ -92,15 +95,15 @@ font: oblique 11pt &quot;Waree&quot;;</string>
   <widget class="QLabel" name="label">
    <property name="geometry">
     <rect>
-     <x>690</x>
+     <x>550</x>
      <y>60</y>
-     <width>551</width>
-     <height>61</height>
+     <width>771</width>
+     <height>171</height>
     </rect>
    </property>
    <property name="styleSheet">
     <string notr="true">color: white;
-font: 57 italic 60pt &quot;URW Chancery L&quot;;</string>
+font: 57 italic 100pt &quot;URW Chancery L&quot;;</string>
    </property>
    <property name="text">
     <string>Untitled  1</string>
@@ -116,9 +119,9 @@ font: 57 italic 60pt &quot;URW Chancery L&quot;;</string>
    <property name="geometry">
     <rect>
      <x>0</x>
-     <y>-20</y>
-     <width>2191</width>
-     <height>1241</height>
+     <y>0</y>
+     <width>1920</width>
+     <height>1080</height>
     </rect>
    </property>
    <property name="text">

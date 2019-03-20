@@ -26,3 +26,8 @@ void asteroids::StartScreen::on_pushButton_3_clicked()
     emit closeProgramm();
 }
 
+
+void asteroids::StartScreen::on_pushButton_clicked()
+{
+    emit goToLoading();
+}
