@@ -1,12 +1,15 @@
 #include "client.h"
 
 namespace asteroids {
-    Client::Client(QHostAddress addr, quint16 port)
+    Client::Client()
+    {}
+
+    Client::connect(QHostAddress addr, quint16 port)
     {
         socket.connectToHost(addr, port);
+        std::cout << "Client hostname: " << addr.toString().toStdString() << std::endl;
         std::cerr << socket.waitForConnected() << ": socket.waitForConnected\n";
     }
-
 
     QByteArray IntToArray(qint32 source) //Use qint32 to ensure that the number have 4 bytes
     {
