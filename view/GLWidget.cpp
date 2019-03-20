@@ -123,6 +123,9 @@ void GLWidget::initializeGL()
         PhysicalObject::Ptr p = std::static_pointer_cast<PhysicalObject>(*it);
         m_physicsEngine->addDestroyable(p);
     }
+
+    //Fügt das Raumschiff der Engine hinzu, damit es richtig explodieren kann
+    m_physicsEngine->addSpaceCraft(m_actor);
 }
 
 void GLWidget::paintGL()
@@ -178,6 +181,9 @@ void GLWidget::step(map<Qt::Key, bool>& keyStates)
     if (keyStates[Qt::Key_D])
     {
         m_actor->move(Transformable::STRAFE_RIGHT, m_moveSpeed);
+    }
+    if(keyStates[Qt::Key_X]){
+        m_actor->destroySpaceCraft();
     }
 
     // Add a bullet to physics engine
