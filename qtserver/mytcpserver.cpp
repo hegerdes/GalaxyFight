@@ -25,6 +25,15 @@ void Server::newConnection()
         QTcpSocket *socket = server->nextPendingConnection();
         connect(socket, SIGNAL(readyRead()), this, SLOT(readyRead()));
         connect(socket, SIGNAL(disconnected()), this, SLOT(disconnected()));
+
+        if(socket_1 == nullptr){
+            socket_1 = socket;
+        }else if(socket_2 == nullptr){
+            socket_2 = socket;
+        }else{
+            socket->abort();
+        }
+
         //connect(this, SIGNAL(dataReceived(QByteArray)),
                 //this, SLOT(writeData(QByteArray)));
 
@@ -32,7 +41,7 @@ void Server::newConnection()
         qint32 *s = new qint32(0);
         buffers.insert(socket, buffer);
         sizes.insert(socket, s);
-        std::cout << "success\n";
+        std::cout << "successful connect\n";
     }
 }
 
@@ -41,62 +50,36 @@ void Server::disconnected()
     QTcpSocket *socket = static_cast<QTcpSocket*>(sender());
     QByteArray *buffer = buffers.value(socket);
     qint32 *s = sizes.value(socket);
-        std::cout << "disconnet success\n";
+    if(socket_1 == socket){
+        socket_1 = nullptr;
+    }else if(socket_2 == socket){
+        socket_2 = nullptr;
+    }else{
+        //ERROR
+    }
+
+    std::cout << "disconnect success\n";
     socket->deleteLater();
     delete buffer;
     delete s;
-    // @ahaker versuchen, dass bei reconnects weniger müllt mitgesendet wird
-    // socket, count zurücksetzten
-    count = 0;
     socket->flush();
 }
 
 bool Server::writeData(QByteArray)
 {
     QTcpSocket *socket = static_cast<QTcpSocket*>(sender());
-    //std::cout << "write data\n";
     QByteArray message;
-    //message.append(std::to_string(count).c_str());
 
-    /*
-     * if(200 <= count)
-    {
-        count = 200;
-        factor = -1;
-    } else if ( -1 >= count) {
-        count = 0;
-        factor = 1;
+    if(socket_1 == socket) {
+        message.append((char*)&position_temp_2[0],(4*12));
+    } else if(socket_2 == socket) {
+        message.append((char*)&position_temp[0],(4*12));
+    } else {
+        //ERROR
     }
-    count += factor;
-    */
-
-    /*
-    float position_temp [19] = {count,count,count,
-
-
-                                (count/100)-1,(count/100)-1,(count/100)-1,(count/100)-1,
-                                (count/100)-1,(count/100)-1,(count/100)-1,(count/100)-1,
-                                (count/100)-1,(count/100)-1,(count/100)-1,(count/100)-1,
-                                0,0,0,1
-                               };
-                               */
-    //float position_temp [3] = {50,60,70};
-    message.append((char*)&position_temp[0],(4*12));
-    //message.append(std::to_string(0).c_str());
-    //message.append(std::to_string(0).c_str());
-    //message.append(" server");
-
-    std::cout << "Send:";
-    float* temp = (float*) message.data();
-    for(int i {0}; i < 12; i++){
-        std::cout << temp[i] << ", ";
-    }
-    std::cout << std::endl;
-
 
     if(socket->state() == QAbstractSocket::ConnectedState)
     {
-        //socket->write(IntToArray(message.size())); //write size of data
         socket->write(message); //write the data itself
         return socket->waitForBytesWritten();
     }
@@ -136,26 +119,20 @@ void Server::readyRead()
                 //Interprete the packet-type:
                 //PacketType type = data[0];
 
-                std::cout << "Received:";
+                //get packet and
                 float* temp = (float*) data.data();
 
-                bool otherThanZero = false;
-                for(int i {0}; i < 12 && !otherThanZero; i++){
-                    if(temp[i] != 0) otherThanZero = true;
-                }
-
-                if(otherThanZero){
-
-                    for(int i {0}; i < 12; i++){
+                for(int i {0}; i < 12; i++){
+                    if(socket_1 == socket){
                         position_temp[i] = temp[i];
-                        std::cout << position_temp[i] << ", ";
+                    }else if(socket_2 == socket){
+                        position_temp_2[i] = temp[i];
+                    }else{
+                        //ERROR
                     }
-                    std::cout << std::endl;
                 }
 
-                //std::cout << data.toStdString() << "\n";
-                std::cerr << this->writeData(data) << ": writeData\n";
-                //emit dataReceived(data);
+                this->writeData(data);
             }
         }
     }
