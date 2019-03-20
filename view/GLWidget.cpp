@@ -115,6 +115,10 @@ void GLWidget::initializeGL()
     // Setup physics
     m_physicsEngine = make_shared<PhysicsEngine>();
 
+    m_playerHPBar = make_shared<HealthBar>(HealthBar::PLAYER_1, width(), height());
+
+    m_enemyHPBar = make_shared<HealthBar>(HealthBar::PLAYER_2, width(), height());
+
     // Add asteroids to physics engine
     std::list<Asteroid::Ptr> asteroids;
     m_asteroidField->getAsteroids(asteroids);
@@ -139,6 +143,10 @@ void GLWidget::paintGL()
     m_physicsEngine->render();
 
     m_actor->render();
+
+    m_playerHPBar->render();
+
+    m_enemyHPBar->render();
 }
 
 void GLWidget::step(map<Qt::Key, bool>& keyStates)

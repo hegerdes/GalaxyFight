@@ -17,6 +17,7 @@
 #include <GL/glew.h>
 #include <QOpenGLWidget>
 
+#include "rendering/HealthBar.hpp"
 #include "view/Camera.hpp"
 #include "rendering/SpaceCraft.hpp"
 #include "rendering/Skybox.hpp"
@@ -64,6 +65,14 @@ private:
 
     /// The virtual camera
     Camera						m_camera;
+
+    /// Health Bar for player 1
+
+    HealthBar::Ptr              m_playerHPBar;
+
+    /// Health Bar for player 2
+    
+    HealthBar::Ptr              m_enemyHPBar;
 
     /// A pointer to the Actor
     SpaceCraft::Ptr  	        m_actor;

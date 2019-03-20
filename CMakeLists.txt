@@ -33,7 +33,7 @@ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/")
 # special optimization flags
 ###############################################################################
 
-set( CMAKE_CXX_FLAGS         "-O3 -Wall" )
+set( CMAKE_CXX_FLAGS         "-O3 -Wall -std=c++17" )
 set( CMAKE_CXX_FLAGS_RELEASE "-O3 -msse3 -Wno-deprecated-declarations -Wno-unused -Wcpp" )
 set( CMAKE_CXX_FLAGS_DEBUG   "-g -Wall" )
 
@@ -140,6 +140,7 @@ set(ASTEROID_SOURCES
     rendering/Skybox.cpp
     rendering/SpaceCraft.cpp
     rendering/Asteroid.cpp
+    rendering/HealthBar.cpp
     util/AsteroidField.cpp 
     util/ColorMap.cpp   
     util/Util.cpp
