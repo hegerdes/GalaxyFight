@@ -9,8 +9,8 @@
 GLWidget::GLWidget(QWidget* parent)
     : QOpenGLWidget(parent),
       m_camera(Vector3f(0.0f, 0.0f, -700.0f), 0.05f, 5.0f),
-      m_rotationSpeed(0.02),
-      m_moveSpeed(1.0),
+      m_rotationSpeed(0.025),
+      m_moveSpeed(5.0),
       m_lastBullet(0),
       m_schussFrequenz(500)
 {
@@ -153,18 +153,15 @@ void GLWidget::paintGL()
 
     m_actor->render();
 
-<<<<<<< HEAD
     m_enemyPlayer->render();
 
     //Debug/Testline
     m_enemyPlayer->setPosition(Vector<float>(10,100,10));
-=======
     m_playerHPBar->render();
 
     m_enemyHPBar->render();
 
     m_crossHair->render();
->>>>>>> origin/HUDTest
 }
 
 void GLWidget::step(map<Qt::Key, bool>& keyStates)
@@ -175,7 +172,7 @@ void GLWidget::step(map<Qt::Key, bool>& keyStates)
     if(m_actor->spaceCraftStatus() == 0){
         if (keyStates[Qt::Key_Up])
         {
-        m_actor->rotate(Transformable::PITCH_RIGHT, m_rotationSpeed);
+            m_actor->rotate(Transformable::PITCH_RIGHT, m_rotationSpeed);
         }
         if (keyStates[Qt::Key_Down])
         {
@@ -206,14 +203,21 @@ void GLWidget::step(map<Qt::Key, bool>& keyStates)
         {
             m_actor->move(Transformable::STRAFE_RIGHT, m_moveSpeed);
         }
+
+        if(keyStates[Qt::Key_E])
+        {
+           m_actor->rotate(Transformable::YAW_LEFT, m_rotationSpeed);
+        }
+        if(keyStates[Qt::Key_Q])
+        {
+           m_actor->rotate(Transformable::YAW_RIGHT, m_rotationSpeed);
+        }
+
         if(keyStates[Qt::Key_X]){
             //Debug/Tesline für Explosion eigenes Raumschiff
             m_actor->destroySpaceCraft();
         }
-        if(keyStates[Qt::Key_Y]){
-            //Debug/Tesline für Explosion eigenes Raumschiff
-            m_enemyPlayer->destroySpaceCraft();
-        }
+        
         // Add a bullet to physics engine
         if(keyStates[Qt::Key_Space])
         {
@@ -251,6 +255,10 @@ void GLWidget::step(map<Qt::Key, bool>& keyStates)
             
         }
     }
+    if(keyStates[Qt::Key_Y]){
+            //Debug/Tesline für Explosion eigenes Raumschiff
+            m_enemyPlayer->destroySpaceCraft();
+        }
     // Trigger update, i.e., redraw via paintGL()
     this->update();
 }
