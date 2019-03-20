@@ -18,7 +18,7 @@ int main(int argc, char** argv)
     QApplication a(argc, argv);
 
     asteroids::MainWindow mainWindow;
-    mainWindow.show();
+    mainWindow.showFullScreen();
 
     return a.exec();
 }
