@@ -103,7 +103,7 @@ font: oblique 11pt &quot;Waree&quot;;</string>
 font: 57 italic 60pt &quot;URW Chancery L&quot;;</string>
    </property>
    <property name="text">
-    <string>Untitled_1</string>
+    <string>Untitled  1</string>
    </property>
    <property name="textFormat">
     <enum>Qt::AutoText</enum>
