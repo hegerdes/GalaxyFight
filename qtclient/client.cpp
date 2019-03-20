@@ -4,7 +4,7 @@ namespace asteroids {
     Client::Client(QHostAddress addr, quint16 port)
     {
         socket.connectToHost(addr, port);
-        std::cerr << global_socket.waitForConnected() << ": global_socket.waitForConnected\n";
+        std::cerr << socket.waitForConnected() << ": socket.waitForConnected\n";
     }
 
 
@@ -35,25 +35,25 @@ namespace asteroids {
     }
 
     void Client::writeData(QByteArray const &data){
-        if(global_socket.state() == QAbstractSocket::ConnectedState)
+        if(socket.state() == QAbstractSocket::ConnectedState)
         {
             // wenn socket verbunden -> sende deine eigenen daten
             std::cout << "write data\n";
 
-            global_socket.write(IntToArray(data.size())); //write size of data
-            global_socket.write(data);
+            socket.write(IntToArray(data.size())); //write size of data
+            socket.write(data);
         }
 
     }
 
     void Client::readData(){
         // @ahaker
-        if(global_socket.state() == QAbstractSocket::ConnectedState)
+        if(socket.state() == QAbstractSocket::ConnectedState)
         {
             // empfange die positionen des anderen
-            QByteArray answer = global_socket.readAll();
+            QByteArray answer = socket.readAll();
             if(answer.length() > 0){
-                std::cerr << global_socket.waitForBytesWritten() << "; waitForBytesWritten\n";
+                std::cerr << socket.waitForBytesWritten() << "; waitForBytesWritten\n";
 
                 char* data = (char*) answer.data();
 
