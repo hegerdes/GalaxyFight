@@ -2,8 +2,6 @@
 #define __HEALTHBAR__
 
 #include "Renderable.hpp"
-#include <string>
-using std::string;
 
 #include "io/TextureFactory.hpp"
 

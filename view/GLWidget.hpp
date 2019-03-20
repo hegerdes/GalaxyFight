@@ -18,6 +18,7 @@
 #include <QOpenGLWidget>
 
 #include "rendering/HealthBar.hpp"
+#include "rendering/Crosshair.hpp"
 #include "view/Camera.hpp"
 #include "rendering/SpaceCraft.hpp"
 #include "rendering/Skybox.hpp"
@@ -73,6 +74,10 @@ private:
     /// Health Bar for player 2
     
     HealthBar::Ptr              m_enemyHPBar;
+
+    ///Crosshair for aiming
+
+    Crosshair::Ptr              m_crossHair;
 
     /// A pointer to the Actor
     SpaceCraft::Ptr  	        m_actor;

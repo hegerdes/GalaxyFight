@@ -30,6 +30,7 @@ void HealthBar::render()
             glVertex3f(0.0f, m_height * 9/10, 0.0f);
         } else
         {
+            glColor3f(1.0f, 0.5f, 0.5f);
             glVertex3f(m_width, m_height * 9/10, 0.0f);
             glVertex3f(m_width, m_height, 0.0f);
             glVertex3f(m_width-m_width/2.2, m_height, 0.0f);

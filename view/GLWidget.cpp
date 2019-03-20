@@ -119,6 +119,8 @@ void GLWidget::initializeGL()
 
     m_enemyHPBar = make_shared<HealthBar>(HealthBar::PLAYER_2, width(), height());
 
+    m_crossHair = make_shared<Crosshair>(0.0f, 100.0f/255.0f, 0.0f, width(), height());
+
     // Add asteroids to physics engine
     std::list<Asteroid::Ptr> asteroids;
     m_asteroidField->getAsteroids(asteroids);
@@ -147,6 +149,8 @@ void GLWidget::paintGL()
     m_playerHPBar->render();
 
     m_enemyHPBar->render();
+
+    m_crossHair->render();
 }
 
 void GLWidget::step(map<Qt::Key, bool>& keyStates)
