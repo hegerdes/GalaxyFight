@@ -58,7 +58,7 @@ protected:
 private:
 
     /// gl widget
-//    GLWidget*       m_widget;
+    GLWidget*       m_3DScene;
 
     /// StartScreen widget
     StartScreen* m_startscreen;

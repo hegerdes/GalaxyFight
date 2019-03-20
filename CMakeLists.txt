@@ -33,7 +33,7 @@ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/")
 # special optimization flags
 ###############################################################################
 
-set( CMAKE_CXX_FLAGS         "-O3 -Wall -std=c++11" )
+set( CMAKE_CXX_FLAGS         "-O3 -Wall -std=c++17" )
 set( CMAKE_CXX_FLAGS_RELEASE "-O3 -msse3 -Wno-deprecated-declarations -Wno-unused -Wcpp" )
 set( CMAKE_CXX_FLAGS_DEBUG   "-g -Wall" )
 
@@ -154,7 +154,6 @@ set(ASTEROID_MOCS
 )
 
 set(ASTEROID_UIS
-    view/MainWindow.ui
     view/startscreen.ui
 )
 

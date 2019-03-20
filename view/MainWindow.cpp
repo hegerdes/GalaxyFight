@@ -27,15 +27,17 @@ MainWindow::MainWindow(const std::string& file, QWidget* parent) :
 {
     // Setup user interface
     m_startscreen = new StartScreen(this);
+    m_3DScene = new GLWidget;
 
+    //create and config layout
     auto mainLayout = new QStackedLayout;
 
     mainLayout->addWidget(m_startscreen);
+    mainLayout->addWidget(m_3DScene);
 
     setLayout(mainLayout);
 
-    // Set level
-//    m_widget->setLevelFile(file);
+
 
     // Create a timer object to trigger the main loop
     connect(m_timer.get(), SIGNAL(timeout()), this, SLOT(handleInput()));

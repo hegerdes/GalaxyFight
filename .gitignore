@@ -17,3 +17,4 @@
 #Individual Files
 CMakeLists.txt.user
 run_build.sh
+compile_commands.json
