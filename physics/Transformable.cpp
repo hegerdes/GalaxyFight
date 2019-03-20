@@ -42,7 +42,13 @@ Transformable::Transformable()
 
 void Transformable::move()
 {
+    
+
     m_position = m_position + m_direction * m_speed;
+
+    
+
+   
 }
 
 void Transformable::move(MoveTransform axis)
@@ -131,7 +137,28 @@ void Transformable::move(MoveTransform axis, float speed)
     }
 
     // Update mesh position
+    
+
+    Vector3f oldPosition = m_position;
+    bool invalidPosition = false;
+    
     m_position = m_position + direction * speed;
+
+    for(int i = 0; i < 3; i++){
+        //std::cout << invalidPosition << " : invalid Position"<< std::endl;
+        if(m_position[i] > 2048){
+            invalidPosition = true;
+            
+        }
+
+        if(m_position[i] < -2048){
+            invalidPosition = true;
+        }
+    }
+
+    if(invalidPosition){
+        m_position = oldPosition;
+    }
 }
 
 void Transformable::computeMatrix()
