@@ -40,7 +40,7 @@ namespace asteroids{
             void sendUpdate_3D_C(Vector<float> pos, Vector<float> xAxis, Vector<float> yAxis, Vector<float> zAxis, Bullet_shot shot, Living living, int bullet_id);
             void readData();
 
-            connect(QHostAddress addr, quint16 port);
+            void connect(QString addr, quint16 port);
     private:
             void writeData(QByteArray const & data);
 

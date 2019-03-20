@@ -4,10 +4,11 @@ namespace asteroids {
     Client::Client()
     {}
 
-    Client::connect(QHostAddress addr, quint16 port)
+    void Client::connect(QString addr, quint16 port)
     {
+        //socket.connectToHost(addr, port);
         socket.connectToHost(addr, port);
-        std::cout << "Client hostname: " << addr.toString().toStdString() << std::endl;
+        //std::cout << "Client hostname: " << addr.toString().toStdString() << std::endl;
         std::cerr << socket.waitForConnected() << ": socket.waitForConnected\n";
     }
 
