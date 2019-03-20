@@ -15,6 +15,12 @@ public:
     explicit StartScreen(QWidget *parent = nullptr);
     ~StartScreen();
 
+signals:
+    void closeProgramm();
+
+private slots:
+    void on_pushButton_3_clicked();
+
 private:
     Ui::StartScreen *ui;
 };
