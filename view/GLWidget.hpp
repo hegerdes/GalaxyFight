@@ -88,9 +88,6 @@ private:
 
     /// Last set mouse position
     QPoint                      m_mousePos;
-
-    // @ahaker
-    QTcpSocket socket;
 };
 
 #endif

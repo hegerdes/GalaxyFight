@@ -11,6 +11,6 @@ enum Living{
 
 enum Hit{
     hit, no_hit
-}
+};
 
 #endif // FLAGS_H

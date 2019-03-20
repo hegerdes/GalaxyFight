@@ -39,7 +39,7 @@ namespace asteroids{
             //start_2D
 
         private:
-            void sendUpdate_3D_C(Vector<float> pos, Vector<float> xAxis, Vector<float> yAxis, Vector<float> zAxis, Bullet_shot shot, Living living);
+            void sendUpdate_3D_C(Vector<float> pos, Vector<float> xAxis, Vector<float> yAxis, Vector<float> zAxis, Bullet_shot shot, Living living, int bullet_id);
             void writeData(QByteArray const & data);
             void readData();
 
