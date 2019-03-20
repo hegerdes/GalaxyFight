@@ -140,6 +140,8 @@ set(ASTEROID_SOURCES
     rendering/Skybox.cpp
     rendering/SpaceCraft.cpp
     rendering/Asteroid.cpp
+    rendering/HealthBar.cpp
+    rendering/Crosshair.cpp
     util/AsteroidField.cpp 
     util/ColorMap.cpp   
     util/Util.cpp
