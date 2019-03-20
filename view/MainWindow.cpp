@@ -34,10 +34,7 @@ MainWindow::MainWindow(const std::string& file, QWidget* parent) :
     m_screenStack->addWidget(m_startscreen);
     m_screenStack->addWidget(m_3DScene);
 
-    m_screenStack->setCurrentIndex(1);
-
     setLayout(m_screenStack);
-
 
     // Create a timer object to trigger the main loop
     connect(m_timer.get(), SIGNAL(timeout()), this, SLOT(handleInput()));
