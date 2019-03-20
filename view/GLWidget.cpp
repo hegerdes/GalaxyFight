@@ -197,9 +197,13 @@ void GLWidget::step(map<Qt::Key, bool>& keyStates)
                                  Bullet_shot::shot, Living::alive, 0);
     client_local.readData();
     m_enemyPlayer->m_position = client_local.enemyPos;
-    m_enemyPlayer->m_xAxis = client_local.enemyxAxis;
-    m_enemyPlayer->m_yAxis = client_local.enemyyAxis;
-    m_enemyPlayer->m_zAxis = client_local.enemyzAxis;
+    cout << m_enemyPlayer->m_position << "\n";
+    //m_enemyPlayer->m_xAxis = client_local.enemyxAxis;
+    //cout << m_enemyPlayer->m_xAxis << "\n";
+    //m_enemyPlayer->m_yAxis = client_local.enemyyAxis;
+    //cout << m_enemyPlayer->m_yAxis << "\n";
+    //m_enemyPlayer->m_zAxis = client_local.enemyzAxis;
+    //cout << m_enemyPlayer->m_zAxis << "\n";
 
     this->update();
 }

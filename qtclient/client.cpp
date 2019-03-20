@@ -153,13 +153,13 @@ namespace asteroids {
 
     float Client::getFloat(char** ptr){
         float f = **ptr;
-        ptr += 4;
+        *ptr += 4;
         return f;
     }
 
     short Client::getShort(char** ptr){
         short f = **ptr;
-        ptr += 2;
+        *ptr += 2;
         return f;
     }
 
@@ -171,7 +171,7 @@ namespace asteroids {
 
     int Client::getInt(char** ptr){
         int f = **ptr;
-        ptr += 4;
+        *ptr += 4;
         return f;
     }
 }
