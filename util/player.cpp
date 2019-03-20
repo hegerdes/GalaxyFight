@@ -1,0 +1,158 @@
+#include "player.h"
+
+#define START_RECOURCE 1000
+#define START_RECOURCE_PER_TIME 100
+#define RECOURCE_PER_MINE 100
+#define COST_PER_ATTACKSPACECRAFT 1000
+#define COST_PER_TRANSPORTSPACECRAFT 1000
+#define COST_PER_MINE 1000
+#define COST_PER_SHIPYARD 100
+#define START_ATTACKSPACECRAFT_NUMBER 1
+#define START_TRANSPORTSPACECRAFT_NUMBER 1
+
+player::player(QObject *parent, int base) : QObject(parent)
+{
+   //start resourcen festlegen
+   current_resource = START_RECOURCE;
+   resource_per_time = START_RECOURCE_PER_TIME;
+   attackSpaceCraft_number = START_ATTACKSPACECRAFT_NUMBER;
+   transportSpaceCraft_number = START_TRANSPORTSPACECRAFT_NUMBER;
+   for (int i = 1; i <= attackSpaceCraft_number;i++) {
+       attackspacecraft *start_attackSpaceCraft = new attackspacecraft(i,base);
+       attackSpaceCraftslist.push_back(start_attackSpaceCraft);
+   }
+   for (int i = 1; i <= transportSpaceCraft_number;i++) {
+       transportspacecraft *start_transportSpaceCraft = new transportspacecraft(i,base);
+       transportSpaceCraftslist.push_back(start_transportSpaceCraft);
+   }
+}
+//aufruf wenn neue miene gebaut wird
+void player::increase_resource_per_time(){
+    resource_per_time += RECOURCE_PER_MINE;
+}
+//aufruf wenn planet und darauf enthaltene mienen verloren gehen
+void player::decrease_resource_per_time(int mine_number){
+    for (int i = 0; i < mine_number;i++) {
+        resource_per_time -= RECOURCE_PER_MINE;
+    }
+}
+// werft bauen
+void player::build_shipyard(){
+    if(current_resource >= COST_PER_SHIPYARD){
+        current_resource -= COST_PER_SHIPYARD;
+    }else {
+        //nicht genug resourcen vorhanden
+        emit no_resources();
+    }
+}
+//miene bauen
+void player::build_mine(){
+    if(current_resource >= COST_PER_MINE){
+        current_resource -= COST_PER_MINE;
+    }else {
+        //nicht genug resourcen vorhanden
+        emit no_resources();
+    }
+}
+//aufruf wenn ein attackspacecraft gebaut wird
+void player::new_attackSpaceCraft(int start_position){
+    if(current_resource >= COST_PER_ATTACKSPACECRAFT){
+    current_resource -= COST_PER_ATTACKSPACECRAFT;
+    attackSpaceCraft_number += 1;
+    attackspacecraft *attackSpaceCraft = new attackspacecraft(attackSpaceCraft_number,start_position);
+    attackSpaceCraftslist.push_back(attackSpaceCraft);
+    }else {
+        //nicht genug resourcen vorhanden
+        emit no_resources();
+    }
+
+}
+// aufruf wenn ein Kampf verloren wurde
+void player::destroy_attackSpaceCraft(int number_id){
+    for (auto i = attackSpaceCraftslist.begin(); i != attackSpaceCraftslist.end(); i++) {
+        if ((*i)->id == number_id){
+            i = attackSpaceCraftslist.erase(i);
+            attackSpaceCraft_number -= 1;
+        }
+
+    }
+
+
+}
+//aufruf wenn ein transportspacecraft gebaut wird
+void player::new_transportSpaceCraft(int start_position){
+    if(current_resource >= COST_PER_TRANSPORTSPACECRAFT){
+        current_resource -= COST_PER_TRANSPORTSPACECRAFT;
+        transportSpaceCraft_number += 1;
+        transportspacecraft* transportSpaceCraft = new transportspacecraft(transportSpaceCraft_number, start_position);
+        transportSpaceCraftslist.push_back(transportSpaceCraft);
+    }else {
+        //nicht genug resourcen vorhanden
+        emit no_resources();
+    }
+}
+//aufruf wenn ein attackspacecraft zu einem anderen planeten fliegen soll
+void player::change_attackSpaceCraft_position(std::list<int> route, int attackSpaceCraft_id){
+    for (auto i = attackSpaceCraftslist.begin(); i != attackSpaceCraftslist.end(); i++) {
+        if ((*i)->id == attackSpaceCraft_id){
+            (*i)->routeToNewPosition = route;
+            (*i)->route_iterator = (*i)->routeToNewPosition.begin();
+            (*i)->change_position = true;
+        }
+
+    }
+}
+//aufruf wenn einem transportspacecraft einem neuen planeten zugeordnet wird
+void player::change_transportSpaceCraft_route(std::list<int> new_route, int transportSpaceCraft_id){
+    for (auto i = transportSpaceCraftslist.begin(); i != transportSpaceCraftslist.end(); i++) {
+        if ((*i)->id == transportSpaceCraft_id){
+            (*i)->current_route = new_route;
+            (*i)->route_iterator = (*i)->current_route.begin();
+        }
+
+    }
+}
+//aufruf wenn eine neue runde gestartet wird
+void player::new_round(){
+    current_resource += resource_per_time;
+
+    for (auto i = attackSpaceCraftslist.begin();i != attackSpaceCraftslist.end(); i++) {
+        if((*i)->change_position == true){
+            if((*i)->route_iterator == (*i)->routeToNewPosition.end()){
+                (*i)->position = *((*i)->route_iterator++);
+                (*i)->next_position = *((*i)->route_iterator);
+            }else {
+                (*i)->position = (*i)->next_position;
+                (*i)->change_position = false;
+            }
+        }
+    }
+    for(auto i = transportSpaceCraftslist.begin(); i != transportSpaceCraftslist.end(); i ++){
+        if((*i)->to_base == true){
+            if((*i)->route_iterator == (*i)->current_route.end()){
+                (*i)->to_base = false;
+                (*i)->to_mine = true;
+                (*i)->position = *((*i)->route_iterator--);
+                (*i)->next_position = *((*i)->route_iterator);
+            }else {
+                (*i)->position = *((*i)->route_iterator++);
+                (*i)->next_position = *((*i)->route_iterator);
+            }
+        }
+        if((*i)->to_mine == true){
+            if((*i)->route_iterator == (*i)->current_route.begin()){
+                (*i)->to_base = true;
+                (*i)->to_mine = false;
+                (*i)->position = *((*i)->route_iterator++);
+                (*i)->next_position = *((*i)->route_iterator);
+
+            }else {
+                (*i)->position = *((*i)->route_iterator--);
+                (*i)->next_position = *((*i)->route_iterator);
+            }
+        }
+    }
+    if(attackSpaceCraft_number == 0){
+        emit gameover();
+    }
+}
