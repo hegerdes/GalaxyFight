@@ -12,6 +12,8 @@
 #include "view/MainWindow.hpp"
 #include "global_socket.h"
 
+QTcpSocket global_socket;
+
 int main(int argc, char** argv)
 {
     if (argc < 2)

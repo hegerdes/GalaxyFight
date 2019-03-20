@@ -3,7 +3,6 @@
 
 #include <QtNetwork>
 
-extern int jojo;
-extern QTcpSocket socket;
+extern QTcpSocket global_socket;
 
 #endif // GLOBAL_SOCKET_H

@@ -2,7 +2,7 @@
 #include "../io/LevelParser.hpp"
 #include "io/TextureFactory.hpp"
 #include <QMouseEvent>
-//#include "global_socket.h"
+#include "global_socket.h"
 
 #include <SDL2/SDL.h>
 
@@ -126,8 +126,8 @@ void GLWidget::initializeGL()
 
     // @ahaker
     //socket.connectToHost(QHostAddress::LocalHost, 38291);
-    socket.connectToHost("lennartkaiser.de", 38291);
-    std::cerr << socket.waitForConnected() << ": socket.waitForConnected\n";
+    global_socket.connectToHost("lennartkaiser.de", 38291);
+    std::cerr << global_socket.waitForConnected() << ": global_socket.waitForConnected\n";
 
 }
 
@@ -135,7 +135,7 @@ void GLWidget::paintGL()
 {
     // Clear bg color and enable depth test (z-Buffer)
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
+    m_camera.follow(m_actor);
     m_camera.apply();
 
     // Render stuff
@@ -166,21 +166,11 @@ void GLWidget::step(map<Qt::Key, bool>& keyStates)
 
     if (keyStates[Qt::Key_Up])
     {
-        // Quaternion nq;
-        // float s = m_enemyPlayer->getSpeed();
-        // Vector3f xAxis = m_enemyPlayer->getXAxis();
-        // Vector3f yAxis = m_enemyPlayer->getYAxis();
-        // Vector3f zAxis = m_enemyPlayer->getZAxis();
-        // nq.fromAxis(xAxis, s);
-        // yAxis = nq * yAxis;
-        // zAxis = nq * zAxis;
-
-        m_actor->rotate(Transformable::YAW_LEFT, m_rotationSpeed);
-        // m_enemyPlayer->setTransformationMatrix(xAxis,yAxis,zAxis,m_enemyPlayer->getPosition());
+        m_actor->rotate(Transformable::PITCH_RIGHT, m_rotationSpeed);
     }
     if (keyStates[Qt::Key_Down])
     {
-        m_actor->rotate(Transformable::YAW_RIGHT, m_rotationSpeed);
+        m_actor->rotate(Transformable::PITCH_LEFT, m_rotationSpeed);
     }
        if (keyStates[Qt::Key_Left])
     {
@@ -217,64 +207,30 @@ void GLWidget::step(map<Qt::Key, bool>& keyStates)
 
     // Trigger update, i.e., redraw via paintGL()
     // @ahaker
-    auto start = chrono::high_resolution_clock::now();
-    if(socket.state() == QAbstractSocket::ConnectedState)
+    if(global_socket.state() == QAbstractSocket::ConnectedState)
     {
         // wenn socket verbunden -> sende deine eigenen daten
         std::cout << "write data\n";
         QByteArray data;
 
-        /*
-            char * position_chars = (char*)&m_actor->m_position;
-            char * xaxis_temp = (char*)&m_actor->m_xAxis;
-            char * yaxis_temp = (char*)&m_actor->m_yAxis;
-            char * zaxis_temp = (char*)&m_actor->m_zAxis;
-            data.append(position_chars, 3*4);
-            data.append(xaxis_temp, 3*4);
-            data.append(yaxis_temp, 3*4);
-            data.append(zaxis_temp, 3*4);
-        */
+        char * position_chars = (char*)&m_actor->m_position;
+        char * xaxis_temp = (char*)&m_actor->m_xAxis;
+        char * yaxis_temp = (char*)&m_actor->m_yAxis;
+        char * zaxis_temp = (char*)&m_actor->m_zAxis;
+        data.append(position_chars, 3*4);
+        data.append(xaxis_temp, 3*4);
+        data.append(yaxis_temp, 3*4);
+        data.append(zaxis_temp, 3*4);
 
-            /*
-        float float_temp [12] = {0};
-        char * float_char = (char*)float_temp;
-        data.append(float_char, 12*4);
-        */
-        /*
-            float * flt_prt = (float*)data.data();
-            cout << "Data: ";
-            for(size_t count{0}; count < 19; count++)
-            {
-                cout << flt_prt[count] << ",";
-            }
-            cout << "\n";
-        */
+        global_socket.write(IntToArray(data.size())); //write size of data
+        global_socket.write(data);
 
-        //data.append((char*)(&position),(sizeof(position[0]*3)));
-        socket.write(IntToArray(data.size())); //write size of data
-        socket.write(data);
         // empfange die positionen des anderen
-
-        //#########computeMatrix ist nocht auskommentiert
-        QByteArray answer = socket.readAll();
+        QByteArray answer = global_socket.readAll();
         if( 12*4 == answer.length()){
-            std::cerr << socket.waitForBytesWritten() << "; waitForBytesWritten\n";
+            std::cerr << global_socket.waitForBytesWritten() << "; waitForBytesWritten\n";
             float* position_temp = (float*) answer.data();
             asteroids::Vector<float,3> position = m_actor->getPosition();
-            // checke ob die empfangene positionen zu weit von den vorheriegen
-            // positionen abweichen, wenn ja nutze die alte
-            /*
-            for(int count {0}; count < 3; count++)
-                {
-                   if(((position[count]-position_temp[count]) < -5.0f) |
-                      ((position[count]-position_temp[count]) > 5.0f))
-                   {
-                       position_temp[count] = position[count];
-                       std::cout << "---------------------------------\n";
-                   }
-                }
-            */
-            /*
             m_enemyPlayer->setPosition({position_temp[0], position_temp[1], position_temp[2]});
 
             m_enemyPlayer->m_xAxis[0] = position_temp[3];
@@ -288,33 +244,9 @@ void GLWidget::step(map<Qt::Key, bool>& keyStates)
             m_enemyPlayer->m_zAxis[0] = position_temp[9];
             m_enemyPlayer->m_zAxis[1] = position_temp[10];
             m_enemyPlayer->m_zAxis[2] = position_temp[11];
-            */
-
-            /*
-                asteroids::Matrix m_neu;
-                cout << "Received: ";
-                for(int count{0}; count < 16+3; count++){
-                    cout << position_temp[count] << ",";
-                }
-                cout << "\n";
-
-                for(int count{3}; count < 16+3; count++){
-                    m_neu[count-3] = position_temp[count];
-                }
-                m_enemyPlayer->m_transformation = m_neu;
-                cout << "m_transformation: ";
-                std::cout<<position_temp[0]<<","<<position_temp[1]<<","<<position_temp[2]<<"; ";
-                //m_enemyPlayer->m_xAxis[0] = m_enemyPlayer->m_transformation[0];
-                for(int count{0}; count < 16; count++){
-                    cout << m_enemyPlayer->m_transformation[count] << "," ;
-                }
-                cout << "\n";
-            */
 
         }
     }
-    cout << chrono::duration<double, milli>
-                    (chrono::high_resolution_clock::now()-start).count() << "; round time\n";
     this->update();
 }
 
@@ -328,25 +260,25 @@ void GLWidget::mouseMoveEvent(QMouseEvent* event)
 
     // Handle motion for pressed L button while R is not
     // pressed
-    if (l_pressed & !r_pressed)
-    {
-        if (delta.x() > -3)
-        {
-            m_camera.turn(Camera::RIGHT);
-        }
-        if (delta.x() < 3)
-        {
-            m_camera.turn(Camera::LEFT);
-        }
-        if (delta.y() > 3)
-        {
-            m_camera.turn(Camera::UP);
-        }
-        if (delta.y() < -3)
-        {
-            m_camera.turn(Camera::DOWN);
-        }
-    }
+    // if (l_pressed & !r_pressed)
+    // {
+    //     if (delta.x() > -3)
+    //     {
+    //         m_camera.turn(Camera::RIGHT);
+    //     }
+    //     if (delta.x() < 3)
+    //     {
+    //         m_camera.turn(Camera::LEFT);
+    //     }
+    //     if (delta.y() > 3)
+    //     {
+    //         m_camera.turn(Camera::UP);
+    //     }
+    //     if (delta.y() < -3)
+    //     {
+    //         m_camera.turn(Camera::DOWN);
+    //     }
+    // }
 
     // Handle motion for pressed R button while L is not
     // pressed
