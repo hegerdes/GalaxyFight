@@ -136,16 +136,17 @@ void Transformable::move(MoveTransform axis, float speed)
         break;
     }
 
-    // Update mesh position
-    
 
+    
+    //Skybox Limiter Anfang
+    //Sorgt dafür, dass ein Objekt die Skybox nicht verlassen kann
     Vector3f oldPosition = m_position;
     bool invalidPosition = false;
-    
+
+    // Update mesh position
     m_position = m_position + direction * speed;
 
     for(int i = 0; i < 3; i++){
-        //std::cout << invalidPosition << " : invalid Position"<< std::endl;
         if(m_position[i] > 2048){
             invalidPosition = true;
             
@@ -155,10 +156,11 @@ void Transformable::move(MoveTransform axis, float speed)
             invalidPosition = true;
         }
     }
-
+    //Würde die Position durch unsere Bewegungs ungültig werden, nehmen wir die vorherige
     if(invalidPosition){
         m_position = oldPosition;
     }
+    //Skybox Limiter Ende
 }
 
 void Transformable::computeMatrix()
