@@ -151,21 +151,8 @@ void GLWidget::step(map<Qt::Key, bool>& keyStates)
 
     if (keyStates[Qt::Key_Up])
     {
-<<<<<<< HEAD
-        // Quaternion nq;
-        // float s = m_enemyPlayer->getSpeed();
-        // Vector3f xAxis = m_enemyPlayer->getXAxis();
-        // Vector3f yAxis = m_enemyPlayer->getYAxis();
-        // Vector3f zAxis = m_enemyPlayer->getZAxis();
-        // nq.fromAxis(xAxis, s);
-        // yAxis = nq * yAxis;
-        // zAxis = nq * zAxis;
 
-        m_actor->rotate(Transformable::YAW_LEFT, m_rotationSpeed);
-        // m_enemyPlayer->setTransformationMatrix(xAxis,yAxis,zAxis,m_enemyPlayer->getPosition());
-=======
         m_actor->rotate(Transformable::PITCH_RIGHT, m_rotationSpeed);
->>>>>>> origin/Kamera3DKeineExtraDateien
     }
     if (keyStates[Qt::Key_Down])
     {
