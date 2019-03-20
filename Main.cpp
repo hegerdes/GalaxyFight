@@ -9,19 +9,15 @@
  *  No unauthorized distribution.
  */
 
+#include <QSettings>
 #include "view/MainWindow.hpp"
+
 
 int main(int argc, char** argv)
 {
-    if (argc < 2)
-    {
-        cerr << "Usage: asteroids <level-file>" << endl;
-        return 1;
-    }
-
     QApplication a(argc, argv);
 
-    asteroids::MainWindow mainWindow(argv[1]);
+    asteroids::MainWindow mainWindow;
     mainWindow.show();
 
     return a.exec();

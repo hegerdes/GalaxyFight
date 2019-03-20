@@ -20,7 +20,7 @@
 namespace asteroids
 {
 
-MainWindow::MainWindow(const std::string& file, QWidget* parent) :
+MainWindow::MainWindow(QWidget* parent) :
     QMainWindow(parent),
     m_timer(new QTimer())
 {
@@ -56,6 +56,11 @@ void MainWindow::gotoStartScreen()
 void MainWindow::goto3DScene()
 {
     m_screenStack->setCurrentWidget(m_3DScene);
+}
+
+void MainWindow::closeWindow()
+{
+    this->close();
 }
 
 void MainWindow::keyPressEvent(QKeyEvent* event)

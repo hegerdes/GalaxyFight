@@ -40,10 +40,8 @@ public:
 
     /**
      * @brief Construct a new Main Window object
-     *
-     * @param plyname  A .ply file to render
      */
-    MainWindow(const std::string& plyname, QWidget* parent = nullptr);
+    MainWindow(QWidget* parent = nullptr);
 
 public slots:
     /// Handle input
@@ -61,6 +59,11 @@ public slots:
      * TODO: add parameter for Scene init which are required to start a 3D fight
      */
     void goto3DScene();
+
+    /**
+     * @brief closeWindow closes the MainWindow
+     */
+    void closeWindow();
 
 protected:
 
