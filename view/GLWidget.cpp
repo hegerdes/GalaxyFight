@@ -123,12 +123,6 @@ void GLWidget::initializeGL()
         PhysicalObject::Ptr p = std::static_pointer_cast<PhysicalObject>(*it);
         m_physicsEngine->addDestroyable(p);
     }
-
-    // @ahaker
-    //socket.connectToHost(QHostAddress::LocalHost, 38291);
-    global_socket.connectToHost("lennartkaiser.de", 38291);
-    std::cerr << global_socket.waitForConnected() << ": global_socket.waitForConnected\n";
-
 }
 
 void GLWidget::paintGL()
@@ -148,15 +142,6 @@ void GLWidget::paintGL()
 
     m_enemyPlayer->render();
     m_enemyPlayer->setPosition(Vector<float>(10,100,10));
-}
-
-QByteArray IntToArray(qint32 source) //Use qint32 to ensure that the number have 4 bytes
-{
-    //Avoid use of cast, this is the Qt way to serialize objects
-    QByteArray temp;
-    QDataStream data(&temp, QIODevice::ReadWrite);
-    data << source;
-    return temp;
 }
 
 void GLWidget::step(map<Qt::Key, bool>& keyStates)
@@ -206,47 +191,6 @@ void GLWidget::step(map<Qt::Key, bool>& keyStates)
     }
 
     // Trigger update, i.e., redraw via paintGL()
-    // @ahaker
-    if(global_socket.state() == QAbstractSocket::ConnectedState)
-    {
-        // wenn socket verbunden -> sende deine eigenen daten
-        std::cout << "write data\n";
-        QByteArray data;
-
-        char * position_chars = (char*)&m_actor->m_position;
-        char * xaxis_temp = (char*)&m_actor->m_xAxis;
-        char * yaxis_temp = (char*)&m_actor->m_yAxis;
-        char * zaxis_temp = (char*)&m_actor->m_zAxis;
-        data.append(position_chars, 3*4);
-        data.append(xaxis_temp, 3*4);
-        data.append(yaxis_temp, 3*4);
-        data.append(zaxis_temp, 3*4);
-
-        global_socket.write(IntToArray(data.size())); //write size of data
-        global_socket.write(data);
-
-        // empfange die positionen des anderen
-        QByteArray answer = global_socket.readAll();
-        if( 12*4 == answer.length()){
-            std::cerr << global_socket.waitForBytesWritten() << "; waitForBytesWritten\n";
-            float* position_temp = (float*) answer.data();
-            asteroids::Vector<float,3> position = m_actor->getPosition();
-            m_enemyPlayer->setPosition({position_temp[0], position_temp[1], position_temp[2]});
-
-            m_enemyPlayer->m_xAxis[0] = position_temp[3];
-            m_enemyPlayer->m_xAxis[1] = position_temp[4];
-            m_enemyPlayer->m_xAxis[2] = position_temp[5];
-
-            m_enemyPlayer->m_yAxis[0] = position_temp[6];
-            m_enemyPlayer->m_yAxis[1] = position_temp[7];
-            m_enemyPlayer->m_yAxis[2] = position_temp[8];
-
-            m_enemyPlayer->m_zAxis[0] = position_temp[9];
-            m_enemyPlayer->m_zAxis[1] = position_temp[10];
-            m_enemyPlayer->m_zAxis[2] = position_temp[11];
-
-        }
-    }
     this->update();
 }
 

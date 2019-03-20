@@ -147,7 +147,8 @@ set(ASTEROID_SOURCES
     util/Util.cpp
     view/GLWidget.cpp
     view/MainWindow.cpp 
-    view/Camera.cpp  
+    view/Camera.cpp
+    qtclient/client.cpp
 )
 set(ASTEROID_MOCS
     view/MainWindow.hpp

@@ -22,8 +22,6 @@
 #include "rendering/Skybox.hpp"
 #include "util/AsteroidField.hpp"
 #include "physics/PhysicsEngine.hpp"
-#include <QtCore>
-#include <QtNetwork>
 
 using namespace asteroids;
 using std::shared_ptr;

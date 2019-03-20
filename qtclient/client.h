@@ -1,0 +1,54 @@
+#ifndef CLIENT_H
+#define CLIENT_H
+
+#include <QtCore>
+#include <QtNetwork>
+#include "global_socket.h"
+#include <iostream>
+#include <view/math/Vector.hpp>
+#include <qtserver/packettypes.h>
+#include <qtserver/flags.h>
+#include <vector>
+
+namespace asteroids{
+    class Client
+    {
+        public:
+            Client(QHostAddress addr, quint16 port);
+
+            //init_3D
+            Vector<float> ownPos;
+            Vector<float> ownxAxis;
+            Vector<float> ownyAxis;
+            Vector<float> ownzAxis;
+
+            //update_3D_S / init_3D
+            Vector<float> enemyPos;
+            Vector<float> enemyxAxis;
+            Vector<float> enemyyAxis;
+            Vector<float> enemyzAxis;
+            Bullet_shot enemy_shot;
+            int enemy_shot_id;
+
+            std::vector<int> asteroids_deleted;
+            std::vector<int> bullet_deleted;
+            Hit own_hit;
+
+            //end_3D
+            char winner_no;
+            //start_2D
+
+        private:
+            void sendUpdate_3D_C(Vector<float> pos, Vector<float> xAxis, Vector<float> yAxis, Vector<float> zAxis, Bullet_shot shot, Living living);
+            void writeData(QByteArray const & data);
+            void readData();
+
+            QTcpSocket socket;
+            float getFloat(char **ptr);
+            int getInt(char **ptr);
+            char getChar(char **ptr);
+            short getShort(char **ptr);
+    };
+}
+
+#endif // CLIENT_H
