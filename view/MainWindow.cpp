@@ -37,8 +37,10 @@ MainWindow::MainWindow(const std::string& file, QWidget* parent) :
     setLayout(m_screenStack);
 
     // Create a timer object to trigger the main loop
-    connect(m_timer.get(), SIGNAL(timeout()), this, SLOT(handleInput()));
+    connect(m_timer.get(), &QTimer::timeout, this, &MainWindow::handleInput);
     m_timer->start(1000 / 60.0);
+
+    setupConnections();
 }
 
 void MainWindow::handleInput()
@@ -70,5 +72,10 @@ void MainWindow::keyReleaseEvent(QKeyEvent* event)
 {
     // Save which key was released
     m_keyStates[(Qt::Key)event->key()] = false;
+}
+
+void MainWindow::setupConnections()
+{
+
 }
 } // namespace asteroids

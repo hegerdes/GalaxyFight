@@ -72,6 +72,12 @@ protected:
 
 private:
 
+    /**
+     * @brief setupConnections setups all connections and it is called at the end of the constructor,
+     * thus all member objects have to be init
+     */
+    void setupConnections();
+
     /// gl widget
     GLWidget*       m_3DScene;
 
