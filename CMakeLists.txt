@@ -145,6 +145,7 @@ set(ASTEROID_SOURCES
     util/AsteroidField.cpp
     util/ColorMap.cpp
     util/Util.cpp
+    util/player.cpp
     view/GLWidget.cpp
     view/MainWindow.cpp
     view/Camera.cpp
@@ -152,6 +153,7 @@ set(ASTEROID_SOURCES
     view/scene2d.cpp
     view/loadingscreen.cpp
     view/infobar.cpp
+    view/2DScene/scene2dhandler.cpp
 )
 set(ASTEROID_MOCS
     view/MainWindow.hpp
