@@ -12,7 +12,7 @@ GLWidget::GLWidget(QWidget* parent)
       m_rotationSpeed(0.02),
       m_moveSpeed(1.0),
       m_lastBullet(0),
-      m_schussFrequenz(100)
+      m_schussFrequenz(500)
 {
 
 }
@@ -155,63 +155,62 @@ void GLWidget::step(map<Qt::Key, bool>& keyStates)
     // Get keyboard states and handle model movement
     m_physicsEngine->process();
 
-    if (keyStates[Qt::Key_Up])
-    {
+    if(m_actor->spaceCraftStatus() == 0){
+        if (keyStates[Qt::Key_Up])
+        {
 
-        m_actor->rotate(Transformable::PITCH_RIGHT, m_rotationSpeed);
-    }
-    if (keyStates[Qt::Key_Down])
-    {
-        m_actor->rotate(Transformable::PITCH_LEFT, m_rotationSpeed);
-    }
-       if (keyStates[Qt::Key_Left])
-    {
-        m_actor->rotate(Transformable::ROLL_LEFT, m_rotationSpeed);
-    }
-    if (keyStates[Qt::Key_Right])
-    {
-        m_actor->rotate(Transformable::ROLL_RIGHT, m_rotationSpeed);
-    }
-   
-    if (keyStates[Qt::Key_W])
-    {
-        m_actor->move(Transformable::FORWARD, m_moveSpeed);
-    }
-    if (keyStates[Qt::Key_S])
-    {
-        m_actor->move(Transformable::BACKWARD, m_moveSpeed);
-    }
-    if (keyStates[Qt::Key_A])
-    {
-        m_actor->move(Transformable::STRAFE_LEFT, m_moveSpeed);
-    }
-    if (keyStates[Qt::Key_D])
-    {
-        m_actor->move(Transformable::STRAFE_RIGHT, m_moveSpeed);
-    }
-    if(keyStates[Qt::Key_X]){
-        m_actor->destroySpaceCraft();
-    }
-
-    // Add a bullet to physics engine
-    if(keyStates[Qt::Key_Space])
-    {
-        
-        auto now = std::chrono::system_clock::now();
-        auto now_ms = std::chrono::time_point_cast<std::chrono::milliseconds>(now);
-        auto value = now_ms.time_since_epoch();
-        long bulletShot = value.count();
-        ///Ermittelt, wann die letzte Kugel abgeschoßen wurde und erlaubt erst nach
-        if(bulletShot - m_lastBullet > m_schussFrequenz){
-            Bullet::Ptr bullet = make_shared<Bullet>(Bullet(m_actor->getPosition(), m_actor->getDirection()));
-            m_physicsEngine->addBullet(bullet);
-            m_lastBullet = bulletShot;
+            m_actor->rotate(Transformable::PITCH_RIGHT, m_rotationSpeed);
         }
-        
-      
-        std::cout << m_lastBullet << std::endl;
-    }
+        if (keyStates[Qt::Key_Down])
+        {
+            m_actor->rotate(Transformable::PITCH_LEFT, m_rotationSpeed);
+        }
+        if (keyStates[Qt::Key_Left])
+        {
+            m_actor->rotate(Transformable::ROLL_LEFT, m_rotationSpeed);
+        }
+        if (keyStates[Qt::Key_Right])
+        {
+            m_actor->rotate(Transformable::ROLL_RIGHT, m_rotationSpeed);
+        }
+    
+        if (keyStates[Qt::Key_W])
+        {
+            m_actor->move(Transformable::FORWARD, m_moveSpeed);
+        }
+        if (keyStates[Qt::Key_S])
+        {
+            m_actor->move(Transformable::BACKWARD, m_moveSpeed);
+        }
+        if (keyStates[Qt::Key_A])
+        {
+            m_actor->move(Transformable::STRAFE_LEFT, m_moveSpeed);
+        }
+        if (keyStates[Qt::Key_D])
+        {
+            m_actor->move(Transformable::STRAFE_RIGHT, m_moveSpeed);
+        }
+        if(keyStates[Qt::Key_X]){
+            m_actor->destroySpaceCraft();
+        }
 
+        // Add a bullet to physics engine
+        if(keyStates[Qt::Key_Space])
+        {
+            
+            auto now = std::chrono::system_clock::now();
+            auto now_ms = std::chrono::time_point_cast<std::chrono::milliseconds>(now);
+            auto value = now_ms.time_since_epoch();
+            long bulletShot = value.count();
+            ///Ermittelt, wann die letzte Kugel abgeschoßen wurde und erlaubt erst nach
+            if(bulletShot - m_lastBullet > m_schussFrequenz){
+                Bullet::Ptr bullet = make_shared<Bullet>(Bullet(m_actor->getPosition(), m_actor->getDirection()));
+                m_physicsEngine->addBullet(bullet);
+                m_lastBullet = bulletShot;
+            }
+            
+        }
+    }
     // Trigger update, i.e., redraw via paintGL()
     this->update();
 }
