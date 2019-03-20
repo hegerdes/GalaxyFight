@@ -16,7 +16,7 @@
 namespace asteroids
 {
 
-Planet::Planet(std::string name, Vector3f pos):m_planet_name(name), m_planet_pos(pos)
+Planet::Planet(std::string name, Vector3f pos): m_planet_name(name), m_planet_pos(pos)
 {
     init();
 }

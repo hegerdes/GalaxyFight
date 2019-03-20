@@ -53,6 +53,25 @@ class Planet
      */
     int updatePlanet(PlanetChanges updates);
 
+    inline std::string getname(){return m_planet_name;}
+
+    inline int getID(){return id;}
+
+    inline int getOre(){return m_num_of_ore;}
+    
+    inline int getFactorys(){return m_num_factory;}
+
+    inline int getFighte(){return m_num_fighters;}
+
+    inline int getTransporter(){return m_num_transporter;}
+
+    inline int getMine(){return m_num_mine;}
+
+    inline Owner getOwner(){return m_owned;}
+
+    inline Vector3f& getPos(){return m_planet_pos;}
+        
+
   private:
 
     //ID of the planet
@@ -62,7 +81,7 @@ class Planet
     std::string m_planet_name;
 
     //Number of ore on planet
-    unsigned int m_num_of_ore;
+    int m_num_of_ore;
 
     //Position in 3D space
     Vector3f m_planet_pos;

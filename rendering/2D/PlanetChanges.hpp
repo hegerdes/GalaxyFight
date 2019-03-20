@@ -23,6 +23,8 @@ class PlanetChanges
 
   public:
 
+  enum Owner{UNASSIGN, PLAYER1, PLAYER2};
+
   inline int getID(){return m_id;}
 
   inline int getFactorys(){return m_num_factory;}
@@ -35,6 +37,8 @@ class PlanetChanges
 
   inline int getTransports(){return m_num_transporter;}
 
+  inline Owner geOwner(){return m_owned;}
+
   inline void setID(int id){m_id = id;}
 
   inline void setFactorys(int factorys){m_num_factory = factorys;}
@@ -46,7 +50,10 @@ class PlanetChanges
   inline void setFighter(int fighter){m_num_fighters = fighter;}
 
   inline void setTransports(int transporter){m_num_transporter = transporter;}
-    
+
+  inline void setOwner(Owner o){m_owned = o;}
+  
+
   private:
 
     //ID of the planet
@@ -68,7 +75,7 @@ class PlanetChanges
     int m_num_transporter;
 
     //Who owns the planet
-    //Planet::Owner m_owned;
+    Owner m_owned;
   
 };
 
