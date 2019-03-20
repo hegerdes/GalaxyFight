@@ -43,7 +43,17 @@ MainWindow::MainWindow(const std::string& file, QWidget* parent) :
 
 void MainWindow::handleInput()
 {
-//    m_widget->step(m_keyStates);
+    m_3DScene->step(m_keyStates);
+}
+
+void MainWindow::gotoStartScreen()
+{
+    m_screenStack->setCurrentWidget(m_startscreen);
+}
+
+void MainWindow::goto3DScene()
+{
+    m_screenStack->setCurrentWidget(m_3DScene);
 }
 
 void MainWindow::keyPressEvent(QKeyEvent* event)

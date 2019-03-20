@@ -43,11 +43,24 @@ public:
      *
      * @param plyname  A .ply file to render
      */
-    MainWindow(const std::string& plyname, QWidget* parent = NULL);
+    MainWindow(const std::string& plyname, QWidget* parent = nullptr);
 
-public Q_SLOTS:
+public slots:
     /// Handle input
     void handleInput();
+
+    ///Screen Navigation
+
+    /**
+     * @brief gotoStartScreen sets StartScreen as top screen
+     */
+    void gotoStartScreen();
+
+    /**
+     * @brief goto3DScene sets 3Dscene as top screen and starts loading process
+     * TODO: add parameter for Scene init which are required to start a 3D fight
+     */
+    void goto3DScene();
 
 protected:
 
