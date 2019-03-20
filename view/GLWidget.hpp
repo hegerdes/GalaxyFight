@@ -13,6 +13,8 @@
 #define __GLWIDGET_HPP__
 
 #include <string>
+#include <chrono>
+#include <ctime>
 
 #include <GL/glew.h>
 #include <QOpenGLWidget>
@@ -24,7 +26,10 @@
 #include "../physics/PhysicsEngine.hpp"
 
 using namespace asteroids;
+using namespace std::chrono;
 using std::shared_ptr;
+
+//typedef std::chrono::milliseconds ms;
 
 /**
  * @brief   implements the OpenGL View in a QT Widget
@@ -88,6 +93,12 @@ private:
 
     /// Last set mouse position
     QPoint                      m_mousePos;
+
+    /// Letzter Zeitpunkt zu dem eine Kugel abgefeurert wurde
+    long                m_lastBullet;
+
+    /// Gibt an nach wie vielen ms wieder geschoßen werden kann
+    long                m_schussFrequenz;
 };
 
 #endif

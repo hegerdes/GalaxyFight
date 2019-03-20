@@ -10,8 +10,11 @@ GLWidget::GLWidget(QWidget* parent)
     : QOpenGLWidget(parent),
       m_camera(Vector3f(0.0f, 0.0f, -700.0f), 0.05f, 5.0f),
       m_rotationSpeed(0.02),
-      m_moveSpeed(1.0)
+      m_moveSpeed(1.0),
+      m_lastBullet(0),
+      m_schussFrequenz(100)
 {
+
 }
 
 void GLWidget::setLevelFile(const std::string& file)
@@ -193,8 +196,20 @@ void GLWidget::step(map<Qt::Key, bool>& keyStates)
     // Add a bullet to physics engine
     if(keyStates[Qt::Key_Space])
     {
-        Bullet::Ptr bullet = make_shared<Bullet>(Bullet(m_actor->getPosition(), m_actor->getDirection()));
-        m_physicsEngine->addBullet(bullet);
+        
+        auto now = std::chrono::system_clock::now();
+        auto now_ms = std::chrono::time_point_cast<std::chrono::milliseconds>(now);
+        auto value = now_ms.time_since_epoch();
+        long bulletShot = value.count();
+        ///Ermittelt, wann die letzte Kugel abgeschoßen wurde und erlaubt erst nach
+        if(bulletShot - m_lastBullet > m_schussFrequenz){
+            Bullet::Ptr bullet = make_shared<Bullet>(Bullet(m_actor->getPosition(), m_actor->getDirection()));
+            m_physicsEngine->addBullet(bullet);
+            m_lastBullet = bulletShot;
+        }
+        
+      
+        std::cout << m_lastBullet << std::endl;
     }
 
     // Trigger update, i.e., redraw via paintGL()
