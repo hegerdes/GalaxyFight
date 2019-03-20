@@ -8,6 +8,7 @@
 #Build Folder
 **/Build/**
 **/build/**
+*.vscode/**
 
 
 #Test-Files
