@@ -147,14 +147,17 @@ set(ASTEROID_SOURCES
     view/MainWindow.cpp 
     view/Camera.cpp  
     view/startscreen.cpp
+    view/scene2d.cpp
 )
 set(ASTEROID_MOCS
     view/MainWindow.hpp
     view/startscreen.h
+    view/scene2d.h
 )
 
 set(ASTEROID_UIS
     view/startscreen.ui
+    view/scene2d.ui
 )
 
 set(CMAKE_AUTOUIC ON)
