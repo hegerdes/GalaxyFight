@@ -15,6 +15,16 @@ Server::Server(QObject *parent) : QObject(parent)
     std::cout << server->serverAddress().toString().toUtf8().constData() << "; serverAdress\n";
     std::cout << server->serverPort() << "; serverPort\n";
     //qDebug() << "Listening:" << server->listen(QHostAddress::LocalHost, 1024);
+    user_data_1.position = {-650,0,0};
+    user_data_1.xAxis[0] = -1;
+    user_data_1.yAxis[1] = -1;
+    user_data_1.zAxis[2] = 1;
+    user_data_1.shot = Bullet_shot::not_shot;
+    user_data_2.position = {-650,0,0};
+    user_data_2.xAxis[0] = -1;
+    user_data_2.yAxis[1] = -1;
+    user_data_2.zAxis[2] = 1;
+    user_data_1.shot = Bullet_shot::not_shot;
 }
 
 void Server::newConnection()
@@ -35,8 +45,8 @@ void Server::newConnection()
             socket->abort();
         }
 
-        //connect(this, SIGNAL(dataReceived(QByteArray)),
-                //this, SLOT(writeData(QByteArray)));
+        //connect(this, SIGNAL(dataReceived(QByteArray const &)),
+                //this, SLOT(writeData(QByteArray const &)));
 
         QByteArray *buffer = new QByteArray();
         qint32 *s = new qint32(0);
@@ -66,7 +76,7 @@ void Server::disconnected()
     socket->flush();
 }
 
-bool Server::writeData(QByteArray)
+bool Server::writeData(QByteArray const & data)
 {
     QTcpSocket *socket = static_cast<QTcpSocket*>(sender());
 
@@ -97,11 +107,12 @@ bool Server::writeData(QByteArray)
     response.append((char*)&client_data_temp.zAxis, 3*4);
     std::cout << client_data_temp.zAxis << std::endl;
 
-    response.append(char{0}, 2); // anzahl zerstörter asteroidend short eine shor null
+    response.append(2, char{}); // anzahl zerstörter asteroidend short eine shor null @ahaker reihenfolge der argumente falsch gewesen
     // Asteroiden ids wenn nötig > 0
     response.append(client_data_temp.shot);
     response.append((char*)&client_data_temp.bullet_id, 4);
-    response.append(char{0}, 4); // zerstörte bullets
+    response.append(Hit::hit); // @ahaker protokoll auf dem server und client einhalten
+    response.append(4, char{}); // zerstörte bullets @ahaker reihenfolge der argumente falsch gewesen
     // Bullet ids wenn nötig > 0
 
     if(socket->state() == QAbstractSocket::ConnectedState)
@@ -220,7 +231,7 @@ float Server::getFloat(char** ptr){
 
 short Server::getShort(char** ptr){
     short * jo = (short*)*ptr;
-    short f = **ptr;
+    short f = *jo;
     *ptr += 2;
     return f;
 }
@@ -233,7 +244,7 @@ char Server::getChar(char** ptr){
 
 int Server::getInt(char** ptr){
     int * jo = (int*)*ptr;
-    int f = **ptr;
+    int f = *jo;
     *ptr += 4;
     return f;
 }

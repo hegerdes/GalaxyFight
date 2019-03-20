@@ -25,7 +25,7 @@ public slots:
     void newConnection();
     void disconnected();
     void readyRead();
-    bool writeData(QByteArray);
+    bool writeData(QByteArray const &);
 
 public:
     QByteArray data;

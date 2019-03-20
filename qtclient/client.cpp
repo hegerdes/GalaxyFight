@@ -6,9 +6,8 @@ namespace asteroids {
 
     void Client::connect(QString addr, quint16 port)
     {
+        socket.connectToHost(QHostAddress::LocalHost, port);
         //socket.connectToHost(addr, port);
-        socket.connectToHost(addr, port);
-        //std::cout << "Client hostname: " << addr.toString().toStdString() << std::endl;
         std::cerr << socket.waitForConnected() << ": socket.waitForConnected\n";
     }
 
@@ -22,7 +21,6 @@ namespace asteroids {
     }
 
     void Client::sendUpdate_3D_C(Vector<float> pos, Vector<float> xAxis, Vector<float> yAxis, Vector<float> zAxis, Bullet_shot shot, Living living, int bullet_id){
-        //
         QByteArray data;
         data.append(PacketType::update_3D_C);
         data.append((char*)&pos, 3*4);
@@ -42,7 +40,7 @@ namespace asteroids {
         if(socket.state() == QAbstractSocket::ConnectedState)
         {
             // wenn socket verbunden -> sende deine eigenen daten
-            std::cout << "write data\n";
+            //std::cerr << "write data\n";
 
             socket.write(IntToArray(data.size())); //write size of data
             socket.write(data);
@@ -52,17 +50,18 @@ namespace asteroids {
 
     void Client::readData(){
         // @ahaker
-        std::cerr << "read data\n";
+        //std::cerr << "read data\n";
         if(socket.state() == QAbstractSocket::ConnectedState)
         {
             // empfange die positionen des anderen
             QByteArray answer = socket.readAll();
             if(answer.length() > 0){
-                std::cerr << socket.waitForBytesWritten() << "; waitForBytesWritten\n";
+                //std::cerr << socket.waitForBytesWritten() << "; waitForBytesWritten\n";
+                socket.waitForBytesWritten();
                 char* data = (char*) answer.data();
 
                 PacketType pt = (PacketType) getChar(&data);
-                std::cout << "pid: " << pt << ", length" << answer.length() << "\n";
+                //std::cerr << "pid: " << pt << ", length" << answer.length() << "\n";
                 if(pt == PacketType::init_3D){
                     //Own
 
@@ -105,30 +104,30 @@ namespace asteroids {
                     }
 
                 } else if(pt == PacketType::update_3D_S){
-                    std::cout << "packtetype_udpate_3d_s\n";
+                    //std::cerr << "packtetype_udpate_3d_s\n";
 
                     enemyPos[0] = getFloat(&data);
                     enemyPos[1] = getFloat(&data);
                     enemyPos[2] = getFloat(&data);
-                    std::cout <<"enemy_pos: " << enemyPos[0] << "," << enemyPos[1] << "," << enemyPos[2] << "\n";
+                    if(enemyPos[0] != -650 || enemyPos[1] || enemyPos[2] ) { std::cerr <<"enemy_pos: " << enemyPos[0] << "," << enemyPos[1] << "," << enemyPos[2] << "\n"; }
 
                     enemyxAxis[0] = getFloat(&data);
                     enemyxAxis[1] = getFloat(&data);
                     enemyxAxis[2] = getFloat(&data);
-                    std::cout << enemyxAxis[0] << "," << enemyxAxis[1] << "," << enemyxAxis[2] << "\n";
+                    if(enemyxAxis[0] != -1 || enemyxAxis[1] || enemyxAxis[2] ) { std::cerr << enemyxAxis[0] << "," << enemyxAxis[1] << "," << enemyxAxis[2] << "\n"; }
 
                     enemyyAxis[0] = getFloat(&data);
                     enemyyAxis[1] = getFloat(&data);
                     enemyyAxis[2] = getFloat(&data);
-                    std::cout << enemyyAxis[0] << "," << enemyyAxis[1] << "," << enemyyAxis[2] << "\n";
+                    if(enemyyAxis[0] || enemyyAxis[1] != -1 || enemyyAxis[2] ) { std::cerr << enemyyAxis[0] << "," << enemyyAxis[1] << "," << enemyyAxis[2] << "\n"; }
 
                     enemyzAxis[0] = getFloat(&data);
                     enemyzAxis[1] = getFloat(&data);
                     enemyzAxis[2] = getFloat(&data);
-                    std::cout << enemyzAxis[0] << "," << enemyzAxis[1] << "," << enemyzAxis[2] << "\n";
+                    if(enemyzAxis[0] || enemyzAxis[1] || enemyzAxis[2] != 1 ) { std::cerr << enemyzAxis[0] << "," << enemyzAxis[1] << "," << enemyzAxis[2] << "\n"; }
 
                     short count_astr = getShort(&data);
-
+                    if(count_astr) { std::cerr << "Asteroid count: " << count_astr << "\n"; }
                     asteroids_deleted.clear();
                     //asteroids_deleted.reserve(count_astr);
                     for(int i {0}; i < count_astr; i++){
@@ -136,15 +135,20 @@ namespace asteroids {
                     }
 
                     enemy_shot = (Bullet_shot) getChar(&data);
-                    enemy_shot_id = getInt(&data);
+                    if(enemy_shot) { std::cerr << "Enemy shot: " << enemy_shot << "\n"; }
 
-                    own_hit = (Hit) getChar(&data);
+                    enemy_shot_id = getInt(&data);
+                    if(enemy_shot_id) { std::cerr << "Enemy shot_id: " << enemy_shot_id << "\n"; }
+
+                    own_hit = (Hit) getChar(&data); // @ahaker protokoll auf dem server und einhalten
+                    if(own_hit) { std::cerr << "own_hit: " << own_hit << "\n"; }
 
                     int count_bullet = getInt(&data);
-
+                    if(count_bullet) { std::cerr << "Bullet count: " << count_bullet << "\n\n"; }
                     bullet_deleted.clear();
                     //bullet_deleted.reserve(count_bullet);
-                    for(int i {0}; i < count_bullet; i++){
+                    for(int i {0}; i < 0; i++){
+                    //for(int i {0}; i < count_bullet; i++){ @ahaker uncomment original line
                         bullet_deleted.push_back(getInt(&data));
                     }
                 } else if(pt == PacketType::end_3D){
@@ -166,7 +170,7 @@ namespace asteroids {
 
     short Client::getShort(char** ptr){
         short * jo = (short*)*ptr;
-        short f = **ptr;
+        short f = *jo;
         *ptr += 2;
         return f;
     }
@@ -179,7 +183,7 @@ namespace asteroids {
 
     int Client::getInt(char** ptr){
         int * jo = (int*)*ptr;
-        int f = **ptr;
+        int f = *jo;
         *ptr += 4;
         return f;
     }
