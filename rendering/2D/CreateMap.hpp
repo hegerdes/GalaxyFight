@@ -66,6 +66,16 @@ class CreateMap
     VecPtr getPlanets();
 
     /**
+     * @brief Get a list with Vector3f. This is the shortest path between planets
+     * 
+     * @param position  Current position
+     * @param start_planet Number of start planet
+     * @param end_planet  Number of end planet
+     * @return std::list<Vector3f> The path
+     */
+    std::list<Vector3f> getPath(Vector3f position, int start_planet, int end_planet);
+
+    /**
      * @brief Prints every planet with pos
      * 
      */
