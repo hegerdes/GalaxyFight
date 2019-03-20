@@ -72,6 +72,11 @@ public:
      */
     void process();
 
+    /**
+     * @brief Fügt das Spielerraumschiff hinzu welches explodieren soll.
+     */ 
+    void addSpaceCraft(SpaceCraft::Ptr spacecraft);
+
 private:
 
     /// List of destroyable objects
@@ -79,6 +84,9 @@ private:
 
     /// List of active bullets
     list<Bullet::Ptr>            m_bullets;
+
+    ///Raumschiff das explodieren soll
+    SpaceCraft::Ptr              m_spacecraft;
 
     ParticleEngine               m_particles;
 

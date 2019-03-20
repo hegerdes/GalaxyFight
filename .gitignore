@@ -1,4 +1,4 @@
-#Ignore all Files in heare
+#Ignore all Files in here
 
 #CPP - Files
 *.o
@@ -15,4 +15,6 @@
 *test*.cpp
 
 #Individual Files
+CMakeLists.txt.user
+run_build.sh
 

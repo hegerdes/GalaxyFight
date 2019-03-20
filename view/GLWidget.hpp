@@ -18,10 +18,10 @@
 #include <QOpenGLWidget>
 
 #include "view/Camera.hpp"
-#include "rendering/SpaceCraft.hpp"
+#include "../rendering/SpaceCraft.hpp"
 #include "rendering/Skybox.hpp"
 #include "util/AsteroidField.hpp"
-#include "physics/PhysicsEngine.hpp"
+#include "../physics/PhysicsEngine.hpp"
 
 using namespace asteroids;
 using std::shared_ptr;

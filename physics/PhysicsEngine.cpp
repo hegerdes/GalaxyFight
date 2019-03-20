@@ -80,7 +80,12 @@ void PhysicsEngine::process()
             b_it++;
         }
     }
-
+    //Gibt dem Raumschiff eine Explosion beim verschwinden
+    if(m_spacecraft->spaceCraftStatus() == 1)
+    {
+        m_particles.addEffect(ParticleEffect::createExplosionSphere(m_spacecraft->getPosition()));
+        m_spacecraft->endDestruction();
+    }
     m_particles.update();
 }
 
@@ -110,6 +115,10 @@ void PhysicsEngine::render()
     m_particles.render();
     //cout << m_bullets.size() << endl;
 
+}
+
+void PhysicsEngine::addSpaceCraft(SpaceCraft::Ptr spacecraft){
+    m_spacecraft = spacecraft;
 }
 
 } /* namespace asteroids */
