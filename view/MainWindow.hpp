@@ -22,6 +22,8 @@
 
 #include "GLWidget.hpp"
 #include "startscreen.h"
+#include "loadingscreen.h"
+#include "scene2d.h"
 
 
 namespace asteroids
@@ -61,6 +63,16 @@ public slots:
     void goto3DScene();
 
     /**
+     * @brief gotoScene2D sets Scene2D as top screen
+     */
+    void gotoScene2D();
+
+    /**
+     * @brief gotoLoadingScreen sets LoadingScreen as top screen
+     */
+    void gotoLoadingScreen();
+
+    /**
      * @brief closeWindow closes the MainWindow
      */
     void closeWindow();
@@ -89,6 +101,12 @@ private:
 
     /// StartScreen widget
     StartScreen* m_startscreen;
+
+    /// LoadingScreen widget
+    LoadingScreen* m_loadingscreen;
+
+    /// Scene2D widget
+    Scene2D* m_scene2d;
 
     /// map with the keys and their states
     map<Qt::Key, bool>          m_keyStates;

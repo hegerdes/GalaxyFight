@@ -27,11 +27,15 @@ MainWindow::MainWindow(QWidget* parent) :
     // Setup user interface
     m_startscreen = new StartScreen(this);
     m_3DScene = new GLWidget(this);
+    m_loadingscreen = new LoadingScreen(this);
+    m_scene2d = new Scene2D(this);
 
     //create and config layout
     m_screenStack = new QStackedLayout;
 
     m_screenStack->addWidget(m_startscreen);
+    m_screenStack->addWidget(m_loadingscreen);
+    m_screenStack->addWidget(m_scene2d);
     m_screenStack->addWidget(m_3DScene);
 
     setLayout(m_screenStack);
@@ -56,6 +60,16 @@ void MainWindow::gotoStartScreen()
 void MainWindow::goto3DScene()
 {
     m_screenStack->setCurrentWidget(m_3DScene);
+}
+
+void MainWindow::gotoScene2D()
+{
+    m_screenStack->setCurrentWidget(m_scene2d);
+}
+
+void MainWindow::gotoLoadingScreen()
+{
+    m_screenStack->setCurrentWidget(m_loadingscreen);
 }
 
 void MainWindow::closeWindow()
