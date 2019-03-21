@@ -278,14 +278,6 @@ void GLWidget::step(map<Qt::Key, bool>& keyStates)
             std::cout << i << ". Asteroid entpackt!";
         }
 
-        if(Bullet_shot::shot == client_global.enemy_shot)
-        {
-            Vector3f shipPosition = m_enemyPlayer->getPosition() + m_enemyPlayer->getZAxis() * -45 + m_enemyPlayer->getXAxis() * -175;
-            Bullet::Ptr bullet = make_shared<Bullet>(Bullet(shipPosition, m_enemyPlayer->m_xAxis*-1));
-            m_physicsEngine->addBullet(bullet);
-            client_global.enemy_shot = Bullet_shot::not_shot;
-        }
-
         client_global.init_received = false;
         std::cerr << "erhaletn----------------------------------------------\n";
     }
@@ -297,7 +289,8 @@ void GLWidget::step(map<Qt::Key, bool>& keyStates)
 
     if(client_global.enemy_shot == Bullet_shot::shot)
     {
-        Bullet::Ptr bullet = make_shared<Bullet>(Bullet(m_enemyPlayer->getPosition(), m_enemyPlayer->m_xAxis*-1));
+        Vector3f shipPosition = m_enemyPlayer->getPosition() + m_enemyPlayer->getZAxis() * -45 + m_enemyPlayer->getXAxis() * -175;
+        Bullet::Ptr bullet = make_shared<Bullet>(Bullet(shipPosition, m_enemyPlayer->m_xAxis*-1));
         m_physicsEngine->addBullet(bullet);
         client_global.enemy_shot = Bullet_shot::not_shot;
     }
