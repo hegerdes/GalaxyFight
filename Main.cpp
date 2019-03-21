@@ -12,7 +12,7 @@
 #include "view/MainWindow.hpp"
 #include "global_socket.h"
 
-QTcpSocket global_socket;
+Client client_global;
 
 int main(int argc, char** argv)
 {
@@ -23,6 +23,7 @@ int main(int argc, char** argv)
     }
 
     QApplication a(argc, argv);
+    client_global.connect("lennartkaiser.de", 38291);
 
     asteroids::MainWindow mainWindow(argv[1]);
     mainWindow.show();

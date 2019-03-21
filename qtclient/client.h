@@ -3,7 +3,6 @@
 
 #include <QtCore>
 #include <QtNetwork>
-#include "global_socket.h"
 #include <iostream>
 #include <view/math/Vector.hpp>
 #include <qtserver/packettypes.h>

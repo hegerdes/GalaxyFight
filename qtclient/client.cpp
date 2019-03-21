@@ -6,8 +6,8 @@ namespace asteroids {
 
     void Client::connect(QString addr, quint16 port)
     {
-        socket.connectToHost(QHostAddress::LocalHost, port);
-        //socket.connectToHost(addr, port);
+        //socket.connectToHost(QHostAddress::LocalHost, port);
+        socket.connectToHost(addr, port);
         std::cerr << socket.waitForConnected() << ": socket.waitForConnected\n";
     }
 
@@ -49,7 +49,6 @@ namespace asteroids {
     }
 
     void Client::readData(){
-        // @ahaker
         //std::cerr << "read data\n";
         if(socket.state() == QAbstractSocket::ConnectedState)
         {
@@ -140,15 +139,14 @@ namespace asteroids {
                     enemy_shot_id = getInt(&data);
                     if(enemy_shot_id) { std::cerr << "Enemy shot_id: " << enemy_shot_id << "\n"; }
 
-                    own_hit = (Hit) getChar(&data); // @ahaker protokoll auf dem server und einhalten
+                    own_hit = (Hit) getChar(&data);
                     if(own_hit) { std::cerr << "own_hit: " << own_hit << "\n"; }
 
                     int count_bullet = getInt(&data);
                     if(count_bullet) { std::cerr << "Bullet count: " << count_bullet << "\n\n"; }
                     bullet_deleted.clear();
                     //bullet_deleted.reserve(count_bullet);
-                    for(int i {0}; i < 0; i++){
-                    //for(int i {0}; i < count_bullet; i++){ @ahaker uncomment original line
+                    for(int i {0}; i < count_bullet; i++){
                         bullet_deleted.push_back(getInt(&data));
                     }
                 } else if(pt == PacketType::end_3D){

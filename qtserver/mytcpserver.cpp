@@ -107,12 +107,12 @@ bool Server::writeData(QByteArray const & data)
     response.append((char*)&client_data_temp.zAxis, 3*4);
     std::cout << client_data_temp.zAxis << std::endl;
 
-    response.append(2, char{}); // anzahl zerstörter asteroidend short eine shor null @ahaker reihenfolge der argumente falsch gewesen
+    response.append(2, char{}); // anzahl zerstörter asteroidend short eine shor null
     // Asteroiden ids wenn nötig > 0
     response.append(client_data_temp.shot);
     response.append((char*)&client_data_temp.bullet_id, 4);
-    response.append(Hit::hit); // @ahaker protokoll auf dem server und client einhalten
-    response.append(4, char{}); // zerstörte bullets @ahaker reihenfolge der argumente falsch gewesen
+    response.append(Hit::hit);
+    response.append(4, char{}); // zerstörte bullets
     // Bullet ids wenn nötig > 0
 
     if(socket->state() == QAbstractSocket::ConnectedState)

@@ -1,8 +1,8 @@
 #ifndef GLOBAL_SOCKET_H
 #define GLOBAL_SOCKET_H
 
-#include <QtNetwork>
+#include "qtclient/client.h"
 
-extern QTcpSocket global_socket;
+extern Client client_global;
 
 #endif // GLOBAL_SOCKET_H

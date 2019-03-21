@@ -22,7 +22,6 @@
 #include "rendering/Skybox.hpp"
 #include "util/AsteroidField.hpp"
 #include "physics/PhysicsEngine.hpp"
-#include "qtclient/client.h"
 
 using namespace asteroids;
 using std::shared_ptr;
@@ -89,7 +88,6 @@ private:
 
     /// Last set mouse position
     QPoint                      m_mousePos;
-    Client client_local;
 
 };
 
