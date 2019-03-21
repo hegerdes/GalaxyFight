@@ -252,6 +252,7 @@ void GLWidget::step(map<Qt::Key, bool>& keyStates)
                     m_physicsEngine->addBullet(bullet);
                     m_lastBullet = bulletShot;
                     bullet_shot = Bullet_shot::shot;
+                    std::cerr << "bullet_shot: " << __LINE__ << "\n";
                 }
                 
             }
