@@ -165,7 +165,7 @@ bool Server::writeData(QByteArray const & data)
             asteroids::Vector3f tmp = asteroids::Randomizer::instance()->getRandomVertex(1000);
             response.append((char*)&tmp, 12);
 
-            asteroids::Vector3f tmp = asteroids::Randomizer::instance()->getRandomVertex(1.0);
+            tmp = asteroids::Randomizer::instance()->getRandomVertex(1.0);
             response.append((char*)&tmp, 12);
 
             float size = asteroids::Randomizer::instance()->getRandomNumber(0, 100);

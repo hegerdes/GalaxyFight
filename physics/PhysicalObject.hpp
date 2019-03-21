@@ -86,6 +86,10 @@ public:
 
     virtual void render() override;
 
+    /**
+     * the radius
+     */
+    float m_radius;
 
 protected:
 
@@ -109,11 +113,6 @@ protected:
      * the accel
      */
     float m_accel;
-
-    /**
-     * the radius
-     */
-    float m_radius;
 
     /**
      * the angle

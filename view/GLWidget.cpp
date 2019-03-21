@@ -117,6 +117,8 @@ void GLWidget::initializeGL()
     m_physicsEngine = make_shared<PhysicsEngine>();
 
     // Add asteroids to physics engine
+
+    /* MANAGED IN init_3d
     std::list<Asteroid::Ptr> asteroids;
     m_asteroidField->getAsteroids(asteroids);
     for (auto it = asteroids.begin(); it != asteroids.end(); it++)
@@ -124,6 +126,7 @@ void GLWidget::initializeGL()
         PhysicalObject::Ptr p = std::static_pointer_cast<PhysicalObject>(*it);
         m_physicsEngine->addDestroyable(p);
     }
+    */
 }
 
 void GLWidget::paintGL()
@@ -205,6 +208,7 @@ void GLWidget::step(map<Qt::Key, bool>& keyStates)
         // asteroids hinzufügen
 
         int i = 0;
+        std::list<Asteroid::Ptr> asteroids;
         for (auto it = asteroids.begin(); it != asteroids.end(); it++)
         {
             if(i < client_global.count_astr)
