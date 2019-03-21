@@ -25,6 +25,8 @@ SpaceCraft::SpaceCraft(const std::string &filename, const Vector3f& position, fl
 {
     m_mesh = TriangleMeshFactory::instance().getMesh(filename);
     m_speed = movespeed;
+    m_maxSpeed = movespeed;
+    m_currentSpeed = 0;
     m_rotationSpeed = rotatespeed;
     if(m_mesh)
     {
@@ -47,6 +49,35 @@ void SpaceCraft::render()
 bool SpaceCraft::hasMesh() const
 {
     return m_mesh != nullptr;
+}
+
+void SpaceCraft::accelerate()
+{
+    m_currentSpeed += m_maxSpeed * 0.025;
+    if(m_currentSpeed >= m_maxSpeed)
+    {
+        m_currentSpeed = m_maxSpeed;
+    }
+}
+
+void SpaceCraft::deccelerate()
+{
+    m_currentSpeed -= m_maxSpeed * 0.025;
+    if(m_currentSpeed <= 0)
+    {
+        m_currentSpeed = 0;
+    }
+
+}
+
+float SpaceCraft::getCurrentSpeed()
+{
+    return m_currentSpeed;
+}
+
+float SpaceCraft::getMaxSpeed()
+{
+    return m_maxSpeed;
 }
 
 SpaceCraft::~SpaceCraft()

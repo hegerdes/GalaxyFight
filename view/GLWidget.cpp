@@ -10,7 +10,7 @@ GLWidget::GLWidget(QWidget* parent)
     : QOpenGLWidget(parent),
       m_camera(Vector3f(0.0f, 0.0f, -700.0f), 0.05f, 5.0f),
       m_rotationSpeed(0.02),
-      m_moveSpeed(1.0)
+      m_moveSpeed(5.0)
 {
 }
 
@@ -146,6 +146,8 @@ void GLWidget::step(map<Qt::Key, bool>& keyStates)
     // Get keyboard states and handle model movement
     m_physicsEngine->process();
 
+    m_actor->move(Transformable::FORWARD, m_actor->getCurrentSpeed());
+
     if (keyStates[Qt::Key_Up])
     {
         m_actor->rotate(Transformable::PITCH_RIGHT, m_rotationSpeed);
@@ -165,19 +167,19 @@ void GLWidget::step(map<Qt::Key, bool>& keyStates)
    
     if (keyStates[Qt::Key_W])
     {
-        m_actor->move(Transformable::FORWARD, m_moveSpeed);
+        m_actor->accelerate();
     }
     if (keyStates[Qt::Key_S])
     {
-        m_actor->move(Transformable::BACKWARD, m_moveSpeed);
+        m_actor->deccelerate();
     }
     if (keyStates[Qt::Key_A])
     {
-        m_actor->move(Transformable::STRAFE_LEFT, m_moveSpeed);
+        m_actor->rotate(Transformable::YAW_LEFT, m_rotationSpeed);
     }
     if (keyStates[Qt::Key_D])
     {
-        m_actor->move(Transformable::STRAFE_RIGHT, m_moveSpeed);
+        m_actor->rotate(Transformable::YAW_RIGHT, m_rotationSpeed);
     }
 
     // Add a bullet to physics engine

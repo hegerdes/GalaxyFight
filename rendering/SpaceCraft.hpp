@@ -62,8 +62,20 @@ public:
      */
     bool hasMesh() const;
 
+    float getMaxSpeed();
+    
+    float getCurrentSpeed();
+
+    void accelerate();
+
+    void deccelerate();
+
 private:
     TriangleMesh::Ptr m_mesh;
+
+    float m_maxSpeed;
+
+    float m_currentSpeed;
 
 };
 
