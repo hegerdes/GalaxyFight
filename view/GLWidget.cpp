@@ -285,6 +285,7 @@ void GLWidget::step(map<Qt::Key, bool>& keyStates)
     }
 
     m_enemyPlayer->m_position = client_global.enemyPos;
+    std::cout << "GLWIDGET POS: " << m_enemyPlayer->getPosition() << std::endl;
     m_enemyPlayer->m_xAxis = client_global.enemyxAxis;
     m_enemyPlayer->m_yAxis = client_global.enemyyAxis;
     m_enemyPlayer->m_zAxis = client_global.enemyzAxis;
