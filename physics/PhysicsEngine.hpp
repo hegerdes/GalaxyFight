@@ -18,8 +18,8 @@
 
 #include "PhysicalObject.hpp"
 #include "ParticleEngine.hpp"
-#include "rendering/Bullet.hpp"
-#include "rendering/SpaceCraft.hpp"
+#include "../rendering/Bullet.hpp"
+#include "../rendering/SpaceCraft.hpp"
 
 
 using std::list;
@@ -42,7 +42,9 @@ public:
     /**
      * @brief   Ctor.
      */
-    PhysicsEngine() = default;
+    PhysicsEngine(SpaceCraft::Ptr own, SpaceCraft::Ptr enemy);
+
+    PhysicsEngine() = delete;
 
     /**
      * @brief   Dtor.
@@ -61,6 +63,8 @@ public:
      * @brief   Adds a bullet to the scene. Takes ownership of the given pointer
      */
     void addBullet(Bullet::Ptr& bullet);
+
+//    void addEnemyBullet(Bullet::Ptr& bullet);
 
     /**
      * @brief   Renders all objects and particle effects
@@ -82,7 +86,11 @@ private:
 
     ParticleEngine               m_particles;
 
+    SpaceCraft::Ptr              m_spacecraft;
 
+    SpaceCraft::Ptr              m_enemy_spacecraft;
+
+    //list<Bullet::Ptr>           m_bullets_enemy;
 };
 
 } /* namespace asteroids */

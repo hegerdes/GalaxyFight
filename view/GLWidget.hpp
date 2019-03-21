@@ -68,6 +68,10 @@ private:
     /// A pointer to the Actor
     SpaceCraft::Ptr  	        m_actor;
 
+    //TODO: Beim Zusammenfügen das genommene eonfügen
+    /// A pointer to the Actor
+    SpaceCraft::Ptr  	        m_enemy;
+
     /// A skybox for the scene
     Skybox::Ptr			        m_skybox;
 

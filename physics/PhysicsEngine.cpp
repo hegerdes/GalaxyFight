@@ -20,6 +20,12 @@ namespace asteroids
 {
 
 
+PhysicsEngine::PhysicsEngine(SpaceCraft::Ptr o_spacecraft, SpaceCraft::Ptr o_enemy)
+{
+    m_spacecraft = o_spacecraft;
+    m_enemy_spacecraft = o_enemy;
+}
+
 void PhysicsEngine::addDestroyable(PhysicalObject::Ptr& obj)
 {
     m_objects.push_back(obj);
@@ -30,6 +36,14 @@ void PhysicsEngine::addBullet(Bullet::Ptr& bullet)
     m_particles.addEffect(ParticleEffect::createBulletTail(bullet->getPosition(), bullet->direction(), bullet->lifetime()));
     m_bullets.push_back(bullet);
 }
+
+/*
+void PhysicsEngine::addEnemyBullet(Bullet::Ptr& bullet)
+{
+    m_particles.addEffect(ParticleEffect::createBulletTail(bullet->getPosition(), bullet->direction(), bullet->lifetime()));
+    m_bullets_enemy.push_back(bullet);
+}
+*/
 
 void PhysicsEngine::process()
 {
@@ -90,6 +104,7 @@ void PhysicsEngine::render()
     // Render all objects
     list<PhysicalObject::Ptr>::iterator p_it;
     list<Bullet::Ptr>::iterator b_it;
+    list<Bullet::Ptr>::iterator be_it;
  
 
      for(p_it = m_objects.begin(); p_it != m_objects.end(); p_it++)
@@ -107,6 +122,17 @@ void PhysicsEngine::render()
         b_it++;
     }
 
+
+    /* WIESOOOOOOOOOO
+    // Render active bullets and delete inactive ones
+    be_it = m_bullets_enemy.begin();
+    while(be_it != m_bullets_enemy.end())
+    {
+        Bullet::Ptr b = (*be_it);
+        b->render();
+        be_it++;
+    }
+    */
     m_particles.render();
     //cout << m_bullets.size() << endl;
 
