@@ -20,6 +20,7 @@ signals:
     void goToLoading();
     void startClient();
     void startServer();
+    void goToSetting();
 
 private slots:
     void on_joinBut_clicked();
@@ -27,6 +28,8 @@ private slots:
     void on_createBut_clicked();
 
     void on_quitBut_clicked();
+
+    void on_settingBut_clicked();
 
 private:
     Ui::StartScreen *ui;

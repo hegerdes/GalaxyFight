@@ -18,6 +18,7 @@ LoadingScreen::LoadingScreen(QWidget *parent) :
     QMovie *movie = new QMovie("models/laden4.gif");
     ui->gifLabel->setMovie(movie);
     movie->start();
+    movie->setSpeed(75);
 
 }
 

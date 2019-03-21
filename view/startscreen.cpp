@@ -25,6 +25,7 @@ StartScreen::~StartScreen()
 
 void asteroids::StartScreen::on_joinBut_clicked()
 {
+    //sends Signals when "Spiel beitreten" was clicked
     emit goToLoading();
     emit startClient();
 }
@@ -32,11 +33,19 @@ void asteroids::StartScreen::on_joinBut_clicked()
 
 void asteroids::StartScreen::on_createBut_clicked()
 {
+    //sends Signals when "Spiel erstellen" was clicked
     emit goToLoading();
     emit startServer();
 }
 
 void asteroids::StartScreen::on_quitBut_clicked()
 {
+    //sends Signal when "Beenden" was clicked
     emit closeProgramm();
+}
+
+void asteroids::StartScreen::on_settingBut_clicked()
+{
+    //sends Signal when "Einstellungen" was clicked
+    emit goToSetting();
 }
