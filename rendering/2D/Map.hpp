@@ -46,7 +46,6 @@ class Map
   public:
     //Pointer to map
     using Ptr = std::shared_ptr<Map>;
-    using MapPtr = std::shared_ptr<std::map<int,Planet>>;
     using VecPtr = std::vector<Planet::Ptr>;
     
     //Define Graph

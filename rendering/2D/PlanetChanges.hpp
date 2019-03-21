@@ -13,7 +13,6 @@
 #ifndef PLANETCHANGES_HPP
 #define PLANETCHANGES_HPP
 
-#include "Planet.hpp"
 
 namespace asteroids
 {
@@ -23,7 +22,9 @@ class PlanetChanges
 
   public:
 
-  enum Owner{UNASSIGN, PLAYER1, PLAYER2};
+    using Ptr = std::shared_ptr<PlanetChanges>;
+
+    enum Owner{UNASSIGN, PLAYER1, PLAYER2};
 
   /**
    * @brief Construct a new Planet Changes object
