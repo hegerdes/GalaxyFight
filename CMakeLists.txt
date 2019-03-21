@@ -150,6 +150,7 @@ set(ASTEROID_SOURCES
     view/MainWindow.cpp
     view/Camera.cpp
     view/startscreen.cpp
+    view/settingwindow.cpp
     view/scene2d.cpp
     view/loadingscreen.cpp
     view/infobar.cpp
@@ -161,6 +162,7 @@ set(ASTEROID_MOCS
     view/scene2d.h
     view/loadingscreen.h
     view/infobar.h
+    view/settingwindow.h
 )
 
 set(ASTEROID_UIS
@@ -168,6 +170,7 @@ set(ASTEROID_UIS
     view/scene2d.ui
     view/loadingscreen.ui
     view/infobar.ui
+    view/settingwindow.ui
 )
 
 set(CMAKE_AUTOUIC ON)

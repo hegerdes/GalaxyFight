@@ -79,7 +79,7 @@ font: oblique 30pt &quot;Waree&quot;;</string>
    <property name="geometry">
     <rect>
      <x>790</x>
-     <y>680</y>
+     <y>840</y>
      <width>351</width>
      <height>121</height>
     </rect>
@@ -128,11 +128,29 @@ font: 57 italic 100pt &quot;URW Chancery L&quot;;</string>
     <string>TextLabel</string>
    </property>
   </widget>
+  <widget class="QPushButton" name="settingBut">
+   <property name="geometry">
+    <rect>
+     <x>790</x>
+     <y>520</y>
+     <width>351</width>
+     <height>131</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">background-color: rgb(114, 159, 207);
+font: oblique 30pt &quot;Waree&quot;;</string>
+   </property>
+   <property name="text">
+    <string>Einstellungen</string>
+   </property>
+  </widget>
   <zorder>piclabel</zorder>
   <zorder>label</zorder>
   <zorder>joinBut</zorder>
   <zorder>createBut</zorder>
   <zorder>quitBut</zorder>
+  <zorder>settingBut</zorder>
  </widget>
  <resources/>
  <connections/>
