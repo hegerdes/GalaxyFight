@@ -156,6 +156,9 @@ set(ASTEROID_SOURCES
     view/loadingscreen.cpp
     view/infobar.cpp
     view/2DScene/scene2dhandler.cpp
+    view/2DScene/graphicsitemplanet.cpp
+    view/2DScene/graphicsitemmine.cpp
+    view/2DScene/graphicsitemfactory.cpp
     view/2DScene/graphicsfighteritem.cpp
 )
 set(ASTEROID_MOCS
@@ -165,6 +168,7 @@ set(ASTEROID_MOCS
     view/loadingscreen.h
     view/infobar.h
     view/settingwindow.h
+    view/2DScene/itemtypes.h
 )
 
 set(ASTEROID_UIS
