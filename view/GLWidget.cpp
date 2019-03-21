@@ -160,7 +160,7 @@ void GLWidget::paintGL()
     m_enemyPlayer->render();
 
     //Debug/Testline
-    m_enemyPlayer->setPosition(Vector<float>(10,100,10));
+    //m_enemyPlayer->setPosition(Vector<float>(10,100,10));
     m_playerHPBar->render();
 
     m_enemyHPBar->render();
@@ -229,9 +229,7 @@ void GLWidget::step(map<Qt::Key, bool>& keyStates)
                 auto value = now_ms.time_since_epoch();
                 long bulletShot = value.count();
                 ///Ermittelt, wann die letzte Kugel abgeschoßen wurde und erlaubt erst nach
-                    std::cerr << "0bullet_shot: " << __LINE__ << "\n";
                 if(bulletShot - m_lastBullet > m_schussFrequenz){
-                    std::cerr << "bullet_shot: " << __LINE__ << "\n";
                     Vector3f shipPosition = m_actor->getPosition() + m_actor->getZAxis() * -45 + m_actor->getXAxis() * -175;
                     Bullet::Ptr bullet = make_shared<Bullet>(Bullet(shipPosition, m_actor->getDirection()));
                     m_physicsEngine->addBullet(bullet);
@@ -285,7 +283,6 @@ void GLWidget::step(map<Qt::Key, bool>& keyStates)
     }
 
     m_enemyPlayer->m_position = client_global.enemyPos;
-    std::cout << "GLWIDGET POS: " << m_enemyPlayer->getPosition() << std::endl;
     m_enemyPlayer->m_xAxis = client_global.enemyxAxis;
     m_enemyPlayer->m_yAxis = client_global.enemyyAxis;
     m_enemyPlayer->m_zAxis = client_global.enemyzAxis;

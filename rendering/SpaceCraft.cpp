@@ -105,13 +105,11 @@ float SpaceCraft::getMaxSpeed()
 bool SpaceCraft::collideShip(Vector<float> vec, float r)
 {
     Vector<float> axis = getXAxis();
-    Vector<float> pos = getPosition();
+    Vector<float> pos = m_position;
     Vector<float> dist = pos - vec;
     float distance = pow(dist[0], 2) + pow(dist[1], 2) + pow(dist[2], 2);
-    //cerr << "distance :" << distance;
     if(distance <= pow(r + 50, 2))
     {
-        cerr << "test";
         return true;
     }
     pos = pos + axis * 90;
@@ -119,7 +117,6 @@ bool SpaceCraft::collideShip(Vector<float> vec, float r)
     distance = pow(dist[0], 2) + pow(dist[1], 2) + pow(dist[2], 2);
     if(distance <= pow(r + 40, 2))
     {
-        cerr << "test";
         return true;
     }
     pos = pos + axis * 70;
@@ -127,7 +124,6 @@ bool SpaceCraft::collideShip(Vector<float> vec, float r)
     distance = pow(dist[0], 2) + pow(dist[1], 2) + pow(dist[2], 2);
     if(distance <= pow(r + 30, 2))
     {
-        cerr << "test";
         return true;
     }
 
