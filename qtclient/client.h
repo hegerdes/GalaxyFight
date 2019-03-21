@@ -21,6 +21,12 @@ namespace asteroids{
             Vector<float> ownyAxis;
             Vector<float> ownzAxis;
 
+            Vector3f pos_astr[10];
+            Vector3f dir_astr[10];
+            float size_astr[10];
+            int count_astr;
+            int id_astr[10];
+
             //update_3D_S / init_3D
             Vector<float> enemyPos;
             Vector<float> enemyxAxis;

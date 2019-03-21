@@ -155,30 +155,23 @@ bool Server::writeData(QByteArray const & data)
         response.append((char*)&client_data_temp_enemy.yAxis, 12);
         response.append((char*)&client_data_temp_enemy.zAxis, 12);
 
+        //Astroids:
         int amount = asteroids::Randomizer::instance()->getRandomNumber(10, 10);
         response.append((char*)&amount, 4);
         for(int i{0}; i < amount; i++)
         {
             response.append((char*)&i, 4);
-        }
 
-        for(int i{0}; i < amount; i++)
-        {
             asteroids::Vector3f tmp = asteroids::Randomizer::instance()->getRandomVertex(1000);
             response.append((char*)&tmp, 12);
-        }
 
-        for(int i{0}; i < amount; i++)
-        {
             asteroids::Vector3f tmp = asteroids::Randomizer::instance()->getRandomVertex(1.0);
             response.append((char*)&tmp, 12);
-        }
 
-        for(int i{0}; i < amount; i++)
-        {
             float size = asteroids::Randomizer::instance()->getRandomNumber(0, 100);
             response.append((char*)&size, 12);
         }
+
     }
 
     if(socket->state() == QAbstractSocket::ConnectedState)

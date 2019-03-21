@@ -84,10 +84,13 @@ namespace asteroids {
         enemyzAxis[2] = getFloat(&data);
 
         int count_astr = getInt(&data);
-        for(int i {0}; i < count_astr; i++){
-            //TODO creating asteroids
+        for(int i {0}; i < count_astr; i++)
+        {
+            id_astr[i] = getInt(&data);
+            pos_astr[i] = getFloat(&data);
+            dir_astr[i] = getFloat(&data);
+            size_astr[i] = getFloat(&data);
         }
-
     }
 
     void Client::update_3D_S(char* data)

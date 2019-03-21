@@ -203,6 +203,22 @@ void GLWidget::step(map<Qt::Key, bool>& keyStates)
         m_actor->m_yAxis = client_global.ownyAxis;
         m_actor->m_zAxis = client_global.ownzAxis;
         // asteroids hinzufügen
+
+        int i = 0;
+        for (auto it = asteroids.begin(); it != asteroids.end(); it++)
+        {
+            if(i < client_global.count_astr)
+            {
+                (*it)->m_position = client_global.pos_astr[i];
+                (*it)->m_radius = client_global.size_astr[i];
+                //TODO SET ID
+            }
+            i++;
+            PhysicalObject::Ptr p = std::static_pointer_cast<PhysicalObject>(*it);
+            m_physicsEngine->addDestroyable(p);
+        }
+
+
         client_global.init_received = false;
         std::cerr << "erhaletn----------------------------------------------\n";
     }
