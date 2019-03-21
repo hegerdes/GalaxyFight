@@ -1,24 +1,24 @@
-#include "graphicplanetitem.h"
+#include "graphicsplanetitem.h"
 
 namespace asteroids {
 
-GraphicPlanetItem::GraphicPlanetItem(PlayerType type, int id): m_player(type), m_id(id), m_selected(false)
+GraphicsPlanetItem::GraphicsPlanetItem(int id): m_id(id), m_selected(false)
 {
 
 }
 
 
-int GraphicPlanetItem::type() const
+int GraphicsPlanetItem::type() const
 {
     return ItemTypes::Planet;
 }
 
-QRectF GraphicPlanetItem::boundingRect() const
+QRectF GraphicsPlanetItem::boundingRect() const
 {
     return QRectF(0, 0, 52.0, 52.0);
 }
 
-void GraphicPlanetItem::paint(QPainter* painter, const QStyleOptionGraphicsItem*, QWidget*)
+void GraphicsPlanetItem::paint(QPainter* painter, const QStyleOptionGraphicsItem*, QWidget*)
 {
     QPixmap icon;
 
@@ -48,21 +48,21 @@ void GraphicPlanetItem::paint(QPainter* painter, const QStyleOptionGraphicsItem*
     }
 }
 
-void GraphicPlanetItem::setOwner(PlayerType newOwner)
+void GraphicsPlanetItem::setOwner(PlayerType newOwner)
 {
     m_player = newOwner;
 }
 
-PlayerType GraphicPlanetItem::getOwner()
+PlayerType GraphicsPlanetItem::getOwner()
 {
     return m_player;
 }
-void GraphicPlanetItem::selected(bool flag)
+void GraphicsPlanetItem::selected(bool flag)
 {
     m_selected = flag;
 }
 
-int GraphicPlanetItem::getId()
+int GraphicsPlanetItem::getId()
 {
     return m_id;
 }
