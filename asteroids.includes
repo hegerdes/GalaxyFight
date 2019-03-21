@@ -1,0 +1,7 @@
+build
+ext/load3ds
+ext/load3ds/math3d++
+view/build
+view/build/asteroids_autogen
+view/ext/load3ds
+view/ext/load3ds/math3d++

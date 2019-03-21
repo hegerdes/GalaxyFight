@@ -18,8 +18,8 @@
 
 #include "PhysicalObject.hpp"
 #include "ParticleEngine.hpp"
-#include "rendering/Bullet.hpp"
-#include "rendering/SpaceCraft.hpp"
+#include "../rendering/Bullet.hpp"
+#include "../rendering/SpaceCraft.hpp"
 
 
 using std::list;
@@ -62,6 +62,8 @@ public:
      */
     void addBullet(Bullet::Ptr& bullet);
 
+    void addEnemyBullet(Bullet::Ptr& bullet);
+
     /**
      * @brief   Renders all objects and particle effects
      */
@@ -97,7 +99,7 @@ private:
 
     ParticleEngine               m_particles;
 
-
+    list<Bullet::Ptr>           m_bullets_enemy;
 };
 
 } /* namespace asteroids */

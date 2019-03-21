@@ -29,6 +29,8 @@ SpaceCraft::SpaceCraft(const std::string &filename, const Vector3f& position, fl
     m_currentSpeed = 0;
     m_rotationSpeed = rotatespeed;
     m_status = 0;
+
+    m_hp = 10;
     if(m_mesh)
     {
        setPosition(position);
@@ -97,6 +99,40 @@ float SpaceCraft::getCurrentSpeed()
 float SpaceCraft::getMaxSpeed()
 {
     return m_maxSpeed;
+}
+
+//TODO: Feinschliff für Hitboxen
+bool SpaceCraft::collideShip(Vector<float> vec, float r)
+{
+    Vector<float> axis = getXAxis();
+    Vector<float> pos = getPosition();
+    Vector<float> dist = pos - vec;
+    float distance = pow(dist[0], 2) + pow(dist[1], 2) + pow(dist[2], 2);
+    //cerr << "distance :" << distance;
+    if(distance <= pow(r + 50, 2))
+    {
+        cerr << "test";
+        return true;
+    }
+    pos = pos + axis * 90;
+    dist = pos - vec;
+    distance = pow(dist[0], 2) + pow(dist[1], 2) + pow(dist[2], 2);
+    if(distance <= pow(r + 40, 2))
+    {
+        cerr << "test";
+        return true;
+    }
+    pos = pos + axis * 70;
+    dist = pos - vec;
+    distance = pow(dist[0], 2) + pow(dist[1], 2) + pow(dist[2], 2);
+    if(distance <= pow(r + 30, 2))
+    {
+        cerr << "test";
+        return true;
+    }
+
+
+    return false;
 }
 
 SpaceCraft::~SpaceCraft()

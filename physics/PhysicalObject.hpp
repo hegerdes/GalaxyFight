@@ -68,6 +68,10 @@ public:
      */
     void multiplySpeed(int factor);
 
+    float getradius()
+    {
+        return m_radius;
+    }
 
     /**
      * @brief checks of collision with a other object

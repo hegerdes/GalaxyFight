@@ -33,9 +33,9 @@ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/")
 # special optimization flags
 ###############################################################################
 
-set( CMAKE_CXX_FLAGS         "-O3 -Wall -std=c++17" )
-set( CMAKE_CXX_FLAGS_RELEASE "-O3 -msse3 -Wno-deprecated-declarations -Wno-unused -Wcpp" )
-set( CMAKE_CXX_FLAGS_DEBUG   "-g -Wall" )
+set( CMAKE_CXX_FLAGS         "-std=c++17 -O3 -Wall" )
+set( CMAKE_CXX_FLAGS_RELEASE "-std=c++17 -O3 -msse3 -Wno-deprecated-declarations -Wno-unused -Wcpp" )
+set( CMAKE_CXX_FLAGS_DEBUG   "-g -Wall -std=c++17" )
 
 ###############################################################################
 # Find required libraries.Right now we need glut and OpenGL. The required 

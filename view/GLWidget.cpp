@@ -114,7 +114,9 @@ void GLWidget::initializeGL()
     // Load level
     LevelParser lp(m_levelFile, m_actor, m_enemyPlayer, m_skybox, m_asteroidField);
 
-    // Setup physics
+
+
+    // Setup physics//
     m_physicsEngine = make_shared<PhysicsEngine>();
 
     m_playerHPBar = make_shared<HealthBar>(HealthBar::PLAYER_1, width(), height());
@@ -291,10 +293,12 @@ void GLWidget::step(map<Qt::Key, bool>& keyStates)
     {
         Vector3f shipPosition = m_enemyPlayer->getPosition() + m_enemyPlayer->getZAxis() * -45 + m_enemyPlayer->getXAxis() * -175;
         Bullet::Ptr bullet = make_shared<Bullet>(Bullet(shipPosition, m_enemyPlayer->m_xAxis*-1));
-        m_physicsEngine->addBullet(bullet);
+        m_physicsEngine->addEnemyBullet(bullet);
         client_global.enemy_shot = Bullet_shot::not_shot;
     }
 
+    std::cout << "Own Health: " << m_actor->getHP() << std::endl;
+    std::cout << "Enemy Health: " << m_enemyPlayer->getHP() << std::endl;
 
     this->update();
 }
