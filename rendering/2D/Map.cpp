@@ -10,7 +10,7 @@
  */
 
 
-#include "CreateMap.hpp"
+#include "Map.hpp"
 
 namespace asteroids
 {
@@ -60,7 +60,7 @@ private:
 	Vertex m_goal;
 };
 
-CreateMap::CreateMap(std::string mapfile):m_planets(25)
+Map::Map(std::string mapfile):m_planets(25)
 {
     using namespace boost;
     try
@@ -144,12 +144,12 @@ CreateMap::CreateMap(std::string mapfile):m_planets(25)
     }
 }
 
-CreateMap::VecPtr CreateMap::getPlanets()
+Map::VecPtr Map::getPlanets()
 {
     return m_planets;
 }
 
-std::list<Vector3f > CreateMap::getPath(Vector3f position, int start, int goal)
+std::list<Vector3f > Map::getPath(Vector3f position, int start, int goal)
 {
     std::cout << "Start: " << start  << " " <<  m_planets[start]->getname() 
         << "\n" << "End: " << goal << " " << m_planets[goal]->getname() << std::endl;
@@ -189,7 +189,7 @@ std::list<Vector3f > CreateMap::getPath(Vector3f position, int start, int goal)
     return solutionPath;
 }
 
-void CreateMap::print()
+void Map::print()
 {
     std::map<std::string,int>::iterator it;
 
