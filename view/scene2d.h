@@ -1,14 +1,18 @@
 #ifndef SCENE2D_H
 #define SCENE2D_H
 
+#include "ui_scene2d.h"
+
 #include <QWidget>
 #include <QGraphicsView>
 #include "infobar.h"
+#include "2DScene/scene2dhandler.h"
 
-namespace Ui {
-class Scene2D;
-}
-
+namespace asteroids  {
+/**
+ * @brief The Scene2D class This widget is the screen which displays the whole 2dGame part of the game
+ * @author lkreienbrink
+ */
 class Scene2D : public QWidget
 {
     Q_OBJECT
@@ -30,6 +34,9 @@ private:
      */
     Infobar *m_infobar;
 
+    Scene2dHandler *m_scenehandler;
+
 };
+}
 
 #endif // SCENE2D_H

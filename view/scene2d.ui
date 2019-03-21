@@ -30,7 +30,11 @@
     <number>0</number>
    </property>
    <item>
-    <widget class="QGraphicsView" name="graphicsView"/>
+    <widget class="QGraphicsView" name="graphicsView">
+     <property name="styleSheet">
+      <string notr="true">border: 0px</string>
+     </property>
+    </widget>
    </item>
    <item>
     <widget class="Infobar" name="infobar" native="true">
