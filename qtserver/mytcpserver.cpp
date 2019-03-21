@@ -12,8 +12,8 @@ Server::Server(QObject *parent) : QObject(parent)
     server = new QTcpServer(this);
     connect(server, SIGNAL(newConnection()), this, SLOT(newConnection()));
     qDebug() << "Listening:" << server->listen(QHostAddress::Any, 38291);
-    std::cout << server->serverAddress().toString().toUtf8().constData() << "; serverAdress\n";
-    std::cout << server->serverPort() << "; serverPort\n";
+    std::cout << server->serverAddress().toString().toUtf8().constData() << "; serverAdress\n" << std::endl;
+    std::cout << server->serverPort() << "; serverPort" << std::endl;
     //qDebug() << "Listening:" << server->listen(QHostAddress::LocalHost, 1024);
     user_data_1.position = {-650,0,0};
     user_data_1.xAxis[0] = -1;
@@ -38,8 +38,8 @@ Server::Server(QObject *parent) : QObject(parent)
 
 void Server::newConnection()
 {
-    qDebug() << "Listening:";
-    std::cout << "new conneciton\n";
+    qDebug() << "Listening:\n ";
+    std::cout << "new conneciton" << std::endl;
     while (server->hasPendingConnections())
     {
         QTcpSocket *socket = server->nextPendingConnection();
@@ -61,7 +61,7 @@ void Server::newConnection()
         qint32 *s = new qint32(0);
         buffers.insert(socket, buffer);
         sizes.insert(socket, s);
-        std::cout << "successful connect\n";
+        std::cout << "successful connect" << std::endl;
     }
 }
 
@@ -150,34 +150,22 @@ bool Server::writeData(QByteArray const & data)
             std::cerr << "client socket not recognized\n";
         }
 
-        std::cerr << "init send" << std::endl;
-
-        std::cerr << "try to send asddsasda?????\n";
-
         response.append(PacketType::init_3D);
-
-        std::cerr << "try to send astr234432\n";
 
         response.append((char*)&client_data_temp_own.position, 12);
         response.append((char*)&client_data_temp_own.xAxis, 12);
         response.append((char*)&client_data_temp_own.yAxis, 12);
         response.append((char*)&client_data_temp_own.zAxis, 12);
 
-        std::cerr << "try to send astr222\n";
-
         response.append((char*)&client_data_temp_enemy.position, 12);
         response.append((char*)&client_data_temp_enemy.xAxis, 12);
         response.append((char*)&client_data_temp_enemy.yAxis, 12);
         response.append((char*)&client_data_temp_enemy.zAxis, 12);
 
-
-        std::cerr << "try to send astr1111\n";
-
         //Astroids:
         int amount = 10;
         response.append((char*)&amount, 4);
 
-        std::cerr << "try to send astr\n";
         for(int i = 0; i < amount; i++)
         {
             response.append((char*)&i, 4);
@@ -190,8 +178,6 @@ bool Server::writeData(QByteArray const & data)
 
             float size = size_astr[i];
             response.append((char*)&size, 4);
-
-            std::cerr << i << ". Asteroid verpackt!" << "\n";
         }
 
     }
