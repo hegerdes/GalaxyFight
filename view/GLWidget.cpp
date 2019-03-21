@@ -243,7 +243,7 @@ void GLWidget::step(map<Qt::Key, bool>& keyStates)
 
     if(client_global.enemy_shot == Bullet_shot::shot)
     {
-        Bullet::Ptr bullet = make_shared<Bullet>(Bullet(m_enemyPlayer->getPosition(), m_enemyPlayer->getDirection()));
+        Bullet::Ptr bullet = make_shared<Bullet>(Bullet(m_enemyPlayer->getPosition(), m_enemyPlayer->m_xAxis*-1));
         m_physicsEngine->addBullet(bullet);
         client_global.enemy_shot = Bullet_shot::not_shot;
     }
