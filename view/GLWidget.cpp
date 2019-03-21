@@ -172,6 +172,7 @@ void GLWidget::step(map<Qt::Key, bool>& keyStates)
     m_physicsEngine->process();
 
 
+    Bullet_shot bullet_shot = Bullet_shot::not_shot;
     if(m_actor->spaceCraftStatus() == 0){
         
 
@@ -250,6 +251,7 @@ void GLWidget::step(map<Qt::Key, bool>& keyStates)
                     Bullet::Ptr bullet = make_shared<Bullet>(Bullet(m_actor->getPosition(), m_actor->getDirection()));
                     m_physicsEngine->addBullet(bullet);
                     m_lastBullet = bulletShot;
+                    bullet_shot = Bullet_shot::shot;
                 }
                 
             }
