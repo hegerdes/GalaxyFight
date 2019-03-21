@@ -28,7 +28,7 @@
   <property name="styleSheet">
    <string notr="true">color: black;</string>
   </property>
-  <widget class="QPushButton" name="pushButton">
+  <widget class="QPushButton" name="joinBut">
    <property name="geometry">
     <rect>
      <x>790</x>
@@ -58,7 +58,7 @@ font: oblique 30pt &quot;Waree&quot;;
     <string>Spiel beitreten</string>
    </property>
   </widget>
-  <widget class="QPushButton" name="pushButton_2">
+  <widget class="QPushButton" name="createBut">
    <property name="geometry">
     <rect>
      <x>790</x>
@@ -75,7 +75,7 @@ font: oblique 30pt &quot;Waree&quot;;</string>
     <string>Spiel erstellen</string>
    </property>
   </widget>
-  <widget class="QPushButton" name="pushButton_3">
+  <widget class="QPushButton" name="quitBut">
    <property name="geometry">
     <rect>
      <x>790</x>
@@ -130,9 +130,9 @@ font: 57 italic 100pt &quot;URW Chancery L&quot;;</string>
   </widget>
   <zorder>piclabel</zorder>
   <zorder>label</zorder>
-  <zorder>pushButton</zorder>
-  <zorder>pushButton_2</zorder>
-  <zorder>pushButton_3</zorder>
+  <zorder>joinBut</zorder>
+  <zorder>createBut</zorder>
+  <zorder>quitBut</zorder>
  </widget>
  <resources/>
  <connections/>

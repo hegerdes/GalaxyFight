@@ -2,7 +2,6 @@
 #include "ui_loadingscreen.h"
 #include <QMovie>
 #include <QPixmap>
-#include <QLabel>
 
 LoadingScreen::LoadingScreen(QWidget *parent) :
     QWidget(parent),
@@ -10,12 +9,15 @@ LoadingScreen::LoadingScreen(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    QMovie *movie = new QMovie("models/loading.gif");
+
+    //background-picture
+    QPixmap pic("models/start.jpg");
+    ui->picLabel->setPixmap(pic);
+
+    //loading-animation as a gif
+    QMovie *movie = new QMovie("models/laden3.gif");
     ui->gifLabel->setMovie(movie);
     movie->start();
-
-
-
 
 }
 

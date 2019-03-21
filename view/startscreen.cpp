@@ -10,6 +10,7 @@ StartScreen::StartScreen(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::StartScreen)
 {
+    // background-picture
     ui->setupUi(this);
     QPixmap pic("models/start.jpg");
     ui->piclabel->setPixmap(pic);
@@ -21,13 +22,21 @@ StartScreen::~StartScreen()
 }
 }
 
-void asteroids::StartScreen::on_pushButton_3_clicked()
+
+void asteroids::StartScreen::on_joinBut_clicked()
 {
-    emit closeProgramm();
+    emit goToLoading();
+    emit startClient();
 }
 
 
-void asteroids::StartScreen::on_pushButton_clicked()
+void asteroids::StartScreen::on_createBut_clicked()
 {
     emit goToLoading();
+    emit startServer();
+}
+
+void asteroids::StartScreen::on_quitBut_clicked()
+{
+    emit closeProgramm();
 }

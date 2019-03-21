@@ -18,11 +18,15 @@ public:
 signals:
     void closeProgramm();
     void goToLoading();
+    void startClient();
+    void startServer();
 
 private slots:
-    void on_pushButton_3_clicked();
+    void on_joinBut_clicked();
 
-    void on_pushButton_clicked();
+    void on_createBut_clicked();
+
+    void on_quitBut_clicked();
 
 private:
     Ui::StartScreen *ui;
