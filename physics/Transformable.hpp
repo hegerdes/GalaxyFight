@@ -135,6 +135,10 @@ public:
     Vector<float> getZAxis() { return m_zAxis;}
     Matrix   m_transformation;
     Vector<float>    m_position;
+    /**
+     * @brief   The current moving direction
+     */
+    Vector<float>   m_direction;
     Vector<float>    m_xAxis;
     Vector<float>    m_yAxis;
     Vector<float>    m_zAxis;
@@ -171,12 +175,6 @@ protected:
      * @brief   A quaternion representing the current rotation
      */
     Quaternion  m_rotation;
-
-
-    /**
-     * @brief   The current moving direction
-     */
-    Vector<float>   m_direction;
 
     /**
      * @brief   The current moving speed
