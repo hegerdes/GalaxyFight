@@ -9,10 +9,15 @@
 GLWidget::GLWidget(QWidget* parent)
     : QOpenGLWidget(parent),
       m_camera(Vector3f(0.0f, 0.0f, -700.0f), 0.05f, 5.0f),
+<<<<<<< HEAD
       m_rotationSpeed(0.025),
       m_moveSpeed(5.0),
       m_lastBullet(0),
       m_schussFrequenz(500)
+=======
+      m_rotationSpeed(0.02),
+      m_moveSpeed(5.0)
+>>>>>>> origin/Beschleunigung
 {
 
 }
@@ -169,6 +174,7 @@ void GLWidget::step(map<Qt::Key, bool>& keyStates)
     // Get keyboard states and handle model movement
     m_physicsEngine->process();
 
+<<<<<<< HEAD
     if(m_actor->spaceCraftStatus() == 0){
         if (keyStates[Qt::Key_Up])
         {
@@ -212,6 +218,43 @@ void GLWidget::step(map<Qt::Key, bool>& keyStates)
         {
            m_actor->rotate(Transformable::YAW_RIGHT, m_rotationSpeed);
         }
+=======
+    m_actor->move(Transformable::FORWARD, m_actor->getCurrentSpeed());
+
+    if (keyStates[Qt::Key_Up])
+    {
+        m_actor->rotate(Transformable::PITCH_RIGHT, m_rotationSpeed);
+    }
+    if (keyStates[Qt::Key_Down])
+    {
+        m_actor->rotate(Transformable::PITCH_LEFT, m_rotationSpeed);
+    }
+       if (keyStates[Qt::Key_Left])
+    {
+        m_actor->rotate(Transformable::ROLL_LEFT, m_rotationSpeed);
+    }
+    if (keyStates[Qt::Key_Right])
+    {
+        m_actor->rotate(Transformable::ROLL_RIGHT, m_rotationSpeed);
+    }
+   
+    if (keyStates[Qt::Key_W])
+    {
+        m_actor->accelerate();
+    }
+    if (keyStates[Qt::Key_S])
+    {
+        m_actor->deccelerate();
+    }
+    if (keyStates[Qt::Key_A])
+    {
+        m_actor->rotate(Transformable::YAW_LEFT, m_rotationSpeed);
+    }
+    if (keyStates[Qt::Key_D])
+    {
+        m_actor->rotate(Transformable::YAW_RIGHT, m_rotationSpeed);
+    }
+>>>>>>> origin/Beschleunigung
 
         if(keyStates[Qt::Key_X]){
             //Debug/Tesline für Explosion eigenes Raumschiff

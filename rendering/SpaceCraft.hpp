@@ -86,6 +86,14 @@ public:
      * Setzt m_status = 2
      */ 
     void endDestruction();
+    
+    float getMaxSpeed();
+    
+    float getCurrentSpeed();
+
+    void accelerate();
+
+    void deccelerate();
 
 private:
     TriangleMesh::Ptr m_mesh;
@@ -94,6 +102,10 @@ private:
     int m_status;
 
     ParticleEngine m_explosion;
+
+    float m_maxSpeed;
+
+    float m_currentSpeed;
 
 };
 
