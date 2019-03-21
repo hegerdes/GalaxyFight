@@ -20,7 +20,6 @@ Scene2D::Scene2D(QWidget *parent) :
 
     m_graphicsview->show();
 
-
     //config screen size
     QSettings settings;
     setMinimumSize(settings.value("minWidth", 1920).toInt(), settings.value("minHeight", 1080).toInt());

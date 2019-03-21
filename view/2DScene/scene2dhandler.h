@@ -16,6 +16,38 @@ class Scene2dHandler : public QGraphicsScene
 public:
     Scene2dHandler(QObject* parent = nullptr);
 
+protected:
+    /**
+     * @brief mouseReleaseEvent
+     * @param mouseEvent
+     */
+    void mouseReleaseEvent(QGraphicsSceneMouseEvent *mouseEvent) override;
+
+private:
+    /**
+     * @brief handlePlanetSelection
+     */
+    void handlePlanetSelection();
+
+    /**
+     * @brief handleMineSelection
+     */
+    void handleMineSelection();
+
+    /**
+     * @brief handleFactorySelection
+     */
+    void handleFactorySelection();
+
+    /**
+     * @brief handleFighterSelection
+     */
+    void handleFighterSelection();
+
+    /**
+     * @brief handleTransporterSelection
+     */
+    void handleTransporterSelection();
 };
 
 }
