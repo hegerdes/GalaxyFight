@@ -204,6 +204,7 @@ void GLWidget::step(map<Qt::Key, bool>& keyStates)
         m_actor->m_zAxis = client_global.ownzAxis;
         // asteroids hinzufügen
         client_global.init_received = false;
+        std::cerr << "erhaletn----------------------------------------------\n";
     }
 
     m_enemyPlayer->m_position = client_global.enemyPos;

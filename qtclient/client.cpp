@@ -52,6 +52,7 @@ namespace asteroids {
         ownPos[0] = getFloat(&data);
         ownPos[1] = getFloat(&data);
         ownPos[2] = getFloat(&data);
+        std::cerr << ownPos << "\n";
 
         ownxAxis[0] = getFloat(&data);
         ownxAxis[1] = getFloat(&data);
@@ -94,25 +95,25 @@ namespace asteroids {
         enemyPos[0] = getFloat(&data);
         enemyPos[1] = getFloat(&data);
         enemyPos[2] = getFloat(&data);
-        if(enemyPos[0] != -650 || enemyPos[1] || enemyPos[2] ) { std::cerr <<"enemy_pos: " << enemyPos[0] << "," << enemyPos[1] << "," << enemyPos[2] << "\n"; }
+        //if(enemyPos[0] != -650 || enemyPos[1] || enemyPos[2] ) { std::cerr <<"enemy_pos: " << enemyPos[0] << "," << enemyPos[1] << "," << enemyPos[2] << "\n"; }
 
         enemyxAxis[0] = getFloat(&data);
         enemyxAxis[1] = getFloat(&data);
         enemyxAxis[2] = getFloat(&data);
-        if(enemyxAxis[0] != -1 || enemyxAxis[1] || enemyxAxis[2] ) { std::cerr << enemyxAxis[0] << "," << enemyxAxis[1] << "," << enemyxAxis[2] << "\n"; }
+        //if(enemyxAxis[0] != -1 || enemyxAxis[1] || enemyxAxis[2] ) { std::cerr << enemyxAxis[0] << "," << enemyxAxis[1] << "," << enemyxAxis[2] << "\n"; }
 
         enemyyAxis[0] = getFloat(&data);
         enemyyAxis[1] = getFloat(&data);
         enemyyAxis[2] = getFloat(&data);
-        if(enemyyAxis[0] || enemyyAxis[1] != -1 || enemyyAxis[2] ) { std::cerr << enemyyAxis[0] << "," << enemyyAxis[1] << "," << enemyyAxis[2] << "\n"; }
+        //if(enemyyAxis[0] || enemyyAxis[1] != -1 || enemyyAxis[2] ) { std::cerr << enemyyAxis[0] << "," << enemyyAxis[1] << "," << enemyyAxis[2] << "\n"; }
 
         enemyzAxis[0] = getFloat(&data);
         enemyzAxis[1] = getFloat(&data);
         enemyzAxis[2] = getFloat(&data);
-        if(enemyzAxis[0] || enemyzAxis[1] || enemyzAxis[2] != 1 ) { std::cerr << enemyzAxis[0] << "," << enemyzAxis[1] << "," << enemyzAxis[2] << "\n"; }
+        //if(enemyzAxis[0] || enemyzAxis[1] || enemyzAxis[2] != 1 ) { std::cerr << enemyzAxis[0] << "," << enemyzAxis[1] << "," << enemyzAxis[2] << "\n"; }
 
         short count_astr = getShort(&data);
-        if(count_astr) { std::cerr << "Asteroid count: " << count_astr << "\n"; }
+        //if(count_astr) { std::cerr << "Asteroid count: " << count_astr << "\n"; }
         asteroids_deleted.clear();
         //asteroids_deleted.reserve(count_astr);
         for(int i {0}; i < count_astr; i++){
@@ -120,16 +121,16 @@ namespace asteroids {
         }
 
         enemy_shot = (Bullet_shot) getChar(&data);
-        if(enemy_shot) { std::cerr << "Enemy shot: " << enemy_shot << "\n"; }
+        //if(enemy_shot) { std::cerr << "Enemy shot: " << enemy_shot << "\n"; }
 
         enemy_shot_id = getInt(&data);
-        if(enemy_shot_id) { std::cerr << "Enemy shot_id: " << enemy_shot_id << "\n"; }
+        //if(enemy_shot_id) { std::cerr << "Enemy shot_id: " << enemy_shot_id << "\n"; }
 
         own_hit = (Hit) getChar(&data);
-        if(own_hit) { std::cerr << "own_hit: " << own_hit << "\n"; }
+        //if(own_hit) { std::cerr << "own_hit: " << own_hit << "\n"; }
 
         int count_bullet = getInt(&data);
-        if(count_bullet) { std::cerr << "Bullet count: " << count_bullet << "\n\n"; }
+        //if(count_bullet) { std::cerr << "Bullet count: " << count_bullet << "\n\n"; }
         bullet_deleted.clear();
         //bullet_deleted.reserve(count_bullet);
         for(int i {0}; i < count_bullet; i++){
@@ -142,6 +143,7 @@ namespace asteroids {
         if(socket.state() == QAbstractSocket::ConnectedState)
         {
             // empfange die positionen des anderen
+            socket.waitForReadyRead();
             QByteArray answer = socket.readAll();
             if(answer.length() > 0){
                 //std::cerr << socket.waitForBytesWritten() << "; waitForBytesWritten\n";
@@ -152,6 +154,7 @@ namespace asteroids {
                 //std::cerr << "pid: " << pt << ", length" << answer.length() << "\n";
                 if(pt == PacketType::init_3D){
                     //Own
+                    std::cerr << __LINE__ << ": init_3d\n";
                     init_3d(data);
                     init_received = true;
                 } else if(pt == PacketType::update_3D_S){
