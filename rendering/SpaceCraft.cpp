@@ -131,6 +131,18 @@ bool SpaceCraft::collideShip(Vector<float> vec, float r)
     return false;
 }
 
+void SpaceCraft::gotHit()
+{
+    m_hp--;
+
+    if(m_hp == 0)
+    {
+         m_alive = false;
+         destroySpaceCraft();
+         
+    }
+}
+
 SpaceCraft::~SpaceCraft()
 {
  

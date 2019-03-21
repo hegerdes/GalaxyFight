@@ -2,7 +2,6 @@
 #define __HEALTHBAR__
 
 #include "Renderable.hpp"
-
 #include "io/TextureFactory.hpp"
 
 namespace asteroids
@@ -14,11 +13,13 @@ class HealthBar : public Renderable
 
         enum Player{PLAYER_1, PLAYER_2};
 
-        HealthBar(Player p, int width, int height);
+        HealthBar(Player p, int width, int height, int maxHP);
 
         HealthBar() = delete;
 
         void render();
+
+        void setHP(int newHP);
 
     private:
     Player m_player;
@@ -26,6 +27,10 @@ class HealthBar : public Renderable
     int m_width;
 
     int m_height;
+
+    int m_currentHP;
+
+    int m_maxHP;
 };
 
 }

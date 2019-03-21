@@ -119,9 +119,9 @@ void GLWidget::initializeGL()
     // Setup physics//
     m_physicsEngine = make_shared<PhysicsEngine>();
 
-    m_playerHPBar = make_shared<HealthBar>(HealthBar::PLAYER_1, width(), height());
+    m_playerHPBar = make_shared<HealthBar>(HealthBar::PLAYER_1, width(), height(), 10);
 
-    m_enemyHPBar = make_shared<HealthBar>(HealthBar::PLAYER_2, width(), height());
+    m_enemyHPBar = make_shared<HealthBar>(HealthBar::PLAYER_2, width(), height(), 10);
 
     m_crossHair = make_shared<Crosshair>(0.0f, 100.0f/255.0f, 0.0f, width(), height());
 
@@ -297,7 +297,8 @@ void GLWidget::step(map<Qt::Key, bool>& keyStates)
 
     std::cout << "Own Health: " << m_actor->getHP() << std::endl;
     std::cout << "Enemy Health: " << m_enemyPlayer->getHP() << std::endl;
-
+    m_enemyHPBar->setHP(m_enemyPlayer->getHP());
+    m_playerHPBar->setHP(m_actor->getHP());
     this->update();
 }
 
@@ -342,10 +343,6 @@ void GLWidget::mouseMoveEvent(QMouseEvent* event)
         if (delta.x() < -3)
         {
             m_camera.move(Camera::RIGHT);
-        }
-        if (delta.y() > 3)
-        {
-            m_camera.move(Camera::FORWARD);
         }
         if (delta.y() < -3)
         {

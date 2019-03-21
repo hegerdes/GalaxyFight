@@ -95,15 +95,8 @@ public:
 
     void deccelerate();
 
-    void gotHit()
-    {
-        m_hp--;
-
-        if(m_hp == 0)
-        {
-            m_alive = false;
-        }
-    }
+    void gotHit();
+   
 
     int getHP(){
         return m_hp;

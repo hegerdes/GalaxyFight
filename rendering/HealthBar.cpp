@@ -2,11 +2,18 @@
 
 namespace asteroids
 {
-HealthBar::HealthBar(Player p, int width, int height)
+HealthBar::HealthBar(Player p, int width, int height, int maxHP)
 {
     m_player = p;
     m_width = width;
     m_height = height;
+    m_maxHP = m_currentHP = maxHP;
+
+}
+
+void HealthBar::setHP(int newHP)
+{
+    m_currentHP = newHP;
 }
 
 void HealthBar::render()
@@ -24,8 +31,8 @@ void HealthBar::render()
     glBegin(GL_QUADS);
         if(m_player == PLAYER_1)
         {
-            glVertex3f(m_width/2.2, m_height * 9/10, 0.0f);
-            glVertex3f(m_width/2.2, m_height, 0.0f);
+            glVertex3f(m_width/2.2 * m_currentHP/m_maxHP, m_height * 9/10, 0.0f);
+            glVertex3f(m_width/2.2 * m_currentHP/m_maxHP, m_height, 0.0f);
             glVertex3f(0.0f, m_height, 0.0f);
             glVertex3f(0.0f, m_height * 9/10, 0.0f);
         } else
@@ -33,8 +40,8 @@ void HealthBar::render()
             glColor3f(1.0f, 0.5f, 0.5f);
             glVertex3f(m_width, m_height * 9/10, 0.0f);
             glVertex3f(m_width, m_height, 0.0f);
-            glVertex3f(m_width-m_width/2.2, m_height, 0.0f);
-            glVertex3f(m_width-m_width/2.2, m_height * 9/10, 0.0f);
+            glVertex3f(m_width-m_width/2.2 * m_currentHP/m_maxHP, m_height, 0.0f);
+            glVertex3f(m_width-m_width/2.2 * m_currentHP/m_maxHP, m_height * 9/10, 0.0f);
         }
         
     glEnd();
