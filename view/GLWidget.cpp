@@ -230,7 +230,8 @@ void GLWidget::step(map<Qt::Key, bool>& keyStates)
                     std::cerr << "0bullet_shot: " << __LINE__ << "\n";
                 if(bulletShot - m_lastBullet > m_schussFrequenz){
                     std::cerr << "bullet_shot: " << __LINE__ << "\n";
-                    Bullet::Ptr bullet = make_shared<Bullet>(Bullet(m_actor->getPosition(), m_actor->getDirection()));
+                    Vector3f shipPosition = m_actor->getPosition() + m_actor->getZAxis() * -45 + m_actor->getXAxis() * -175;
+                    Bullet::Ptr bullet = make_shared<Bullet>(Bullet(shipPosition, m_actor->getDirection()));
                     m_physicsEngine->addBullet(bullet);
                     m_lastBullet = bulletShot;
                     bullet_shot = Bullet_shot::shot;
