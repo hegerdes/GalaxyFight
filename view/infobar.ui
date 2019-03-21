@@ -14,7 +14,7 @@
    <string>Form</string>
   </property>
   <property name="styleSheet">
-   <string notr="true">background-color: rgb(46, 52, 54);</string>
+   <string notr="true">background-color: black;</string>
   </property>
   <layout class="QGridLayout" name="gridLayout">
    <property name="leftMargin">
@@ -31,6 +31,12 @@
    </property>
    <item row="0" column="0">
     <layout class="QHBoxLayout" name="horizontalLayout">
+     <property name="spacing">
+      <number>2</number>
+     </property>
+     <property name="leftMargin">
+      <number>2</number>
+     </property>
      <item>
       <widget class="QGroupBox" name="rundenzeit">
        <property name="sizePolicy">
@@ -46,7 +52,9 @@
         </size>
        </property>
        <property name="styleSheet">
-        <string notr="true">color: rgb(255, 255, 255);</string>
+        <string notr="true">color: rgb(255, 255, 255);
+background: rgb(46, 52, 54);
+</string>
        </property>
        <property name="title">
         <string>Verbleibende Rundenzeit</string>
@@ -123,7 +131,8 @@ border-radius: 6px;</string>
         </size>
        </property>
        <property name="styleSheet">
-        <string notr="true">color: rgb(255, 255, 255);</string>
+        <string notr="true">color: rgb(255, 255, 255);
+background: rgb(46, 52, 54);</string>
        </property>
        <property name="title">
         <string>Planet</string>
@@ -272,7 +281,8 @@ border-radius: 6px;</string>
         </size>
        </property>
        <property name="styleSheet">
-        <string notr="true">color: rgb(255, 255, 255);</string>
+        <string notr="true">color: rgb(255, 255, 255);
+background: rgb(46, 52, 54);</string>
        </property>
        <property name="title">
         <string>Resourcen</string>
