@@ -144,7 +144,7 @@ Map::Map(std::string mapfile):m_planets(25)
     }
 }
 
-Map::VecPtr Map::getPlanets()
+Map::VecPtr& Map::getPlanets()
 {
     return m_planets;
 }

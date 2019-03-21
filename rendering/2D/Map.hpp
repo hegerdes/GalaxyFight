@@ -64,7 +64,7 @@ class Map
      * 
      * @return VecPtr Returns a shared pointer that holds all Planets
      */
-    VecPtr getPlanets();
+    VecPtr& getPlanets();
 
     /**
      * @brief Get a list with Vector3f. This is the shortest path between planets
