@@ -2,6 +2,7 @@
 #define SCENE2DHANDLER_H
 
 #include <QGraphicsScene>
+#include "graphicsfighteritem.h"
 
 namespace asteroids {
 
@@ -42,7 +43,7 @@ private:
     /**
      * @brief handleFighterSelection
      */
-    void handleFighterSelection();
+    void handleFighterSelection(GraphicsFighterItem* fighter);
 
     /**
      * @brief handleTransporterSelection
