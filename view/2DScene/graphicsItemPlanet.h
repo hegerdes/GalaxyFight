@@ -4,10 +4,11 @@
 #include <QGraphicsItem>
 #include <QPainter>
 #include <QPoint>
-#include <QImage>
 #include <QIcon>
 #include <QSize>
-//#include "ItemTypes"
+#include "itemtypes.h"
+
+namespace asteroids {
 
 class GraphicsItemPlanet : public QGraphicsItem
 {
@@ -47,5 +48,7 @@ private:
 
     int m_id;
 };
+
+}
 
 #endif // PLANET_H
