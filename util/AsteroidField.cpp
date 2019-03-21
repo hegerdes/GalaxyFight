@@ -34,8 +34,8 @@ AsteroidField::AsteroidField(int quantity, const std::string& filename, float ra
 	  ));
       */
       Asteroid::Ptr p = make_shared<Asteroid>(Asteroid(
-          mesh,  1,           // Orientation
-                500,          // Position
+          mesh,  {1,1,1},           // Orientation
+                {20.0f*i,0,0},          // Position
                 100,        // Mass
                 1, // Rotation
                 0,          // Speed
