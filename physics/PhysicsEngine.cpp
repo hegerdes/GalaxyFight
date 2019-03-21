@@ -68,6 +68,8 @@ void PhysicsEngine::process()
         {
             b->destroy();
 
+            m_enemyPlayer->gotHit();
+
             m_particles.addEffect(ParticleEffect::createExplosionSphere(b->getPosition()));
         }
 
@@ -130,6 +132,8 @@ void PhysicsEngine::process()
         if(m_spacecraft->collideShip(b->getPosition(), b->radius()))
         {
             b->destroy();
+
+            m_spacecraft->gotHit();
 
             m_particles.addEffect(ParticleEffect::createExplosionSphere(b->getPosition()));
         }
