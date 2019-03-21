@@ -83,7 +83,8 @@ namespace asteroids {
         enemyzAxis[1] = getFloat(&data);
         enemyzAxis[2] = getFloat(&data);
 
-        int count_astr = getInt(&data);
+        count_astr = getInt(&data);
+        std::cerr << count_astr << " count_astr --------------------\n";
         for(int i {0}; i < count_astr; i++)
         {
             id_astr[i] = getInt(&data);
