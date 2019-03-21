@@ -1,7 +1,10 @@
 #include "scene2dhandler.h"
 #include <QGraphicsRectItem>
 #include <QGraphicsSceneMouseEvent>
+#include "../../rendering/2D/MapFactory.hpp"
 #include "itemtypes.h"
+#include "graphicsitemplanet.h"
+
 
 namespace asteroids {
 
@@ -11,6 +14,21 @@ Scene2dHandler::Scene2dHandler(QObject* parent)
     //config appearance
     QPixmap background("./models/box3.jpg");
     setBackgroundBrush(QBrush(background));
+
+    MapFactory& fac = MapFactory::getinstance();
+
+    //draw map
+    auto map = fac.getMap("./models/01.map");
+
+    auto planets = map->getPlanets();
+    map->print();
+    for (const auto& planet : planets) {
+        GraphicsItemPlanet* pitem = new GraphicsItemPlanet(planet->getID());
+
+        pitem->setPos(QPointF(planet->getPos()[0], planet->getPos()[1]));
+
+        addItem(pitem);
+    }
 }
 
 void Scene2dHandler::mouseReleaseEvent(QGraphicsSceneMouseEvent* mouseEvent)
