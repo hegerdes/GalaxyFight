@@ -3,7 +3,7 @@
 #include <QGraphicsSceneMouseEvent>
 #include "../../rendering/2D/MapFactory.hpp"
 #include "itemtypes.h"
-#include "graphicsitemplanet.h"
+#include "graphicsplanetitem.h"
 
 
 namespace asteroids {
@@ -23,7 +23,7 @@ Scene2dHandler::Scene2dHandler(QObject* parent)
     auto planets = map->getPlanets();
     map->print();
     for (const auto& planet : planets) {
-        GraphicsItemPlanet* pitem = new GraphicsItemPlanet(planet->getID());
+        GraphicsPlanetItem* pitem = new GraphicsPlanetItem(planet->getID());
 
         pitem->setPos(QPointF(planet->getPos()[0], planet->getPos()[1]));
 
