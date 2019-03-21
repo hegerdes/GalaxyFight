@@ -28,6 +28,7 @@ void PhysicsEngine::addDestroyable(PhysicalObject::Ptr& obj)
 void PhysicsEngine::addBullet(Bullet::Ptr& bullet)
 {
     //m_particles.addEffect(ParticleEffect::createBulletTail(bullet->getPosition(), bullet->direction(), bullet->lifetime()));
+
     m_bullets.push_back(bullet);
 }
 
@@ -80,8 +81,23 @@ void PhysicsEngine::process()
             b_it++;
         }
     }
+    //Gibt dem Raumschiff eine Explosion beim verschwinden
+    if(m_spacecraft->spaceCraftStatus() == 1)
+    {
+        m_particles.addEffect(ParticleEffect::createExplosionSphere(m_spacecraft->getPosition()));
+        m_spacecraft->endDestruction();
+    }
+    
+
+    if(m_enemyPlayer->spaceCraftStatus() == 1)
+    {
+        m_particles.addEffect(ParticleEffect::createExplosionSphere(m_enemyPlayer->getPosition()));
+        m_enemyPlayer->endDestruction();
+
+    }
 
     m_particles.update();
+
 }
 
 void PhysicsEngine::render()
@@ -110,6 +126,14 @@ void PhysicsEngine::render()
     m_particles.render();
     //cout << m_bullets.size() << endl;
 
+}
+
+void PhysicsEngine::addSpaceCraft(SpaceCraft::Ptr spacecraft){
+    m_spacecraft = spacecraft;
+}
+
+void PhysicsEngine::addEnemyPlayer(SpaceCraft::Ptr enemy){
+    m_enemyPlayer = enemy;
 }
 
 } /* namespace asteroids */

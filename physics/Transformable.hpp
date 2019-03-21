@@ -179,6 +179,7 @@ protected:
     /**
      * @brief   The current moving speed
      */
+
     float           m_speed;
 
     float           m_rotationSpeed;

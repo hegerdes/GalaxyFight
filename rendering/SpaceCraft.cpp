@@ -25,7 +25,10 @@ SpaceCraft::SpaceCraft(const std::string &filename, const Vector3f& position, fl
 {
     m_mesh = TriangleMeshFactory::instance().getMesh(filename);
     m_speed = movespeed;
+    m_maxSpeed = movespeed;
+    m_currentSpeed = 0;
     m_rotationSpeed = rotatespeed;
+    m_status = 0;
     if(m_mesh)
     {
        setPosition(position);
@@ -36,17 +39,64 @@ SpaceCraft::SpaceCraft(const std::string &filename, const Vector3f& position, fl
 void SpaceCraft::render()
 {
     // Compute transformation matrix
-    computeMatrix();
+    if(m_status==0){
+        computeMatrix();
 
-    glPushMatrix();
-	glMultMatrixf(m_transformation.getData());
-    m_mesh->render();
-    glPopMatrix();
+        glPushMatrix();
+        glMultMatrixf(m_transformation.getData());
+        m_mesh->render();
+        glPopMatrix();
+    }
 }
 
 bool SpaceCraft::hasMesh() const
 {
     return m_mesh != nullptr;
+}
+
+void SpaceCraft::destroySpaceCraft()
+{
+    if(m_status != 2){
+        m_status = 1;
+    }
+}
+
+int SpaceCraft::spaceCraftStatus()
+{
+    return m_status;
+}
+
+void SpaceCraft::endDestruction()
+{
+    m_status = 2;
+}
+void SpaceCraft::accelerate()
+{
+    m_currentSpeed += m_maxSpeed * 0.025;
+    if(m_currentSpeed >= m_maxSpeed)
+    {
+        m_currentSpeed = m_maxSpeed;
+    }
+}
+
+void SpaceCraft::deccelerate()
+{
+    m_currentSpeed -= m_maxSpeed * 0.025;
+    if(m_currentSpeed <= 0)
+    {
+        m_currentSpeed = 0;
+    }
+
+}
+
+float SpaceCraft::getCurrentSpeed()
+{
+    return m_currentSpeed;
+}
+
+float SpaceCraft::getMaxSpeed()
+{
+    return m_maxSpeed;
 }
 
 SpaceCraft::~SpaceCraft()
