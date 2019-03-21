@@ -169,7 +169,7 @@ void GLWidget::step(map<Qt::Key, bool>& keyStates)
     {
         m_actor->rotate(Transformable::ROLL_RIGHT, m_rotationSpeed);
     }
-   
+
     if (keyStates[Qt::Key_W])
     {
         m_actor->move(Transformable::FORWARD, m_moveSpeed);
@@ -188,16 +188,18 @@ void GLWidget::step(map<Qt::Key, bool>& keyStates)
     }
 
     // Add a bullet to physics engine
+    Bullet_shot bullet_shot = Bullet_shot::not_shot;
     if(keyStates[Qt::Key_Space])
     {
         Bullet::Ptr bullet = make_shared<Bullet>(Bullet(m_actor->getPosition(), m_actor->getDirection()));
         m_physicsEngine->addBullet(bullet);
+        bullet_shot = Bullet_shot::shot;
     }
 
     // Trigger update, i.e., redraw via paintGL()
     client_global.sendUpdate_3D_C(m_actor->m_position, m_actor->m_xAxis,
                                  m_actor->m_yAxis, m_actor->m_zAxis,
-                                 Bullet_shot::shot, Living::alive, 0);
+                                 bullet_shot, Living::alive, 0);
     client_global.readData();
     if(client_global.init_received)
     {
@@ -238,6 +240,14 @@ void GLWidget::step(map<Qt::Key, bool>& keyStates)
     m_enemyPlayer->m_xAxis = client_global.enemyxAxis;
     m_enemyPlayer->m_yAxis = client_global.enemyyAxis;
     m_enemyPlayer->m_zAxis = client_global.enemyzAxis;
+
+    if(client_global.enemy_shot == Bullet_shot::shot)
+    {
+        Bullet::Ptr bullet = make_shared<Bullet>(Bullet(m_enemyPlayer->getPosition(), m_enemyPlayer->getDirection()));
+        m_physicsEngine->addBullet(bullet);
+        client_global.enemy_shot = Bullet_shot::not_shot;
+    }
+
 
     this->update();
 }
