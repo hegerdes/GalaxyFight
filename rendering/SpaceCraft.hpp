@@ -95,6 +95,21 @@ public:
 
     void deccelerate();
 
+    void gotHit()
+    {
+        m_hp--;
+
+        if(m_hp == 0)
+        {
+            m_alive = false;
+        }
+    }
+
+    /**
+     * @brief collide returns if the spacecraft would collide with round objects of the size r on position vec
+     */
+    bool collideShip(Vector<float> vec, float r);
+
 private:
     TriangleMesh::Ptr m_mesh;
     
@@ -106,6 +121,10 @@ private:
     float m_maxSpeed;
 
     float m_currentSpeed;
+
+    int m_hp;
+
+    bool m_alive;
 
 };
 

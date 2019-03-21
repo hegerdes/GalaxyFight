@@ -81,6 +81,8 @@ private:
 
     float  m_scale;
     int    m_id;
+
+    float m_radius;
 };
 
 }

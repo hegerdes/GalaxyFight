@@ -115,8 +115,10 @@ void GLWidget::initializeGL()
     // Load level
     LevelParser lp(m_levelFile, m_actor, m_enemyPlayer, m_skybox, m_asteroidField);
 
-    // Setup physics
-    m_physicsEngine = make_shared<PhysicsEngine>();
+
+
+    // Setup physics//
+    m_physicsEngine = make_shared<PhysicsEngine>(m_actor, m_enemy);
 
     m_playerHPBar = make_shared<HealthBar>(HealthBar::PLAYER_1, width(), height());
 
