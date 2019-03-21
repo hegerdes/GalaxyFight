@@ -9,15 +9,10 @@
 GLWidget::GLWidget(QWidget* parent)
     : QOpenGLWidget(parent),
       m_camera(Vector3f(0.0f, 0.0f, -700.0f), 0.05f, 5.0f),
-<<<<<<< HEAD
       m_rotationSpeed(0.025),
       m_moveSpeed(5.0),
       m_lastBullet(0),
       m_schussFrequenz(500)
-=======
-      m_rotationSpeed(0.02),
-      m_moveSpeed(5.0)
->>>>>>> origin/Beschleunigung
 {
 
 }
@@ -174,8 +169,12 @@ void GLWidget::step(map<Qt::Key, bool>& keyStates)
     // Get keyboard states and handle model movement
     m_physicsEngine->process();
 
-<<<<<<< HEAD
+
     if(m_actor->spaceCraftStatus() == 0){
+        
+
+        m_actor->move(Transformable::FORWARD, m_actor->getCurrentSpeed());
+
         if (keyStates[Qt::Key_Up])
         {
             m_actor->rotate(Transformable::PITCH_RIGHT, m_rotationSpeed);
@@ -195,108 +194,63 @@ void GLWidget::step(map<Qt::Key, bool>& keyStates)
     
         if (keyStates[Qt::Key_W])
         {
-            m_actor->move(Transformable::FORWARD, m_moveSpeed);
+            m_actor->accelerate();
         }
         if (keyStates[Qt::Key_S])
         {
-            m_actor->move(Transformable::BACKWARD, m_moveSpeed);
+            m_actor->deccelerate();
         }
         if (keyStates[Qt::Key_A])
         {
-            m_actor->move(Transformable::STRAFE_LEFT, m_moveSpeed);
+            m_actor->rotate(Transformable::YAW_LEFT, m_rotationSpeed);
         }
         if (keyStates[Qt::Key_D])
         {
-            m_actor->move(Transformable::STRAFE_RIGHT, m_moveSpeed);
+            m_actor->rotate(Transformable::YAW_RIGHT, m_rotationSpeed);
         }
-        //Ermöglicht YAW mit Q und E
-        if(keyStates[Qt::Key_E])
-        {
-           m_actor->rotate(Transformable::YAW_LEFT, m_rotationSpeed);
-        }
-        if(keyStates[Qt::Key_Q])
-        {
-           m_actor->rotate(Transformable::YAW_RIGHT, m_rotationSpeed);
-        }
-=======
-    m_actor->move(Transformable::FORWARD, m_actor->getCurrentSpeed());
 
-    if (keyStates[Qt::Key_Up])
-    {
-        m_actor->rotate(Transformable::PITCH_RIGHT, m_rotationSpeed);
-    }
-    if (keyStates[Qt::Key_Down])
-    {
-        m_actor->rotate(Transformable::PITCH_LEFT, m_rotationSpeed);
-    }
-       if (keyStates[Qt::Key_Left])
-    {
-        m_actor->rotate(Transformable::ROLL_LEFT, m_rotationSpeed);
-    }
-    if (keyStates[Qt::Key_Right])
-    {
-        m_actor->rotate(Transformable::ROLL_RIGHT, m_rotationSpeed);
-    }
-   
-    if (keyStates[Qt::Key_W])
-    {
-        m_actor->accelerate();
-    }
-    if (keyStates[Qt::Key_S])
-    {
-        m_actor->deccelerate();
-    }
-    if (keyStates[Qt::Key_A])
-    {
-        m_actor->rotate(Transformable::YAW_LEFT, m_rotationSpeed);
-    }
-    if (keyStates[Qt::Key_D])
-    {
-        m_actor->rotate(Transformable::YAW_RIGHT, m_rotationSpeed);
-    }
->>>>>>> origin/Beschleunigung
 
-        if(keyStates[Qt::Key_X]){
-            //Debug/Tesline für Explosion eigenes Raumschiff
-            m_actor->destroySpaceCraft();
-        }
-        
-        // Add a bullet to physics engine
-        if(keyStates[Qt::Key_Space])
-        {
-            
-            auto now = std::chrono::system_clock::now();
-            auto now_ms = std::chrono::time_point_cast<std::chrono::milliseconds>(now);
-            auto value = now_ms.time_since_epoch();
-            long bulletShot = value.count();
-            //Ermittelt, wann die letzte Kugel abgeschoßen wurde und erlaubt erst nach
-            if(bulletShot - m_lastBullet > m_schussFrequenz){
-
-                //Lässt Bullet bei der Kanone des Raumschiffes erscheinen
-                Vector3f shipPosition = m_actor->getPosition() + m_actor->getZAxis() * -50 + m_actor->getXAxis() * -140;
-                Bullet::Ptr bullet = make_shared<Bullet>(Bullet(shipPosition, m_actor->getDirection()));
-                m_physicsEngine->addBullet(bullet);
-                m_lastBullet = bulletShot;
+            if(keyStates[Qt::Key_X]){
+                //Debug/Tesline für Explosion eigenes Raumschiff
+                m_actor->destroySpaceCraft();
             }
             
-        }
+            // Add a bullet to physics engine
+            if(keyStates[Qt::Key_Space])
+            {
+                
+                auto now = std::chrono::system_clock::now();
+                auto now_ms = std::chrono::time_point_cast<std::chrono::milliseconds>(now);
+                auto value = now_ms.time_since_epoch();
+                long bulletShot = value.count();
+                //Ermittelt, wann die letzte Kugel abgeschoßen wurde und erlaubt erst nach
+                if(bulletShot - m_lastBullet > m_schussFrequenz){
 
-        // Add a bullet to physics engine
-        if(keyStates[Qt::Key_Space])
-        {
-            
-            auto now = std::chrono::system_clock::now();
-            auto now_ms = std::chrono::time_point_cast<std::chrono::milliseconds>(now);
-            auto value = now_ms.time_since_epoch();
-            long bulletShot = value.count();
-            ///Ermittelt, wann die letzte Kugel abgeschoßen wurde und erlaubt erst nach
-            if(bulletShot - m_lastBullet > m_schussFrequenz){
-                Bullet::Ptr bullet = make_shared<Bullet>(Bullet(m_actor->getPosition(), m_actor->getDirection()));
-                m_physicsEngine->addBullet(bullet);
-                m_lastBullet = bulletShot;
+                    //Lässt Bullet bei der Kanone des Raumschiffes erscheinen
+                    Vector3f shipPosition = m_actor->getPosition() + m_actor->getZAxis() * -50 + m_actor->getXAxis() * -140;
+                    Bullet::Ptr bullet = make_shared<Bullet>(Bullet(shipPosition, m_actor->getDirection()));
+                    m_physicsEngine->addBullet(bullet);
+                    m_lastBullet = bulletShot;
+                }
+                
             }
-            
-        }
+
+            // Add a bullet to physics engine
+            if(keyStates[Qt::Key_Space])
+            {
+                
+                auto now = std::chrono::system_clock::now();
+                auto now_ms = std::chrono::time_point_cast<std::chrono::milliseconds>(now);
+                auto value = now_ms.time_since_epoch();
+                long bulletShot = value.count();
+                ///Ermittelt, wann die letzte Kugel abgeschoßen wurde und erlaubt erst nach
+                if(bulletShot - m_lastBullet > m_schussFrequenz){
+                    Bullet::Ptr bullet = make_shared<Bullet>(Bullet(m_actor->getPosition(), m_actor->getDirection()));
+                    m_physicsEngine->addBullet(bullet);
+                    m_lastBullet = bulletShot;
+                }
+                
+            }
     }
     if(keyStates[Qt::Key_Y]){
             //Debug/Tesline für Explosion eigenes Raumschiff
