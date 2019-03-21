@@ -87,8 +87,17 @@ namespace asteroids {
         for(int i {0}; i < count_astr; i++)
         {
             id_astr[i] = getInt(&data);
-            pos_astr[i] = getFloat(&data);
-            dir_astr[i] = getFloat(&data);
+
+            pos_astr[i][0] = getFloat(&data);
+            pos_astr[i][1] = getFloat(&data);
+            pos_astr[i][2] = getFloat(&data);
+            std::cerr << "Astr Pos: " << pos_astr[i] << "\n";
+
+            dir_astr[i][0] = getFloat(&data);
+            dir_astr[i][1] = getFloat(&data);
+            dir_astr[i][2] = getFloat(&data);
+            std::cerr << "Astr dir: " << dir_astr[i] << "\n";
+
             size_astr[i] = getFloat(&data);
         }
     }

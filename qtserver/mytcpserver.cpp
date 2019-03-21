@@ -25,6 +25,15 @@ Server::Server(QObject *parent) : QObject(parent)
     user_data_2.yAxis[1] = 1;
     user_data_2.zAxis[2] = 1;
     user_data_1.shot = Bullet_shot::not_shot;
+
+    //generate asteroids:
+    int amount = 10;
+    for(int i{0}; i < amount; i++)
+    {
+        pos_astr[i] = asteroids::Randomizer::instance()->getRandomVertex(1000);
+        dir_astr[i] = asteroids::Randomizer::instance()->getRandomVertex(1.0);
+        size_astr[i] = asteroids::Randomizer::instance()->getRandomNumber(0, 100);
+    }
 }
 
 void Server::newConnection()
@@ -143,33 +152,46 @@ bool Server::writeData(QByteArray const & data)
 
         std::cerr << "init send" << std::endl;
 
+        std::cerr << "try to send asddsasda?????\n";
+
         response.append(PacketType::init_3D);
+
+        std::cerr << "try to send astr234432\n";
 
         response.append((char*)&client_data_temp_own.position, 12);
         response.append((char*)&client_data_temp_own.xAxis, 12);
         response.append((char*)&client_data_temp_own.yAxis, 12);
         response.append((char*)&client_data_temp_own.zAxis, 12);
 
+        std::cerr << "try to send astr222\n";
+
         response.append((char*)&client_data_temp_enemy.position, 12);
         response.append((char*)&client_data_temp_enemy.xAxis, 12);
         response.append((char*)&client_data_temp_enemy.yAxis, 12);
         response.append((char*)&client_data_temp_enemy.zAxis, 12);
 
+
+        std::cerr << "try to send astr1111\n";
+
         //Astroids:
-        int amount = asteroids::Randomizer::instance()->getRandomNumber(10, 10);
+        int amount = 10;
         response.append((char*)&amount, 4);
-        for(int i{0}; i < amount; i++)
+
+        std::cerr << "try to send astr\n";
+        for(int i = 0; i < amount; i++)
         {
             response.append((char*)&i, 4);
 
-            asteroids::Vector3f tmp = asteroids::Randomizer::instance()->getRandomVertex(1000);
+            asteroids::Vector3f tmp = pos_astr[i];
             response.append((char*)&tmp, 12);
 
-            tmp = asteroids::Randomizer::instance()->getRandomVertex(1.0);
+            tmp = dir_astr[i];
             response.append((char*)&tmp, 12);
 
-            float size = asteroids::Randomizer::instance()->getRandomNumber(0, 100);
-            response.append((char*)&size, 12);
+            float size = size_astr[i];
+            response.append((char*)&size, 4);
+
+            std::cerr << i << ". Asteroid verpackt!" << "\n";
         }
 
     }

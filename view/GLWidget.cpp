@@ -209,6 +209,7 @@ void GLWidget::step(map<Qt::Key, bool>& keyStates)
 
         int i = 0;
         std::list<Asteroid::Ptr> asteroids;
+        m_asteroidField->getAsteroids(asteroids);
         for (auto it = asteroids.begin(); it != asteroids.end(); it++)
         {
             if(i < client_global.count_astr)
@@ -220,6 +221,7 @@ void GLWidget::step(map<Qt::Key, bool>& keyStates)
             i++;
             PhysicalObject::Ptr p = std::static_pointer_cast<PhysicalObject>(*it);
             m_physicsEngine->addDestroyable(p);
+            std::cout << i << ". Asteroid entpackt!";
         }
 
 

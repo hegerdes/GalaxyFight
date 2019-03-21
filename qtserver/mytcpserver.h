@@ -64,6 +64,10 @@ public:
 private:
        bool already_send_1 = false;
        bool already_send_2 = false;
+
+       asteroids::Vector3f pos_astr[10];
+       asteroids::Vector3f dir_astr[10];
+       float size_astr[10];
 };
 
 #endif // MYTCPSERVER_H
