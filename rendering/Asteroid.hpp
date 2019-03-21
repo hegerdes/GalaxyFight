@@ -74,6 +74,8 @@ public:
 
     constexpr static float MODEL_RADIUS = 100;
 
+    float m_radius;
+
 private:
 
 
@@ -81,8 +83,6 @@ private:
 
     float  m_scale;
     int    m_id;
-
-    float m_radius;
 };
 
 }

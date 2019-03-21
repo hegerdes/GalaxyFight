@@ -4,7 +4,7 @@
 #include <QtCore>
 #include <QtNetwork>
 #include <iostream>
-#include <view/math/Vector.hpp>
+#include <math/Vector.hpp>
 #include <qtserver/packettypes.h>
 #include <qtserver/flags.h>
 #include <vector>
