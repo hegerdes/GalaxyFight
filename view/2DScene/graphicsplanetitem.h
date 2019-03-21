@@ -11,11 +11,11 @@ namespace asteroids {
  * @brief The GraphicsFighterItem class represents a fighter ship as GraphicsItem
  * @author meversmeyer
  */
-class GraphicPlanetItem : public QGraphicsItem
+class GraphicsPlanetItem : public QGraphicsItem
 {
 public:
 
-    GraphicPlanetItem(PlayerType type, int id);
+    GraphicsPlanetItem(int id);
 
     int type() const override;
 
