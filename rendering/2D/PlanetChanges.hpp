@@ -25,6 +25,16 @@ class PlanetChanges
 
   enum Owner{UNASSIGN, PLAYER1, PLAYER2};
 
+  /**
+   * @brief Construct a new Planet Changes object
+   * 
+   * @param id 
+   */
+  PlanetChanges(int id)
+  {
+    id = m_id;
+  }
+
   inline int getID(){return m_id;}
 
   inline int getFactorys(){return m_num_factory;}
@@ -39,8 +49,6 @@ class PlanetChanges
 
   inline Owner geOwner(){return m_owned;}
 
-  inline void setID(int id){m_id = id;}
-
   inline void setFactorys(int factorys){m_num_factory = factorys;}
 
   inline void setMines(int mines){m_num_mine = mines;}
@@ -52,7 +60,6 @@ class PlanetChanges
   inline void setTransports(int transporter){m_num_transporter = transporter;}
 
   inline void setOwner(Owner o){m_owned = o;}
-  
 
   private:
 
@@ -60,7 +67,7 @@ class PlanetChanges
     int m_id;
 
     //Number of ore on planet
-    unsigned int m_num_of_ore;
+    int m_num_of_ore;
 
     //Number of factorys
     int m_num_factory;
