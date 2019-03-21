@@ -42,6 +42,8 @@ namespace asteroids{
             void connect(QString addr, quint16 port);
     private:
             void writeData(QByteArray const & data);
+            void init_3d(char *);
+            void update_3D_S(char *);
 
             QTcpSocket socket;
             float getFloat(char **ptr);
