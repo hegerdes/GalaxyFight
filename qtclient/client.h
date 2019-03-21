@@ -38,8 +38,10 @@ namespace asteroids{
             //start_2D
             void sendUpdate_3D_C(Vector<float> pos, Vector<float> xAxis, Vector<float> yAxis, Vector<float> zAxis, Bullet_shot shot, Living living, int bullet_id);
             void readData();
+            void wait_for_readData();
 
             void connect(QString addr, quint16 port);
+            bool init_received;
     private:
             void writeData(QByteArray const & data);
             void init_3d(char *);

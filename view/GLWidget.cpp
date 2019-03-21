@@ -196,6 +196,16 @@ void GLWidget::step(map<Qt::Key, bool>& keyStates)
                                  m_actor->m_yAxis, m_actor->m_zAxis,
                                  Bullet_shot::shot, Living::alive, 0);
     client_global.readData();
+    if(client_global.init_received)
+    {
+        m_actor->m_position = client_global.ownPos;
+        m_actor->m_xAxis = client_global.ownxAxis;
+        m_actor->m_yAxis = client_global.ownyAxis;
+        m_actor->m_zAxis = client_global.ownzAxis;
+        // asteroids hinzufügen
+        client_global.init_received = false;
+    }
+
     m_enemyPlayer->m_position = client_global.enemyPos;
     m_enemyPlayer->m_xAxis = client_global.enemyxAxis;
     m_enemyPlayer->m_yAxis = client_global.enemyyAxis;

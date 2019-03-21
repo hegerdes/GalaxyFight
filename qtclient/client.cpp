@@ -153,6 +153,7 @@ namespace asteroids {
                 if(pt == PacketType::init_3D){
                     //Own
                     init_3d(data);
+                    init_received = true;
                 } else if(pt == PacketType::update_3D_S){
                     //std::cerr << "packtetype_udpate_3d_s\n";
                     update_3D_S(data);
@@ -161,12 +162,40 @@ namespace asteroids {
                 } else if(pt == PacketType::start_2D){
                     //TODO BLOCK WAITING:::
                 }
-
-
             }
         }
     }
 
+
+    void Client::wait_for_readData(){
+        //std::cerr << "read data\n";
+        if(socket.state() == QAbstractSocket::ConnectedState)
+        {
+            // empfange die positionen des anderen
+            socket.waitForReadyRead();
+            QByteArray answer = socket.readAll();
+            if(answer.length() > 0){
+                //std::cerr << socket.waitForBytesWritten() << "; waitForBytesWritten\n";
+                socket.waitForBytesWritten();
+                char* data = (char*) answer.data();
+
+                PacketType pt = (PacketType) getChar(&data);
+                //std::cerr << "pid: " << pt << ", length" << answer.length() << "\n";
+                if(pt == PacketType::init_3D){
+                    //Own
+                    init_3d(data);
+                    init_received = true;
+                } else if(pt == PacketType::update_3D_S){
+                    //std::cerr << "packtetype_udpate_3d_s\n";
+                    update_3D_S(data);
+                } else if(pt == PacketType::end_3D){
+                    winner_no = getChar(&data);
+                } else if(pt == PacketType::start_2D){
+                    //TODO BLOCK WAITING:::
+                }
+            }
+        }
+    }
     float Client::getFloat(char** ptr){
         float * jo = (float*)*ptr;
         float f = *jo;
