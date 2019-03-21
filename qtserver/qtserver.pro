@@ -18,7 +18,9 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += \
         main.cpp \
-    mytcpserver.cpp
+    mytcpserver.cpp \
+    ../math/Randomizer.cpp
+
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

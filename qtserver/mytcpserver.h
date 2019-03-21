@@ -8,6 +8,7 @@
 #include <QtCore>
 #include <QtNetwork>
 #include "../math/Vector.hpp"
+#include "../math/Randomizer.hpp"
 #include "flags.h"
 
 #include "packettypes.h"
@@ -59,6 +60,9 @@ public:
 
     client_data user_data_1;
     client_data user_data_2;
+
+private:
+       bool already_send = false;
 };
 
 #endif // MYTCPSERVER_H

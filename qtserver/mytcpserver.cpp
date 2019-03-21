@@ -68,6 +68,7 @@ void Server::disconnected()
     }else{
         //ERROR
     }
+    already_send = false;
 
     std::cout << "disconnect success\n";
     socket->deleteLater();
@@ -82,47 +83,106 @@ bool Server::writeData(QByteArray const & data)
 
     QByteArray response;
 
-    client_data client_data_temp;
-    if(socket_1 == socket){
-       client_data_temp = user_data_2;
-    }else if(socket_2 == socket){
-       client_data_temp = user_data_1;
-    }else{
-        std::cerr << "client socket not recognized\n";
+    PacketType toSend = PacketType::update_3D_C;
+
+    if(socket_1 != nullptr && socket_2 != nullptr && !already_send){
+        toSend = PacketType::init_3D;
+        already_send = true;
     }
 
-    response.append(PacketType::update_3D_S);
-    //std::cout << "Packettype out: " << response.data()[0] << std::endl;
-    std::cout << "----------------" << std::endl;
+    if(toSend == PacketType::update_3D_C){
 
-    response.append((char*)&client_data_temp.position, 3*4);
-    std::cout << client_data_temp.position << std::endl;
+        client_data client_data_temp;
+        if(socket_1 == socket){
+           client_data_temp = user_data_2;
+        }else if(socket_2 == socket){
+           client_data_temp = user_data_1;
+        }else{
+            std::cerr << "client socket not recognized\n";
+        }
 
-    response.append((char*)&client_data_temp.xAxis, 3*4);
-    std::cout << client_data_temp.xAxis << std::endl;
+        response.append(PacketType::update_3D_S);
+        //std::cout << "Packettype out: " << response.data()[0] << std::endl;
+        std::cout << "----------------" << std::endl;
 
-    response.append((char*)&client_data_temp.yAxis, 3*4);
-    std::cout << client_data_temp.yAxis << std::endl;
+        response.append((char*)&client_data_temp.position, 3*4);
+        std::cout << client_data_temp.position << std::endl;
 
-    response.append((char*)&client_data_temp.zAxis, 3*4);
-    std::cout << client_data_temp.zAxis << std::endl;
+        response.append((char*)&client_data_temp.xAxis, 3*4);
+        std::cout << client_data_temp.xAxis << std::endl;
 
-    response.append(2, char{}); // anzahl zerstörter asteroidend short eine shor null
-    // Asteroiden ids wenn nötig > 0
-    response.append(client_data_temp.shot);
-    response.append((char*)&client_data_temp.bullet_id, 4);
-    response.append(Hit::hit);
-    response.append(4, char{}); // zerstörte bullets
-    // Bullet ids wenn nötig > 0
+        response.append((char*)&client_data_temp.yAxis, 3*4);
+        std::cout << client_data_temp.yAxis << std::endl;
 
-    if(socket->state() == QAbstractSocket::ConnectedState)
-    {
-        socket->write(response); //write the data itself
-        return socket->waitForBytesWritten();
-    }
-    else{
-        std::cerr << socket->state() << ": connected State\n";
-        return false;
+        response.append((char*)&client_data_temp.zAxis, 3*4);
+        std::cout << client_data_temp.zAxis << std::endl;
+
+        response.append(2, char{}); // anzahl zerstörter asteroidend short eine shor null
+        // Asteroiden ids wenn nötig > 0
+        response.append(client_data_temp.shot);
+        response.append((char*)&client_data_temp.bullet_id, 4);
+        response.append(Hit::hit);
+        response.append(4, char{}); // zerstörte bullets
+        // Bullet ids wenn nötig > 0
+
+        if(socket->state() == QAbstractSocket::ConnectedState)
+        {
+            socket->write(response); //write the data itself
+            return socket->waitForBytesWritten();
+        }
+        else{
+            std::cerr << socket->state() << ": connected State\n";
+            return false;
+        }
+    } else if(toSend == PacketType::init_3D){
+        client_data client_data_temp_own;
+        client_data client_data_temp_enemy;
+        if(socket_1 == socket){
+           client_data_temp_own = user_data_1;
+           client_data_temp_enemy = user_data_2;
+        }else if(socket_2 == socket){
+            client_data_temp_own = user_data_2;
+            client_data_temp_enemy = user_data_1;
+        }else{
+            std::cerr << "client socket not recognized\n";
+        }
+
+        response.append(PacketType::init_3D);
+
+        response.append((char*)&client_data_temp_own.position, 12);
+        response.append((char*)&client_data_temp_own.xAxis, 12);
+        response.append((char*)&client_data_temp_own.yAxis, 12);
+        response.append((char*)&client_data_temp_own.zAxis, 12);
+
+        response.append((char*)&client_data_temp_enemy.position, 12);
+        response.append((char*)&client_data_temp_enemy.xAxis, 12);
+        response.append((char*)&client_data_temp_enemy.yAxis, 12);
+        response.append((char*)&client_data_temp_enemy.zAxis, 12);
+
+        int amount = asteroids::Randomizer::instance()->getRandomNumber(10, 10);
+        response.append((char*)&amount, 4);
+        for(int i{0}; i < amount; i++)
+        {
+            response.append((char*)&i, 4);
+        }
+
+        for(int i{0}; i < amount; i++)
+        {
+            asteroids::Vector3f tmp = asteroids::Randomizer::instance()->getRandomVertex(1000);
+            response.append((char*)&tmp, 12);
+        }
+
+        for(int i{0}; i < amount; i++)
+        {
+            asteroids::Vector3f tmp = asteroids::Randomizer::instance()->getRandomVertex(1.0);
+            response.append((char*)&tmp, 12);
+        }
+
+        for(int i{0}; i < amount; i++)
+        {
+            float size = asteroids::Randomizer::instance()->getRandomNumber(0, 100);
+            response.append((char*)&size, 12);
+        }
     }
 
 }
