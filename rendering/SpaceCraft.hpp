@@ -62,6 +62,11 @@ public:
      */
     bool hasMesh() const;
 
+    /**
+     * @brief collide returns if the spacecraft would collide with round objects of the size r on position vec
+     */
+    bool collide(Vector<float> vec, float r);
+
 private:
     TriangleMesh::Ptr m_mesh;
 

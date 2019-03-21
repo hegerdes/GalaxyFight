@@ -37,13 +37,13 @@ void PhysicsEngine::addBullet(Bullet::Ptr& bullet)
     m_bullets.push_back(bullet);
 }
 
-/*
+
 void PhysicsEngine::addEnemyBullet(Bullet::Ptr& bullet)
 {
     m_particles.addEffect(ParticleEffect::createBulletTail(bullet->getPosition(), bullet->direction(), bullet->lifetime()));
     m_bullets_enemy.push_back(bullet);
 }
-*/
+
 
 void PhysicsEngine::process()
 {
@@ -95,6 +95,19 @@ void PhysicsEngine::process()
         }
     }
 
+    p_it = m_objects.begin();
+    while(p_it != m_objects.end())
+    {
+        if(m_spacecraft->collide((*p_it)->getPosition(), (*p_it)->getradius()))
+        {
+            p_it = m_objects.erase(p_it);
+        }else
+        {
+            p_it++;
+        }
+
+    }
+
     m_particles.update();
 }
 
@@ -123,7 +136,7 @@ void PhysicsEngine::render()
     }
 
 
-    /* WIESOOOOOOOOOO
+
     // Render active bullets and delete inactive ones
     be_it = m_bullets_enemy.begin();
     while(be_it != m_bullets_enemy.end())
@@ -132,7 +145,7 @@ void PhysicsEngine::render()
         b->render();
         be_it++;
     }
-    */
+
     m_particles.render();
     //cout << m_bullets.size() << endl;
 

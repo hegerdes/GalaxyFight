@@ -64,7 +64,7 @@ public:
      */
     void addBullet(Bullet::Ptr& bullet);
 
-//    void addEnemyBullet(Bullet::Ptr& bullet);
+    void addEnemyBullet(Bullet::Ptr& bullet);
 
     /**
      * @brief   Renders all objects and particle effects
@@ -90,7 +90,7 @@ private:
 
     SpaceCraft::Ptr              m_enemy_spacecraft;
 
-    //list<Bullet::Ptr>           m_bullets_enemy;
+    list<Bullet::Ptr>           m_bullets_enemy;
 };
 
 } /* namespace asteroids */

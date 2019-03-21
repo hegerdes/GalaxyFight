@@ -68,6 +68,8 @@ private:
 
     float  m_scale;
 
+    float m_radius;
+
 };
 
 }

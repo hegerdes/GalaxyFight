@@ -49,6 +49,21 @@ bool SpaceCraft::hasMesh() const
     return m_mesh != nullptr;
 }
 
+
+bool SpaceCraft::collide(Vector<float> vec, float r)
+{
+    Vector<float> axis = getXAxis();
+    Vector<float> dist = getPosition() - vec;
+    float distance = pow(dist[0], 2) + pow(dist[1], 2) + pow(dist[2], 2);
+    if(distance <= r + 150)
+    {
+        return true;
+    }
+
+
+    return false;
+}
+
 SpaceCraft::~SpaceCraft()
 {
  
