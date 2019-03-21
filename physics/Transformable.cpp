@@ -42,7 +42,13 @@ Transformable::Transformable()
 
 void Transformable::move()
 {
+    
+
     m_position = m_position + m_direction * m_speed;
+
+    
+
+   
 }
 
 void Transformable::move(MoveTransform axis)
@@ -103,6 +109,14 @@ void Transformable::rotate(RotationTransfrom axis, float s)
     m_direction = m_xAxis * -1.0;
 }
 
+void Transformable::setTransformationMatrix(Vector3f xAxis, Vector3f yAxis, Vector3f zAxis, Vector3f position)
+{
+    m_xAxis = xAxis;
+    m_yAxis = yAxis;
+    m_zAxis = zAxis;
+    m_position = position;
+}
+
 void Transformable::move(MoveTransform axis, float speed)
 {
     Vector<float> direction;
@@ -130,8 +144,31 @@ void Transformable::move(MoveTransform axis, float speed)
         break;
     }
 
+
+    
+    //Skybox Limiter Anfang
+    //Sorgt dafür, dass ein Objekt die Skybox nicht verlassen kann
+    Vector3f oldPosition = m_position;
+    bool invalidPosition = false;
+
     // Update mesh position
     m_position = m_position + direction * speed;
+
+    for(int i = 0; i < 3; i++){
+        if(m_position[i] > 2048){
+            invalidPosition = true;
+            
+        }
+
+        if(m_position[i] < -2048){
+            invalidPosition = true;
+        }
+    }
+    //Würde die Position durch unsere Bewegungs ungültig werden, nehmen wir die vorherige
+    if(invalidPosition){
+        m_position = oldPosition;
+    }
+    //Skybox Limiter Ende
 }
 
 void Transformable::computeMatrix()

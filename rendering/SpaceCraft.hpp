@@ -16,6 +16,7 @@
 #include "TriangleMesh.hpp"
 #include "physics/Transformable.hpp"
 #include "math/Vector.hpp"
+#include "physics/ParticleEngine.hpp"
 
 #include <memory>
 
@@ -62,6 +63,38 @@ public:
      */
     bool hasMesh() const;
 
+    /**
+     * @brief Setzt den Status des Raumschiffes auf zerstört.
+     * 
+     * Das Raumschiff wird nichtmehr gereendert.
+     * Setzt m_status = 1
+     */ 
+    void destroySpaceCraft();
+
+    /**
+     * @brief Gibt den Status des Raumschiffes wieder
+     * 
+     * @return 0 wenn das Raumschiff nicht zerstört wurde
+     * @return 1 wenn das Raumschiff gerade zerstört wurde
+     * @return 2 wenn das Raumschiff zerstört ist 
+     */ 
+    int spaceCraftStatus();
+
+    /**
+     * @brief Beendet die Zerstörtung des Raumschiffes.
+     * 
+     * Setzt m_status = 2
+     */ 
+    void endDestruction();
+    
+    float getMaxSpeed();
+    
+    float getCurrentSpeed();
+
+    void accelerate();
+
+    void deccelerate();
+
     void gotHit()
     {
         m_hp--;
@@ -79,6 +112,15 @@ public:
 
 private:
     TriangleMesh::Ptr m_mesh;
+    
+    //Gibt an ob das Raumschiff gerendert werden soll
+    int m_status;
+
+    ParticleEngine m_explosion;
+
+    float m_maxSpeed;
+
+    float m_currentSpeed;
 
     int m_hp;
 

@@ -87,4 +87,12 @@ void Asteroid::render()
     glPopMatrix();
 }
 
+void Asteroid::setid(int id){
+    m_id = id;
+}
+
+int Asteroid::getid(){
+    return m_id;
+}
+
 } // namespace asteroids

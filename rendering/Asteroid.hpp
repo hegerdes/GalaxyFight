@@ -61,15 +61,28 @@ public:
      */
     virtual void render() override;
 
+    /**
+     * @brief Setter für die ID eines Asteroiden
+     */ 
+    void setid(int id);
+
+    /**
+     * @brief Getter für die ID eines Asteroiden
+     */ 
+    int getid();
+
+
     constexpr static float MODEL_RADIUS = 100;
 
 private:
+
+
     void copy(const Asteroid& other);
 
     float  m_scale;
+    int    m_id;
 
     float m_radius;
-
 };
 
 }

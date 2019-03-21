@@ -32,10 +32,11 @@ public:
      * 
      * @param file the filename of the XML file
      * @param actor the Actorpointer
+     * @param enemy der Pointer für den zweiten Spieler
      * @param sky the Skyboxpointer
      * @param af the AsteroidFieldpointer
      */
-    LevelParser(const std::string& file, SpaceCraft::Ptr& actor, Skybox::Ptr& sky, AsteroidField::Ptr& af);
+    LevelParser(const std::string& file, SpaceCraft::Ptr& actor, SpaceCraft::Ptr& enemy, Skybox::Ptr& sky, AsteroidField::Ptr& af);
 };
 
 } /* namespace asteriods */
