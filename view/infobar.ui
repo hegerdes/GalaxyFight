@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1104</width>
-    <height>197</height>
+    <width>1122</width>
+    <height>217</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -17,33 +17,62 @@
    <string notr="true">background-color: rgb(46, 52, 54);</string>
   </property>
   <layout class="QGridLayout" name="gridLayout">
+   <property name="leftMargin">
+    <number>0</number>
+   </property>
+   <property name="topMargin">
+    <number>0</number>
+   </property>
+   <property name="rightMargin">
+    <number>0</number>
+   </property>
+   <property name="bottomMargin">
+    <number>0</number>
+   </property>
    <item row="0" column="0">
     <layout class="QHBoxLayout" name="horizontalLayout">
      <item>
       <widget class="QGroupBox" name="rundenzeit">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>400</width>
+         <height>16777215</height>
+        </size>
+       </property>
        <property name="styleSheet">
         <string notr="true">color: rgb(255, 255, 255);</string>
        </property>
        <property name="title">
-        <string>Rundenzeit</string>
+        <string>Verbleibende Rundenzeit</string>
        </property>
        <layout class="QGridLayout" name="gridLayout_2">
         <item row="0" column="0">
          <layout class="QVBoxLayout" name="verticalLayout">
           <item>
-           <widget class="QLabel" name="timer">
-            <property name="text">
-             <string>100</string>
-            </property>
-            <property name="alignment">
-             <set>Qt::AlignCenter</set>
+           <widget class="QLCDNumber" name="timer">
+            <property name="intValue" stdset="0">
+             <number>100</number>
             </property>
            </widget>
           </item>
           <item>
            <widget class="QPushButton" name="weiter">
+            <property name="minimumSize">
+             <size>
+              <width>0</width>
+              <height>30</height>
+             </size>
+            </property>
             <property name="styleSheet">
-             <string notr="true">background-color: green;</string>
+             <string notr="true">background-color: green;
+border: none;
+border-radius: 6px;</string>
             </property>
             <property name="text">
              <string>Weiter</string>
@@ -52,8 +81,16 @@
           </item>
           <item>
            <widget class="QPushButton" name="aufgeben">
+            <property name="minimumSize">
+             <size>
+              <width>0</width>
+              <height>30</height>
+             </size>
+            </property>
             <property name="styleSheet">
-             <string notr="true">background-color: rgb(164, 0, 0);</string>
+             <string notr="true">background-color: rgb(164, 0, 0);
+border: none;
+border-radius: 6px;</string>
             </property>
             <property name="text">
              <string>Aufgeben</string>
@@ -68,10 +105,16 @@
      <item>
       <widget class="QGroupBox" name="planet">
        <property name="sizePolicy">
-        <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+        <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
          <horstretch>0</horstretch>
          <verstretch>0</verstretch>
         </sizepolicy>
+       </property>
+       <property name="minimumSize">
+        <size>
+         <width>0</width>
+         <height>0</height>
+        </size>
        </property>
        <property name="baseSize">
         <size>
@@ -88,45 +131,42 @@
        <layout class="QGridLayout" name="gridLayout_5">
         <item row="1" column="0">
          <layout class="QGridLayout" name="gridLayout_4">
-          <item row="7" column="2">
-           <widget class="QLabel" name="erzlager_value">
-            <property name="text">
-             <string>0</string>
-            </property>
-           </widget>
-          </item>
-          <item row="6" column="0">
+          <item row="7" column="0">
            <widget class="QLabel" name="minenanzahl">
             <property name="text">
              <string>Minenanzahl</string>
             </property>
            </widget>
           </item>
-          <item row="6" column="2">
-           <widget class="QLabel" name="erzlager">
-            <property name="text">
-             <string>Gelagertes Erz</string>
+          <item row="10" column="0">
+           <widget class="QPushButton" name="mine_bauen">
+            <property name="enabled">
+             <bool>true</bool>
             </property>
-           </widget>
-          </item>
-          <item row="9" column="1">
-           <widget class="QPushButton" name="werft_bauen">
+            <property name="minimumSize">
+             <size>
+              <width>0</width>
+              <height>30</height>
+             </size>
+            </property>
             <property name="styleSheet">
-             <string notr="true">background-color: blue;</string>
+             <string notr="true">background-color: blue;
+border: none;
+border-radius: 6px;</string>
             </property>
             <property name="text">
-             <string>Werft bauen</string>
+             <string>Mine bauen</string>
             </property>
            </widget>
           </item>
-          <item row="7" column="1">
+          <item row="8" column="1">
            <widget class="QLabel" name="erzvorkommen_value">
             <property name="text">
              <string>0</string>
             </property>
            </widget>
           </item>
-          <item row="7" column="0">
+          <item row="8" column="0">
            <widget class="QLabel" name="minenanzahl_value">
             <property name="text">
              <string>0</string>
@@ -134,49 +174,87 @@
            </widget>
           </item>
           <item row="9" column="2">
-           <widget class="QPushButton" name="kampfschiff_bauen">
-            <property name="styleSheet">
-             <string notr="true">background-color: blue;</string>
-            </property>
-            <property name="text">
-             <string>Kampfschiff bauen</string>
-            </property>
-           </widget>
-          </item>
-          <item row="8" column="2">
            <widget class="QPushButton" name="transporter_bauen">
+            <property name="minimumSize">
+             <size>
+              <width>0</width>
+              <height>30</height>
+             </size>
+            </property>
             <property name="styleSheet">
-             <string notr="true">background-color: blue;</string>
+             <string notr="true">background-color: blue;
+border: none;
+border-radius: 6px;</string>
             </property>
             <property name="text">
              <string>Transporter bauen</string>
             </property>
            </widget>
           </item>
-          <item row="9" column="0">
-           <widget class="QPushButton" name="mine_bauen">
-            <property name="enabled">
-             <bool>true</bool>
+          <item row="10" column="1">
+           <widget class="QPushButton" name="werft_bauen">
+            <property name="minimumSize">
+             <size>
+              <width>0</width>
+              <height>30</height>
+             </size>
             </property>
             <property name="styleSheet">
-             <string notr="true">background-color: blue;</string>
+             <string notr="true">background-color: blue;
+border: none;
+border-radius: 6px;</string>
             </property>
             <property name="text">
-             <string>Mine bauen</string>
+             <string>Werft bauen</string>
             </property>
            </widget>
           </item>
-          <item row="6" column="1">
+          <item row="7" column="1">
            <widget class="QLabel" name="erzvorkommen">
             <property name="text">
              <string>Erzvorkommen</string>
             </property>
            </widget>
           </item>
-          <item row="5" column="0">
+          <item row="8" column="2">
+           <widget class="QLabel" name="erzlager_value">
+            <property name="text">
+             <string>0</string>
+            </property>
+           </widget>
+          </item>
+          <item row="10" column="2">
+           <widget class="QPushButton" name="kampfschiff_bauen">
+            <property name="minimumSize">
+             <size>
+              <width>0</width>
+              <height>30</height>
+             </size>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">background-color: blue;
+border: none;
+border-radius: 6px;</string>
+            </property>
+            <property name="text">
+             <string>Kampfschiff bauen</string>
+            </property>
+           </widget>
+          </item>
+          <item row="7" column="2">
+           <widget class="QLabel" name="erzlager">
+            <property name="text">
+             <string>Gelagertes Erz</string>
+            </property>
+           </widget>
+          </item>
+          <item row="6" column="1">
            <widget class="QLabel" name="planetname">
             <property name="text">
              <string>Planetname</string>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignCenter</set>
             </property>
            </widget>
           </item>
@@ -187,6 +265,12 @@
      </item>
      <item>
       <widget class="QGroupBox" name="resourcen">
+       <property name="maximumSize">
+        <size>
+         <width>400</width>
+         <height>16777215</height>
+        </size>
+       </property>
        <property name="styleSheet">
         <string notr="true">color: rgb(255, 255, 255);</string>
        </property>
@@ -272,6 +356,7 @@
   <tabstop>aufgeben</tabstop>
   <tabstop>mine_bauen</tabstop>
   <tabstop>werft_bauen</tabstop>
+  <tabstop>transporter_bauen</tabstop>
   <tabstop>kampfschiff_bauen</tabstop>
  </tabstops>
  <resources/>
