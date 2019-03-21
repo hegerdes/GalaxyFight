@@ -35,11 +35,11 @@ int Planet::init()
  int Planet::updatePlanet(PlanetChanges updates)
  {
     if(id != updates.getID()) return 1;
-    m_num_factory = updates.getFactorys();
-    m_num_fighters = updates.getFighter();
-    m_num_mine = updates.getMines();
-    m_num_transporter = updates.getTransports();
-    m_num_of_ore = updates.getOre();
+    m_num_factory =+ updates.getFactorys();
+    m_num_fighters =+ updates.getFighter();
+    m_num_mine =+ updates.getMines();
+    m_num_transporter =+ updates.getTransports();
+    m_num_of_ore =+ updates.getOre();
     m_owned = UNASSIGN;
     return 0;
  }
