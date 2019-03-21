@@ -157,8 +157,8 @@ set(ASTEROID_SOURCES
     view/infobar.cpp
     view/2DScene/scene2dhandler.cpp
     view/2DScene/graphicsitemplanet.cpp
-    view/2DScene/graphicsitemmine.cpp
-    view/2DScene/graphicsitemfactory.cpp
+#    view/2DScene/graphicsitemmine.cpp
+#    view/2DScene/graphicsitemfactory.cpp
     view/2DScene/graphicsfighteritem.cpp
 )
 set(ASTEROID_MOCS
