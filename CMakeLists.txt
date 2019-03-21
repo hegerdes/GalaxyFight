@@ -156,7 +156,9 @@ set(ASTEROID_SOURCES
     view/loadingscreen.cpp
     view/infobar.cpp
     view/2DScene/scene2dhandler.cpp
-    view/2DScene/graphicsItemPlanet.cpp
+    view/2DScene/graphicsitemplanet.cpp
+    view/2DScene/graphicsitemmine.cpp
+    view/2DScene/graphicsitemfactory.cpp
 )
 set(ASTEROID_MOCS
     view/MainWindow.hpp
