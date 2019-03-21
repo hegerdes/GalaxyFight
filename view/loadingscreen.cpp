@@ -15,7 +15,7 @@ LoadingScreen::LoadingScreen(QWidget *parent) :
     ui->picLabel->setPixmap(pic);
 
     //loading-animation as a gif
-    QMovie *movie = new QMovie("models/laden3.gif");
+    QMovie *movie = new QMovie("models/laden4.gif");
     ui->gifLabel->setMovie(movie);
     movie->start();
 

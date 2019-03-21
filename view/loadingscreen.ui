@@ -61,10 +61,10 @@ color: rgb(238, 238, 236);</string>
   <widget class="QLabel" name="gifLabel">
    <property name="geometry">
     <rect>
-     <x>560</x>
-     <y>340</y>
-     <width>800</width>
-     <height>600</height>
+     <x>600</x>
+     <y>330</y>
+     <width>720</width>
+     <height>720</height>
     </rect>
    </property>
    <property name="text">
