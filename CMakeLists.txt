@@ -165,6 +165,7 @@ set(ASTEROID_MOCS
     view/loadingscreen.h
     view/infobar.h
     view/settingwindow.h
+    view/2DScene/itemtypes.h
 )
 
 set(ASTEROID_UIS
