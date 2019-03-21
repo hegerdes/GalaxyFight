@@ -216,6 +216,7 @@ void GLWidget::step(map<Qt::Key, bool>& keyStates)
             {
                 (*it)->m_position = client_global.pos_astr[i];
                 (*it)->m_radius = client_global.size_astr[i];
+                (*it)->m_direction = client_global.dir_astr[i];
                 //TODO SET ID
             }
             i++;
