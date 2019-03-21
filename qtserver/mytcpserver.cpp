@@ -20,9 +20,9 @@ Server::Server(QObject *parent) : QObject(parent)
     user_data_1.yAxis[1] = -1;
     user_data_1.zAxis[2] = 1;
     user_data_1.shot = Bullet_shot::not_shot;
-    user_data_2.position = {-650,0,0};
-    user_data_2.xAxis[0] = -1;
-    user_data_2.yAxis[1] = -1;
+    user_data_2.position = {0,0,0};
+    user_data_2.xAxis[0] = 1;
+    user_data_2.yAxis[1] = 1;
     user_data_2.zAxis[2] = 1;
     user_data_1.shot = Bullet_shot::not_shot;
 }
@@ -68,7 +68,8 @@ void Server::disconnected()
     }else{
         //ERROR
     }
-    already_send = false;
+    already_send_1 = false;
+    already_send_2 = false;
 
     std::cout << "disconnect success\n";
     socket->deleteLater();
@@ -85,9 +86,12 @@ bool Server::writeData(QByteArray const & data)
 
     PacketType toSend = PacketType::update_3D_C;
 
-    if(socket_1 != nullptr && socket_2 != nullptr && !already_send){
+    if(socket_1 != nullptr && socket_2 != nullptr && !already_send_1 && socket_1 == socket){
         toSend = PacketType::init_3D;
-        already_send = true;
+        already_send_1 = true;
+    }else if(socket_1 != nullptr && socket_2 != nullptr && !already_send_2 && socket_2 == socket){
+        toSend = PacketType::init_3D;
+        already_send_2 = true;
     }
 
     if(toSend == PacketType::update_3D_C){
@@ -103,19 +107,19 @@ bool Server::writeData(QByteArray const & data)
 
         response.append(PacketType::update_3D_S);
         //std::cout << "Packettype out: " << response.data()[0] << std::endl;
-        std::cout << "----------------" << std::endl;
+        //std::cout << "----------------" << std::endl;
 
         response.append((char*)&client_data_temp.position, 3*4);
-        std::cout << client_data_temp.position << std::endl;
+        //std::cout << client_data_temp.position << std::endl;
 
         response.append((char*)&client_data_temp.xAxis, 3*4);
-        std::cout << client_data_temp.xAxis << std::endl;
+        //std::cout << client_data_temp.xAxis << std::endl;
 
         response.append((char*)&client_data_temp.yAxis, 3*4);
-        std::cout << client_data_temp.yAxis << std::endl;
+        //std::cout << client_data_temp.yAxis << std::endl;
 
         response.append((char*)&client_data_temp.zAxis, 3*4);
-        std::cout << client_data_temp.zAxis << std::endl;
+        //std::cout << client_data_temp.zAxis << std::endl;
 
         response.append(2, char{}); // anzahl zerstörter asteroidend short eine shor null
         // Asteroiden ids wenn nötig > 0
@@ -124,16 +128,6 @@ bool Server::writeData(QByteArray const & data)
         response.append(Hit::hit);
         response.append(4, char{}); // zerstörte bullets
         // Bullet ids wenn nötig > 0
-
-        if(socket->state() == QAbstractSocket::ConnectedState)
-        {
-            socket->write(response); //write the data itself
-            return socket->waitForBytesWritten();
-        }
-        else{
-            std::cerr << socket->state() << ": connected State\n";
-            return false;
-        }
     } else if(toSend == PacketType::init_3D){
         client_data client_data_temp_own;
         client_data client_data_temp_enemy;
@@ -146,6 +140,8 @@ bool Server::writeData(QByteArray const & data)
         }else{
             std::cerr << "client socket not recognized\n";
         }
+
+        std::cerr << "init send" << std::endl;
 
         response.append(PacketType::init_3D);
 
@@ -185,6 +181,16 @@ bool Server::writeData(QByteArray const & data)
         }
     }
 
+    if(socket->state() == QAbstractSocket::ConnectedState)
+    {
+        socket->write(response); //write the data itself
+        return socket->waitForBytesWritten();
+    }
+    else{
+        std::cerr << socket->state() << ": connected State\n";
+        return false;
+    }
+
 }
 
 void Server::readyRead()
@@ -216,33 +222,33 @@ void Server::readyRead()
                 //Interprete the packet-type:
                 char* data = (char*) answer.data();
                 PacketType pt = (PacketType) getChar(&data);
-                std::cout << pt << std::endl;
+                ////std::cout << pt << std::endl;
 
-                if(pt == PacketType::update_3D_C){
+                if(pt == PacketType::update_3D_C && already_send_1 && already_send_2){
                     client_data client_data_temp;
                     client_data_temp.position[0] = getFloat(&data);
                     client_data_temp.position[1] = getFloat(&data);
                     client_data_temp.position[2] = getFloat(&data);
 
-                    std::cout << client_data_temp.position << std::endl;
+                    //std::cout << client_data_temp.position << std::endl;
 
                     client_data_temp.xAxis[0] = getFloat(&data);
                     client_data_temp.xAxis[1] = getFloat(&data);
                     client_data_temp.xAxis[2] = getFloat(&data);
 
-                    std::cout << client_data_temp.xAxis << std::endl;
+                    //std::cout << client_data_temp.xAxis << std::endl;
 
                     client_data_temp.yAxis[0] = getFloat(&data);
                     client_data_temp.yAxis[1] = getFloat(&data);
                     client_data_temp.yAxis[2] = getFloat(&data);
 
-                    std::cout << client_data_temp.yAxis << std::endl;
+                    //std::cout << client_data_temp.yAxis << std::endl;
 
                     client_data_temp.zAxis[0] = getFloat(&data);
                     client_data_temp.zAxis[1] = getFloat(&data);
                     client_data_temp.zAxis[2] = getFloat(&data);
 
-                    std::cout << client_data_temp.zAxis << std::endl;
+                    //std::cout << client_data_temp.zAxis << std::endl;
 
                     client_data_temp.shot = (Bullet_shot) getChar(&data);
                     client_data_temp.bullet_id = getInt(&data);

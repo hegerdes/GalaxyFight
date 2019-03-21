@@ -62,7 +62,8 @@ public:
     client_data user_data_2;
 
 private:
-       bool already_send = false;
+       bool already_send_1 = false;
+       bool already_send_2 = false;
 };
 
 #endif // MYTCPSERVER_H
