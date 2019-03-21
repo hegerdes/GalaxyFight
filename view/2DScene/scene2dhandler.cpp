@@ -11,20 +11,6 @@ Scene2dHandler::Scene2dHandler(QObject* parent)
     //config appearance
     QPixmap background("./models/box3.jpg");
     setBackgroundBrush(QBrush(background));
-
-    QGraphicsRectItem rec(10, 10, 100, 100);
-    rec.setBrush(QBrush(Qt::white));
-
-    rec.setSelected(true);
-
-    rec.show();
-
-    addItem(&rec);
-
-//    addRect(200, 200, 100, 100, QPen(), QBrush(Qt::white));
-
-
-
 }
 
 void Scene2dHandler::mouseReleaseEvent(QGraphicsSceneMouseEvent* mouseEvent)
@@ -36,6 +22,9 @@ void Scene2dHandler::mouseReleaseEvent(QGraphicsSceneMouseEvent* mouseEvent)
     //get item
     QGraphicsItem* item;
     item = itemAt(mouseEvent->pos(), QTransform());
+
+    if(item == nullptr)
+        return;
 
     //Performs a operation specific to each type
     switch (item->type()) {
@@ -49,7 +38,7 @@ void Scene2dHandler::mouseReleaseEvent(QGraphicsSceneMouseEvent* mouseEvent)
 
         break;
     case ItemTypes::Fighter:
-
+            handleFighterSelection((GraphicsFighterItem*) item);
         break;
     case ItemTypes::Transporter:
 
@@ -76,9 +65,10 @@ void Scene2dHandler::handleFactorySelection()
 
 }
 
-void Scene2dHandler::handleFighterSelection()
+void Scene2dHandler::handleFighterSelection(GraphicsFighterItem* fighter)
 {
-
+    fighter->selected();
+    update(fighter->pos().x(), fighter->pos().x(), 50, 50);
 }
 
 void Scene2dHandler::handleTransporterSelection()
