@@ -38,9 +38,9 @@ AsteroidField::AsteroidField(int quantity, const std::string& filename, float ra
                 {20.0f*i,0,0},          // Position
                 100,        // Mass
                 1, // Rotation
-                0,          // Speed
+                0.05,          // Speed
                 0,          // Acceleration
-                20         // Radius)
+                100         // Radius)
       ));
       m_asteroids.push_back(p);
 	}
