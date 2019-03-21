@@ -118,7 +118,7 @@ void GLWidget::initializeGL()
 
 
     // Setup physics//
-    m_physicsEngine = make_shared<PhysicsEngine>(m_actor, m_enemy);
+    m_physicsEngine = make_shared<PhysicsEngine>();
 
     m_playerHPBar = make_shared<HealthBar>(HealthBar::PLAYER_1, width(), height());
 
@@ -231,23 +231,6 @@ void GLWidget::step(map<Qt::Key, bool>& keyStates)
                     //Lässt Bullet bei der Kanone des Raumschiffes erscheinen
                     Vector3f shipPosition = m_actor->getPosition() + m_actor->getZAxis() * -45 + m_actor->getXAxis() * -175;
                     Bullet::Ptr bullet = make_shared<Bullet>(Bullet(shipPosition, m_actor->getDirection()));
-                    m_physicsEngine->addBullet(bullet);
-                    m_lastBullet = bulletShot;
-                }
-                
-            }
-
-            // Add a bullet to physics engine
-            if(keyStates[Qt::Key_Space])
-            {
-                
-                auto now = std::chrono::system_clock::now();
-                auto now_ms = std::chrono::time_point_cast<std::chrono::milliseconds>(now);
-                auto value = now_ms.time_since_epoch();
-                long bulletShot = value.count();
-                ///Ermittelt, wann die letzte Kugel abgeschoßen wurde und erlaubt erst nach
-                if(bulletShot - m_lastBullet > m_schussFrequenz){
-                    Bullet::Ptr bullet = make_shared<Bullet>(Bullet(m_actor->getPosition(), m_actor->getDirection()));
                     m_physicsEngine->addBullet(bullet);
                     m_lastBullet = bulletShot;
                 }

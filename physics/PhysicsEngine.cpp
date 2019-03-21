@@ -20,12 +20,6 @@ namespace asteroids
 {
 
 
-PhysicsEngine::PhysicsEngine(SpaceCraft::Ptr o_spacecraft, SpaceCraft::Ptr o_enemy)
-{
-    m_spacecraft = SpaceCraft::Ptr(o_spacecraft);
-    m_enemy_spacecraft = SpaceCraft::Ptr(o_enemy);
-}
-
 void PhysicsEngine::addDestroyable(PhysicalObject::Ptr& obj)
 {
     m_objects.push_back(obj);
@@ -70,7 +64,7 @@ void PhysicsEngine::process()
         /*
          *check of enemy Ship with Bullets*/
 
-        if(m_enemy_spacecraft->collideShip(b->getPosition(), b->radius()))
+        if(m_enemyPlayer->collideShip(b->getPosition(), b->radius()))
         {
             b->destroy();
 
@@ -188,10 +182,10 @@ void PhysicsEngine::process()
         /*
          * TODO:: Einkommentieren, wenn merge, dann m_enemy_ship initialisiert
         */
-        else if(m_enemy_spacecraft->collideShip((*p_it)->getPosition(), (*p_it)->getradius()))
+        else if(m_enemyPlayer->collideShip((*p_it)->getPosition(), (*p_it)->getradius()))
         {
             m_particles.addEffect(ParticleEffect::createExplosionSphere((*p_it)->getPosition()));
-            m_enemy_spacecraft->gotHit();
+            m_enemyPlayer->gotHit();
 
             p_it = m_objects.erase(p_it);
         }else

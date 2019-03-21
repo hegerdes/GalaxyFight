@@ -56,7 +56,6 @@ bool SpaceCraft::hasMesh() const
     return m_mesh != nullptr;
 }
 
-<<<<<<< rendering/SpaceCraft.cpp
 void SpaceCraft::destroySpaceCraft()
 {
     if(m_status != 2){
@@ -100,7 +99,7 @@ float SpaceCraft::getCurrentSpeed()
 float SpaceCraft::getMaxSpeed()
 {
     return m_maxSpeed;
-
+}
 
 //TODO: Feinschliff für Hitboxen
 bool SpaceCraft::collideShip(Vector<float> vec, float r)

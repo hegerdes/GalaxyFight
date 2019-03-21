@@ -42,9 +42,7 @@ public:
     /**
      * @brief   Ctor.
      */
-    PhysicsEngine(SpaceCraft::Ptr own, SpaceCraft::Ptr enemy);
-
-    PhysicsEngine() = delete;
+    PhysicsEngine() = default;
 
     /**
      * @brief   Dtor.
@@ -100,10 +98,6 @@ private:
     SpaceCraft::Ptr              m_enemyPlayer;
 
     ParticleEngine               m_particles;
-
-    SpaceCraft::Ptr              m_spacecraft;
-
-    SpaceCraft::Ptr              m_enemy_spacecraft;
 
     list<Bullet::Ptr>           m_bullets_enemy;
 };
