@@ -112,6 +112,8 @@ void GLWidget::initializeGL()
     // Load level
     LevelParser lp(m_levelFile, m_actor, m_skybox, m_asteroidField);
 
+
+
     // Setup physics//
     m_physicsEngine = make_shared<PhysicsEngine>(m_actor, m_enemy);
 

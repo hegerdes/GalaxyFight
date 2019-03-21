@@ -26,6 +26,7 @@ SpaceCraft::SpaceCraft(const std::string &filename, const Vector3f& position, fl
     m_mesh = TriangleMeshFactory::instance().getMesh(filename);
     m_speed = movespeed;
     m_rotationSpeed = rotatespeed;
+    m_hp = 10;
     if(m_mesh)
     {
        setPosition(position);
@@ -50,13 +51,33 @@ bool SpaceCraft::hasMesh() const
 }
 
 
-bool SpaceCraft::collide(Vector<float> vec, float r)
+//TODO: Feinschliff für Hitboxen
+bool SpaceCraft::collideShip(Vector<float> vec, float r)
 {
     Vector<float> axis = getXAxis();
-    Vector<float> dist = getPosition() - vec;
+    Vector<float> pos = getPosition();
+    Vector<float> dist = pos - vec;
     float distance = pow(dist[0], 2) + pow(dist[1], 2) + pow(dist[2], 2);
-    if(distance <= r + 150)
+    //cerr << "distance :" << distance;
+    if(distance <= pow(r + 50, 2))
     {
+        cerr << "test";
+        return true;
+    }
+    pos = pos + axis * 90;
+    dist = pos - vec;
+    distance = pow(dist[0], 2) + pow(dist[1], 2) + pow(dist[2], 2);
+    if(distance <= pow(r + 40, 2))
+    {
+        cerr << "test";
+        return true;
+    }
+    pos = pos + axis * 70;
+    dist = pos - vec;
+    distance = pow(dist[0], 2) + pow(dist[1], 2) + pow(dist[2], 2);
+    if(distance <= pow(r + 30, 2))
+    {
+        cerr << "test";
         return true;
     }
 

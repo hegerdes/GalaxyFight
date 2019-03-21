@@ -62,13 +62,27 @@ public:
      */
     bool hasMesh() const;
 
+    void gotHit()
+    {
+        m_hp--;
+
+        if(m_hp == 0)
+        {
+            m_alive = false;
+        }
+    }
+
     /**
      * @brief collide returns if the spacecraft would collide with round objects of the size r on position vec
      */
-    bool collide(Vector<float> vec, float r);
+    bool collideShip(Vector<float> vec, float r);
 
 private:
     TriangleMesh::Ptr m_mesh;
+
+    int m_hp;
+
+    bool m_alive;
 
 };
 
