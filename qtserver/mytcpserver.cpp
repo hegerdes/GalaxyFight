@@ -97,7 +97,7 @@ bool Server::writeData(QByteArray const& data) {
     }
 
     if (toSend == PacketType::update_3D_C) {
-        sendUpdate_3D_C(response, socket);
+        sendUpdate_3D_S(response, socket);
     } else if (toSend == PacketType::init_3D) {
         sendInit_3D(response, socket);
     }
@@ -111,7 +111,7 @@ bool Server::writeData(QByteArray const& data) {
     }
 }
 
-void Server::sendUpdate_3D_C(QByteArray& response, QTcpSocket* socket) {
+void Server::sendUpdate_3D_S(QByteArray& response, QTcpSocket* socket) {
     client_data client_data_temp;
     if (socket_1 == socket) {
         client_data_temp = user_data_2;
@@ -124,28 +124,58 @@ void Server::sendUpdate_3D_C(QByteArray& response, QTcpSocket* socket) {
     }
 
     response.append(PacketType::update_3D_S);
-    // std::cout << "Packettype out: " << response.data()[0] << std::endl;
-    // std::cout << "----------------" << std::endl;
-
     response.append((char*) &client_data_temp.position, 3 * 4);
-    // std::cout << client_data_temp.position << std::endl;
-
     response.append((char*) &client_data_temp.xAxis, 3 * 4);
-    // std::cout << client_data_temp.xAxis << std::endl;
-
     response.append((char*) &client_data_temp.yAxis, 3 * 4);
-    // std::cout << client_data_temp.yAxis << std::endl;
-
     response.append((char*) &client_data_temp.zAxis, 3 * 4);
-    // std::cout << client_data_temp.zAxis << std::endl;
 
     response.append(2, char{}); // anzahl zerstörter asteroidend short eine shor null
     // Asteroiden ids wenn nötig > 0
+
     response.append(client_data_temp.shot);
     response.append((char*) &client_data_temp.bullet_id, 4);
     response.append(Hit::hit);
     response.append(4, char{}); // zerstörte bullets
-                                // Bullet ids wenn nötig > 0
+    // Bullet ids wenn nötig > 0
+}
+
+void Server::recvUpdate_3D_C(char* data, QTcpSocket* socket) {
+    client_data client_data_temp;
+    client_data_temp.position[0] = getFloat(&data);
+    client_data_temp.position[1] = getFloat(&data);
+    client_data_temp.position[2] = getFloat(&data);
+
+    // std::cout << client_data_temp.position << std::endl;
+
+    client_data_temp.xAxis[0] = getFloat(&data);
+    client_data_temp.xAxis[1] = getFloat(&data);
+    client_data_temp.xAxis[2] = getFloat(&data);
+
+    // std::cout << client_data_temp.xAxis << std::endl;
+
+    client_data_temp.yAxis[0] = getFloat(&data);
+    client_data_temp.yAxis[1] = getFloat(&data);
+    client_data_temp.yAxis[2] = getFloat(&data);
+
+    // std::cout << client_data_temp.yAxis << std::endl;
+
+    client_data_temp.zAxis[0] = getFloat(&data);
+    client_data_temp.zAxis[1] = getFloat(&data);
+    client_data_temp.zAxis[2] = getFloat(&data);
+
+    // std::cout << client_data_temp.zAxis << std::endl;
+
+    client_data_temp.shot = (Bullet_shot) getChar(&data);
+    client_data_temp.bullet_id = getInt(&data);
+    client_data_temp.living = (Living) getChar(&data);
+
+    if (socket_1 == socket) {
+        user_data_1 = client_data_temp;
+    } else if (socket_2 == socket) {
+        user_data_2 = client_data_temp;
+    } else {
+        std::cerr << "client socket not recognized\n";
+    }
 }
 
 void Server::sendInit_3D(QByteArray& response, QTcpSocket* socket) {
@@ -225,61 +255,10 @@ void Server::readyRead() {
                 ////std::cout << pt << std::endl;
 
                 if (pt == PacketType::update_3D_C && already_send_1 && already_send_2) {
-
-                    client_data client_data_temp;
-                    client_data_temp.position[0] = getFloat(&data);
-                    client_data_temp.position[1] = getFloat(&data);
-                    client_data_temp.position[2] = getFloat(&data);
-
-                    // std::cout << client_data_temp.position << std::endl;
-
-                    client_data_temp.xAxis[0] = getFloat(&data);
-                    client_data_temp.xAxis[1] = getFloat(&data);
-                    client_data_temp.xAxis[2] = getFloat(&data);
-
-                    // std::cout << client_data_temp.xAxis << std::endl;
-
-                    client_data_temp.yAxis[0] = getFloat(&data);
-                    client_data_temp.yAxis[1] = getFloat(&data);
-                    client_data_temp.yAxis[2] = getFloat(&data);
-
-                    // std::cout << client_data_temp.yAxis << std::endl;
-
-                    client_data_temp.zAxis[0] = getFloat(&data);
-                    client_data_temp.zAxis[1] = getFloat(&data);
-                    client_data_temp.zAxis[2] = getFloat(&data);
-
-                    // std::cout << client_data_temp.zAxis << std::endl;
-
-                    client_data_temp.shot = (Bullet_shot) getChar(&data);
-                    client_data_temp.bullet_id = getInt(&data);
-                    client_data_temp.living = (Living) getChar(&data);
-
-                    if (socket_1 == socket) {
-                        user_data_1 = client_data_temp;
-                    } else if (socket_2 == socket) {
-                        user_data_2 = client_data_temp;
-                    } else {
-                        std::cerr << "client socket not recognized\n";
-                    }
+                    recvUpdate_3D_C(data, socket);
                 }
 
-                // PacketType type = data[0];
-                // get packet and
-                /*
-                    float* temp = (float*) data.data();
-
-                    for(int i {0}; i < 12; i++){
-                        if(socket_1 == socket){
-                            position_temp[i] = temp[i];
-                        }else if(socket_2 == socket){
-                            position_temp_2[i] = temp[i];
-                        }else{
-                            //ERROR
-                        }
-                    }
-                */
-
+                // direct response after receiving
                 this->writeData(nullptr);
             }
         }

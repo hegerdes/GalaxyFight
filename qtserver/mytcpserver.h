@@ -70,8 +70,9 @@ class Server : public QObject {
     float size_astr[10];
     // sending packets
     void sendInit_3D(QByteArray& response, QTcpSocket* socket);
-    void sendUpdate_3D_C(QByteArray& response, QTcpSocket* socket);
+    void sendUpdate_3D_S(QByteArray& response, QTcpSocket* socket);
     // receive packets
+    void recvUpdate_3D_C(char* data, QTcpSocket* socket);
 };
 
 #endif // MYTCPSERVER_H
