@@ -22,7 +22,7 @@ class PlanetChanges
 
   public:
 
-    using Ptr = std::shared_ptr<PlanetChanges>;
+    //using Ptr = std::shared_ptr<PlanetChanges>;
 
     enum Owner{UNASSIGN, PLAYER1, PLAYER2};
 
