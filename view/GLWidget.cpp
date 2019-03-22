@@ -12,7 +12,7 @@ GLWidget::GLWidget(QWidget* parent)
       m_rotationSpeed(0.025),
       m_moveSpeed(5.0),
       m_lastBullet(0),
-      m_schussFrequenz(500)
+      m_schussFrequenz(500),
       active(false)
 {
 }
@@ -172,6 +172,7 @@ void GLWidget::paintGL()
     m_enemyHPBar->render();
 
     m_crossHair->render();
+    }
 }
 
 void GLWidget::step(map<Qt::Key, bool>& keyStates)
