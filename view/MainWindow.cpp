@@ -43,9 +43,8 @@ MainWindow::MainWindow(QWidget* parent) :
 //    setLayout(m_screenStack);
 
     // Create a timer object to trigger the main loop
-    connect(m_timer.get(), &QTimer::timeout, this, &MainWindow::handleInput);
-    m_timer->start(1000 / 60.0);
-
+    connect(m_timer.get(), SIGNAL(timeout()), this, SLOT(handleInput()));
+    m_timer->start(1000 / 30.0);
     setupConnections();
 }
 

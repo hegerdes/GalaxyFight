@@ -12,7 +12,7 @@
 #ifndef RANDOMIZER_HPP_
 #define RANDOMIZER_HPP_
 
-#include "math/Vector.hpp"
+#include "Vector.hpp"
 #include <ctime>
 #include <cstdlib>
 
