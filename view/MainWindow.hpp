@@ -112,7 +112,7 @@ private:
     map<Qt::Key, bool>          m_keyStates;
 
     /// 60 fps timer
-    shared_ptr<QTimer>          m_timer;
+    std::shared_ptr<QTimer>          m_timer;
 };
 
 }

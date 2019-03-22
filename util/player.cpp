@@ -32,6 +32,10 @@ player::player(QObject *parent, int base) : QObject(parent)
        transportSpaceCraftslist.push_back(start_transportSpaceCraft);
    }
 
+   MapFactory& b = MapFactory::getinstance();
+   Map::Ptr map = b.getMap("models/01.map");
+   planets = map->getPlanets();
+
 }
 
 //instace
@@ -52,9 +56,18 @@ void player::build_shipyard(int planet_number){
     if(current_resource >= COST_PER_SHIPYARD){
         current_resource -= COST_PER_SHIPYARD;
 
-        PlanetChanges new_change(planet_number);
-        new_change.setFactorys(1);
-        round_changes.push_back(new_change);
+        bool exist = false;
+        for (auto i = round_changes.begin(); i != round_changes.end();i++) {
+            if((*i).getID() == planet_number){
+                (*i).setFactorys(1);
+                exist = true;
+            }
+        }
+        if(exist == false){
+            PlanetChanges new_change(planet_number);
+            new_change.setFactorys(1);
+            round_changes.push_back(new_change);
+        }
 
         emit update();
     }else {
@@ -69,9 +82,18 @@ void player::build_mine(int planet_number){
         current_resource -= COST_PER_MINE;
         resource_per_time += RESOURCE_PER_MINE;
 
-        PlanetChanges new_change(planet_number);
-        new_change.setMines(1);
-        round_changes.push_back(new_change);
+        bool exist = false;
+        for (auto i = round_changes.begin(); i != round_changes.end();i++) {
+            if((*i).getID() == planet_number){
+                (*i).setMines(1);
+                exist = true;
+            }
+        }
+        if(exist == false){
+            PlanetChanges new_change(planet_number);
+            new_change.setMines(1);
+            round_changes.push_back(new_change);
+        }
 
         emit update();
     }else {
@@ -81,16 +103,25 @@ void player::build_mine(int planet_number){
 }
 
 //aufruf wenn ein attackspacecraft gebaut wird
-void player::new_attackSpaceCraft(int start_position){
+void player::new_attackSpaceCraft(int planet_number){
     if(current_resource >= COST_PER_ATTACKSPACECRAFT){
     current_resource -= COST_PER_ATTACKSPACECRAFT;
     attackspacecraft_id += 1;
-    attackspacecraft *attackSpaceCraft = new attackspacecraft(attackSpaceCraft_number,start_position);
+    attackspacecraft *attackSpaceCraft = new attackspacecraft(attackSpaceCraft_number,planet_number);
     attackSpaceCraftslist.push_back(attackSpaceCraft);
 
-    PlanetChanges new_change(start_position);
-    new_change.setFighter(1);
-    round_changes.push_back(new_change);
+    bool exist = false;
+    for (auto i = round_changes.begin(); i != round_changes.end();i++) {
+        if((*i).getID() == planet_number){
+            (*i).setFighter(1);
+            exist = true;
+        }
+    }
+    if(exist == false){
+        PlanetChanges new_change(planet_number);
+        new_change.setFighter(1);
+        round_changes.push_back(new_change);
+    }
 
     emit update();
     }else {
@@ -112,11 +143,11 @@ void player::destroy_attackSpaceCraft(int number_id){
 }
 
 //aufruf wenn ein transportspacecraft gebaut wird
-void player::new_transportSpaceCraft(int start_position){
+void player::new_transportSpaceCraft(int planet_number){
     if(current_resource >= COST_PER_TRANSPORTSPACECRAFT){
         current_resource -= COST_PER_TRANSPORTSPACECRAFT;
         transportSpaceCraft_number += 1;
-        transportspacecraft* transportSpaceCraft = new transportspacecraft(transportSpaceCraft_number, start_position);
+        transportspacecraft* transportSpaceCraft = new transportspacecraft(transportSpaceCraft_number, planet_number);
         transportSpaceCraftslist.push_back(transportSpaceCraft);
 
         emit update();

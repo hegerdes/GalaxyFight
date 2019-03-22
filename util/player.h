@@ -3,8 +3,11 @@
 
 #include <QObject>
 #include <list>
+#include <memory>
 #include "rendering/2D/PlanetChanges.hpp"
 #include <map>
+#include "rendering/2D/Map.hpp"
+#include "rendering/2D/MapFactory.hpp"
 
 namespace asteroids {
 
@@ -66,11 +69,11 @@ public slots:
 
     void build_mine(int planet_number);
 
-    void new_attackSpaceCraft(int start_position);
+    void new_attackSpaceCraft(int planet_number);
 
     void destroy_attackSpaceCraft(int number_id);
 
-    void new_transportSpaceCraft(int start_position);
+    void new_transportSpaceCraft(int planet_number);
 
     void change_transportSpaceCraft_route(std::list<int> route, int transportSpaceCraft_id);
 
@@ -111,6 +114,9 @@ private:
 
     //map um die einzelnen änderungen an planeten zu speichern
     std::list<PlanetChanges> round_changes;
+
+    //spielmap
+    std::vector<std::shared_ptr<Planet>> planets;
 
 };
 }
