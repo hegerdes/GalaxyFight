@@ -56,6 +56,8 @@ signals:
 
     void no_resources();
 
+    void update();
+
 public slots:
 
     void decrease_resource_per_time(int mine_number);
