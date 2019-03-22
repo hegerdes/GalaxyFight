@@ -60,7 +60,7 @@ private:
 	Vertex m_goal;
 };
 
-Map::Map(std::string mapfile):m_planets(17)
+Map::Map(std::string mapfile):m_planets(25)
 {
     using namespace boost;
     try
