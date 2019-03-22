@@ -48,6 +48,8 @@ class PlanetChanges
 
   inline int getTransports(){return m_num_transporter;}
 
+  inline int getInitFight(){return m_attack_planet;}
+
   inline Owner geOwner(){return m_owned;}
 
   inline void setFactorys(int factorys){m_num_factory = factorys;}
@@ -59,6 +61,8 @@ class PlanetChanges
   inline void setFighter(int fighter){m_num_fighters = fighter;}
 
   inline void setTransports(int transporter){m_num_transporter = transporter;}
+
+  inline void setInitFight(bool startFight){m_attack_planet = startFight;}
 
   inline void setOwner(Owner o){m_owned = o;}
 
@@ -81,6 +85,9 @@ class PlanetChanges
 
     //Number of transporters on planet
     int m_num_transporter;
+
+    //if player wants to start a fight
+    bool m_attack_planet;
 
     //Who owns the planet
     Owner m_owned;
