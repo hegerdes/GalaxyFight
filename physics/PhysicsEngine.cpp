@@ -42,9 +42,13 @@ void PhysicsEngine::addEnemyBullet(Bullet::Ptr& bullet)
 
 void PhysicsEngine::process()
 {
-    //list<PhysicalObject::Ptr>::iterator p_it;
+
     list<PhysicalObject::Ptr>::iterator p_it;
     list<Bullet::Ptr>::iterator b_it;
+
+    p_it = m_objects.begin();
+
+    PhysicalObject::Ptr p = *p_it;
 
     // Move all objects
     for (p_it = m_objects.begin(); p_it != m_objects.end(); p_it++)

@@ -177,136 +177,138 @@ void GLWidget::paintGL()
 
 void GLWidget::step(map<Qt::Key, bool>& keyStates)
 {
-    // Get keyboard states and handle model movement
-    m_physicsEngine->process();
+    if(active){
+        // Get keyboard states and handle model movement
+        m_physicsEngine->process();
 
 
-    Bullet_shot bullet_shot = Bullet_shot::not_shot;
-    if(m_actor->spaceCraftStatus() == 0){
-        
-
-        m_actor->move(Transformable::FORWARD, m_actor->getCurrentSpeed());
-
-        if (keyStates[Qt::Key_Up])
-        {
-            m_actor->rotate(Transformable::PITCH_RIGHT, m_rotationSpeed);
-        }
-        if (keyStates[Qt::Key_Down])
-        {
-            m_actor->rotate(Transformable::PITCH_LEFT, m_rotationSpeed);
-        }
-        if (keyStates[Qt::Key_Left])
-        {
-            m_actor->rotate(Transformable::ROLL_LEFT, m_rotationSpeed);
-        }
-        if (keyStates[Qt::Key_Right])
-        {
-            m_actor->rotate(Transformable::ROLL_RIGHT, m_rotationSpeed);
-        }
-    
-        if (keyStates[Qt::Key_W])
-        {
-            m_actor->accelerate();
-        }
-        if (keyStates[Qt::Key_S])
-        {
-            m_actor->deccelerate();
-        }
-        if (keyStates[Qt::Key_A])
-        {
-            m_actor->rotate(Transformable::YAW_LEFT, m_rotationSpeed);
-        }
-        if (keyStates[Qt::Key_D])
-        {
-            m_actor->rotate(Transformable::YAW_RIGHT, m_rotationSpeed);
-        }
+        Bullet_shot bullet_shot = Bullet_shot::not_shot;
+        if(m_actor->spaceCraftStatus() == 0){
 
 
-            if(keyStates[Qt::Key_X]){
-                //Debug/Tesline für Explosion eigenes Raumschiff
-                m_actor->destroySpaceCraft();
-            }
-            
-            // Add a bullet to physics engine
-            if(keyStates[Qt::Key_Space])
+            m_actor->move(Transformable::FORWARD, m_actor->getCurrentSpeed());
+
+            if (keyStates[Qt::Key_Up])
             {
-                
-                auto now = std::chrono::system_clock::now();
-                auto now_ms = std::chrono::time_point_cast<std::chrono::milliseconds>(now);
-                auto value = now_ms.time_since_epoch();
-                long bulletShot = value.count();
-                ///Ermittelt, wann die letzte Kugel abgeschoßen wurde und erlaubt erst nach
-                if(bulletShot - m_lastBullet > m_schussFrequenz){
-                    Vector3f shipPosition = m_actor->getPosition() + m_actor->getZAxis() * -45 + m_actor->getXAxis() * -175;
-                    Bullet::Ptr bullet = make_shared<Bullet>(Bullet(shipPosition, m_actor->getDirection()));
-                    m_physicsEngine->addBullet(bullet);
-                    m_lastBullet = bulletShot;
-                    bullet_shot = Bullet_shot::shot;
+                m_actor->rotate(Transformable::PITCH_RIGHT, m_rotationSpeed);
+            }
+            if (keyStates[Qt::Key_Down])
+            {
+                m_actor->rotate(Transformable::PITCH_LEFT, m_rotationSpeed);
+            }
+            if (keyStates[Qt::Key_Left])
+            {
+                m_actor->rotate(Transformable::ROLL_LEFT, m_rotationSpeed);
+            }
+            if (keyStates[Qt::Key_Right])
+            {
+                m_actor->rotate(Transformable::ROLL_RIGHT, m_rotationSpeed);
+            }
+
+            if (keyStates[Qt::Key_W])
+            {
+                m_actor->accelerate();
+            }
+            if (keyStates[Qt::Key_S])
+            {
+                m_actor->deccelerate();
+            }
+            if (keyStates[Qt::Key_A])
+            {
+                m_actor->rotate(Transformable::YAW_LEFT, m_rotationSpeed);
+            }
+            if (keyStates[Qt::Key_D])
+            {
+                m_actor->rotate(Transformable::YAW_RIGHT, m_rotationSpeed);
+            }
+
+
+                if(keyStates[Qt::Key_X]){
+                    //Debug/Tesline für Explosion eigenes Raumschiff
+                    m_actor->destroySpaceCraft();
                 }
-                
-            }
-    }
-    if(keyStates[Qt::Key_Y]){
-            //Debug/Tesline für Explosion eigenes Raumschiff
-            m_enemyPlayer->destroySpaceCraft();
-        }
-    // Trigger update, i.e., redraw via paintGL()
-    client_global.sendUpdate_3D_C(m_actor->m_position, m_actor->m_xAxis,
-                                 m_actor->m_yAxis, m_actor->m_zAxis,
-                                 bullet_shot, Living::alive, 0);
-    client_global.readData();
-    if(client_global.init_received)
-    {
-        m_actor->m_position = client_global.ownPos;
-        m_actor->m_xAxis = client_global.ownxAxis;
-        m_actor->m_yAxis = client_global.ownyAxis;
-        m_actor->m_zAxis = client_global.ownzAxis;
-        // asteroids hinzufügen
 
-        int i = 0;
-        std::list<Asteroid::Ptr> asteroids;
-        m_asteroidField->getAsteroids(asteroids);
-        std::cerr << client_global.count_astr << " ----------------------------------\n";
-        for (auto it = asteroids.begin(); it != asteroids.end(); it++)
+                // Add a bullet to physics engine
+                if(keyStates[Qt::Key_Space])
+                {
+
+                    auto now = std::chrono::system_clock::now();
+                    auto now_ms = std::chrono::time_point_cast<std::chrono::milliseconds>(now);
+                    auto value = now_ms.time_since_epoch();
+                    long bulletShot = value.count();
+                    ///Ermittelt, wann die letzte Kugel abgeschoßen wurde und erlaubt erst nach
+                    if(bulletShot - m_lastBullet > m_schussFrequenz){
+                        Vector3f shipPosition = m_actor->getPosition() + m_actor->getZAxis() * -45 + m_actor->getXAxis() * -175;
+                        Bullet::Ptr bullet = make_shared<Bullet>(Bullet(shipPosition, m_actor->getDirection()));
+                        m_physicsEngine->addBullet(bullet);
+                        m_lastBullet = bulletShot;
+                        bullet_shot = Bullet_shot::shot;
+                    }
+
+                }
+        }
+        if(keyStates[Qt::Key_Y]){
+                //Debug/Tesline für Explosion eigenes Raumschiff
+                m_enemyPlayer->destroySpaceCraft();
+            }
+        // Trigger update, i.e., redraw via paintGL()
+        client_global.sendUpdate_3D_C(m_actor->m_position, m_actor->m_xAxis,
+                                     m_actor->m_yAxis, m_actor->m_zAxis,
+                                     bullet_shot, Living::alive, 0);
+        client_global.readData();
+        if(client_global.init_received)
         {
-            if(i < client_global.count_astr)
+            m_actor->m_position = client_global.ownPos;
+            m_actor->m_xAxis = client_global.ownxAxis;
+            m_actor->m_yAxis = client_global.ownyAxis;
+            m_actor->m_zAxis = client_global.ownzAxis;
+            // asteroids hinzufügen
+
+            int i = 0;
+            std::list<Asteroid::Ptr> asteroids;
+            m_asteroidField->getAsteroids(asteroids);
+            std::cerr << client_global.count_astr << " ----------------------------------\n";
+            for (auto it = asteroids.begin(); it != asteroids.end(); it++)
             {
-                (*it)->m_position = client_global.pos_astr[i];
-                std::cerr << "m_position " << (*it)->m_position << "\n";
-                (*it)->m_radius = client_global.size_astr[i];
-                std::cerr << "m_radius " << (*it)->m_radius << "\n";
-                (*it)->m_direction = client_global.dir_astr[i];
-                std::cerr << "m_direction " << (*it)->m_direction << "\n";
-                //TODO SET ID
+                if(i < client_global.count_astr)
+                {
+                    (*it)->m_position = client_global.pos_astr[i];
+                    std::cerr << "m_position " << (*it)->m_position << "\n";
+                    (*it)->m_radius = client_global.size_astr[i];
+                    std::cerr << "m_radius " << (*it)->m_radius << "\n";
+                    (*it)->m_direction = client_global.dir_astr[i];
+                    std::cerr << "m_direction " << (*it)->m_direction << "\n";
+                    //TODO SET ID
+                }
+                i++;
+                PhysicalObject::Ptr p = std::static_pointer_cast<PhysicalObject>(*it);
+                m_physicsEngine->addDestroyable(p);
+                std::cout << i << ". Asteroid entpackt!";
             }
-            i++;
-            PhysicalObject::Ptr p = std::static_pointer_cast<PhysicalObject>(*it);
-            m_physicsEngine->addDestroyable(p);
-            std::cout << i << ". Asteroid entpackt!";
+
+            client_global.init_received = false;
+            std::cerr << "erhaletn----------------------------------------------\n";
         }
 
-        client_global.init_received = false;
-        std::cerr << "erhaletn----------------------------------------------\n";
+        m_enemyPlayer->m_position = client_global.enemyPos;
+        m_enemyPlayer->m_xAxis = client_global.enemyxAxis;
+        m_enemyPlayer->m_yAxis = client_global.enemyyAxis;
+        m_enemyPlayer->m_zAxis = client_global.enemyzAxis;
+
+        if(client_global.enemy_shot == Bullet_shot::shot)
+        {
+            Vector3f shipPosition = m_enemyPlayer->getPosition() + m_enemyPlayer->getZAxis() * -45 + m_enemyPlayer->getXAxis() * -175;
+            Bullet::Ptr bullet = make_shared<Bullet>(Bullet(shipPosition, m_enemyPlayer->m_xAxis*-1));
+            m_physicsEngine->addEnemyBullet(bullet);
+            client_global.enemy_shot = Bullet_shot::not_shot;
+        }
+
+        std::cout << "Own Health: " << m_actor->getHP() << std::endl;
+        std::cout << "Enemy Health: " << m_enemyPlayer->getHP() << std::endl;
+        m_enemyHPBar->setHP(m_enemyPlayer->getHP());
+        m_playerHPBar->setHP(m_actor->getHP());
+        this->update();
     }
-
-    m_enemyPlayer->m_position = client_global.enemyPos;
-    m_enemyPlayer->m_xAxis = client_global.enemyxAxis;
-    m_enemyPlayer->m_yAxis = client_global.enemyyAxis;
-    m_enemyPlayer->m_zAxis = client_global.enemyzAxis;
-
-    if(client_global.enemy_shot == Bullet_shot::shot)
-    {
-        Vector3f shipPosition = m_enemyPlayer->getPosition() + m_enemyPlayer->getZAxis() * -45 + m_enemyPlayer->getXAxis() * -175;
-        Bullet::Ptr bullet = make_shared<Bullet>(Bullet(shipPosition, m_enemyPlayer->m_xAxis*-1));
-        m_physicsEngine->addEnemyBullet(bullet);
-        client_global.enemy_shot = Bullet_shot::not_shot;
-    }
-
-    std::cout << "Own Health: " << m_actor->getHP() << std::endl;
-    std::cout << "Enemy Health: " << m_enemyPlayer->getHP() << std::endl;
-    m_enemyHPBar->setHP(m_enemyPlayer->getHP());
-    m_playerHPBar->setHP(m_actor->getHP());
-    this->update();
 }
 
 void GLWidget::mouseMoveEvent(QMouseEvent* event)
