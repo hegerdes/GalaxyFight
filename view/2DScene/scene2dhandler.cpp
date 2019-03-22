@@ -37,7 +37,15 @@ Scene2dHandler::Scene2dHandler(QObject* parent)
         GraphicsPlanetItem* pitem = new GraphicsPlanetItem(planet->getID());
         pitem->setPos(QPointF(planet->getPos()[0], planet->getPos()[1]));
 
+        QGraphicsTextItem* item = new QGraphicsTextItem(planet->getname().c_str());
+        item->setDefaultTextColor(Qt::darkCyan);
+        auto font = item->font();
+        font.setPointSize(12);
+        item->setFont(font);
+        item->setPos(QPointF(planet->getPos()[0], planet->getPos()[1]));
+
         addItem(pitem);
+        addItem(item);
     }
 
     auto ship = new GraphicsFighterItem(PLAYER2, 1);
