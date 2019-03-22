@@ -102,30 +102,77 @@ float SpaceCraft::getMaxSpeed()
 }
 
 //TODO: Feinschliff für Hitboxen
+//vec Position des Objektes, r ist radius
 bool SpaceCraft::collideShip(Vector<float> vec, float r)
 {
-    Vector<float> axis = getXAxis();
+    Vector<float> xAxis = getXAxis();
+    Vector<float> yAxis = getYAxis();
     Vector<float> pos = m_position;
     Vector<float> dist = pos - vec;
+    
+    Vector<float> center_box = pos;
+    dist = center_box - vec;
     float distance = pow(dist[0], 2) + pow(dist[1], 2) + pow(dist[2], 2);
     if(distance <= pow(r + 50, 2))
     {
+        std::cout << "CENTER HIT" << std::endl;
         return true;
     }
-    pos = pos + axis * 90;
-    dist = pos - vec;
+    
+    Vector<float> back_box = pos + xAxis * 90;
+    dist = back_box - vec;
     distance = pow(dist[0], 2) + pow(dist[1], 2) + pow(dist[2], 2);
-    if(distance <= pow(r + 40, 2))
+    if(distance <= pow(r + 50, 2))
     {
+        std::cout << "BACK HIT" << std::endl;
         return true;
     }
-    pos = pos + axis * 70;
-    dist = pos - vec;
+
+    Vector<float> back_box_left = back_box + yAxis * 70;
+    dist = back_box_left - vec;
     distance = pow(dist[0], 2) + pow(dist[1], 2) + pow(dist[2], 2);
-    if(distance <= pow(r + 30, 2))
+    if(distance <= pow(r + 55, 2))
     {
+        std::cout << "BACK LEFT HIT" << std::endl;
         return true;
     }
+
+    Vector<float> back_box_right = back_box - yAxis * 70;
+    dist = back_box_right - vec;
+    distance = pow(dist[0], 2) + pow(dist[1], 2) + pow(dist[2], 2);
+    if(distance <= pow(r + 55, 2))
+    {
+        std::cout << "BACK RIGHT HIT" << std::endl;
+        return true;
+    }
+   
+    Vector<float> farback_box = pos + xAxis * 110;
+    dist = farback_box - vec;
+    distance = pow(dist[0], 2) + pow(dist[1], 2) + pow(dist[2], 2);
+    if(distance <= pow(r + 50, 2))
+    {
+        std::cout << "FAR-BACK HIT" << std::endl;
+        return true;
+    }
+
+    Vector<float> farfront_box = pos - xAxis * 70;
+    dist = farfront_box - vec;
+    distance = pow(dist[0], 2) + pow(dist[1], 2) + pow(dist[2], 2);
+    if(distance <= pow(r + 50, 2))
+    {
+        std::cout << "FRONT HIT" << std::endl;
+        return true;
+    }
+
+    Vector<float> front_box = pos - xAxis * 100;
+    dist = front_box - vec;
+    distance = pow(dist[0], 2) + pow(dist[1], 2) + pow(dist[2], 2);
+    if(distance <= pow(r + 50, 2))
+    {
+        std::cout << "FAR-FRONT HIT" << std::endl;
+        return true;
+    }
+    
 
 
     return false;

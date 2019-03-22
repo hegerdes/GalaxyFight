@@ -113,6 +113,11 @@ private:
 
     /// Gibt an nach wie vielen ms wieder geschoßen werden kann
     long                m_schussFrequenz;
+
+    ///Hilfsvariablen
+    int                 hp_actor;
+
+    int                 hp_enemy;
 };
 
 #endif

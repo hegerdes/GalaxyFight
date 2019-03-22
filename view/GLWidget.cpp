@@ -140,6 +140,10 @@ void GLWidget::initializeGL()
     //Fügt das Raumschiff der Engine hinzu, damit es richtig explodieren kann
     m_physicsEngine->addSpaceCraft(m_actor);
     m_physicsEngine->addEnemyPlayer(m_enemyPlayer);
+
+    //setzen dummy variablen
+    hp_actor = 10;
+    hp_enemy = 10;
 }
 
 void GLWidget::paintGL()
@@ -295,8 +299,18 @@ void GLWidget::step(map<Qt::Key, bool>& keyStates)
         client_global.enemy_shot = Bullet_shot::not_shot;
     }
 
-    std::cout << "Own Health: " << m_actor->getHP() << std::endl;
-    std::cout << "Enemy Health: " << m_enemyPlayer->getHP() << std::endl;
+    if(hp_actor != m_actor->getHP())
+    {
+         std::cout << "Own Health: " << m_actor->getHP() << std::endl;
+         hp_actor = m_actor->getHP();
+    }
+
+    if(hp_enemy != m_enemyPlayer->getHP()){
+        std::cout << "Enemy Health: " << m_enemyPlayer->getHP() << std::endl;
+        hp_enemy = m_enemyPlayer->getHP();
+    }
+   
+    
     m_enemyHPBar->setHP(m_enemyPlayer->getHP());
     m_playerHPBar->setHP(m_actor->getHP());
     this->update();
