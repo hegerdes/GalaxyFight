@@ -1,5 +1,6 @@
 #include "player.h"
 
+
 #define START_RESOURCE 1000
 #define START_RESOURCE_PER_TIME 100
 #define RESOURCE_PER_MINE 100
@@ -31,8 +32,6 @@ player::player(QObject *parent, int base) : QObject(parent)
        transportSpaceCraftslist.push_back(start_transportSpaceCraft);
    }
 
-   //connections
-
 }
 
 //instace
@@ -56,6 +55,8 @@ void player::build_shipyard(int planet_number){
         PlanetChanges new_change(planet_number);
         new_change.setFactorys(1);
         round_changes.push_back(new_change);
+
+        emit update();
     }else {
         //nicht genug resourcen vorhanden
         emit no_resources();
@@ -71,6 +72,8 @@ void player::build_mine(int planet_number){
         PlanetChanges new_change(planet_number);
         new_change.setMines(1);
         round_changes.push_back(new_change);
+
+        emit update();
     }else {
         //nicht genug resourcen vorhanden
         emit no_resources();
@@ -89,6 +92,7 @@ void player::new_attackSpaceCraft(int start_position){
     new_change.setFighter(1);
     round_changes.push_back(new_change);
 
+    emit update();
     }else {
         //nicht genug resourcen vorhanden
         emit no_resources();
@@ -104,6 +108,7 @@ void player::destroy_attackSpaceCraft(int number_id){
             attackSpaceCraft_number -= 1;
         }
     }
+    emit update();
 }
 
 //aufruf wenn ein transportspacecraft gebaut wird
@@ -114,6 +119,7 @@ void player::new_transportSpaceCraft(int start_position){
         transportspacecraft* transportSpaceCraft = new transportspacecraft(transportSpaceCraft_number, start_position);
         transportSpaceCraftslist.push_back(transportSpaceCraft);
 
+        emit update();
     }else {
         //nicht genug resourcen vorhanden
         emit no_resources();
@@ -190,5 +196,6 @@ void player::new_round(){
     if(attackSpaceCraft_number == 0){
         emit gameover();
     }
+    emit update();
 }
 }
