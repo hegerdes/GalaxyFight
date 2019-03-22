@@ -16,14 +16,14 @@
 
 int main(int argc, char** argv)
 {
-    //Testing Map
-    asteroids::MapFactory& b = asteroids::MapFactory::getinstance();
-    asteroids::Map::Ptr map = b.getMap("models/01.map");
+//    //Testing Map
+//    asteroids::MapFactory& b = asteroids::MapFactory::getinstance();
+//    asteroids::Map::Ptr map = b.getMap("models/01.map");
 
-    //map->print();
-    map->printEdges();
-    auto planets = map->getPlanets();
-    map->getPath(Vector3f(0,0,0),1,5);
+//    //map->print();
+//    map->printEdges();
+//    auto planets = map->getPlanets();
+//    map->getPath(Vector3f(0,0,0),1,5);
 
     QApplication a(argc, argv);
 

@@ -1,53 +1,40 @@
-25
-MacLean 50 300 10
-Kopiak 150 150 0
-TCSC1701 150 400 50
-Everett 40 350 100
-NewHope 350 150 -200
-Venture 400 50 -100
-Torres 550 150 10
-Alderson 600 100 0
-Hidebeidel 70 150 100
-Benford 850 150 100
-Portilla 950 200 100
-Centauri 750 300 100
-Olivia 250 50 0
-TCSC1619 400 400 100
-Hentrich 600 10 -10
-Schmidt 650 10 -10
-Pandey 700 20 20
-Fujimori 750 20 10 
-Solomon 500 700 0
-Tucanae 550 700 200
-Marcelais 600 800 100
-Argent 650 800 150
-BetaTucanae 650 700 100
-Arcadia 700 700 50
-Akis 750 750 0 
+17
+0MacLean 0 300 0   
+1Kopiak 100 450 0    
+2TCSC1701 100 150 0 
+3Everett 300 650 0
+4NewHope 300 75 0 
+5Venture 300 325 0
+6Torres 400 600 0  
+7Alderson 600 750 0 
+8Hidebeidel 400 250 0 
+9Benford  600 0  
+10Portilla 700 200 0 
+11Centauri 800 75 0 
+12Olivia 800 325 0 
+13TCSC1619 800 650 0 
+14Hentrich 1000 450 0 
+15Schmidt 1000 150 0 
+16Pandey 1100 300 0 
 0 1
-1 2 
+0 2
+2 4
 1 3
-1 12
-3 13 
-1 12
-12 4
 4 5
+3 6
 5 6
-4 6
+4 9
+5 8
+8 6
 6 7
-7 8
+7 12
+8 10
 8 9
-9 10
+10 12
+10 11
 9 11
-8 14
-8 15
-9 16
-9 17
-7 18
-18 19
-19 20
-20 21
-19 22
-21 22
-21 23
-21 24
+11 15
+15 16
+16 14
+14 13
+12 13
