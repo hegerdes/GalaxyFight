@@ -38,6 +38,18 @@ class PlanetChanges
     id = m_id;
   }
 
+  PlanetChanges(Owner own, int id, int ore, int factory, int mine, int fighters, int transporter, bool attack)
+  {
+      m_owned = own;
+      m_id = id;
+      m_num_of_ore = ore;
+      m_num_factory = factory;
+      m_num_mine = mine;
+      m_num_fighters = fighters;
+      m_num_transporter = transporter;
+      m_attack_planet = attack;
+  }
+
   inline int getID(){return m_id;}
 
   inline int getFactorys(){return m_num_factory;}
@@ -50,7 +62,7 @@ class PlanetChanges
 
   inline int getTransports(){return m_num_transporter;}
 
-  inline int getInitFight(){return m_attack_planet;}
+  inline bool getInitFight(){return m_attack_planet;}
 
   inline Owner geOwner(){return m_owned;}
 
