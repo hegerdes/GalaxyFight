@@ -14,7 +14,7 @@ QRectF GraphicsFactoryItem::boundingRect() const
 
 void GraphicsFactoryItem::paint(QPainter* painter, const QStyleOptionGraphicsItem*, QWidget*)
 {
-    QPixmap icon = QIcon("/models/factory.svg").pixmap(20, 20);
+    QPixmap icon = QIcon("./models/factory.svg").pixmap(20, 20);
 
     painter->drawPixmap(0, 0, icon);
 }

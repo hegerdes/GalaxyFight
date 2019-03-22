@@ -17,7 +17,7 @@ Scene2D::Scene2D(QWidget *parent) :
     m_scenehandler = new Scene2dHandler(this);
 
     m_graphicsview->setScene(m_scenehandler);
-
+    m_graphicsview->setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform | QPainter::HighQualityAntialiasing);
     m_graphicsview->show();
 
     //config screen size

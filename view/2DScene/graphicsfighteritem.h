@@ -41,7 +41,5 @@ private:
     int m_id;
     bool m_selected;
 };
-
-
 }
 #endif // GRAPHICSFIGHTERITEM_H

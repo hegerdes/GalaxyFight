@@ -2,22 +2,18 @@
 #define PLANET_H
 
 #include <QGraphicsItem>
-#include <QPainter>
-#include <QIcon>
 #include "itemtypes.h"
 
 namespace asteroids {
 /**
- * @brief The GraphicsFighterItem class represents a fighter ship as GraphicsItem
+ * @brief The GraphicsFighterItem class represents a Planet ship as GraphicsItem
  * @author meversmeyer
  */
 class GraphicsPlanetItem : public QGraphicsItem
 {
+//    Q_OBJECT
 public:
-
     GraphicsPlanetItem(int id);
-
-    int type() const override;
 
     /**
      * @brief boundingRect
@@ -31,26 +27,24 @@ public:
      * @param option
      * @param widget
      */
-    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) override;
+    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
+                   QWidget *widget) override;
+
+    int type() const override { return ItemTypes::Planet;}
+
+    int getID();
+
+    void selected(bool flag = true);
 
     void setOwner(PlayerType newOwner);
 
     PlayerType getOwner();
 
-    void selected(bool flag);
-
-    int getId();
-
 private:
-
     PlayerType m_player;
-
     int m_id;
-
     bool m_selected;
-
 };
-
 }
 
 #endif // PLANET_H

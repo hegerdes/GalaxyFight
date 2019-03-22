@@ -3,6 +3,9 @@
 
 #include <QGraphicsScene>
 #include "graphicsfighteritem.h"
+#include "graphicsplanetitem.h"
+#include "graphicsmineitem.h"
+#include "graphicsfactoryitem.h"
 
 namespace asteroids {
 
@@ -28,7 +31,7 @@ private:
     /**
      * @brief handlePlanetSelection
      */
-    void handlePlanetSelection();
+    void handlePlanetSelection(GraphicsPlanetItem* planet);
 
     /**
      * @brief handleMineSelection
@@ -49,6 +52,13 @@ private:
      * @brief handleTransporterSelection
      */
     void handleTransporterSelection();
+
+    /**
+     * @brief unselectAll removes all selection
+     */
+    void unselectAll();
+
+    QGraphicsItem* m_currentlySelected;
 };
 
 }

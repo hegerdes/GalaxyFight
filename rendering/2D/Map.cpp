@@ -121,6 +121,8 @@ Map::Map(std::string mapfile):m_planets(25)
             int pair1, pair2;
             instring >> pair1 >> pair2;
 
+            //create edge list
+            m_edges.push_back(Vector2i(pair1, pair2));
             
             float distance = m_nodes[pair1].dist2d(m_nodes[pair2]);
 

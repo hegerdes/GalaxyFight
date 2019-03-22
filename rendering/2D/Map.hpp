@@ -76,6 +76,12 @@ class Map
     std::list<Vector3f> getPath(Vector3f position, int start_planet, int end_planet);
 
     /**
+     * @brief getEdges returns all edges
+     * @return a vector of int pairs representing the planet ids which are connected
+     */
+    std::vector<Vector2i> getEdges() {return m_edges;}
+
+    /**
      * @brief Prints every planet with pos
      * 
      */
@@ -98,11 +104,7 @@ class Map
     //Map to match the Names to a Index
     std::map<std::string,int> m_planat_dir;
 
-
-
-
 };
-
 
 }//asteroids
 

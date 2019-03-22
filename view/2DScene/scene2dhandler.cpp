@@ -3,7 +3,7 @@
 #include <QGraphicsSceneMouseEvent>
 #include "../../rendering/2D/MapFactory.hpp"
 #include "itemtypes.h"
-#include "graphicsplanetitem.h"
+#include <QDebug>
 
 
 namespace asteroids {
@@ -19,16 +19,31 @@ Scene2dHandler::Scene2dHandler(QObject* parent)
 
     //draw map
     auto map = fac.getMap("./models/01.map");
-
     auto planets = map->getPlanets();
-    map->print();
+    auto edges = map->getEdges();
+
+    //draw connections
+    QPen linePen(Qt::white, 3);
+    for(const auto& edge : edges) {
+        auto p1 = planets[edge[0]];
+        auto p2 = planets[edge[1]];
+
+        addLine(p1->getPos()[0] + 25, p1->getPos()[1] + 25,
+                p2->getPos()[0] + 25, p2->getPos()[1] + 25, linePen);
+    }
+
+    //draw Planets
     for (const auto& planet : planets) {
         GraphicsPlanetItem* pitem = new GraphicsPlanetItem(planet->getID());
-
         pitem->setPos(QPointF(planet->getPos()[0], planet->getPos()[1]));
 
         addItem(pitem);
     }
+
+    auto ship = new GraphicsFighterItem(PLAYER2, 1);
+
+    addItem(ship);
+
 }
 
 void Scene2dHandler::mouseReleaseEvent(QGraphicsSceneMouseEvent* mouseEvent)
@@ -39,15 +54,17 @@ void Scene2dHandler::mouseReleaseEvent(QGraphicsSceneMouseEvent* mouseEvent)
 
     //get item
     QGraphicsItem* item;
-    item = itemAt(mouseEvent->pos(), QTransform());
-
+    item = itemAt(mouseEvent->scenePos(), QTransform());
+    std::cout << mouseEvent->scenePos().x() << " : " << mouseEvent->scenePos().y() << std::endl;
     if(item == nullptr)
         return;
+
+    unselectAll();
 
     //Performs a operation specific to each type
     switch (item->type()) {
     case ItemTypes::Planet:
-
+        handlePlanetSelection((GraphicsPlanetItem*) item);
         break;
     case ItemTypes::Mine:
 
@@ -68,9 +85,12 @@ void Scene2dHandler::mouseReleaseEvent(QGraphicsSceneMouseEvent* mouseEvent)
 
 }
 
-void Scene2dHandler::handlePlanetSelection()
+void Scene2dHandler::handlePlanetSelection(GraphicsPlanetItem* planet)
 {
-
+    planet->selected();
+//    update(planet->pos().x(), planet->pos().x(), 75, 75);
+    update(0, 0, width(), height());
+    m_currentlySelected = planet;
 }
 
 void Scene2dHandler::handleMineSelection()
@@ -86,11 +106,42 @@ void Scene2dHandler::handleFactorySelection()
 void Scene2dHandler::handleFighterSelection(GraphicsFighterItem* fighter)
 {
     fighter->selected();
-    update(fighter->pos().x(), fighter->pos().x(), 50, 50);
+    update(fighter->pos().x()-10, fighter->pos().x()-10, 60, 60);
+    m_currentlySelected = fighter;
 }
 
 void Scene2dHandler::handleTransporterSelection()
 {
 
+}
+
+void Scene2dHandler::unselectAll()
+{
+    if(m_currentlySelected == nullptr)
+        return;
+
+    switch (m_currentlySelected->type()) {
+    case ItemTypes::Planet:
+        ((GraphicsPlanetItem*) m_currentlySelected)->selected(false);
+        break;
+    case ItemTypes::Mine:
+
+        break;
+    case ItemTypes::Factory:
+
+        break;
+    case ItemTypes::Fighter:
+            ((GraphicsFighterItem*) m_currentlySelected)->selected(false);
+        break;
+    case ItemTypes::Transporter:
+
+        break;
+    default:
+        //ignore all other items in the scene
+        break;
+    }
+
+    update(m_currentlySelected->pos().x()-10, m_currentlySelected->pos().x()-10, 75, 75);
+    m_currentlySelected = nullptr;
 }
 }
