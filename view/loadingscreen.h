@@ -7,6 +7,8 @@ namespace Ui {
 class LoadingScreen;
 }
 
+namespace asteroids {
+
 class LoadingScreen : public QWidget
 {
     Q_OBJECT
@@ -19,4 +21,7 @@ private:
     Ui::LoadingScreen *ui;
 };
 
+}
+
 #endif // LOADINGSCREEN_H
+

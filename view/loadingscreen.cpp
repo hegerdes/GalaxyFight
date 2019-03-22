@@ -3,6 +3,8 @@
 #include <QMovie>
 #include <QPixmap>
 
+namespace asteroids {
+
 LoadingScreen::LoadingScreen(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::LoadingScreen)
@@ -25,4 +27,5 @@ LoadingScreen::LoadingScreen(QWidget *parent) :
 LoadingScreen::~LoadingScreen()
 {
     delete ui;
+}
 }
