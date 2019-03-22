@@ -191,7 +191,7 @@ std::list<Vector3f > Map::getPath(Vector3f position, int start, int goal)
     return solutionPath;
 }
 
-void Map::print()
+void Map::printPlanets()
 {
     std::map<std::string,int>::iterator it;
 
@@ -202,6 +202,17 @@ void Map::print()
             << std::setw(5) << std::endl;
 
             m_nodes[it->second].printVector();
+    }
+}
+
+void Map::printEdges()
+{
+    std::vector<Vector2i>::iterator it;
+
+    std::cout << "Print Edges" << std::endl; 
+    for(it = m_edges.begin(); it !=m_edges.end(); ++it)
+    {
+        it->printVector();
     }
 }
 }

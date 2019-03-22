@@ -85,7 +85,13 @@ class Map
      * @brief Prints every planet with pos
      * 
      */
-    void print();
+    void printPlanets();
+
+    /**
+     * @brief print edges;
+     * 
+     */
+    void printEdges();
 
   private:
 
