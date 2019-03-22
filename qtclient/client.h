@@ -15,6 +15,12 @@ namespace asteroids{
         public:
             Client();
 
+            //game_start
+            std::string id_other;
+            char player_No;
+            //Map Konfig am start fehlt
+
+
             //init_3D
             Vector<float> ownPos;
             Vector<float> ownxAxis;
@@ -43,6 +49,13 @@ namespace asteroids{
             char winner_no;
             //start_2D
             void sendUpdate_3D_C(Vector<float> pos, Vector<float> xAxis, Vector<float> yAxis, Vector<float> zAxis, Bullet_shot shot, Living living, int bullet_id);
+            /**
+             * @brief sendReadyT constructs the ready_T packet. This will signal the server, the user is ready to play
+             * @param player_id playername as c_str without terminating 0-Byte
+             */
+            void sendReadyT(char* player_id, int length);
+            void game_start(char* data);
+            void conLost();
             void readData();
             void wait_for_readData();
 

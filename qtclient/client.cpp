@@ -182,6 +182,36 @@ namespace asteroids {
         }
     }
 
+    void Client::sendReadyT(char* player_id, int length)
+    {
+        QByteArray data;
+        data.append(PacketType::ready_T);
+        data.append((char*)&length, 4);
+        data.append(player_id, length);
+        writeData(data);
+    }
+
+    void Client::conLost()
+    {
+        QByteArray data;
+        data.append(PacketType::con_lost);
+        writeData(data);
+    }
+
+    void Client::game_start(char* data)
+    {
+        int length = getInt(&data);
+        char id[length + 1];
+        for(int i = 0; i < length; i++)
+        {
+            id[i] = getChar(&data);
+        }
+        id[length] = '\0';
+        id_other = std::string(id);
+        player_No = getChar(&data);
+
+        //MapKonfig erste mal laden.
+    }
 
     void Client::wait_for_readData(){
         //std::cerr << "read data\n";
