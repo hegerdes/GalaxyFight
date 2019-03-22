@@ -71,5 +71,13 @@ void Bullet::render()
 	glPopMatrix();
 }
 
+void Bullet::setid(int id){
+    m_id = id;
+}
+
+int Bullet::getid(){
+    return m_id;
+}
+
 } // namespace asreroids
 

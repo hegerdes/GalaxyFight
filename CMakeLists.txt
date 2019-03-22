@@ -33,9 +33,9 @@ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/")
 # special optimization flags
 ###############################################################################
 
-set( CMAKE_CXX_FLAGS         "-O3 -Wall -std=c++17" )
-set( CMAKE_CXX_FLAGS_RELEASE "-O3 -msse3 -Wno-deprecated-declarations -Wno-unused -Wcpp" )
-set( CMAKE_CXX_FLAGS_DEBUG   "-g -Wall" )
+set( CMAKE_CXX_FLAGS         "-std=c++17 -O3 -Wall" )
+set( CMAKE_CXX_FLAGS_RELEASE "-std=c++17 -O3 -msse3 -Wno-deprecated-declarations -Wno-unused -Wcpp" )
+set( CMAKE_CXX_FLAGS_DEBUG   "-g -Wall -std=c++17" )
 
 ###############################################################################
 # Find required libraries.Right now we need glut and OpenGL. The required
@@ -88,6 +88,7 @@ set( QT_USE_QTOPENGL TRUE )
 find_package( Qt5
     COMPONENTS
     Core
+    Network
     Widgets
     OpenGL
     REQUIRED
@@ -95,6 +96,7 @@ find_package( Qt5
 
 include_directories(${Qt5Widgets_INCLUDE_DIRS})
 include_directories(${Qt5Core_INCLUDE_DIRS})
+include_directories(${Qt5Network_INCLUDE_DIRS})
 include_directories(${Qt5OpenGL_INCLUDE_DIRS})
 
 
@@ -145,6 +147,8 @@ set(ASTEROID_SOURCES
     rendering/2D/MapFactory.cpp
     util/AsteroidField.cpp
     util/ColorMap.cpp
+    rendering/HealthBar.cpp
+    rendering/Crosshair.cpp
     util/Util.cpp
     util/player.cpp
     view/GLWidget.cpp
@@ -161,6 +165,7 @@ set(ASTEROID_SOURCES
     view/2DScene/graphicsfactoryitem.cpp
     view/2DScene/graphicsfighteritem.cpp
     view/2DScene/graphicstransporteritem.cpp
+    qtclient/client.cpp
 )
 set(ASTEROID_MOCS
     view/MainWindow.hpp
@@ -201,6 +206,7 @@ set(ASTEROID_DEPENDS
     ${SDL2_LIBRARY}
     ${JPEG_LIBRARIES}
     ${Qt5Widgets_LIBRARIES}
+    ${Qt5Network_LIBRARIES}
     c3dsreader
 )
 

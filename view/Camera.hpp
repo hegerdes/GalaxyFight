@@ -13,6 +13,7 @@
 #define __CAMERA_HPP__
 
 #include "math/Vector.hpp"
+#include "../rendering/SpaceCraft.hpp"
 
 #define PI 3.14159265
 #define PH 1.57079632
@@ -65,6 +66,13 @@ public:
      */
     void move(const CameraMovement& dir);
 
+    /**
+     * @brief Moves the camera behind the given spacecraft
+     * 
+     * @param s The spacecraft to be followed
+     */ 
+     void follow(SpaceCraft::Ptr s);
+
      /**
      * @brief turns the camera according to given direction
      * 
@@ -97,18 +105,11 @@ private:
     /// View up vector
     Vector3f  m_up;
 
-    /// Translation
-    Vector3f  m_trans;
-
     /// Look at Vector
     Vector3f  m_l;
 
-    /// Rotation angles encoded in Vector, i.e., x is the
-    /// rotation around the x-axis and so on
-    Vector3f  m_rot;
-
-    /// Initial position of the camera
-    Vector3f  m_initial;
+    /// Position of the camera
+    Vector3f  m_position;
 
     /// Turn speed in radians per call
     float   m_turnSpeed;

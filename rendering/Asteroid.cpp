@@ -24,7 +24,7 @@ Asteroid::Asteroid(
     float speed,
     float accell,
     float radius)
-    : PhysicalObject(mesh, startDirection, startPosition, mass, rotation, speed, accell, radius)
+    : PhysicalObject(mesh, startDirection, startPosition, mass, rotation, speed, accell, radius), m_radius(radius)
 {
     // cout << startDirection << endl;
     // cout << startPosition << endl;
@@ -85,6 +85,14 @@ void Asteroid::render()
         m_renderable->render();
     }
     glPopMatrix();
+}
+
+void Asteroid::setid(int id){
+    m_id = id;
+}
+
+int Asteroid::getid(){
+    return m_id;
 }
 
 } // namespace asteroids
