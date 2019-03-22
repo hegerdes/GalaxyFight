@@ -35,7 +35,6 @@ void GraphicsPlanetItem::paint(QPainter* painter, const QStyleOptionGraphicsItem
 
     if(m_selected)
     {
-//        QRectF rect = boundingRect();
         QRectF rect(0, 0, 52, 52);
 
         QPen pen(Qt::blue, 3);

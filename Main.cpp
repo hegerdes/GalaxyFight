@@ -12,7 +12,9 @@
 #include <QSettings>
 #include "view/MainWindow.hpp"
 #include "rendering/2D/MapFactory.hpp"
+#include "global_socket.h"
 
+Client client_global;
 
 int main(int argc, char** argv)
 {
@@ -27,6 +29,7 @@ int main(int argc, char** argv)
 //    map->getPath(Vector3f(0,0,0),1,5);
 
     QApplication a(argc, argv);
+    client_global.connect("lennartkaiser.de", 38291);
 
     asteroids::MainWindow mainWindow;
     mainWindow.showFullScreen();

@@ -7,6 +7,7 @@
 #include <map>
 #include "rendering/2D/Planet.hpp"
 #include "rendering/2D/Map.hpp"
+#include "rendering/2D/Planet.hpp"
 #include "rendering/2D/MapFactory.hpp"
 
 namespace asteroids {
@@ -104,6 +105,9 @@ public slots:
     void quit();
 
 private:
+    //spielmap
+    Map::VecPtr m_planets;
+
     //private constructor für singelton
     explicit player(QObject *parent = nullptr, int base = 0);
 
@@ -135,8 +139,7 @@ private:
     //map um die einzelnen änderungen an planeten zu speichern
     std::list<PlanetChanges::Ptr> m_round_changes;
 
-    //spielmap
-    std::vector<std::shared_ptr<Planet>> m_planets;
+
 
 };
 }

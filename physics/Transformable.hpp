@@ -42,6 +42,15 @@ public:
     void rotate(RotationTransfrom axis);
 
     /**
+     * @brief Setzt die Transformationsmatrix des Raumschiffes 
+     * @param xAxis zum verändern der x-Achse
+     * @param yAxis zum verändern der y-Achse
+     * @param zAxis zum verändern der z-Achse
+     * @param position zum verändern der Position
+     */
+    void setTransformationMatrix(Vector3f xAxis, Vector3f yAxis, Vector3f zAxis, Vector3f position);
+
+    /**
      * @brief   Moves a triangle mesh at the given axis with the given speed
      * @param axis axis to move
      * @param speed speed of movement
@@ -52,6 +61,8 @@ public:
 
     virtual void move();
 
+    
+    
     /**
      * @brief Sets a new flight direction
      * @param dir   The new direction
@@ -107,6 +118,7 @@ public:
         m_speed = s;
     }
 
+
     /**
      * @brief   Returns the orientation of the x in the global coordinate system
      */
@@ -121,6 +133,15 @@ public:
      * @brief   Returns the orientation of the z in the global coordinate system
      */
     Vector<float> getZAxis() { return m_zAxis;}
+    Matrix   m_transformation;
+    Vector<float>    m_position;
+    /**
+     * @brief   The current moving direction
+     */
+    Vector<float>   m_direction;
+    Vector<float>    m_xAxis;
+    Vector<float>    m_yAxis;
+    Vector<float>    m_zAxis;
 
 protected:
 
@@ -132,43 +153,33 @@ protected:
     /**
      * @brief   The transformation matrix for this object
      */
-    Matrix   m_transformation;
 
     /**
      * @brief   The current orientation of the x axis
      */
-    Vector<float>    m_xAxis;
 
     /**
      * @brief   The current orientation of the y axis
      */
-    Vector<float>    m_yAxis;
 
     /**
      * @brief   The current orientation of the z axis
      */
-    Vector<float>    m_zAxis;
 
 
     /**
      * @brief   The current position of the mesh object
      */
-    Vector<float>    m_position;
 
     /**
      * @brief   A quaternion representing the current rotation
      */
     Quaternion  m_rotation;
 
-
-    /**
-     * @brief   The current moving direction
-     */
-    Vector<float>   m_direction;
-
     /**
      * @brief   The current moving speed
      */
+
     float           m_speed;
 
     float           m_rotationSpeed;
