@@ -13,18 +13,25 @@
 #define __GLWIDGET_HPP__
 
 #include <string>
+#include <chrono>
+#include <ctime>
 
 #include <GL/glew.h>
 #include <QOpenGLWidget>
 
+#include "rendering/HealthBar.hpp"
+#include "rendering/Crosshair.hpp"
 #include "view/Camera.hpp"
-#include "rendering/SpaceCraft.hpp"
+#include "../rendering/SpaceCraft.hpp"
 #include "rendering/Skybox.hpp"
 #include "util/AsteroidField.hpp"
-#include "physics/PhysicsEngine.hpp"
+#include "../physics/PhysicsEngine.hpp"
 
 using namespace asteroids;
+using namespace std::chrono;
 using std::shared_ptr;
+
+//typedef std::chrono::milliseconds ms;
 
 /**
  * @brief   implements the OpenGL View in a QT Widget
@@ -48,6 +55,9 @@ protected:
     /// Init OpenGL
     virtual void initializeGL() override;
 
+    /// Initialize Level
+    void loadLevel();
+
     /// Render scene
     virtual void paintGL() override;
 
@@ -65,8 +75,23 @@ private:
     /// The virtual camera
     Camera						m_camera;
 
+    /// Health Bar for player 1
+
+    HealthBar::Ptr              m_playerHPBar;
+
+    /// Health Bar for player 2
+    
+    HealthBar::Ptr              m_enemyHPBar;
+
+    ///Crosshair for aiming
+
+    Crosshair::Ptr              m_crossHair;
+
     /// A pointer to the Actor
     SpaceCraft::Ptr  	        m_actor;
+
+    /// Zweiter Spieler
+    SpaceCraft::Ptr             m_enemyPlayer;
 
     /// A skybox for the scene
     Skybox::Ptr			        m_skybox;
@@ -80,11 +105,20 @@ private:
     /// Rotation speed of the actor
     float                       m_rotationSpeed;
 
-    /// Translation speed of the actor
+    /// Translation speed of the actor  LevelParser np(m_)s
     float                       m_moveSpeed;
 
     /// Last set mouse position
     QPoint                      m_mousePos;
+
+    /// Determines whether game should be loaded
+    bool active;
+
+    /// Letzter Zeitpunkt zu dem eine Kugel abgefeurert wurde
+    long                m_lastBullet;
+
+    /// Gibt an nach wie vielen ms wieder geschoßen werden kann
+    long                m_schussFrequenz;
 };
 
 #endif

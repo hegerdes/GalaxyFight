@@ -8,6 +8,7 @@
 #Build Folder
 **/Build/**
 **/build/**
+*.vscode/**
 
 
 #Test-Files
@@ -17,4 +18,13 @@
 #Individual Files
 CMakeLists.txt.user
 run_build.sh
-
+compile_commands.json
+./idea/
+cmake-build-debug/
+run_build.sh
+CMakeLists.txt.user
+*.save
+*.pro.*
+*.sh
+*.user
+#Individual Files

@@ -18,8 +18,8 @@
 
 #include "PhysicalObject.hpp"
 #include "ParticleEngine.hpp"
-#include "rendering/Bullet.hpp"
-#include "rendering/SpaceCraft.hpp"
+#include "../rendering/Bullet.hpp"
+#include "../rendering/SpaceCraft.hpp"
 
 
 using std::list;
@@ -62,6 +62,8 @@ public:
      */
     void addBullet(Bullet::Ptr& bullet);
 
+    void addEnemyBullet(Bullet::Ptr& bullet);
+
     /**
      * @brief   Renders all objects and particle effects
      */
@@ -72,6 +74,16 @@ public:
      */
     void process();
 
+    /**
+     * @brief Fügt das Spielerraumschiff hinzu welches explodieren soll.
+     */ 
+    void addSpaceCraft(SpaceCraft::Ptr spacecraft);
+
+    /**
+     * @brief Fügt das Gegenspielerraumschiff hinzu welches explodieren soll.
+     */ 
+    void addEnemyPlayer(SpaceCraft::Ptr enemyPlayer);
+
 private:
 
     /// List of destroyable objects
@@ -80,9 +92,14 @@ private:
     /// List of active bullets
     list<Bullet::Ptr>            m_bullets;
 
+    ///Raumschiff das explodieren soll
+    SpaceCraft::Ptr              m_spacecraft;
+
+    SpaceCraft::Ptr              m_enemyPlayer;
+
     ParticleEngine               m_particles;
 
-
+    list<Bullet::Ptr>           m_bullets_enemy;
 };
 
 } /* namespace asteroids */

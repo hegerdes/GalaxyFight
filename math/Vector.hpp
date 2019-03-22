@@ -33,6 +33,26 @@ public:
 	Vector(T x = 0, T y = 0, T z = 0);
 
 	/**
+	 * @brief Prints the Vector
+	 * 
+	 */
+	void printVector();
+
+	/**
+	 * @brief Distance between two Vectors
+	 * 
+	 */
+	float dist(const Vector<T,L>& vec) const;
+
+	/**
+	 * @brief Distance between two Vectors in 2D space
+	 * Ignores z value
+	 * 
+	 */
+	float dist2d(const Vector<T,L>& vec) const;
+	
+
+	/**
 	 * @brief   Normalize a Vector
 	 */
 	void normalize();

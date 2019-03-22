@@ -1,16 +1,19 @@
-
 #include "GLWidget.hpp"
-#include "io/LevelParser.hpp"
+#include "../io/LevelParser.hpp"
 #include "io/TextureFactory.hpp"
 #include <QMouseEvent>
+#include "global_socket.h"
 
 #include <SDL2/SDL.h>
 
 GLWidget::GLWidget(QWidget* parent)
     : QOpenGLWidget(parent),
       m_camera(Vector3f(0.0f, 0.0f, -700.0f), 0.05f, 5.0f),
-      m_rotationSpeed(0.02),
-      m_moveSpeed(1.0)
+      m_rotationSpeed(0.025),
+      m_moveSpeed(5.0),
+      m_lastBullet(0),
+      m_schussFrequenz(500),
+      active(false)
 {
 }
 
@@ -108,87 +111,204 @@ void GLWidget::initializeGL()
 
     // This makes our buffer swap syncronized with the monitor's vertical refresh
     SDL_GL_SetSwapInterval(1);
-
+}
+void GLWidget::loadLevel()
+{
     // Load level
-    LevelParser lp(m_levelFile, m_actor, m_skybox, m_asteroidField);
+    LevelParser lp(m_levelFile, m_actor, m_enemyPlayer, m_skybox, m_asteroidField);
 
-    // Setup physics
+
+
+    // Setup physics//
     m_physicsEngine = make_shared<PhysicsEngine>();
 
+    m_playerHPBar = make_shared<HealthBar>(HealthBar::PLAYER_1, width(), height(), 10);
+
+    m_enemyHPBar = make_shared<HealthBar>(HealthBar::PLAYER_2, width(), height(), 10);
+
+    m_crossHair = make_shared<Crosshair>(0.0f, 100.0f/255.0f, 0.0f, width(), height());
+
     // Add asteroids to physics engine
+
+    /* MANAGED IN init_3d
     std::list<Asteroid::Ptr> asteroids;
     m_asteroidField->getAsteroids(asteroids);
     for (auto it = asteroids.begin(); it != asteroids.end(); it++)
     {
         PhysicalObject::Ptr p = std::static_pointer_cast<PhysicalObject>(*it);
         m_physicsEngine->addDestroyable(p);
+    } 
     }
+    */
+
+    //Fügt das Raumschiff der Engine hinzu, damit es richtig explodieren kann
+    m_physicsEngine->addSpaceCraft(m_actor);
+    m_physicsEngine->addEnemyPlayer(m_enemyPlayer);
 }
 
 void GLWidget::paintGL()
 {
+    if(active)
+    {
     // Clear bg color and enable depth test (z-Buffer)
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
+    m_camera.follow(m_actor);
     m_camera.apply();
 
-    // Render stuff
-    m_skybox->render(m_camera);
+        // Render stuff
+        m_skybox->render(m_camera);
 
-    // Render all physical objects
-    m_physicsEngine->render();
+        // Render all physical objects
+        m_physicsEngine->render();
 
     m_actor->render();
+
+    m_enemyPlayer->render();
+
+    //Debug/Testline
+    //m_enemyPlayer->setPosition(Vector<float>(10,100,10));
+    m_playerHPBar->render();
+
+    m_enemyHPBar->render();
+
+    m_crossHair->render();
+    }
 }
 
 void GLWidget::step(map<Qt::Key, bool>& keyStates)
 {
-    // Get keyboard states and handle model movement
-    m_physicsEngine->process();
+    if(active){
+        // Get keyboard states and handle model movement
+        m_physicsEngine->process();
 
-    if (keyStates[Qt::Key_Up])
-    {
-        m_actor->rotate(Transformable::YAW_LEFT, m_rotationSpeed);
-    }
-    if (keyStates[Qt::Key_Down])
-    {
-        m_actor->rotate(Transformable::YAW_RIGHT, m_rotationSpeed);
-    }
-       if (keyStates[Qt::Key_Left])
-    {
-        m_actor->rotate(Transformable::ROLL_LEFT, m_rotationSpeed);
-    }
-    if (keyStates[Qt::Key_Right])
-    {
-        m_actor->rotate(Transformable::ROLL_RIGHT, m_rotationSpeed);
-    }
-   
-    if (keyStates[Qt::Key_W])
-    {
-        m_actor->move(Transformable::FORWARD, m_moveSpeed);
-    }
-    if (keyStates[Qt::Key_S])
-    {
-        m_actor->move(Transformable::BACKWARD, m_moveSpeed);
-    }
-    if (keyStates[Qt::Key_A])
-    {
-        m_actor->move(Transformable::STRAFE_LEFT, m_moveSpeed);
-    }
-    if (keyStates[Qt::Key_D])
-    {
-        m_actor->move(Transformable::STRAFE_RIGHT, m_moveSpeed);
-    }
 
-    // Add a bullet to physics engine
-    if(keyStates[Qt::Key_Space])
-    {
-        Bullet::Ptr bullet = make_shared<Bullet>(Bullet(m_actor->getPosition(), m_actor->getDirection()));
-        m_physicsEngine->addBullet(bullet);
-    }
+        Bullet_shot bullet_shot = Bullet_shot::not_shot;
+        if(m_actor->spaceCraftStatus() == 0){
 
-    // Trigger update, i.e., redraw via paintGL()
-    this->update();
+
+            m_actor->move(Transformable::FORWARD, m_actor->getCurrentSpeed());
+
+            if (keyStates[Qt::Key_Up])
+            {
+                m_actor->rotate(Transformable::PITCH_RIGHT, m_rotationSpeed);
+            }
+            if (keyStates[Qt::Key_Down])
+            {
+                m_actor->rotate(Transformable::PITCH_LEFT, m_rotationSpeed);
+            }
+            if (keyStates[Qt::Key_Left])
+            {
+                m_actor->rotate(Transformable::ROLL_LEFT, m_rotationSpeed);
+            }
+            if (keyStates[Qt::Key_Right])
+            {
+                m_actor->rotate(Transformable::ROLL_RIGHT, m_rotationSpeed);
+            }
+
+            if (keyStates[Qt::Key_W])
+            {
+                m_actor->accelerate();
+            }
+            if (keyStates[Qt::Key_S])
+            {
+                m_actor->deccelerate();
+            }
+            if (keyStates[Qt::Key_A])
+            {
+                m_actor->rotate(Transformable::YAW_LEFT, m_rotationSpeed);
+            }
+            if (keyStates[Qt::Key_D])
+            {
+                m_actor->rotate(Transformable::YAW_RIGHT, m_rotationSpeed);
+            }
+
+
+                if(keyStates[Qt::Key_X]){
+                    //Debug/Tesline für Explosion eigenes Raumschiff
+                    m_actor->destroySpaceCraft();
+                }
+
+                // Add a bullet to physics engine
+                if(keyStates[Qt::Key_Space])
+                {
+
+                    auto now = std::chrono::system_clock::now();
+                    auto now_ms = std::chrono::time_point_cast<std::chrono::milliseconds>(now);
+                    auto value = now_ms.time_since_epoch();
+                    long bulletShot = value.count();
+                    ///Ermittelt, wann die letzte Kugel abgeschoßen wurde und erlaubt erst nach
+                    if(bulletShot - m_lastBullet > m_schussFrequenz){
+                        Vector3f shipPosition = m_actor->getPosition() + m_actor->getZAxis() * -45 + m_actor->getXAxis() * -175;
+                        Bullet::Ptr bullet = make_shared<Bullet>(Bullet(shipPosition, m_actor->getDirection()));
+                        m_physicsEngine->addBullet(bullet);
+                        m_lastBullet = bulletShot;
+                        bullet_shot = Bullet_shot::shot;
+                    }
+
+                }
+        }
+        if(keyStates[Qt::Key_Y]){
+                //Debug/Tesline für Explosion eigenes Raumschiff
+                m_enemyPlayer->destroySpaceCraft();
+            }
+        // Trigger update, i.e., redraw via paintGL()
+        client_global.sendUpdate_3D_C(m_actor->m_position, m_actor->m_xAxis,
+                                     m_actor->m_yAxis, m_actor->m_zAxis,
+                                     bullet_shot, Living::alive, 0);
+        client_global.readData();
+        if(client_global.init_received)
+        {
+            m_actor->m_position = client_global.ownPos;
+            m_actor->m_xAxis = client_global.ownxAxis;
+            m_actor->m_yAxis = client_global.ownyAxis;
+            m_actor->m_zAxis = client_global.ownzAxis;
+            // asteroids hinzufügen
+
+            int i = 0;
+            std::list<Asteroid::Ptr> asteroids;
+            m_asteroidField->getAsteroids(asteroids);
+            std::cerr << client_global.count_astr << " ----------------------------------\n";
+            for (auto it = asteroids.begin(); it != asteroids.end(); it++)
+            {
+                if(i < client_global.count_astr)
+                {
+                    (*it)->m_position = client_global.pos_astr[i];
+                    std::cerr << "m_position " << (*it)->m_position << "\n";
+                    (*it)->m_radius = client_global.size_astr[i];
+                    std::cerr << "m_radius " << (*it)->m_radius << "\n";
+                    (*it)->m_direction = client_global.dir_astr[i];
+                    std::cerr << "m_direction " << (*it)->m_direction << "\n";
+                    //TODO SET ID
+                }
+                i++;
+                PhysicalObject::Ptr p = std::static_pointer_cast<PhysicalObject>(*it);
+                m_physicsEngine->addDestroyable(p);
+                std::cout << i << ". Asteroid entpackt!";
+            }
+
+            client_global.init_received = false;
+            std::cerr << "erhaletn----------------------------------------------\n";
+        }
+
+        m_enemyPlayer->m_position = client_global.enemyPos;
+        m_enemyPlayer->m_xAxis = client_global.enemyxAxis;
+        m_enemyPlayer->m_yAxis = client_global.enemyyAxis;
+        m_enemyPlayer->m_zAxis = client_global.enemyzAxis;
+
+        if(client_global.enemy_shot == Bullet_shot::shot)
+        {
+            Vector3f shipPosition = m_enemyPlayer->getPosition() + m_enemyPlayer->getZAxis() * -45 + m_enemyPlayer->getXAxis() * -175;
+            Bullet::Ptr bullet = make_shared<Bullet>(Bullet(shipPosition, m_enemyPlayer->m_xAxis*-1));
+            m_physicsEngine->addEnemyBullet(bullet);
+            client_global.enemy_shot = Bullet_shot::not_shot;
+        }
+
+        std::cout << "Own Health: " << m_actor->getHP() << std::endl;
+        std::cout << "Enemy Health: " << m_enemyPlayer->getHP() << std::endl;
+        m_enemyHPBar->setHP(m_enemyPlayer->getHP());
+        m_playerHPBar->setHP(m_actor->getHP());
+        this->update();
+    }
 }
 
 void GLWidget::mouseMoveEvent(QMouseEvent* event)
@@ -201,25 +321,25 @@ void GLWidget::mouseMoveEvent(QMouseEvent* event)
 
     // Handle motion for pressed L button while R is not
     // pressed
-    if (l_pressed & !r_pressed)
-    {
-        if (delta.x() > -3)
-        {
-            m_camera.turn(Camera::RIGHT);
-        }
-        if (delta.x() < 3)
-        {
-            m_camera.turn(Camera::LEFT);
-        }
-        if (delta.y() > 3)
-        {
-            m_camera.turn(Camera::UP);
-        }
-        if (delta.y() < -3)
-        {
-            m_camera.turn(Camera::DOWN);
-        }
-    }
+    // if (l_pressed & !r_pressed)
+    // {
+    //     if (delta.x() > -3)
+    //     {
+    //         m_camera.turn(Camera::RIGHT);
+    //     }
+    //     if (delta.x() < 3)
+    //     {
+    //         m_camera.turn(Camera::LEFT);
+    //     }
+    //     if (delta.y() > 3)
+    //     {
+    //         m_camera.turn(Camera::UP);
+    //     }
+    //     if (delta.y() < -3)
+    //     {
+    //         m_camera.turn(Camera::DOWN);
+    //     }
+    // }
 
     // Handle motion for pressed R button while L is not
     // pressed
@@ -232,10 +352,6 @@ void GLWidget::mouseMoveEvent(QMouseEvent* event)
         if (delta.x() < -3)
         {
             m_camera.move(Camera::RIGHT);
-        }
-        if (delta.y() > 3)
-        {
-            m_camera.move(Camera::FORWARD);
         }
         if (delta.y() < -3)
         {

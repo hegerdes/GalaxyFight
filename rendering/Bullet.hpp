@@ -61,6 +61,16 @@ public:
     static int lifetime() { return m_lifetime;}
 
     Vector3f direction() {return m_fighterAxis;}
+
+    /**
+     * @brief Setter für die ID einer Bullet
+     */ 
+    void setid(int id);
+
+    /**
+     * @brief Getter für die ID einer Bullet
+     */ 
+    int getid();
 private:
 
     // Lifetime, i.e., how many timesteps the bullet visible
@@ -76,6 +86,9 @@ private:
     Sphere m_sphere;
 
     size_t m_iterations;
+
+    ///ID einer Bullet
+    int m_id;
 };
 
 } // namespace asteroids
