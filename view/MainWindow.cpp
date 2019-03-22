@@ -38,7 +38,7 @@ MainWindow::MainWindow(QWidget* parent) :
     m_screenStack->addWidget(m_scene2d);
     m_screenStack->addWidget(m_3DScene);
 
-    m_screenStack->setCurrentWidget(m_scene2d);
+    m_screenStack->setCurrentWidget(m_startscreen);
 
 //    setLayout(m_screenStack);
 

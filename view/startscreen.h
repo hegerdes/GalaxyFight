@@ -4,6 +4,7 @@
 #include <QWidget>
 
 #include "ui_startscreen.h"
+#include "qtclient/client.h"
 
 namespace asteroids {
 
@@ -19,13 +20,10 @@ signals:
     void closeProgramm();
     void goToLoading();
     void startClient();
-    void startServer();
     void goToSetting();
 
 private slots:
-    void on_joinBut_clicked();
-
-    void on_createBut_clicked();
+    void on_playBut_clicked();
 
     void on_quitBut_clicked();
 
@@ -33,6 +31,11 @@ private slots:
 
 private:
     Ui::StartScreen *ui;
+
+    void setupConnections();
+
+   // Client* m_client;
+
 };
 }
 #endif // STARTSCREEN_H

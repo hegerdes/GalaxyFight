@@ -17,6 +17,9 @@ public:
     explicit LoadingScreen(QWidget *parent = nullptr);
     ~LoadingScreen();
 
+signals:
+    void goTo2D();
+
 private:
     Ui::LoadingScreen *ui;
 };
