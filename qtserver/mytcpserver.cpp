@@ -88,6 +88,7 @@ bool Server::writeData(QByteArray const& data) {
 
     PacketType toSend = PacketType::update_3D_C;
 
+    //to remove
     if (socket_1 != nullptr && socket_2 != nullptr && !already_send_1 && socket_1 == socket) {
         toSend = PacketType::init_3D;
         already_send_1 = true;
@@ -96,10 +97,13 @@ bool Server::writeData(QByteArray const& data) {
         already_send_2 = true;
     }
 
+    //determine which packet has to be send
     if (toSend == PacketType::update_3D_C) {
         sendUpdate_3D_S(response, socket);
     } else if (toSend == PacketType::init_3D) {
         sendInit_3D(response, socket);
+    } else if(toSend == PacketType::game_start){
+        sendGame_Start(response, socket);
     }
 
     if (socket->state() == QAbstractSocket::ConnectedState) {
@@ -178,6 +182,26 @@ void Server::recvUpdate_3D_C(char* data, QTcpSocket* socket) {
     }
 }
 
+void Server::recvReady_T(char* data, QTcpSocket* socket) {
+    int length = getInt(&data);
+    char id[length + 1];
+    for(int i = 0; i < length; i++)
+    {
+        id[i] = getChar(&data);
+    }
+    id[length] = '\0';
+
+    std::string name = std::string(id);
+
+    if (socket_1 == socket) {
+        user_data_1.name = name;
+    } else if (socket_2 == socket) {
+        user_data_2.name = name;
+    } else {
+        std::cerr << "client socket not recognized\n";
+    }
+}
+
 void Server::sendInit_3D(QByteArray& response, QTcpSocket* socket) {
     client_data client_data_temp_own;
     client_data client_data_temp_enemy;
@@ -221,6 +245,34 @@ void Server::sendInit_3D(QByteArray& response, QTcpSocket* socket) {
     }
 }
 
+void Server::sendGame_Start(QByteArray& response, QTcpSocket* socket) {
+    client_data client_data_temp_own;
+    client_data client_data_temp_enemy;
+    if (socket_1 == socket) {
+        client_data_temp_own = user_data_1;
+        client_data_temp_enemy = user_data_2;
+    } else if (socket_2 == socket) {
+        client_data_temp_own = user_data_2;
+        client_data_temp_enemy = user_data_1;
+    } else {
+        std::cerr << "client socket not recognized\n";
+    }
+
+    response.append(PacketType::game_start);
+
+    int length = client_data_temp_enemy.name.length();
+
+    response.append((char*)&length, 4);
+    response.append(client_data_temp_enemy.name.c_str(), length);
+    if (socket_1 == socket) {
+        response.append(player_no::first);
+    } else if (socket_2 == socket) {
+        response.append(player_no::second);
+    }
+
+    //TODO send fist map config data
+}
+
 void Server::readyRead() {
     // std::cout << "read success\n";
     QTcpSocket* socket = static_cast<QTcpSocket*>(sender());
@@ -254,8 +306,11 @@ void Server::readyRead() {
                 PacketType pt = (PacketType) getChar(&data);
                 ////std::cout << pt << std::endl;
 
+                //already send / to be removed TODO
                 if (pt == PacketType::update_3D_C && already_send_1 && already_send_2) {
                     recvUpdate_3D_C(data, socket);
+                } else if (pt == PacketType::ready_T) {
+                    recvReady_T(data, socket);
                 }
 
                 // direct response after receiving
