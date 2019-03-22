@@ -215,4 +215,15 @@ void Map::printEdges()
         it->printVector();
     }
 }
+
+void Map::printNodes()
+{
+    std::vector<Vector3f>::iterator it;
+
+    std::cout << "Print Edges" << std::endl; 
+    for(it = m_nodes.begin(); it !=m_nodes.end(); ++it)
+    {
+        it->printVector();
+    }
+}
 }

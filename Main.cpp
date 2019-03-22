@@ -16,12 +16,13 @@
 
 int main(int argc, char** argv)
 {
-//    //Testing Map
+   //Testing Map
 //    asteroids::MapFactory& b = asteroids::MapFactory::getinstance();
 //    asteroids::Map::Ptr map = b.getMap("models/01.map");
 
 //    //map->print();
-//    map->printEdges();
+//    //map->printEdges();
+//    map->printNodes();
 //    auto planets = map->getPlanets();
 //    map->getPath(Vector3f(0,0,0),1,5);
 
