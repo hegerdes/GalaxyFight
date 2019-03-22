@@ -21,6 +21,9 @@ public:
     explicit Scene2D(QWidget *parent = nullptr);
     ~Scene2D();
 
+signals:
+    void planetSelected(int);
+
 private:
     Ui::Scene2D *ui;
 

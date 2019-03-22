@@ -160,6 +160,7 @@ set(ASTEROID_SOURCES
     view/2DScene/graphicsmineitem.cpp
     view/2DScene/graphicsfactoryitem.cpp
     view/2DScene/graphicsfighteritem.cpp
+    view/2DScene/graphicstransporteritem.cpp
 )
 set(ASTEROID_MOCS
     view/MainWindow.hpp

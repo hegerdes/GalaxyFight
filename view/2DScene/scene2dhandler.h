@@ -6,6 +6,7 @@
 #include "graphicsplanetitem.h"
 #include "graphicsmineitem.h"
 #include "graphicsfactoryitem.h"
+#include "graphicstransporteritem.h"
 
 namespace asteroids {
 
@@ -19,6 +20,9 @@ class Scene2dHandler : public QGraphicsScene
     Q_OBJECT
 public:
     Scene2dHandler(QObject* parent = nullptr);
+
+signals:
+    void planetSelected(int);
 
 protected:
     /**
@@ -51,7 +55,7 @@ private:
     /**
      * @brief handleTransporterSelection
      */
-    void handleTransporterSelection();
+    void handleTransporterSelection(GraphicsTransporterItem* transporter);
 
     /**
      * @brief unselectAll removes all selection

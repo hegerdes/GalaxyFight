@@ -37,20 +37,14 @@ Scene2dHandler::Scene2dHandler(QObject* parent)
         GraphicsPlanetItem* pitem = new GraphicsPlanetItem(planet->getID());
         pitem->setPos(QPointF(planet->getPos()[0], planet->getPos()[1]));
 
-        QGraphicsTextItem* item = new QGraphicsTextItem(planet->getname().c_str());
-        item->setDefaultTextColor(Qt::darkCyan);
-        auto font = item->font();
-        font.setPointSize(12);
-        item->setFont(font);
-        item->setPos(QPointF(planet->getPos()[0], planet->getPos()[1]));
-
         addItem(pitem);
-        addItem(item);
     }
 
     auto ship = new GraphicsFighterItem(PLAYER2, 1);
-
+    auto tship = new GraphicsTransporterItem(1);
+    tship->setPos(100, 100);
     addItem(ship);
+    addItem(tship);
 
 }
 
@@ -84,7 +78,7 @@ void Scene2dHandler::mouseReleaseEvent(QGraphicsSceneMouseEvent* mouseEvent)
             handleFighterSelection((GraphicsFighterItem*) item);
         break;
     case ItemTypes::Transporter:
-
+            handleTransporterSelection((GraphicsTransporterItem*) item);
         break;
     default:
         //ignore all other items in the scene
@@ -99,6 +93,7 @@ void Scene2dHandler::handlePlanetSelection(GraphicsPlanetItem* planet)
 //    update(planet->pos().x(), planet->pos().x(), 75, 75);
     update(0, 0, width(), height());
     m_currentlySelected = planet;
+    emit planetSelected(planet->getID());
 }
 
 void Scene2dHandler::handleMineSelection()
@@ -118,9 +113,11 @@ void Scene2dHandler::handleFighterSelection(GraphicsFighterItem* fighter)
     m_currentlySelected = fighter;
 }
 
-void Scene2dHandler::handleTransporterSelection()
+void Scene2dHandler::handleTransporterSelection(GraphicsTransporterItem* transporter)
 {
-
+    transporter->selected();
+    update(transporter->pos().x()-10, transporter->pos().x()-10, 60, 60);
+    m_currentlySelected = transporter;
 }
 
 void Scene2dHandler::unselectAll()
@@ -142,7 +139,7 @@ void Scene2dHandler::unselectAll()
             ((GraphicsFighterItem*) m_currentlySelected)->selected(false);
         break;
     case ItemTypes::Transporter:
-
+            ((GraphicsTransporterItem*) m_currentlySelected)->selected(false);
         break;
     default:
         //ignore all other items in the scene

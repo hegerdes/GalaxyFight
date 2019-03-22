@@ -16,6 +16,7 @@ Scene2D::Scene2D(QWidget *parent) :
 
     m_scenehandler = new Scene2dHandler(this);
 
+    //config scene
     m_graphicsview->setScene(m_scenehandler);
     m_graphicsview->setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform | QPainter::HighQualityAntialiasing);
     m_graphicsview->show();
@@ -24,7 +25,7 @@ Scene2D::Scene2D(QWidget *parent) :
     QSettings settings;
     setMinimumSize(settings.value("minWidth", 1920).toInt(), settings.value("minHeight", 1080).toInt());
 
-
+    connect(m_scenehandler, &Scene2dHandler::planetSelected, this, &Scene2D::planetSelected);
 }
 
 Scene2D::~Scene2D()
