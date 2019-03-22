@@ -16,25 +16,25 @@ namespace asteroids {
 player::player(QObject *parent, int base) : QObject(parent)
 {
    //start resourcen festlegen
-   current_resource = START_RESOURCE;
-   resource_per_time = START_RESOURCE_PER_TIME;
-   attackSpaceCraft_number = START_ATTACKSPACECRAFT_NUMBER;
-   transportSpaceCraft_number = START_TRANSPORTSPACECRAFT_NUMBER;
-   attackspacecraft_id = attackSpaceCraft_number;
+   m_current_resource = START_RESOURCE;
+   m_resource_per_time = START_RESOURCE_PER_TIME;
+   m_attackSpaceCraft_number = START_ATTACKSPACECRAFT_NUMBER;
+   m_transportSpaceCraft_number = START_TRANSPORTSPACECRAFT_NUMBER;
+   m_attackspacecraft_id = m_attackSpaceCraft_number;
 
    //Die am Start verfügbaren Schiffe werden den Listen hinzugefügt
-   for (int i = 1; i <= attackSpaceCraft_number;i++) {
-       attackspacecraft *start_attackSpaceCraft = new attackspacecraft(i,base);
-       attackSpaceCraftslist.push_back(start_attackSpaceCraft);
+   for (int i = 1; i <= m_attackSpaceCraft_number;i++) {
+       std::shared_ptr<attackspacecraft> attackSpaceCraft = std::make_shared<attackspacecraft>(i, base);
+       m_attackSpaceCraftslist.push_back(attackSpaceCraft);
    }
-   for (int i = 1; i <= transportSpaceCraft_number;i++) {
-       transportspacecraft *start_transportSpaceCraft = new transportspacecraft(i,base);
-       transportSpaceCraftslist.push_back(start_transportSpaceCraft);
+   for (int i = 1; i <= m_transportSpaceCraft_number;i++) {
+       std::shared_ptr<transportspacecraft> transportSpaceCraft = std::make_shared<transportspacecraft>(i,base);
+       m_transportSpaceCraftslist.push_back(transportSpaceCraft);
    }
 
    MapFactory& b = MapFactory::getinstance();
    Map::Ptr map = b.getMap("models/01.map");
-   planets = map->getPlanets();
+   m_planets = map->getPlanets();
 
 }
 
@@ -45,30 +45,32 @@ player& player::getinstance(){
 }
 
 //aufruf wenn planet und darauf enthaltene mienen verloren gehen
-void player::decrease_resource_per_time(int mine_number){
-    for (int i = 0; i < mine_number;i++) {
-        resource_per_time -= RESOURCE_PER_MINE;
+void player::lost_planet(int planet_id){
+    int tmp_mine_number = m_planets[planet_id]->getMine();
+    for (int i = 0; i < planet_id;i++) {
+        m_resource_per_time -= RESOURCE_PER_MINE * tmp_mine_number;
     }
 }
 
 // werft bauen
 void player::build_shipyard(int planet_number){
-    if(current_resource >= COST_PER_SHIPYARD){
-        current_resource -= COST_PER_SHIPYARD;
+    if(m_current_resource >= COST_PER_SHIPYARD){
+        m_current_resource -= COST_PER_SHIPYARD;
 
+        //änderungen in der liste speichern
         bool exist = false;
-        for (auto i = round_changes.begin(); i != round_changes.end();i++) {
-            if((*i).getID() == planet_number){
-                (*i).setFactorys(1);
+        for (auto i = m_round_changes.begin(); i != m_round_changes.end();i++) {
+            if((*i)->getID() == planet_number){
+                (*i)->setFactorys(1);
                 exist = true;
             }
         }
         if(exist == false){
-            PlanetChanges new_change(planet_number);
-            new_change.setFactorys(1);
-            round_changes.push_back(new_change);
+            PlanetChanges::Ptr new_change = std::make_shared<PlanetChanges>(planet_number);
+            new_change->setFactorys(1);
+            m_round_changes.push_back(new_change);
         }
-
+        //update signal für die info bar
         emit update();
     }else {
         //nicht genug resourcen vorhanden
@@ -78,21 +80,22 @@ void player::build_shipyard(int planet_number){
 
 //miene bauen
 void player::build_mine(int planet_number){
-    if(current_resource >= COST_PER_MINE){
-        current_resource -= COST_PER_MINE;
-        resource_per_time += RESOURCE_PER_MINE;
+    if(m_current_resource >= COST_PER_MINE){
+        m_current_resource -= COST_PER_MINE;
+        m_resource_per_time += RESOURCE_PER_MINE;
 
+        //änderungen in liste speichern
         bool exist = false;
-        for (auto i = round_changes.begin(); i != round_changes.end();i++) {
-            if((*i).getID() == planet_number){
-                (*i).setMines(1);
+        for (auto i = m_round_changes.begin(); i != m_round_changes.end();i++) {
+            if((*i)->getID() == planet_number){
+                (*i)->setMines(1);
                 exist = true;
             }
         }
         if(exist == false){
-            PlanetChanges new_change(planet_number);
-            new_change.setMines(1);
-            round_changes.push_back(new_change);
+            PlanetChanges::Ptr new_change = std::make_shared<PlanetChanges>(planet_number);
+            new_change->setMines(1);
+            m_round_changes.push_back(new_change);
         }
 
         emit update();
@@ -104,23 +107,23 @@ void player::build_mine(int planet_number){
 
 //aufruf wenn ein attackspacecraft gebaut wird
 void player::new_attackSpaceCraft(int planet_number){
-    if(current_resource >= COST_PER_ATTACKSPACECRAFT){
-    current_resource -= COST_PER_ATTACKSPACECRAFT;
-    attackspacecraft_id += 1;
-    attackspacecraft *attackSpaceCraft = new attackspacecraft(attackSpaceCraft_number,planet_number);
-    attackSpaceCraftslist.push_back(attackSpaceCraft);
+    if(m_current_resource >= COST_PER_ATTACKSPACECRAFT){
+    m_current_resource -= COST_PER_ATTACKSPACECRAFT;
+    m_attackspacecraft_id += 1;
+    std::shared_ptr<attackspacecraft> attackSpaceCraft = std::make_shared<attackspacecraft>(m_attackspacecraft_id, planet_number);
+    m_attackSpaceCraftslist.push_back(attackSpaceCraft);
 
     bool exist = false;
-    for (auto i = round_changes.begin(); i != round_changes.end();i++) {
-        if((*i).getID() == planet_number){
-            (*i).setFighter(1);
+    for (auto i = m_round_changes.begin(); i != m_round_changes.end();i++) {
+        if((*i)->getID() == planet_number){
+            (*i)->setFighter(1);
             exist = true;
         }
     }
     if(exist == false){
-        PlanetChanges new_change(planet_number);
-        new_change.setFighter(1);
-        round_changes.push_back(new_change);
+        PlanetChanges::Ptr new_change = std::make_shared<PlanetChanges>(planet_number);
+        new_change->setFighter(1);
+        m_round_changes.push_back(new_change);
     }
 
     emit update();
@@ -133,10 +136,10 @@ void player::new_attackSpaceCraft(int planet_number){
 
 // aufruf wenn ein Kampf verloren wurde
 void player::destroy_attackSpaceCraft(int number_id){
-    for (auto i = attackSpaceCraftslist.begin(); i != attackSpaceCraftslist.end(); i++) {
-        if ((*i)->id == number_id){
-            i = attackSpaceCraftslist.erase(i);
-            attackSpaceCraft_number -= 1;
+    for (auto i = m_attackSpaceCraftslist.begin(); i != m_attackSpaceCraftslist.end(); i++) {
+        if ((*i)->m_id == number_id){
+            i = m_attackSpaceCraftslist.erase(i);
+            m_attackSpaceCraft_number -= 1;
         }
     }
     emit update();
@@ -144,11 +147,11 @@ void player::destroy_attackSpaceCraft(int number_id){
 
 //aufruf wenn ein transportspacecraft gebaut wird
 void player::new_transportSpaceCraft(int planet_number){
-    if(current_resource >= COST_PER_TRANSPORTSPACECRAFT){
-        current_resource -= COST_PER_TRANSPORTSPACECRAFT;
-        transportSpaceCraft_number += 1;
-        transportspacecraft* transportSpaceCraft = new transportspacecraft(transportSpaceCraft_number, planet_number);
-        transportSpaceCraftslist.push_back(transportSpaceCraft);
+    if(m_current_resource >= COST_PER_TRANSPORTSPACECRAFT){
+        m_current_resource -= COST_PER_TRANSPORTSPACECRAFT;
+        m_transportSpaceCraft_number += 1;
+        std::shared_ptr<transportspacecraft> transportSpaceCraft = std::make_shared<transportspacecraft>(m_transportSpaceCraft_number, planet_number);
+        m_transportSpaceCraftslist.push_back(transportSpaceCraft);
 
         emit update();
     }else {
@@ -159,23 +162,25 @@ void player::new_transportSpaceCraft(int planet_number){
 
 //aufruf wenn ein attackspacecraft zu einem anderen planeten fliegen soll
 void player::change_attackSpaceCraft_position(int new_position, int attackSpaceCraft_id){
-    for (auto i = attackSpaceCraftslist.begin(); i != attackSpaceCraftslist.end(); i++) {
-        if ((*i)->id == attackSpaceCraft_id){
-            (*i)->next_position = new_position;
-            (*i)->change_position = true;
+    for (auto i = m_attackSpaceCraftslist.begin(); i != m_attackSpaceCraftslist.end(); i++) {
+        if ((*i)->m_id == attackSpaceCraft_id){
+            (*i)->m_next_position = new_position;
+            (*i)->m_change_position = true;
 
         }
     }
 }
 
 //aufruf wenn einem transportspacecraft einem neuen planeten zugeordnet wird
-void player::change_transportSpaceCraft_route(std::list<int> new_route, int transportSpaceCraft_id){
+void player::change_transportSpaceCraft_route(std::list<int> new_route, std::list<int> tmp_route, int transportSpaceCraft_id){
     //checken ob der planet mit der neuen route auch dem player gehört
-    if(true){
-        for (auto i = transportSpaceCraftslist.begin(); i != transportSpaceCraftslist.end(); i++) {
-            if ((*i)->id == transportSpaceCraft_id){
-                (*i)->current_route = new_route;
-                (*i)->route_iterator = (*i)->current_route.begin();
+    if((m_planets[(*new_route.begin())])->getOwner() == m_player_id){
+        for (auto i = m_transportSpaceCraftslist.begin(); i != m_transportSpaceCraftslist.end(); i++) {
+            if ((*i)->m_id == transportSpaceCraft_id){
+                (*i)->m_tmp_route = tmp_route;
+                (*i)->m_current_route = new_route;
+                (*i)->m_route_iterator = (*i)->m_tmp_route.begin();
+                (*i)->m_to_new_route = true;
             }
         }
     }else {
@@ -189,42 +194,53 @@ void player::quit(){
 
 //aufruf wenn eine neue runde gestartet wird
 void player::new_round(){
-    current_resource += resource_per_time;
-    round_changes.clear();
+    m_current_resource += m_resource_per_time;
+    m_round_changes.clear();
 
-    for (auto i = attackSpaceCraftslist.begin();i != attackSpaceCraftslist.end(); i++) {
-        if((*i)->change_position == true){
-                (*i)->position = (*i)->next_position;
-                (*i)->change_position = false;
+    for (auto i = m_attackSpaceCraftslist.begin();i != m_attackSpaceCraftslist.end(); i++) {
+        if((*i)->m_change_position == true){
+                (*i)->m_position = (*i)->m_next_position;
+                (*i)->m_change_position = false;
         }
     }
 
-    for(auto i = transportSpaceCraftslist.begin(); i != transportSpaceCraftslist.end(); i ++){
-        if((*i)->to_base == true){
-            if((*i)->route_iterator == (*i)->current_route.end()){
-                (*i)->to_base = false;
-                (*i)->to_mine = true;
-                (*i)->position = *((*i)->route_iterator--);
-                (*i)->next_position = *((*i)->route_iterator);
+    for(auto i = m_transportSpaceCraftslist.begin(); i != m_transportSpaceCraftslist.end(); i ++){
+        if((*i)->m_to_new_route == true){
+            if((*i)->m_route_iterator == (*i)->m_tmp_route.end()){
+                (*i)->m_route_iterator = (*i)->m_current_route.begin();
+                (*i)->m_to_base = true;
+                (*i)->m_to_new_route = false;
+                (*i)->m_position = *((*i)->m_route_iterator++);
+                (*i)->m_next_position = *((*i)->m_route_iterator);
+            }
+            (*i)->m_position = *((*i)->m_route_iterator++);
+            (*i)->m_next_position = *((*i)->m_route_iterator);
+        }
+        if((*i)->m_to_base == true){
+            if((*i)->m_route_iterator == (*i)->m_current_route.end()){
+                (*i)->m_to_base = false;
+                (*i)->m_to_mine = true;
+                (*i)->m_position = *((*i)->m_route_iterator--);
+                (*i)->m_next_position = *((*i)->m_route_iterator);
             }else {
-                (*i)->position = *((*i)->route_iterator++);
-                (*i)->next_position = *((*i)->route_iterator);
+                (*i)->m_position = *((*i)->m_route_iterator++);
+                (*i)->m_next_position = *((*i)->m_route_iterator);
             }
         }
-        if((*i)->to_mine == true){
-            if((*i)->route_iterator == (*i)->current_route.begin()){
-                (*i)->to_base = true;
-                (*i)->to_mine = false;
-                (*i)->position = *((*i)->route_iterator++);
-                (*i)->next_position = *((*i)->route_iterator);
+        if((*i)->m_to_mine == true){
+            if((*i)->m_route_iterator == (*i)->m_current_route.begin()){
+                (*i)->m_to_base = true;
+                (*i)->m_to_mine = false;
+                (*i)->m_position = *((*i)->m_route_iterator++);
+                (*i)->m_next_position = *((*i)->m_route_iterator);
 
             }else {
-                (*i)->position = *((*i)->route_iterator--);
-                (*i)->next_position = *((*i)->route_iterator);
+                (*i)->m_position = *((*i)->m_route_iterator--);
+                (*i)->m_next_position = *((*i)->m_route_iterator);
             }
         }
     }
-    if(attackSpaceCraft_number == 0){
+    if(m_attackSpaceCraft_number == 0){
         emit gameover();
     }
     emit update();
