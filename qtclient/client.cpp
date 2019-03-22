@@ -1,7 +1,9 @@
 #include "client.h"
 
 namespace asteroids {
-Client::Client() {}
+Client::Client() {
+    enemy_disconnected = false;
+}
 
 void Client::connect(QString addr, quint16 port) {
     // socket.connectToHost(QHostAddress::LocalHost, port);
@@ -171,9 +173,7 @@ void Client::sendReadyT(char* player_id, int length)
 
 void Client::conLost()
 {
-    QByteArray data;
-    data.append(PacketType::con_lost);
-    writeData(data);
+    enemy_disconnected = true;
 }
 
 void Client::game_start(char* data)
@@ -211,6 +211,9 @@ void Client::interpreteAnswer() {
             winner_no = getChar(&data);
         } else if (pt == PacketType::start_2D) {
             // TODO BLOCK WAITING:::
+        } else if(pt == PacketType::game_start)
+        {
+            game_start(data);
         }
     }
 }
