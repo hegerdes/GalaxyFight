@@ -151,6 +151,7 @@ set(ASTEROID_SOURCES
     rendering/Crosshair.cpp
     util/Util.cpp
     util/player.cpp
+    util/ManageGame.cpp
     view/GLWidget.cpp
     view/MainWindow.cpp
     view/Camera.cpp
