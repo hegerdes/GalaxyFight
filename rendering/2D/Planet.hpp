@@ -61,7 +61,7 @@ class Planet
     
     inline int getFactorys(){return m_num_factory;}
 
-    inline int getFighte(){return m_num_fighters;}
+    inline int getFighter(){return m_num_fighters;}
 
     inline int getTransporter(){return m_num_transporter;}
 
