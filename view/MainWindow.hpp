@@ -24,6 +24,7 @@
 #include "startscreen.h"
 #include "loadingscreen.h"
 #include "scene2d.h"
+#include "settingwindow.h"
 
 
 namespace asteroids
@@ -73,6 +74,11 @@ public slots:
     void gotoLoadingScreen();
 
     /**
+     * @brief gotoSettingsScreen sets the SettingsScreen as top screen
+     */
+    void gotoSettingsScreen();
+
+    /**
      * @brief closeWindow closes the MainWindow
      */
     void closeWindow();
@@ -107,6 +113,9 @@ private:
 
     /// Scene2D widget
     Scene2D* m_scene2d;
+
+    /// Settings Screen widget
+    settingwindow* m_settingsScreen;
 
     /// map with the keys and their states
     map<Qt::Key, bool>          m_keyStates;

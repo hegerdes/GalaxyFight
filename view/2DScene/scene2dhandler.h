@@ -24,6 +24,9 @@ public:
 signals:
     void planetSelected(int);
 
+public slots:
+    void updateRound();
+
 protected:
     /**
      * @brief mouseReleaseEvent
