@@ -43,22 +43,22 @@ StartScreen::~StartScreen()
 }
 
 
-void asteroids::StartScreen::on_playBut_clicked()
+void StartScreen::on_playBut_clicked()
 {
     //sends Signals when "Spielen" was clicked
-    emit goToLoading();
+    emit gotoLoadingScreen();
     emit startClient();
 }
 
 
 
-void asteroids::StartScreen::on_quitBut_clicked()
+void StartScreen::on_quitBut_clicked()
 {
     //sends Signal when "Beenden" was clicked
-    emit closeProgramm();
+    emit closeWindow();
 }
 
-void asteroids::StartScreen::on_settingBut_clicked()
+void StartScreen::on_settingBut_clicked()
 {
     //sends Signal when "Einstellungen" was clicked
     emit goToSetting();
