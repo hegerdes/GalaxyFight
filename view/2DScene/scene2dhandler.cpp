@@ -152,7 +152,12 @@ void Scene2dHandler::unselectAll()
 
 void Scene2dHandler::placeFighter()
 {
+    auto map = MapFactory::getinstance().getMap("./models/01.map");
+    auto planets = map->getPlanets();
 
+    for (const auto& planet : planets) {
+
+    }
 }
 
 void Scene2dHandler::placeTransporter()
