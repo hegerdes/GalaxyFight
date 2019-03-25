@@ -2,7 +2,7 @@
 
 namespace asteroids
 {
-    HUDWidget::HUDWidget(QWidget* parent):QWidget(parent), m_cockpit("../models/spaceship-cockpit-png-3.png"), m_firstPerson(false)
+    HUDWidget::HUDWidget(QWidget* parent):QWidget(parent), m_cockpit("models/spaceship-cockpit-png-3.png"), m_firstPerson(false)
     {
     }
 
@@ -23,7 +23,7 @@ namespace asteroids
         else
         {
             fullScreen = QRect(0, 0, width(), height());
-            leftHP = QRect(2.01*width()/9, height()*90.5/100, width()/6 * m_enemyShip->getHP()/10, height()/15);
+            leftHP = QRect(2.01*width()/9, height()*90.5/100, width()/6 * m_myShip->getHP()/10, height()/15);
             rightHP = QRect(5.5*width()/9 + (width()/6-width()/6 * m_enemyShip->getHP()/10), height()*90.5/100, width()/6 * m_enemyShip->getHP()/10, height()/15);
             m_p.begin(this);
             m_p.drawImage(fullScreen, m_cockpit);

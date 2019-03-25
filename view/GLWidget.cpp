@@ -12,12 +12,11 @@ GLWidget::GLWidget(QWidget* parent)
       m_rotationSpeed(0.025),
       m_moveSpeed(5.0),
       m_lastBullet(0),
-<<<<<<< HEAD
+      m_BulletId(0),
       m_schussFrequenz(500),
-      m_BulletId(0)
-=======
-      m_schussFrequenz(500), m_firstPerson(false), m_firstPersonAble(true), m_hud(this)
->>>>>>> a3ce296e3dbe1a8e85acd260b5a43f9caf838a17
+      m_firstPerson(false),
+      m_firstPersonAble(true),
+      m_hud(this)
 {
     m_layout.addWidget(&m_hud);
     setLayout(&m_layout);
