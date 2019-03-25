@@ -217,6 +217,7 @@ void ManageGame::next_round()
     updateStats();
 
     emit updateInfobar();
+    // @ahaker send initpacket
     emit goto3DScene();
 }
 

@@ -192,30 +192,25 @@ void GLWidget::step(map<Qt::Key, bool>& keyStates)
 
             m_actor->move(Transformable::FORWARD, m_actor->getCurrentSpeed());
 
-            if (keyStates[Qt::Key_H])
-            {
-                std::cerr << "key_up\n";
-                m_actor->rotate(Transformable::PITCH_RIGHT, m_rotationSpeed);
-            }
             if (keyStates[Qt::Key_L])
             {
-                std::cerr << "key_down\n";
+                m_actor->rotate(Transformable::PITCH_RIGHT, m_rotationSpeed);
+            }
+            if (keyStates[Qt::Key_H])
+            {
                 m_actor->rotate(Transformable::PITCH_LEFT, m_rotationSpeed);
             }
             if (keyStates[Qt::Key_J])
             {
-                std::cerr << "key_left\n";
                 m_actor->rotate(Transformable::ROLL_LEFT, m_rotationSpeed);
             }
             if (keyStates[Qt::Key_K])
             {
-                std::cerr << "key_right\n";
                 m_actor->rotate(Transformable::ROLL_RIGHT, m_rotationSpeed);
             }
 
             if (keyStates[Qt::Key_W])
             {
-                std::cerr << "key_w\n";
                 m_actor->accelerate();
             }
             if (keyStates[Qt::Key_S])
@@ -238,7 +233,7 @@ void GLWidget::step(map<Qt::Key, bool>& keyStates)
                 }
 
                 // Add a bullet to physics engine
-                if(keyStates[Qt::Key_Space])
+                if(keyStates[Qt::Key_N])
                 {
 
                     auto now = std::chrono::system_clock::now();
