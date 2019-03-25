@@ -1,6 +1,7 @@
 #include "scene2dhandler.h"
 #include <QGraphicsRectItem>
 #include <QGraphicsSceneMouseEvent>
+#include "../../util/ManageGame.hpp"
 #include "../../rendering/2D/MapFactory.hpp"
 #include "itemtypes.h"
 #include <QDebug>
@@ -15,10 +16,8 @@ Scene2dHandler::Scene2dHandler(QObject* parent)
     QPixmap background("./models/box3.jpg");
     setBackgroundBrush(QBrush(background));
 
-    MapFactory& fac = MapFactory::getinstance();
-
     //draw map
-    auto map = fac.getMap("./models/01.map");
+    auto map = MapFactory::getinstance().getMap("./models/01.map");
     auto planets = map->getPlanets();
     auto edges = map->getEdges();
 
@@ -41,11 +40,14 @@ Scene2dHandler::Scene2dHandler(QObject* parent)
         addItem(pitem);
     }
 
+    //debug ships
     auto ship = new GraphicsFighterItem(PlayerType::PLAYER2, 1);
     auto tship = new GraphicsTransporterItem(1);
     tship->setPos(100, 100);
     addItem(ship);
     addItem(tship);
+
+    //connections
 
 }
 
@@ -91,8 +93,7 @@ void Scene2dHandler::mouseReleaseEvent(QGraphicsSceneMouseEvent* mouseEvent)
 void Scene2dHandler::handlePlanetSelection(GraphicsPlanetItem* planet)
 {
     planet->selected();
-//    update(planet->pos().x(), planet->pos().x(), 75, 75);
-    update(0, 0, width(), height());
+    update(0, 0, 1920, 1080);
     m_currentlySelected = planet;
     emit planetSelected(planet->getID());
 }
@@ -110,14 +111,14 @@ void Scene2dHandler::handleFactorySelection()
 void Scene2dHandler::handleFighterSelection(GraphicsFighterItem* fighter)
 {
     fighter->selected();
-    update(fighter->pos().x()-10, fighter->pos().x()-10, 60, 60);
+    update(0, 0, 1920, 1080);
     m_currentlySelected = fighter;
 }
 
 void Scene2dHandler::handleTransporterSelection(GraphicsTransporterItem* transporter)
 {
     transporter->selected();
-    update(transporter->pos().x()-10, transporter->pos().x()-10, 60, 60);
+    update(0, 0, 1920, 1080);
     m_currentlySelected = transporter;
 }
 
@@ -147,26 +148,78 @@ void Scene2dHandler::unselectAll()
         break;
     }
 
-    update(m_currentlySelected->pos().x()-10, m_currentlySelected->pos().x()-10, 75, 75);
+    update(0, 0, 1920, 1080);
     m_currentlySelected = nullptr;
 }
 
 void Scene2dHandler::placeFighter()
 {
-    auto map = MapFactory::getinstance().getMap("./models/01.map");
-    auto planets = map->getPlanets();
+    auto fighters = ManageGame::getinstance()->get_attackSpaceCraftList();
+    auto planets = MapFactory::getinstance().getMap("./models/01.map")->getPlanets();
+    auto itemList = items();
 
-    for (const auto& planet : planets) {
+    //start animation and placement
+    for (const auto& fighter : fighters) {
 
+        //skip fighter if nothing changed
+        if (!fighter->m_change_position)
+            continue;
+
+        bool foundFlag = false;
+        //get current GraphicsItem
+        for(auto& item : itemList) {
+            if(item->type() == ItemTypes::Fighter && ((GraphicsFighterItem*)item)->getID() == fighter->m_id) {
+                auto pos = planets[fighter->m_next_position]->getPos();
+                item->setPos(pos[0], pos[1]);
+                foundFlag = true;
+            }
+        }
+
+        //if no fighter found, create a new one
+        if(!foundFlag) {
+            auto newFighter = new GraphicsFighterItem(PlayerType::PLAYER1, fighter->m_id);
+            auto pos = planets[fighter->m_position]->getPos();
+            newFighter->setPos(pos[0], pos[1]);
+            addItem(newFighter);
+        }
     }
+
+    update(0, 0, 1920, 1080);
 }
 
 void Scene2dHandler::placeTransporter()
 {
+    auto transporters = ManageGame::getinstance()->get_transportSpaceCraftList();
+    auto planets = MapFactory::getinstance().getMap("./models/01.map")->getPlanets();
+    auto itemList = items();
 
+    //start animation and placement
+    for (const auto& transporter : transporters) {
+
+        bool foundFlag = false;
+        //get current GraphicsItem
+        for(auto& item : itemList) {
+            if(item->type() == ItemTypes::Transporter && ((GraphicsFighterItem*)item)->getID() == transporter->m_id) {
+                auto pos = planets[transporter->m_next_position]->getPos();
+                item->setPos(pos[0], pos[1]);
+                foundFlag = true;
+            }
+        }
+
+        //if no transporter found, create a new one
+        if(!foundFlag) {
+            auto newTransporter = new GraphicsFighterItem(PlayerType::PLAYER1, transporter->m_id);
+            auto pos = planets[transporter->m_position]->getPos();
+            newTransporter->setPos(pos[0], pos[1]);
+            addItem(newTransporter);
+        }
+    }
+
+    update(0, 0, 1920, 1080);
 }
 
 void Scene2dHandler::updateRound() {
-
+    placeFighter();
+    placeTransporter();
 }
 }
