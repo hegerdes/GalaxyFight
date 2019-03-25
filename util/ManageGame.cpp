@@ -376,6 +376,8 @@ void ManageGame::updateSpaceCrafts()
             }
         }
     }
+
+    emit updateScene();
 }
 
 ManageGame::~ManageGame()

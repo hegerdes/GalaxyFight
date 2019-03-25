@@ -4,6 +4,7 @@
 #include "../../util/ManageGame.hpp"
 #include "../../rendering/2D/MapFactory.hpp"
 #include "itemtypes.h"
+#include <memory>
 #include <QDebug>
 
 
@@ -15,6 +16,8 @@ Scene2dHandler::Scene2dHandler(QObject* parent)
     //config appearance
     QPixmap background("./models/box3.jpg");
     setBackgroundBrush(QBrush(background));
+
+    ManageGame::initialize_player(PlayerType::PLAYER1, 1);
 
     //draw map
     auto map = MapFactory::getinstance().getMap("./models/01.map");
@@ -41,53 +44,67 @@ Scene2dHandler::Scene2dHandler(QObject* parent)
     }
 
     //debug ships
-    auto ship = new GraphicsFighterItem(PlayerType::PLAYER2, 1);
-    auto tship = new GraphicsTransporterItem(1);
-    tship->setPos(100, 100);
-    addItem(ship);
-    addItem(tship);
+//    auto ship = new GraphicsFighterItem(PlayerType::PLAYER2, 1);
+//    auto tship = new GraphicsTransporterItem(1);
+//    tship->setPos(100, 100);
+//    addItem(ship);
+//    addItem(tship);
 
     //connections
-
+    connect(ManageGame::getinstance(), &ManageGame::updateScene, this, &Scene2dHandler::updateRound);
 }
 
 void Scene2dHandler::mouseReleaseEvent(QGraphicsSceneMouseEvent* mouseEvent)
 {
     //get item on click with left mouse button
-    if (mouseEvent->button() != Qt::LeftButton)
-        return;
+    if (mouseEvent->button() == Qt::LeftButton) {
+        //get item
+        QGraphicsItem* item;
+        item = itemAt(mouseEvent->scenePos(), QTransform());
+        std::cout << mouseEvent->scenePos().x() << " : " << mouseEvent->scenePos().y() << std::endl;
+        if(item == nullptr)
+            return;
 
-    //get item
-    QGraphicsItem* item;
-    item = itemAt(mouseEvent->scenePos(), QTransform());
-    std::cout << mouseEvent->scenePos().x() << " : " << mouseEvent->scenePos().y() << std::endl;
-    if(item == nullptr)
-        return;
+        unselectAll();
 
-    unselectAll();
+        //Performs a operation specific to each type
+        switch (item->type()) {
+        case ItemTypes::Planet:
+            handlePlanetSelection(static_cast<GraphicsPlanetItem*>(item));
+            break;
+        case ItemTypes::Mine:
 
-    //Performs a operation specific to each type
-    switch (item->type()) {
-    case ItemTypes::Planet:
-        handlePlanetSelection((GraphicsPlanetItem*) item);
-        break;
-    case ItemTypes::Mine:
+            break;
+        case ItemTypes::Factory:
 
-        break;
-    case ItemTypes::Factory:
+            break;
+        case ItemTypes::Fighter:
+                handleFighterSelection(static_cast<GraphicsFighterItem*>(item));
+            break;
+        case ItemTypes::Transporter:
+                handleTransporterSelection(static_cast<GraphicsTransporterItem*>(item));
+            break;
+        default:
+            //ignore all other items in the scene
+            return;
+        }
+    } else if (mouseEvent->button() == Qt::RightButton) { //handle fighter movement
+        //get item
+        QGraphicsItem* item;
+        item = itemAt(mouseEvent->scenePos(), QTransform());
+        std::cout << mouseEvent->scenePos().x() << " : " << mouseEvent->scenePos().y() << std::endl;
+        if(item == nullptr)
+            return;
 
-        break;
-    case ItemTypes::Fighter:
-            handleFighterSelection((GraphicsFighterItem*) item);
-        break;
-    case ItemTypes::Transporter:
-            handleTransporterSelection((GraphicsTransporterItem*) item);
-        break;
-    default:
-        //ignore all other items in the scene
+        //fighter can only move to planets
+        if(item->type() != ItemTypes::Planet)
+            return;
+
+        ManageGame::getinstance()->change_Fighter_position(static_cast<GraphicsPlanetItem*>(item)->getID(),
+                                                           static_cast<GraphicsFighterItem*>(m_currentlySelected)->getID());
+    } else {
         return;
     }
-
 }
 
 void Scene2dHandler::handlePlanetSelection(GraphicsPlanetItem* planet)
@@ -129,7 +146,7 @@ void Scene2dHandler::unselectAll()
 
     switch (m_currentlySelected->type()) {
     case ItemTypes::Planet:
-        ((GraphicsPlanetItem*) m_currentlySelected)->selected(false);
+        static_cast<GraphicsPlanetItem*>(m_currentlySelected)->selected(false);
         break;
     case ItemTypes::Mine:
 
@@ -138,10 +155,10 @@ void Scene2dHandler::unselectAll()
 
         break;
     case ItemTypes::Fighter:
-            ((GraphicsFighterItem*) m_currentlySelected)->selected(false);
+            static_cast<GraphicsFighterItem*>(m_currentlySelected)->selected(false);
         break;
     case ItemTypes::Transporter:
-            ((GraphicsTransporterItem*) m_currentlySelected)->selected(false);
+            static_cast<GraphicsTransporterItem*>(m_currentlySelected)->selected(false);
         break;
     default:
         //ignore all other items in the scene
