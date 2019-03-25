@@ -148,6 +148,7 @@ set(ASTEROID_SOURCES
     util/ColorMap.cpp   
     util/Util.cpp
     view/GLWidget.cpp
+    view/HUDWidget.cpp
     view/MainWindow.cpp 
     view/Camera.cpp
     qtclient/client.cpp
