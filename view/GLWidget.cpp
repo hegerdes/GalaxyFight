@@ -200,6 +200,7 @@ void GLWidget::step(map<Qt::Key, bool>& keyStates)
 
 
             m_actor->move(Transformable::FORWARD, m_actor->getCurrentSpeed());
+            //Toggle first person
             if(keyStates[Qt::Key_V])
             {
                 if(m_firstPersonAble)
