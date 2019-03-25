@@ -99,6 +99,10 @@ void Client::init_3d(char* data) {
 
         size_astr[i] = getFloat(&data);
     }
+
+
+    // TODO:: TESTING___________________________________________
+    player_No = getChar(&data);
 }
 
 void Client::update_3D_S(char* data) {

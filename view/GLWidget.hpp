@@ -19,6 +19,8 @@
 #include <GL/glew.h>
 #include <QOpenGLWidget>
 
+#include <limits.h>
+
 #include "rendering/HealthBar.hpp"
 #include "rendering/Crosshair.hpp"
 #include "view/Camera.hpp"
@@ -64,6 +66,10 @@ protected:
     /// Handle mouse movement
     virtual void mouseMoveEvent(QMouseEvent* event) override;
 
+    // TODO:: Setzen der BulletID passend zur PlayerID. Noch nicht passende Stelle gefunden
+    /// Set BulletId according to the playerID
+    void setBulletId(int o_id);
+
 private:
 
     /// Name of the given level file
@@ -107,6 +113,9 @@ private:
 
     /// Last set mouse position
     QPoint                      m_mousePos;
+
+    ///Current BulletId
+    int m_BulletId;
 
     /// Letzter Zeitpunkt zu dem eine Kugel abgefeurert wurde
     long                m_lastBullet;

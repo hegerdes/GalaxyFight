@@ -12,7 +12,8 @@ GLWidget::GLWidget(QWidget* parent)
       m_rotationSpeed(0.025),
       m_moveSpeed(5.0),
       m_lastBullet(0),
-      m_schussFrequenz(500)
+      m_schussFrequenz(500),
+      m_BulletId(0)
 {
 }
 
@@ -230,8 +231,10 @@ void GLWidget::step(map<Qt::Key, bool>& keyStates)
                 long bulletShot = value.count();
                 ///Ermittelt, wann die letzte Kugel abgeschoßen wurde und erlaubt erst nach
                 if(bulletShot - m_lastBullet > m_schussFrequenz){
+                    m_BulletId++;
                     Vector3f shipPosition = m_actor->getPosition() + m_actor->getZAxis() * -45 + m_actor->getXAxis() * -175;
                     Bullet::Ptr bullet = make_shared<Bullet>(Bullet(shipPosition, m_actor->getDirection()));
+                    bullet->setid(m_BulletId);
                     m_physicsEngine->addBullet(bullet);
                     m_lastBullet = bulletShot;
                     bullet_shot = Bullet_shot::shot;
@@ -246,7 +249,7 @@ void GLWidget::step(map<Qt::Key, bool>& keyStates)
     // Trigger update, i.e., redraw via paintGL()
     client_global.sendUpdate_3D_C(m_actor->m_position, m_actor->m_xAxis,
                                  m_actor->m_yAxis, m_actor->m_zAxis,
-                                 bullet_shot, Living::alive, 0);
+                                 bullet_shot, Living::alive, m_BulletId);
     client_global.readData();
     if(client_global.init_received)
     {
@@ -280,6 +283,16 @@ void GLWidget::step(map<Qt::Key, bool>& keyStates)
 
         client_global.init_received = false;
         std::cerr << "erhaletn----------------------------------------------\n";
+
+        //TODO: TESTING __________________________________________________
+        if(client_global.player_No == player_no::first)
+        {
+            m_BulletId = INT_MIN;
+        } else
+        {
+            m_BulletId = 0;
+        }
+
     }
 
     m_enemyPlayer->m_position = client_global.enemyPos;
@@ -360,4 +373,9 @@ void GLWidget::resizeGL(int w, int h)
     gluPerspective(45, ratio, 1, 10000);
 
     glMatrixMode(GL_MODELVIEW);
+}
+
+void GLWidget::setBulletId(int o_id)
+{
+    m_BulletId = o_id;
 }
