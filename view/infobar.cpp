@@ -7,13 +7,19 @@ Infobar::Infobar(QWidget *parent) :
 {
     ui->setupUi(this);
 
+    //Set singelton instances
     asteroids::MapFactory& factory = asteroids::MapFactory::getinstance();
     m_manage_game = asteroids::ManageGame::getinstance();
 
+    //Set map and planets
     m_planetmap = factory.getMap("models/01.map");
     m_planets = m_planetmap->getPlanets();
     m_selected_planet = -1;
 
+    //Draw default ressources on infobar
+    updateInfobar();
+
+    //Connects
     connect(this, &Infobar::end_game,m_manage_game, &asteroids::ManageGame::end_game);
     connect(this, &Infobar::next_round,m_manage_game, &asteroids::ManageGame::next_round);
     connect(this, &Infobar::build_mine,m_manage_game, &asteroids::ManageGame::build_mine);
