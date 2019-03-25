@@ -10,6 +10,7 @@ namespace asteroids
 
     void HUDWidget::paintEvent(QPaintEvent* event)
     {
+        //HP-Balken
         QRect leftHP;
         QRect rightHP;
         //Durchsichtige Rechtecke auf denen der Name der Spieler steht
