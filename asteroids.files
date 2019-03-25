@@ -6,6 +6,7 @@ build/CMakeFiles/feature_tests.c
 build/CMakeFiles/feature_tests.cxx
 build/asteroids_automoc.cpp
 build/moc_GLWidget.cpp
+build/moc_HUDWidget.cpp
 build/moc_MainWindow.cpp
 build/moc_infobar.cpp
 build/moc_loadingscreen.cpp
@@ -93,10 +94,16 @@ physics/Transformable.hpp
 qtclient/client.cpp
 qtclient/client.h
 qtserver/flags.h
+qtserver/loggingtype.h
 qtserver/main.cpp
 qtserver/mytcpserver.cpp
 qtserver/mytcpserver.h
 qtserver/packettypes.h
+qtserver/qtserver.pro
+qtserver/serverphysicalobject.cpp
+qtserver/serverphysicalobject.h
+qtserver/serverphysics.cpp
+qtserver/serverphysics.h
 rendering/Asteroid.cpp
 rendering/Asteroid.hpp
 rendering/Bullet.cpp
@@ -134,7 +141,8 @@ view/Camera.cpp
 view/Camera.hpp
 view/GLWidget.cpp
 view/GLWidget.hpp
-view/Main.cpp
+view/HUDWidget.cpp
+view/HUDWidget.hpp
 view/MainWindow.cpp
 view/MainWindow.hpp
 view/build/CMakeFiles/3.10.2/CompilerIdC/CMakeCCompilerId.c

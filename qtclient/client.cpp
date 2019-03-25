@@ -102,7 +102,7 @@ void Client::init_3d(char* data) {
 
 
     // TODO:: TESTING___________________________________________
-    player_No = getChar(&data);
+    player_No = (player_no) getChar(&data);
 }
 
 void Client::update_3D_S(char* data) {
@@ -190,7 +190,7 @@ void Client::game_start(char* data)
     }
     id[length] = '\0';
     id_other = std::string(id);
-    player_No = getChar(&data);
+    player_No = (player_no) getChar(&data);
 
     //MapKonfig erste mal laden.
 }
