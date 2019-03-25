@@ -43,6 +43,8 @@ Scene2dHandler::Scene2dHandler(QObject* parent)
         addItem(pitem);
     }
 
+    updateRound();
+
     //debug ships
 //    auto ship = new GraphicsFighterItem(PlayerType::PLAYER2, 1);
 //    auto tship = new GraphicsTransporterItem(1);
@@ -175,12 +177,12 @@ void Scene2dHandler::placeFighter()
     auto planets = MapFactory::getinstance().getMap("./models/01.map")->getPlanets();
     auto itemList = items();
 
-    std::cout << "start fighter placement: num: fighter" << fighters.size();
+    std::cout << "start fighter placement: num: fighter" << fighters.size() << std::endl;
 
 
     //start animation and placement
     for (const auto& fighter : fighters) {
-        std::cerr << "place fighter: " + fighter->m_id;
+        std::cout << "place fighter: " + fighter->m_id << std::endl;
         //skip fighter if nothing changed
         if (!fighter->m_change_position)
             continue;
@@ -239,7 +241,7 @@ void Scene2dHandler::placeTransporter()
 }
 
 void Scene2dHandler::updateRound() {
-    std::cout << "update round";
+    std::cout << "update round" << std::endl;
     placeFighter();
     placeTransporter();
 }

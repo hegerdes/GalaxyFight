@@ -267,7 +267,7 @@ void ManageGame::next_round()
     m_round_changes_map.clear();
 
     //Raumschiffrouten aktualisieren
-    updateSpaceCrafts();
+//    updateSpaceCrafts();
 
     //TODO Sent List
     //inet network
