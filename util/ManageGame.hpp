@@ -28,7 +28,7 @@ namespace asteroids
 
 struct attackspacecraft{
     //constructor
-    attackspacecraft(int id, int position) : m_id(id), m_position(position), m_change_position(false) {}
+    attackspacecraft(int id, int position) : m_id(id), m_position(position), m_next_position(-1), m_change_position(false) {}
     //id für einzelne Schiffe
     int m_id;
     //owner
@@ -43,7 +43,7 @@ struct attackspacecraft{
 
 struct transportspacecraft{
     //constructor
-    transportspacecraft(int id, int position) : m_id(id), m_position(position), m_to_new_route(false) {}
+    transportspacecraft(int id, int position) : m_id(id), m_position(position), m_to_new_route(false), m_current_route(), m_tmp_route(), m_route_iterator() {}
     //id für einzelne Schiffe
     int m_id;
     //owner
@@ -121,6 +121,8 @@ class ManageGame : public QObject
     void already_exist();
     void goToScene2D();
     void goto3DScene();
+    void updateScene();
+    void changeRouteError();
 
   public slots:
     void change_Fighter_position(int new_position, int attackSpaceCraft_id);
