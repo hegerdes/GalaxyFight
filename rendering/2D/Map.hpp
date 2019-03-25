@@ -82,6 +82,13 @@ class Map
     std::vector<Vector2i> getEdges() {return m_edges;}
 
     /**
+     * @brief Get the Number Of Planets object
+     * 
+     * @return int Number of planets
+     */
+    int getNumberOfPlanets(){return m_num_of_planets;}
+
+    /**
      * @brief Prints every planet with pos
      * 
      */
@@ -115,6 +122,9 @@ class Map
 
     //Map to match the Names to a Index
     std::map<std::string,int> m_planat_dir;
+
+    //Number of planets
+    int m_num_of_planets;
 
 };
 
