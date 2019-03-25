@@ -141,7 +141,7 @@ bool Server::writeData(QByteArray const& data) {
         QByteArray response_2;
         sendGame_Start(response_2, socket_2);
         if (socket_2->state() == QAbstractSocket::ConnectedState) {
-            socket_2->write(response); // write the data itself
+            socket_2->write(response_2); // write the data itself
             bytes_written_2 = socket_2->waitForBytesWritten();
         } else {
             log(LoggingType::INFO, "Client not connected on Address: " + socket->peerAddress().toString().toStdString());
@@ -318,10 +318,8 @@ void Server::sendGame_Start(QByteArray& response, QTcpSocket* socket) {
     response.append(client_data_temp_enemy.name.c_str(), length);
     if (socket_1 == socket) {
         response.append(player_no::first);
-        std::cerr << "socket_1 player_no::first\n";
     } else if (socket_2 == socket) {
         response.append(player_no::second);
-        std::cerr << "socket_2 player_no::first\n";
     }
 
     //TODO send fist map config data
