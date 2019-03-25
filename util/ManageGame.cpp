@@ -16,7 +16,7 @@ namespace asteroids
 
 ManageGame *ManageGame::instance = nullptr;
 
-ManageGame::ManageGame(QObject *parent, PlanetChanges::Owner player_id, int planet_id) : QObject(parent), m_player_id(player_id), m_base(planet_id)
+ManageGame::ManageGame(QObject *parent, PlanetChanges::Owner player_id, int planet_id) : QObject(parent), m_player_id(PlanetChanges::UNASSIGN), m_base(planet_id)
 {
     //Read in defaults
     m_current_resource = START_RESOURCE;
@@ -289,6 +289,8 @@ void ManageGame::next_round()
     //TODO Next 2d-round
     updateStats();
 
+    emit updateScene();
+    std::cout << "updateScene called " << __LINE__ << std::endl;
     emit updateInfobar();
 }
 
@@ -388,8 +390,6 @@ void ManageGame::updateSpaceCrafts()
             }
         }
     }
-
-    emit updateScene();
 }
 
 ManageGame::~ManageGame()

@@ -58,6 +58,8 @@ Scene2dHandler::Scene2dHandler(QObject* parent)
 
 void Scene2dHandler::mouseReleaseEvent(QGraphicsSceneMouseEvent* mouseEvent)
 {
+
+    updateRound();
     //get item on click with left mouse button
     if (mouseEvent->button() == Qt::LeftButton) {
         //get item
@@ -177,12 +179,12 @@ void Scene2dHandler::placeFighter()
     auto planets = MapFactory::getinstance().getMap("./models/01.map")->getPlanets();
     auto itemList = items();
 
-    std::cout << "start fighter placement: num: fighter" << fighters.size() << std::endl;
+    std::cout << "start fighter placement: num:" << fighters.size() << std::endl;
 
 
     //start animation and placement
     for (const auto& fighter : fighters) {
-        std::cout << "place fighter: " + fighter->m_id << std::endl;
+        std::cout << "place fighter: " + QString::number(fighter->m_id).toStdString() << std::endl;
         //skip fighter if nothing changed
         if (!fighter->m_change_position)
             continue;
@@ -206,7 +208,7 @@ void Scene2dHandler::placeFighter()
         }
     }
 
-    update(0, 0, 1920, 1080);
+    update(-20000, -20000, 192000, 108000);
 }
 
 void Scene2dHandler::placeTransporter()
@@ -221,7 +223,7 @@ void Scene2dHandler::placeTransporter()
         bool foundFlag = false;
         //get current GraphicsItem
         for(auto& item : itemList) {
-            if(item->type() == ItemTypes::Transporter && ((GraphicsFighterItem*)item)->getID() == transporter->m_id) {
+            if(item->type() == ItemTypes::Transporter && static_cast<GraphicsTransporterItem*>(item)->getID() == transporter->m_id) {
                 auto pos = planets[transporter->m_next_position]->getPos();
                 item->setPos(pos[0], pos[1]);
                 foundFlag = true;
@@ -230,7 +232,7 @@ void Scene2dHandler::placeTransporter()
 
         //if no transporter found, create a new one
         if(!foundFlag) {
-            auto newTransporter = new GraphicsFighterItem(PlayerType::PLAYER1, transporter->m_id);
+            auto newTransporter = new GraphicsTransporterItem(transporter->m_id);
             auto pos = planets[transporter->m_position]->getPos();
             newTransporter->setPos(pos[0], pos[1]);
             addItem(newTransporter);
