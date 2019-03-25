@@ -5,6 +5,7 @@
 
 #include "ui_startscreen.h"
 #include "qtclient/client.h"
+#include "../util/ManageGame.hpp"
 
 namespace asteroids {
 
