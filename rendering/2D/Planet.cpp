@@ -40,6 +40,7 @@ int Planet::init()
     m_num_mine += updates->getMines();
     m_num_transporter += updates->getTransports();
     m_num_of_ore += updates->getOre();
+    m_stored_ore += updates->getStoredOre();
     if(updates->getOwner() != PlanetChanges::UNASSIGN)
     {
         m_owned = updates->getOwner();
@@ -52,7 +53,7 @@ int Planet::init()
     std::cout << "PlanetNr: " << m_id << " Owner: " << m_owned << " Ore: " 
         <<  m_num_of_ore << " Fighter: " << m_num_fighters << " Transporter: " 
         <<  m_num_transporter << " Mine: " << m_num_mine << " Factory: " 
-        << m_num_factory <<  std::endl;
+        << m_num_factory <<  "StoredOre: " << m_stored_ore << std::endl;
  }
 
 }//asteroids
