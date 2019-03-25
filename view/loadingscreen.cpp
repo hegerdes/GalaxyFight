@@ -27,7 +27,8 @@ LoadingScreen::LoadingScreen(QWidget *parent) :
     //loading-animation as a gif
     QMovie *movie = new QMovie("models/laden4.gif");
     ui->gifLabel->setMovie(movie);
-    ui->gifLabel->setGeometry(x - screengeometry.width()/6,y - 50,screengeometry.width()/2,screengeometry.height()/2);
+    ui->gifLabel->setGeometry(x - screengeometry.width()/4,y - 50,screengeometry.width()/2,screengeometry.height()/2);
+    movie->setScaledSize(ui->gifLabel->size());
     movie->start();
     movie->setSpeed(75);
 
