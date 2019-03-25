@@ -150,6 +150,16 @@ void Scene2dHandler::unselectAll()
     m_currentlySelected = nullptr;
 }
 
+void Scene2dHandler::placeFighter()
+{
+
+}
+
+void Scene2dHandler::placeTransporter()
+{
+
+}
+
 
 void Scene2dHandler::updateRound() {
 
