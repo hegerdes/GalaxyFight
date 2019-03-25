@@ -16,11 +16,7 @@ namespace asteroids
 
 ManageGame *ManageGame::instance = nullptr;
 
-<<<<<<< HEAD
 ManageGame::ManageGame(QObject *parent) : QObject(parent)
-=======
-ManageGame::ManageGame(QObject *parent, PlanetChanges::Owner player_id, int planet_id) : QObject(parent), m_player_id(PlanetChanges::UNASSIGN), m_base(planet_id)
->>>>>>> 2D
 {
     //Read in defaults
     m_current_resource = START_RESOURCE;
