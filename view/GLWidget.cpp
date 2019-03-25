@@ -111,9 +111,12 @@ void GLWidget::initializeGL()
 
     // This makes our buffer swap syncronized with the monitor's vertical refresh
     SDL_GL_SetSwapInterval(1);
+
+    loadLevel();
 }
 void GLWidget::loadLevel()
 {
+    active = true;
     // Load level
     LevelParser lp(m_levelFile, m_actor, m_enemyPlayer, m_skybox, m_asteroidField);
 
