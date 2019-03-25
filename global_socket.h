@@ -3,6 +3,6 @@
 
 #include "qtclient/client.h"
 
-extern Client client_global;
+extern asteroids::Client client_global;
 
 #endif // GLOBAL_SOCKET_H

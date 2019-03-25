@@ -13,4 +13,8 @@ enum Hit{
     hit, no_hit
 };
 
+enum player_no {
+    first, second
+};
+
 #endif // FLAGS_H

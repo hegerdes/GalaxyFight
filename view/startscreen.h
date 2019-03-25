@@ -21,6 +21,7 @@ signals:
     void gotoLoadingScreen();
     void startClient();
     void goToSetting();
+    void goTo2D();
 
 private slots:
     void on_playBut_clicked();

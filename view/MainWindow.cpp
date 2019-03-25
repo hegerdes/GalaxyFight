@@ -42,6 +42,7 @@ MainWindow::MainWindow(QWidget* parent) :
     m_screenStack->addWidget(m_3DScene);
     m_screenStack->addWidget(m_settingsScreen);
 
+
     m_3DScene->setMinimumSize(size());
 
    m_screenStack->setCurrentWidget(m_startscreen);
@@ -114,8 +115,9 @@ void MainWindow::setupConnections()
 {
   connect(m_manage_game, &ManageGame::goto3DScene, this, &MainWindow::goto3DScene);
   connect(m_manage_game, &ManageGame::goToScene2D,this,&MainWindow::goToScene2D);
-  connect(m_startscreen, &StartScreen::gotoLoadingScreen, this, &MainWindow::goToScene2D);
+  connect(m_startscreen, &StartScreen::gotoLoadingScreen, this, &MainWindow::gotoLoadingScreen);
   connect(m_startscreen, &StartScreen::closeWindow , this, &MainWindow::closeWindow);
+  connect(m_startscreen, &StartScreen::goTo2D, this, &MainWindow::goToScene2D);
   //connect(m_startscreen, &StartScreen::gotoLoadingScreen, this, &MainWindow::goToLoadingScreen);
 }
 } // namespace asteroids
