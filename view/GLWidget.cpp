@@ -178,7 +178,7 @@ void GLWidget::paintGL()
     m_enemyPlayer->render();
 
     //Debug/Testline
-    //m_enemyPlayer->setPosition(Vector<float>(10,100,10));
+    //m_enemyPlayer->setPosition(Vector<float>(100,100,100));
 //    m_playerHPBar->render();
 
   //  m_enemyHPBar->render();
