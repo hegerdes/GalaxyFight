@@ -76,6 +76,11 @@ public:
 
     float m_radius;
 
+    void setScale(float radius)
+    {
+         m_scale     = radius / MODEL_RADIUS;
+    }
+
 private:
 
 

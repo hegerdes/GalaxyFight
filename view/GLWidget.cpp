@@ -299,6 +299,7 @@ void GLWidget::step(map<Qt::Key, bool>& keyStates)
                 std::cerr << "m_radius " << (*it)->m_radius << "\n";
                 (*it)->m_direction = client_global.dir_astr[i];
                 std::cerr << "m_direction " << (*it)->m_direction << "\n";
+                (*it)->setScale(client_global.size_astr[i]);
                 //TODO SET ID
                 Asteroid::Ptr p = *it;
                 p->setid(client_global.id_astr[i]);

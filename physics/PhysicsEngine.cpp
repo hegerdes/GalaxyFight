@@ -68,7 +68,7 @@ int PhysicsEngine::removeAster()
 }
 
 
-int removeBullets()
+int PhysicsEngine::removeBullets()
 {
     int n = 0;
     auto it = client_global.bullet_deleted.begin();
@@ -100,6 +100,7 @@ int removeBullets()
             {
                 b_it = m_bullets.erase(b_it);
                 n++;
+                it = client_global.bullet_deleted.erase(it);
             } else
             {
                 b_it++;
@@ -115,6 +116,15 @@ void PhysicsEngine::process()
     //list<PhysicalObject::Ptr>::iterator p_it;
     list<Asteroid::Ptr>::iterator p_it;
     list<Bullet::Ptr>::iterator b_it;
+
+    if(client_global.bullet_deleted.size() != removeBullets())
+    {
+        std::cerr << "Nicht alle Bullets removed;" << __LINE__;
+    }
+    if(client_global.asteroids_deleted.size() != removeAster())
+    {
+        std::cerr << "Nicht alle asteroiden gelöscht" << __LINE__;
+    }
 
     // Move all objects
     for (p_it = m_objects.begin(); p_it != m_objects.end(); p_it++)
