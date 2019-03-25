@@ -114,6 +114,7 @@ void GLWidget::initializeGL()
 }
 void GLWidget::loadLevel()
 {
+    active = true;
     // Load level
     LevelParser lp(m_levelFile, m_actor, m_enemyPlayer, m_skybox, m_asteroidField);
 

@@ -67,7 +67,7 @@ void MainWindow::goto3DScene()
 {
     m_screenStack->setCurrentWidget(m_3DScene);
 
-    m_3DScene->setLevelFile(QSettings().value("levelXML", "models/level.xml").toString().toStdString());
+    m_3DScene->setLevelFile(QSettings().value("levelXML", "./models/level.xml").toString().toStdString());
     m_3DScene->loadLevel();
 }
 
