@@ -150,7 +150,7 @@ Map::VecPtr& Map::getPlanets()
     return m_planets;
 }
 
-std::list<int> Map::getPath(int position, int start, int goal)
+std::list<int> Map::getPath(int start, int goal)
 {
     std::cout << "Start: " << start  << " " <<  m_planets[start]->getname() 
         << "\n" << "End: " << goal << " " << m_planets[goal]->getname() << std::endl;
@@ -172,7 +172,6 @@ std::list<int> Map::getPath(int position, int start, int goal)
     {
         std::cout << "Found Goal" << std::endl; 
         std::list<int> shortest_path;
-        shortest_path.push_front(position);
         for(vertex v = goal;; v = p[v]) {
             shortest_path.push_front(m_nodes[v]);
             if(p[v] == v)
@@ -186,7 +185,6 @@ std::list<int> Map::getPath(int position, int start, int goal)
     //If there is no solution
     std::cout << "Found no Path" << std::endl;
     std::list<int> solutionPath;
-    solutionPath.push_front(position);
     return solutionPath;
 }
 
