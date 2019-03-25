@@ -114,23 +114,28 @@ private:
     QPoint                      m_mousePos;
 
     /// Determines whether game should be loaded
-    bool active;
+    bool                        active;
 
     /// Letzter Zeitpunkt zu dem eine Kugel abgefeurert wurde
-    long                m_lastBullet;
+    long                        m_lastBullet;
 
     /// Gibt an nach wie vielen ms wieder geschoßen werden kann
-    long                m_schussFrequenz;
+    long                        m_schussFrequenz;
 
     ///Hilfsvariablen
-    int                 hp_actor;
+    int                         hp_actor;
 
-    int                 hp_enemy;
+    int                         hp_enemy;
+    
+    /// First Person-Modus und First Person Toggleable(verhindert rumspringen bei gedrückter V-Taste)
+    bool                        m_firstPerson;
+    bool                        m_firstPersonAble;
 
-    bool m_firstPerson;
-    bool m_firstPersonAble;
-    HUDWidget           m_hud;
-    QStackedLayout             m_layout;
+    /// Widget for displaying the HUD
+    HUDWidget                   m_hud;
+
+    /// Layout for displaying the HUD
+    QStackedLayout              m_layout;
 };
 
 #endif
