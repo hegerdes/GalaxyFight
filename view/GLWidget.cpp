@@ -147,7 +147,8 @@ void GLWidget::initializeGL()
     //Fügt das Raumschiff der Engine hinzu, damit es richtig explodieren kann
     m_physicsEngine->addSpaceCraft(m_actor);
     m_physicsEngine->addEnemyPlayer(m_enemyPlayer);
-
+    m_hud.setSpacecraft(m_actor);
+    m_hud.setEnemy(m_enemyPlayer);
     //setzen dummy variablen
     hp_actor = 10;
     hp_enemy = 10;
@@ -178,7 +179,7 @@ void GLWidget::paintGL()
 
   //  m_enemyHPBar->render();
 
-    m_crossHair->render();
+//    m_crossHair->render();
 }
 
 void GLWidget::step(map<Qt::Key, bool>& keyStates)
