@@ -93,6 +93,12 @@ class Map
      */
     void printEdges();
 
+    /**
+     * @brief Print nodes
+     * 
+     */
+    void printNodes();
+
   private:
 
     //The graph

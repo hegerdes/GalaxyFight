@@ -25,7 +25,8 @@ Scene2D::Scene2D(QWidget *parent) :
     QSettings settings;
     setMinimumSize(settings.value("minWidth", 1920).toInt(), settings.value("minHeight", 1080).toInt());
 
-    connect(m_scenehandler, &Scene2dHandler::planetSelected, this, &Scene2D::planetSelected);
+    connect(m_scenehandler, &Scene2dHandler::planetSelected, m_infobar, &Infobar::set_selected_planet);
+
 }
 
 Scene2D::~Scene2D()

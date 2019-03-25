@@ -6,7 +6,7 @@
 
 namespace asteroids {
 
-GraphicsTransporterItem::GraphicsTransporterItem(int id) : m_player(PLAYER1), m_id(id), m_selected(false)
+GraphicsTransporterItem::GraphicsTransporterItem(int id) : m_player(PlayerType::PLAYER1), m_id(id), m_selected(false)
 {
 
 }
@@ -22,10 +22,10 @@ void GraphicsTransporterItem::paint(QPainter* painter, const QStyleOptionGraphic
 
     //draw ship
     switch (m_player) {
-    case PLAYER1:
+    case PlayerType::PLAYER1:
         icon = QIcon("./models/transporter_player1.svg").pixmap(20, 20);
         break;
-    case PLAYER2:
+    case PlayerType::PLAYER2:
         icon = QIcon("./models/transporter_player1.svg").pixmap(20, 20);
         break;
     default:

@@ -94,9 +94,6 @@ Map::Map(std::string mapfile):m_planets(17)
         std::istringstream instring(readline);
         instring >> number_of_vertices;
 
-        //Output for testing
-        std::cout << number_of_vertices << std::endl;
-
         //Read Nodes
         for (int i = 0; i < number_of_vertices; i++)
         {
@@ -107,7 +104,7 @@ Map::Map(std::string mapfile):m_planets(17)
             instring >> strname >> x >> y >> z;
 
             //Create Map with all planets
-            m_planets[i] = std::make_shared<Planet>(Planet(strname, Vector3f(x,y,z)));
+            m_planets[i] = std::make_shared<Planet>(Planet(i, strname, Vector3f(x,y,z)));
             
             //Nodes for Graph
             m_nodes.push_back(Vector3f(x,y,z));
@@ -193,15 +190,10 @@ std::list<Vector3f > Map::getPath(Vector3f position, int start, int goal)
 
 void Map::printPlanets()
 {
-    std::map<std::string,int>::iterator it;
-
-    for(it = m_planat_dir.begin(); it !=m_planat_dir.end(); ++it)
+    for (const auto& planet : m_planets) 
     {
-        std::cout << "Num: " << std::setw(2) << it->second << " Name: " 
-            << std::left << std::setw(12) << it->first << " " << std::right 
-            << std::setw(5) << std::endl;
-
-            m_nodes[it->second].printVector();
+        //print every pnlanet DEBUG
+        planet->printPlanet();
     }
 }
 
@@ -211,6 +203,17 @@ void Map::printEdges()
 
     std::cout << "Print Edges" << std::endl; 
     for(it = m_edges.begin(); it !=m_edges.end(); ++it)
+    {
+        it->printVector();
+    }
+}
+
+void Map::printNodes()
+{
+    std::vector<Vector3f>::iterator it;
+
+    std::cout << "Print Edges" << std::endl; 
+    for(it = m_nodes.begin(); it !=m_nodes.end(); ++it)
     {
         it->printVector();
     }

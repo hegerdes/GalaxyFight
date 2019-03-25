@@ -3,6 +3,8 @@
 #include <QFile>
 #include <QPalette>
 #include <QPixmap>
+#include "../qtclient/client.h"
+#include <QScreen>
 
 namespace asteroids {
 
@@ -14,6 +16,24 @@ StartScreen::StartScreen(QWidget *parent) :
     ui->setupUi(this);
     QPixmap pic("models/start.jpg");
     ui->piclabel->setPixmap(pic);
+
+    QScreen *screen = QGuiApplication::primaryScreen();
+    QRect screengeometry = screen->geometry();
+    this->resize(screengeometry.width(),screengeometry.height());
+
+    int x = screengeometry.width()/2;
+    int y = screengeometry.height()/2;
+    int hoehe = screengeometry.height()/10;
+    int breite = screengeometry.width()/6;
+
+    ui->playBut->setGeometry(x - breite/2,y - hoehe,breite,hoehe);
+    ui->settingBut->setGeometry(x - breite/2,y,breite,hoehe);
+    ui->quitBut->setGeometry(x - breite/2,y + 3*hoehe,breite,hoehe);
+
+
+    ui->label->setGeometry(x - screengeometry.width()/4,10,screengeometry.width()/2,screengeometry.height()/4);
+
+
 }
 
 StartScreen::~StartScreen()
@@ -23,29 +43,28 @@ StartScreen::~StartScreen()
 }
 
 
-void asteroids::StartScreen::on_joinBut_clicked()
+void StartScreen::on_playBut_clicked()
 {
-    //sends Signals when "Spiel beitreten" was clicked
-    emit goToLoading();
+    //sends Signals when "Spielen" was clicked
+    emit gotoLoadingScreen();
     emit startClient();
 }
 
 
-void asteroids::StartScreen::on_createBut_clicked()
-{
-    //sends Signals when "Spiel erstellen" was clicked
-    emit goToLoading();
-    emit startServer();
-}
 
-void asteroids::StartScreen::on_quitBut_clicked()
+void StartScreen::on_quitBut_clicked()
 {
     //sends Signal when "Beenden" was clicked
-    emit closeProgramm();
+    emit closeWindow();
 }
 
-void asteroids::StartScreen::on_settingBut_clicked()
+void StartScreen::on_settingBut_clicked()
 {
     //sends Signal when "Einstellungen" was clicked
     emit goToSetting();
+}
+
+void StartScreen::setupConnections()
+{
+    //connect(this, &StartScreen::startClient , m_client, &Client::sendReadyT);
 }

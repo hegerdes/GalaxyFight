@@ -12,6 +12,8 @@
 #ifndef __MAINWINDOW_HPP__
 #define __MAINWINDOW_HPP__
 
+#pragma once
+
 #include <string>
 
 #include <QMainWindow>
@@ -24,6 +26,8 @@
 #include "startscreen.h"
 #include "loadingscreen.h"
 #include "scene2d.h"
+#include "../util/ManageGame.hpp"
+#include "settingwindow.h"
 
 
 namespace asteroids
@@ -63,14 +67,19 @@ public slots:
     void goto3DScene();
 
     /**
-     * @brief gotoScene2D sets Scene2D as top screen
+     * @brief goToScene2D sets Scene2D as top screen
      */
-    void gotoScene2D();
+    void goToScene2D();
 
     /**
      * @brief gotoLoadingScreen sets LoadingScreen as top screen
      */
     void gotoLoadingScreen();
+
+    /**
+     * @brief gotoSettingsScreen sets the SettingsScreen as top screen
+     */
+    void gotoSettingsScreen();
 
     /**
      * @brief closeWindow closes the MainWindow
@@ -108,11 +117,17 @@ private:
     /// Scene2D widget
     Scene2D* m_scene2d;
 
+    /// Settings Screen widget
+    settingwindow* m_settingsScreen;
+
     /// map with the keys and their states
     map<Qt::Key, bool>          m_keyStates;
 
     /// 60 fps timer
     std::shared_ptr<QTimer>          m_timer;
+
+    ///GameManager
+    ManageGame* m_manage_game;
 };
 
 }

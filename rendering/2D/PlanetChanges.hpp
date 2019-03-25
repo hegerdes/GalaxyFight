@@ -27,6 +27,7 @@ class PlanetChanges
 
     using Ptr = std::shared_ptr<PlanetChanges>;
 
+    //The possible Owners
     enum Owner{UNASSIGN, PLAYER1, PLAYER2};
 
     /**
@@ -36,8 +37,22 @@ class PlanetChanges
      */
     PlanetChanges(int id)
     {
-      id = m_id;
-    }   
+        id = m_id;
+        init();
+    }
+
+    /**
+     * @brief Construct a new Planet Changes object
+     * 
+     * @param own Who owns the planet now
+     * @param id The planet-id
+     * @param ore How much ore changes
+     * @param factory How many new factorys
+     * @param mine How many new mines
+     * @param fighters How many new fighters 
+     * @param transporter How many new transporters
+     * @param attack If wants to attack a the planet
+     */
     PlanetChanges(Owner own, int id, int ore, int factory, int mine, int fighters, int transporter, bool attack)
     {
         m_owned = own;
@@ -57,21 +72,43 @@ class PlanetChanges
     inline int getFighter(){return m_num_fighters;} 
     inline int getTransports(){return m_num_transporter;}   
     inline bool getInitFight(){return m_attack_planet;} 
-    inline Owner geOwner(){return m_owned;} 
-    inline void setFactorys(int factorys){m_num_factory = factorys;}    
-    inline void setMines(int mines){m_num_mine = mines;}    
-    inline void setOre(int ore){m_num_of_ore = ore;}    
-    inline void setFighter(int fighter){m_num_fighters = fighter;}  
-    inline void setTransports(int transporter){m_num_transporter = transporter;}    
+    inline Owner getOwner(){return m_owned;} 
+    inline void setFactorys(int factorys){m_num_factory += factorys;}    
+    inline void setMines(int mines){m_num_mine += mines;}    
+    inline void setOre(int ore){m_num_of_ore += ore;}    
+    inline void setFighter(int fighter){m_num_fighters += fighter;}  
+    inline void setTransports(int transporter){m_num_transporter += transporter;}    
     inline void setInitFight(bool startFight){m_attack_planet = startFight;}    
     inline void setOwner(Owner o){m_owned = o;} 
     
+    /**
+     * @brief Print to cout
+     * 
+     */
     inline void print()
     {
-        std::cout << m_id << " NumOfOre: " << m_num_of_ore << std::endl;
+        std::cout << "PlanetNr: " << m_id << " ChangeOwner: " << m_owned << " OreChange: " 
+        <<  m_num_of_ore << " FighterCange: " << m_num_fighters << " TransportChange: " 
+        <<  m_num_transporter << " MineCange: " << m_num_mine << " FactoryChange: " 
+        << m_num_factory << " Attack: " << m_attack_planet << std::endl;
     }
 
   private:
+
+    /**
+     * @brief Initilize all members with 0
+     * 
+     */
+    void init()
+    {
+        m_owned = UNASSIGN;
+        m_num_of_ore = 0;
+        m_num_factory = 0;
+        m_num_mine = 0;
+        m_num_fighters = 0;
+        m_num_transporter = 0;
+        m_attack_planet = false;
+    }
 
     //ID of the planet
     int m_id;

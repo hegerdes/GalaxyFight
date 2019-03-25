@@ -1,0 +1,134 @@
+/**
+ * @file ManageGame.hpp
+ * @author Henrik Gerdes (hegerdes@uni-osnabrueck.de)
+ * @brief 
+ * @version 0.1
+ * @date 2019-03-21
+ * 
+ * @copyright Copyright (c) 2019
+ * 
+ */
+
+#ifndef MANAGEGANE_HPP
+#define MANAGEGAME_HPP
+
+#pragma once
+
+#include <QObject> 
+#include <iostream>
+#include <list>
+#include <map>
+
+#include "GameValues.hpp"
+#include "../rendering/2D/MapFactory.hpp"
+
+namespace asteroids
+{
+class ManageGame : public QObject 
+{
+    Q_OBJECT
+
+  public:
+
+    /**
+     * @brief Singelton get the instance
+     * 
+     * @return ManageGame& Reference to ManageGame
+     */
+    static ManageGame* getinstance();
+
+    /**
+     * @brief Interates through all planets and counts mine, fighter and transporter
+     * 
+     */
+    void updateStats();
+
+    std::list<PlanetChanges::Ptr>& get_PlanetCangeList();
+
+    inline int get_current_resource(){return m_current_resource;}
+
+    inline int get_resource_per_time(){return m_resource_per_time;}
+
+    inline int get_transportCpaceCraft_number(){return m_transportSpaceCraft_number;}
+
+    inline int get_attackSpaceCraft_number(){return m_attackSpaceCraft_number;}
+
+  signals:
+    void gameover();
+    void no_resources();
+    void updateInfobar();
+    void not_ur_planet();
+    void goToScene2D();
+    void goto3DScene();
+
+  public slots:
+    void build_factory(int planet_id);
+    void build_mine(int planet_id);
+    void build_fighter(int planet_id);
+    void build_transporter(int planet_id);
+    void next_round();
+    void end_game();
+
+
+
+  private:
+
+    /**
+     * @brief Construct a new Manage Game object
+     * 
+     * @param parent 
+     */
+    explicit ManageGame(QObject *parent = nullptr);
+
+    /**
+     * @brief Destroy the Manage Game object
+     * 
+     */
+    virtual ~ManageGame();
+
+
+
+    //The instance
+    static ManageGame* instance;
+
+    //Pointer to the map
+    Map::Ptr m_planetmap;
+
+    //Planets
+    Map::VecPtr m_planets;
+
+    //Current ressources
+    int m_current_resource;
+
+    //Current ressources per time
+    int m_resource_per_time;
+
+    //Global number of fighters
+    int m_attackSpaceCraft_number;
+
+    //global number of transporters
+    int m_transportSpaceCraft_number;
+
+    //global number of mines
+    int m_global_mines;
+
+    //id for ownerckeck
+    PlanetChanges::Owner m_player_id;
+
+    //counter für die Kampfschiff-id
+    int m_attackspacecraft_id;
+
+    //save changes in list
+    std::list<PlanetChanges::Ptr> m_round_changes_list;
+
+    //save changes in map
+    std::map<int,PlanetChanges::Ptr> m_round_changes_map;
+
+
+};
+
+}//asteroids
+
+
+
+#endif

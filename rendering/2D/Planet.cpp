@@ -16,7 +16,7 @@
 namespace asteroids
 {
 
-Planet::Planet(std::string name, Vector3f pos): m_planet_name(name), m_planet_pos(pos)
+Planet::Planet(int id, std::string name, Vector3f pos): m_id(id), m_planet_name(name), m_planet_pos(pos)
 {
     init();
 }
@@ -28,20 +28,31 @@ int Planet::init()
     m_num_mine = 0;
     m_num_transporter = 0;
     m_num_of_ore = 10;
-    m_owned = UNASSIGN;
+    m_owned = PlanetChanges::UNASSIGN;
     return 1;
 }
 
- int Planet::updatePlanet(PlanetChanges updates)
+ int Planet::updatePlanet(PlanetChanges::Ptr updates)
  {
-    if(id != updates.getID()) return 1;
-    m_num_factory =+ updates.getFactorys();
-    m_num_fighters =+ updates.getFighter();
-    m_num_mine =+ updates.getMines();
-    m_num_transporter =+ updates.getTransports();
-    m_num_of_ore =+ updates.getOre();
-    m_owned = UNASSIGN;
+    if(m_id != updates->getID()) return 1;
+    m_num_factory += updates->getFactorys();
+    m_num_fighters += updates->getFighter();
+    m_num_mine += updates->getMines();
+    m_num_transporter += updates->getTransports();
+    m_num_of_ore += updates->getOre();
+    if(updates->getOwner() != PlanetChanges::UNASSIGN)
+    {
+        m_owned = updates->getOwner();
+    }
     return 0;
+ }
+
+ void Planet::printPlanet()
+ {
+    std::cout << "PlanetNr: " << m_id << " Owner: " << m_owned << " Ore: " 
+        <<  m_num_of_ore << " Fighter: " << m_num_fighters << " Transporter: " 
+        <<  m_num_transporter << " Mine: " << m_num_mine << " Factory: " 
+        << m_num_factory <<  std::endl;
  }
 
 }//asteroids
