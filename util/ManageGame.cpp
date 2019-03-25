@@ -16,7 +16,7 @@ namespace asteroids
 
 ManageGame *ManageGame::instance = nullptr;
 
-ManageGame::ManageGame(QObject *parent) : QObject(parent)
+ManageGame::ManageGame(QObject *parent, PlanetChanges::Owner player_id, int planet_id) : QObject(parent), m_player_id(player_id), m_base(planet_id)
 {
     //Read in defaults
     m_current_resource = START_RESOURCE;
@@ -29,7 +29,28 @@ ManageGame::ManageGame(QObject *parent) : QObject(parent)
     m_planetmap = b.getMap("models/01.map");
     m_planets = m_planetmap->getPlanets();
 
+    //Die am Start verfügbaren Schiffe werden den Listen hinzugefügt
+    for (int i = 1; i <= m_attackSpaceCraft_number;i++) {
+        std::shared_ptr<attackspacecraft> attackSpaceCraft = std::make_shared<attackspacecraft>(i, planet_id);
+        attackSpaceCraft->m_next_position = planet_id;
+        attackSpaceCraft->m_change_position = true;
+        attackSpaceCraft->m_owner = m_player_id;
+        m_attackSpaceCraftslist.push_back(attackSpaceCraft);
+    }
+    for (int i = 1; i <= m_transportSpaceCraft_number;i++) {
+        std::shared_ptr<transportspacecraft> transportSpaceCraft = std::make_shared<transportspacecraft>(i,planet_id);
+        transportSpaceCraft->m_owner = m_player_id;
+        m_transportSpaceCraftslist.push_back(transportSpaceCraft);
+    }
+
     updateStats();
+}
+
+ManageGame* ManageGame::initialize_player(PlanetChanges::Owner player_id, int planet_id)
+{
+   ManageGame::instance = new ManageGame(nullptr,player_id,planet_id);
+
+   return ManageGame::instance;
 }
 
 ManageGame *ManageGame::getinstance()
@@ -45,7 +66,7 @@ void ManageGame::build_factory(int planet_id)
 {
     //Ceck if planet belongs to player
     //TODO chane PlanetChanges::UNASSIGN to m_player_id
-    if (m_planets.at((unsigned long)planet_id)->getOwner() != PlanetChanges::UNASSIGN)
+    if (m_planets.at((unsigned long)planet_id)->getOwner() != m_player_id)
     {
         emit not_ur_planet();
     }
@@ -56,7 +77,10 @@ void ManageGame::build_factory(int planet_id)
         {
             emit no_resources();
         }
-        else
+        else if(m_planets.at((unsigned long)planet_id)->getFactorys() != 0)
+        {
+            emit already_exist();
+        }else
         {
             m_current_resource -= COST_PER_SHIPYARD;
 
@@ -82,7 +106,7 @@ void ManageGame::build_mine(int planet_id)
 {
     //Ceck if planet belongs to player
     //TODO chane PlanetChanges::UNASSIGN to m_player_id
-    if (m_planets.at((unsigned long)planet_id)->getOwner() != PlanetChanges::UNASSIGN)
+    if (m_planets.at((unsigned long)planet_id)->getOwner() != m_player_id)
     {
         emit not_ur_planet();
     }
@@ -119,7 +143,7 @@ void ManageGame::build_fighter(int planet_id)
 {
     //Ceck if planet belongs to player
     //TODO chane PlanetChanges::UNASSIGN to m_player_id
-    if (m_planets.at((unsigned long)planet_id)->getOwner() != PlanetChanges::UNASSIGN)
+    if (m_planets.at((unsigned long)planet_id)->getOwner() != m_player_id)
     {
         emit not_ur_planet();
     }
@@ -133,7 +157,13 @@ void ManageGame::build_fighter(int planet_id)
         else
         {
             m_current_resource -= COST_PER_ATTACKSPACECRAFT;
-            std::cout << "Test aus Mine" << std::endl;
+
+            m_attackspacecraft_id += 1;
+            std::shared_ptr<attackspacecraft> attackSpaceCraft = std::make_shared<attackspacecraft>(m_attackspacecraft_id, planet_id);
+            attackSpaceCraft->m_next_position = planet_id;
+            attackSpaceCraft->m_change_position = true;
+            attackSpaceCraft->m_owner = m_player_id;
+            m_attackSpaceCraftslist.push_back(attackSpaceCraft);
 
             //Check for alrady existing change for this planet
             auto search = m_round_changes_map.find(planet_id);
@@ -156,7 +186,7 @@ void ManageGame::build_transporter(int planet_id)
 {
     //Ceck if planet belongs to player
     //TODO chane PlanetChanges::UNASSIGN to m_player_id
-    if (m_planets.at((unsigned long)planet_id)->getOwner() != PlanetChanges::UNASSIGN)
+    if (m_planets.at((unsigned long)planet_id)->getOwner() != m_player_id)
     {
         emit not_ur_planet();
     }
@@ -170,6 +200,11 @@ void ManageGame::build_transporter(int planet_id)
         else
         {
             m_current_resource -= COST_PER_TRANSPORTSPACECRAFT;
+
+            m_transportSpaceCraft_number += 1;
+            std::shared_ptr<transportspacecraft> transportSpaceCraft = std::make_shared<transportspacecraft>(m_transportSpaceCraft_number, planet_id);
+            transportSpaceCraft->m_owner = m_player_id;
+            m_transportSpaceCraftslist.push_back(transportSpaceCraft);
 
             //Check for alrady existing change for this planet
             auto search = m_round_changes_map.find(planet_id);
@@ -188,6 +223,41 @@ void ManageGame::build_transporter(int planet_id)
         }
     }
 }
+
+void ManageGame::change_Fighter_position(int new_position, int attackSpaceCraft_id){
+    for (auto i = m_attackSpaceCraftslist.begin(); i != m_attackSpaceCraftslist.end(); i++) {
+        if ((*i)->m_id == attackSpaceCraft_id){
+            auto tmp = m_planetmap->getPath((*i)->m_position, new_position);
+            if(tmp.size() == 2)
+            {
+                (*i)->m_next_position = new_position;
+                (*i)->m_change_position = true;
+                break;
+            }else
+            {
+                emit changeRouteError();
+            }
+
+        }
+    }
+}
+
+void ManageGame::change_transport_route(int planet_id, int transportSpaceCraft_id){
+    //checken ob der planet mit der neuen route auch dem player gehört
+    if((m_planets[(unsigned long)planet_id])->getOwner() == m_player_id){
+        for (auto i = m_transportSpaceCraftslist.begin(); i != m_transportSpaceCraftslist.end(); i++) {
+            if ((*i)->m_id == transportSpaceCraft_id){
+                (*i)->m_tmp_route = m_planetmap->getPath((*i)->m_position, planet_id);
+                (*i)->m_current_route = m_planetmap->getPath(planet_id, m_base);
+                (*i)->m_route_iterator = (*i)->m_tmp_route.begin();
+                (*i)->m_to_new_route = true;
+            }
+        }
+    }else {
+        //falscher owner
+    }
+}
+
 void ManageGame::next_round()
 {
     //Convert to list to send
@@ -195,6 +265,9 @@ void ManageGame::next_round()
 
     //Clear change_map for next round
     m_round_changes_map.clear();
+
+    //Raumschiffrouten aktualisieren
+    updateSpaceCrafts();
 
     //TODO Sent List
     //inet network
@@ -263,6 +336,58 @@ std::list<PlanetChanges::Ptr> &ManageGame::get_PlanetCangeList()
         it->second->print();
     }
     return m_round_changes_list;
+}
+
+void ManageGame::updateSpaceCrafts()
+{
+    //fighterrouten aktualisieren
+    for (auto i = m_attackSpaceCraftslist.begin();i != m_attackSpaceCraftslist.end(); i++) {
+        if((*i)->m_change_position == true){
+                (*i)->m_position = (*i)->m_next_position;
+                (*i)->m_change_position = false;
+        }
+    }
+
+    //transportrouten aktualisieren
+    for(auto i = m_transportSpaceCraftslist.begin(); i != m_transportSpaceCraftslist.end(); i ++){
+        if((*i)->m_to_new_route == true){
+            if((*i)->m_route_iterator == (*i)->m_tmp_route.end()){
+                (*i)->m_route_iterator = (*i)->m_current_route.begin();
+                (*i)->m_to_base = true;
+                (*i)->m_to_mine = false;
+                (*i)->m_to_new_route = false;
+                (*i)->m_position = *((*i)->m_route_iterator++);
+                (*i)->m_next_position = *((*i)->m_route_iterator);
+            }
+            (*i)->m_position = *((*i)->m_route_iterator++);
+            (*i)->m_next_position = *((*i)->m_route_iterator);
+        }
+        if((*i)->m_to_base == true){
+            if((*i)->m_route_iterator == (*i)->m_current_route.end()){
+                (*i)->m_to_base = false;
+                (*i)->m_to_mine = true;
+                (*i)->m_position = *((*i)->m_route_iterator--);
+                (*i)->m_next_position = *((*i)->m_route_iterator);
+            }else {
+                (*i)->m_position = *((*i)->m_route_iterator++);
+                (*i)->m_next_position = *((*i)->m_route_iterator);
+            }
+        }
+        if((*i)->m_to_mine == true){
+            if((*i)->m_route_iterator == (*i)->m_current_route.begin()){
+                (*i)->m_to_base = true;
+                (*i)->m_to_mine = false;
+                (*i)->m_position = *((*i)->m_route_iterator++);
+                (*i)->m_next_position = *((*i)->m_route_iterator);
+
+            }else {
+                (*i)->m_position = *((*i)->m_route_iterator--);
+                (*i)->m_next_position = *((*i)->m_route_iterator);
+            }
+        }
+    }
+
+    emit updateScene();
 }
 
 ManageGame::~ManageGame()

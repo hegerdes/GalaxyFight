@@ -35,6 +35,7 @@ Scene2dHandler::Scene2dHandler(QObject* parent)
     //draw Planets
     for (const auto& planet : planets) {
         GraphicsPlanetItem* pitem = new GraphicsPlanetItem(planet->getID());
+        pitem->setOwner(planet->getOwner());
         pitem->setPos(QPointF(planet->getPos()[0], planet->getPos()[1]));
 
         addItem(pitem);
@@ -164,7 +165,6 @@ void Scene2dHandler::placeTransporter()
 {
 
 }
-
 
 void Scene2dHandler::updateRound() {
 
