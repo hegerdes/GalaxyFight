@@ -10,8 +10,10 @@
 #include <QTcpSocket>
 #include <QtCore>
 #include <QtNetwork>
+#include <fstream>
 
 #include "packettypes.h"
+#include "loggingtype.h"
 
 class Server : public QObject {
     Q_OBJECT
@@ -65,7 +67,8 @@ class Server : public QObject {
     client_data user_data_1;
     client_data user_data_2;
 
-  private:
+    void log(LoggingType type, std::string msg);
+private:
     bool already_send_1 = false;
     bool already_send_2 = false;
 
