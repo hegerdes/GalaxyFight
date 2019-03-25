@@ -150,7 +150,6 @@ set(ASTEROID_SOURCES
     rendering/HealthBar.cpp
     rendering/Crosshair.cpp
     util/Util.cpp
-    util/player.cpp
     util/ManageGame.cpp
     view/GLWidget.cpp
     view/MainWindow.cpp
