@@ -1,4 +1,4 @@
-/**
+﻿/**
  * @file 2DMap.cpp
  * @author Henrik Gerdes (hegerdes@uni-osnabrueck.de)
  * @brief 
@@ -95,6 +95,7 @@ Map::Map(std::string mapfile):m_planets(17)
 
         std::istringstream instring(readline);
         instring >> number_of_vertices;
+        m_num_of_planets = number_of_vertices;
 
         //Read Nodes
         for (int i = 0; i < number_of_vertices; i++)
@@ -106,7 +107,7 @@ Map::Map(std::string mapfile):m_planets(17)
             instring >> strname >> x >> y >> z;
 
             //Create Map with all planets
-            m_planets[i] = std::make_shared<Planet>(Planet(i, strname, Vector3f(x,y,z)));
+            m_planets[(unsigned long)i] = std::make_shared<Planet>(Planet(i, strname, Vector3f(x,y,z)));
             
             //Nodes for Graph
             m_nodes.push_back(i);
@@ -210,10 +211,10 @@ void Map::printEdges()
 
 void Map::printNodes()
 {
-    // std::cout << "Print Edges" << std::endl; 
-    // for(auto it = m_nodes.begin(); it !=m_nodes.end(); ++it)
-    // {
-    //     it->printVector();
-    // }
+    std::cout << "Print Nodes" << std::endl;
+     for(auto it = m_nodes.begin(); it !=m_nodes.end(); ++it)
+     {
+         std::cout << "PlanetID: " << *(it) << std::endl;
+     }
 }
 }
