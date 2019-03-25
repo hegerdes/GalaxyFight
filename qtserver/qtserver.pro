@@ -19,7 +19,9 @@ DEFINES += QT_DEPRECATED_WARNINGS
 SOURCES += \
         main.cpp \
     mytcpserver.cpp \
-    ../math/Randomizer.cpp
+    ../math/Randomizer.cpp \
+    serverphysics.cpp \
+    serverphysicalobject.cpp
 
 
 # Default rules for deployment.
@@ -31,4 +33,7 @@ HEADERS += \
     mytcpserver.h \
     packettypes.h \
     flags.h \
-    loggingtype.h
+    loggingtype.h \
+    flags.h \
+    serverphysics.h \
+    serverphysicalobject.h

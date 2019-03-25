@@ -34,7 +34,8 @@ Server::Server(QObject* parent) : QObject(parent) {
     int amount = 10;
     for (int i{0}; i < amount; i++) {
         pos_astr[i] = asteroids::Randomizer::instance()->getRandomVertex(1000);
-        dir_astr[i] = asteroids::Randomizer::instance()->getRandomVertex(1.0);
+        dir_astr[i] = asteroids::Randomizer::instance()->getRandomVertex(1.0) *
+                            asteroids::Randomizer::instance()->getRandomNumber(0, 8);
         size_astr[i] = asteroids::Randomizer::instance()->getRandomNumber(0, 100);
     }
 }
@@ -185,8 +186,10 @@ void Server::recvUpdate_3D_C(char* data, QTcpSocket* socket) {
 
     client_data_temp.shot = (Bullet_shot) getChar(&data);
     client_data_temp.bullet_id = getInt(&data);
-    if(client_data_temp.shot == Bullet_shot::shot)
+    if(client_data_temp.shot == Bullet_shot::shot){
         log(LoggingType::DEBUG, "Send Bullet ID: " + std::to_string(client_data_temp.bullet_id));
+
+    }
 
     client_data_temp.living = (Living) getChar(&data);
 
