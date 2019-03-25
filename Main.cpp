@@ -28,7 +28,7 @@ int main(int argc, char** argv)
 //    map->getPath(Vector3f(0,0,0),1,5);
 
     QApplication a(argc, argv);
-    client_global.connect("lennartkaiser.de", 38291);
+    client_global.connect("lennartkaiser.de", 38292);
 
     asteroids::MainWindow mainWindow;
     mainWindow.showFullScreen();

@@ -10,8 +10,10 @@
 #include <QTcpSocket>
 #include <QtCore>
 #include <QtNetwork>
+#include <fstream>
 
 #include "packettypes.h"
+#include "loggingtype.h"
 
 class Server : public QObject {
     Q_OBJECT
@@ -49,6 +51,7 @@ class Server : public QObject {
     int getInt(char** ptr);
 
     struct client_data {
+        //3D Teil
         asteroids::Vector<float> position;
         asteroids::Vector<float> xAxis;
         asteroids::Vector<float> yAxis;
@@ -56,23 +59,31 @@ class Server : public QObject {
         Bullet_shot shot;
         int bullet_id;
         Living living;
+
+        //2D Teil
+        std::string name = "Name undefined";
     };
 
     client_data user_data_1;
     client_data user_data_2;
 
-  private:
+    void log(LoggingType type, std::string msg);
+private:
     bool already_send_1 = false;
     bool already_send_2 = false;
 
     asteroids::Vector3f pos_astr[10];
     asteroids::Vector3f dir_astr[10];
     float size_astr[10];
+
     // sending packets
     void sendInit_3D(QByteArray& response, QTcpSocket* socket);
     void sendUpdate_3D_S(QByteArray& response, QTcpSocket* socket);
+    void sendGame_Start(QByteArray &response, QTcpSocket *socket);
+
     // receive packets
     void recvUpdate_3D_C(char* data, QTcpSocket* socket);
+    void recvReady_T(char *data, QTcpSocket *socket);
 };
 
 #endif // MYTCPSERVER_H

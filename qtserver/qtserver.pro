@@ -29,4 +29,6 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 
 HEADERS += \
     mytcpserver.h \
-    packettypes.h
+    packettypes.h \
+    flags.h \
+    loggingtype.h
