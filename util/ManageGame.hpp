@@ -17,6 +17,7 @@
 #include <QObject> 
 #include <iostream>
 #include <list>
+#include <stdexcept>
 #include <map>
 
 #include "GameValues.hpp"
@@ -73,6 +74,8 @@ class ManageGame : public QObject
     Q_OBJECT
 
   public:
+    using Fighter = std::shared_ptr<attackspacecraft>;
+    using Transporter = std::shared_ptr<transportspacecraft>;
 
     /**
      * @brief initialize_player initializiert die die ManageGame Instanz
@@ -90,12 +93,6 @@ class ManageGame : public QObject
     static ManageGame* getinstance();
 
     /**
-     * @brief Interates through all planets and counts mine, fighter and transporter
-     * 
-     */
-    void updateStats();
-
-    /**
      * @brief updateSpaceCrafts Alle positionen werden aktualisiert
      */
     void updateSpaceCrafts();
@@ -110,15 +107,16 @@ class ManageGame : public QObject
 
     inline int get_attackSpaceCraft_number(){return m_attackSpaceCraft_number;}
 
-    inline std::list<std::shared_ptr<attackspacecraft>>& get_attackSpaceCraftList(){return m_attackSpaceCraftslist;}
+    inline std::list<Fighter>& get_attackSpaceCraftList(){return m_attackSpaceCraftslist;}
 
-    inline std::list<std::shared_ptr<transportspacecraft>>& get_transportSpaceCraftList(){return m_transportSpaceCraftslist;}
+    inline std::list<Transporter>& get_transportSpaceCraftList(){return m_transportSpaceCraftslist;}
 
   signals:
     void gameover();
     void no_resources();
     void updateInfobar();
     void not_ur_planet();
+    void not_ur_ship();
     void already_exist();
     void goToScene2D();
     void goto3DScene();
@@ -147,8 +145,19 @@ class ManageGame : public QObject
     explicit ManageGame(QObject *parent = nullptr);
 
     /**
+     * @brief Interates through all planets and counts mine, fighter and transporter
+     *
+     */
+    void updateStats();
+
+    /**
+     * @brief Throws a error if not inizlized
+     */
+    [[ noreturn ]] void throwError();
+
+    /**
      * @brief Destroy the Manage Game object
-     * 
+     *
      */
     virtual ~ManageGame();
 
@@ -156,6 +165,9 @@ class ManageGame : public QObject
 
     //The instance
     static ManageGame* instance;
+
+    //If alrady initialise
+    bool m_initialised;
 
     //Pointer to the map
     Map::Ptr m_planetmap;
@@ -194,10 +206,10 @@ class ManageGame : public QObject
     std::map<int,PlanetChanges::Ptr> m_round_changes_map;
 
     //liste von Kampfschiffen
-    std::list<std::shared_ptr<attackspacecraft>> m_attackSpaceCraftslist;
+    std::list<Fighter> m_attackSpaceCraftslist;
 
     //liste von Transportschiffen
-    std::list<std::shared_ptr<transportspacecraft>> m_transportSpaceCraftslist;
+    std::list<Transporter> m_transportSpaceCraftslist;
 
 };
 
