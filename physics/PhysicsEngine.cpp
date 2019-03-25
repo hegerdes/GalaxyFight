@@ -12,6 +12,7 @@
 
 
 #include "PhysicsEngine.hpp"
+#include "global_socket.h"
 
 #include <iostream>
 using namespace std;
@@ -42,7 +43,71 @@ void PhysicsEngine::addEnemyBullet(Bullet::Ptr& bullet)
 
 int PhysicsEngine::removeAster()
 {
+    int n = 0;
+    auto it = client_global.asteroids_deleted.begin();
+    while(client_global.asteroids_deleted.end() != it)
+    {
+        list<Asteroid::Ptr>::iterator a_it;
+        while(a_it != m_objects.end())
+        {
+            Asteroid::Ptr a = *a_it;
+            if(a->getid() == *it)
+            {
+                a_it = m_objects.erase(a_it);
+                n++;
+                it = client_global.bullet_deleted.erase(it);
+            } else
+            {
+                a_it++;
+            }
+        }
+    }
 
+    return n;
+
+}
+
+
+int removeBullets()
+{
+    int n = 0;
+    auto it = client_global.bullet_deleted.begin();
+    while(client_global.bullet_deleted.end() != it)
+    {
+        list<Bullet::Ptr>::iterator b_it;
+        while(b_it != m_bullets.end())
+        {
+            Bullet::Ptr b = *b_it;
+            if(b->getid() == *it)
+            {
+                b_it = m_bullets.erase(b_it);
+                n++;
+                it = client_global.bullet_deleted.erase(it);
+            } else
+            {
+                b_it++;
+            }
+        }
+    }
+
+    while(client_global.bullet_deleted.end() != it)
+    {
+        list<Bullet::Ptr>::iterator b_it;
+        while(b_it != m_bullets.end())
+        {
+            Bullet::Ptr b = *b_it;
+            if(b->getid() == *it)
+            {
+                b_it = m_bullets.erase(b_it);
+                n++;
+            } else
+            {
+                b_it++;
+            }
+        }
+    }
+
+    return n;
 }
 
 void PhysicsEngine::process()

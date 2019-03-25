@@ -18,6 +18,7 @@
 
 #include "PhysicalObject.hpp"
 #include "ParticleEngine.hpp"
+
 #include "rendering/Bullet.hpp"
 #include "rendering/SpaceCraft.hpp"
 #include "rendering/Asteroid.hpp"
@@ -85,12 +86,6 @@ public:
      */ 
     void addEnemyPlayer(SpaceCraft::Ptr enemyPlayer);
 
-
-    /**
-     * @brief removeBullets
-     * @param dest_bull a std::vector<int> with the ids of the destroyed bullets
-     * @return the number of deleted things
-     */
     int removeBullets();
 
     int removeAster();

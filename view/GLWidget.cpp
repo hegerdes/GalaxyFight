@@ -274,12 +274,18 @@ void GLWidget::step(map<Qt::Key, bool>& keyStates)
                 (*it)->m_direction = client_global.dir_astr[i];
                 std::cerr << "m_direction " << (*it)->m_direction << "\n";
                 //TODO SET ID
+                Asteroid::Ptr p = *it;
+                p->setid(client_global.id_astr[i]);
+                m_physicsEngine->addDestroyable(p);
+                i++;
+                std::cerr << "Asteroid entpackt\n";
+
+            }else
+            {
+                std::cerr << "XML asterooid ignoriert.";
             }
-            i++;
+
             //PhysicalObject::Ptr p = std::static_pointer_cast<PhysicalObject>(*it);
-            Asteroid::Ptr p = *it;
-            m_physicsEngine->addDestroyable(p);
-            std::cout << i << ". Asteroid entpackt!";
         }
 
         client_global.init_received = false;
