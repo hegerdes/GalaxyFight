@@ -43,6 +43,12 @@ class HUDWidget : public QWidget
          */
         void setEnemy(SpaceCraft::Ptr s){m_enemyShip = s;}
     protected:
+
+        /**
+         * @brief Updates the HUDWidget whenever update() is called
+         * 
+         * @param event A paintevent
+         */
         void paintEvent(QPaintEvent* event);
     private:
         /// Painter to be used for painting the HUD
