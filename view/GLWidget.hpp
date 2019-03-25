@@ -21,6 +21,7 @@
 
 #include <limits.h>
 
+#include <QStackedLayout>
 #include "rendering/HealthBar.hpp"
 #include "rendering/Crosshair.hpp"
 #include "view/Camera.hpp"
@@ -29,6 +30,8 @@
 #include "rendering/Asteroid.hpp"
 #include "util/AsteroidField.hpp"
 #include "physics/PhysicsEngine.hpp"
+#include "../physics/PhysicsEngine.hpp"
+#include "HUDWidget.hpp"
 
 using namespace asteroids;
 using namespace std::chrono;
@@ -123,6 +126,16 @@ private:
 
     /// Gibt an nach wie vielen ms wieder geschoßen werden kann
     long                m_schussFrequenz;
+
+    ///Hilfsvariablen
+    int                 hp_actor;
+
+    int                 hp_enemy;
+
+    bool m_firstPerson;
+    bool m_firstPersonAble;
+    HUDWidget           m_hud;
+    QStackedLayout             m_layout;
 };
 
 #endif

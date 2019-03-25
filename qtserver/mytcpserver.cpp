@@ -152,6 +152,7 @@ void Server::sendUpdate_3D_S(QByteArray& response, QTcpSocket* socket) {
     response.append(client_data_temp.shot);
     response.append((char*) &client_data_temp.bullet_id, 4);
     response.append(Hit::hit);
+
     response.append(4, char{}); // zerstörte bullets
     // Bullet ids wenn nötig > 0
 }
@@ -185,7 +186,7 @@ void Server::recvUpdate_3D_C(char* data, QTcpSocket* socket) {
     client_data_temp.shot = (Bullet_shot) getChar(&data);
     client_data_temp.bullet_id = getInt(&data);
     if(client_data_temp.shot == Bullet_shot::shot)
-        log(LoggingType::INFO, "Send Bullet ID: " + std::to_string(client_data_temp.bullet_id));
+        log(LoggingType::DEBUG, "Send Bullet ID: " + std::to_string(client_data_temp.bullet_id));
 
     client_data_temp.living = (Living) getChar(&data);
 
