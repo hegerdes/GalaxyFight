@@ -175,9 +175,12 @@ void Scene2dHandler::placeFighter()
     auto planets = MapFactory::getinstance().getMap("./models/01.map")->getPlanets();
     auto itemList = items();
 
+    std::cout << "start fighter placement: num: fighter" << fighters.size();
+
+
     //start animation and placement
     for (const auto& fighter : fighters) {
-
+        std::cerr << "place fighter: " + fighter->m_id;
         //skip fighter if nothing changed
         if (!fighter->m_change_position)
             continue;
@@ -236,6 +239,7 @@ void Scene2dHandler::placeTransporter()
 }
 
 void Scene2dHandler::updateRound() {
+    std::cout << "update round";
     placeFighter();
     placeTransporter();
 }
