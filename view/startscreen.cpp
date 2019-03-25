@@ -3,7 +3,7 @@
 #include <QFile>
 #include <QPalette>
 #include <QPixmap>
-#include "../qtclient/client.h"
+#include "global_socket.h"
 #include <QScreen>
 
 namespace asteroids {
@@ -47,7 +47,11 @@ void StartScreen::on_playBut_clicked()
 {
     //sends Signals when "Spielen" was clicked
     emit gotoLoadingScreen();
-    emit startClient();
+    // emit startClient();
+    client_global.sendReadyT("eins",4);
+    client_global.wait_for_readData(10000);
+    emit goTo2D();
+
 }
 
 
