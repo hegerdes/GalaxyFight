@@ -16,7 +16,7 @@ namespace asteroids
 
 ManageGame *ManageGame::instance = nullptr;
 
-ManageGame::ManageGame(QObject *parent, PlanetChanges::Owner player_id, int planet_id) : QObject(parent), m_player_id(player_id), m_base(planet_id)
+ManageGame::ManageGame(QObject *parent) : QObject(parent)
 {
     //Read in defaults
     m_current_resource = START_RESOURCE;
@@ -29,7 +29,28 @@ ManageGame::ManageGame(QObject *parent, PlanetChanges::Owner player_id, int plan
     m_planetmap = b.getMap("models/01.map");
     m_planets = m_planetmap->getPlanets();
 
-    //Die am Start verfügbaren Schiffe werden den Listen hinzugefügt
+//    //Die am Start verfügbaren Schiffe werden den Listen hinzugefügt
+//    for (int i = 1; i <= m_attackSpaceCraft_number;i++) {
+//        std::shared_ptr<attackspacecraft> attackSpaceCraft = std::make_shared<attackspacecraft>(i, planet_id);
+//        attackSpaceCraft->m_next_position = planet_id;
+//        attackSpaceCraft->m_change_position = true;
+//        attackSpaceCraft->m_owner = m_player_id;
+//        m_attackSpaceCraftslist.push_back(attackSpaceCraft);
+//    }
+//    for (int i = 1; i <= m_transportSpaceCraft_number;i++) {
+//        std::shared_ptr<transportspacecraft> transportSpaceCraft = std::make_shared<transportspacecraft>(i,planet_id);
+//        transportSpaceCraft->m_owner = m_player_id;
+//        m_transportSpaceCraftslist.push_back(transportSpaceCraft);
+//    }
+
+    updateStats();
+}
+
+void ManageGame::initialize_player(PlanetChanges::Owner player_id, int planet_id)
+{
+    m_player_id = player_id;
+    m_base = planet_id;
+
     for (int i = 1; i <= m_attackSpaceCraft_number;i++) {
         std::shared_ptr<attackspacecraft> attackSpaceCraft = std::make_shared<attackspacecraft>(i, planet_id);
         attackSpaceCraft->m_next_position = planet_id;
@@ -42,22 +63,14 @@ ManageGame::ManageGame(QObject *parent, PlanetChanges::Owner player_id, int plan
         transportSpaceCraft->m_owner = m_player_id;
         m_transportSpaceCraftslist.push_back(transportSpaceCraft);
     }
-
-    updateStats();
-}
-
-ManageGame* ManageGame::initialize_player(PlanetChanges::Owner player_id, int planet_id)
-{
-    if(!ManageGame::instance)
-    {
-        ManageGame::instance = new ManageGame(nullptr,player_id,planet_id);
-    }
-
-   return ManageGame::instance;
 }
 
 ManageGame *ManageGame::getinstance()
 {
+    if(!ManageGame::instance)
+    {
+        ManageGame::instance = new ManageGame();
+    }
     return ManageGame::instance;
 }
 

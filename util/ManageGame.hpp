@@ -80,7 +80,7 @@ class ManageGame : public QObject
      * @param planet_id ist die id vom Hauptquatier
      * @return
      */
-    static ManageGame* initialize_player(PlanetChanges::Owner player_id, int planet_id);
+    void initialize_player(PlanetChanges::Owner player_id, int planet_id);
 
     /**
      * @brief Singelton get the instance
@@ -144,7 +144,7 @@ class ManageGame : public QObject
      * 
      * @param parent 
      */
-    explicit ManageGame(QObject *parent = nullptr, PlanetChanges::Owner player_id = PlanetChanges::UNASSIGN, int planet_id = 0);
+    explicit ManageGame(QObject *parent = nullptr);
 
     /**
      * @brief Destroy the Manage Game object
