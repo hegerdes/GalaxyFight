@@ -64,7 +64,7 @@ void PhysicsEngine::process()
     {
         Bullet::Ptr b = *b_it;
         b->run();
-        std::cerr << "Own Bullets" << b->getid() << "\n";
+        //std::cerr << "Own Bullets" << b->getid() << "\n";
 
         //TODO: Einkommentieren, wenn merge; m_enemy_spacecraft noch uninitialisiert
         /*
@@ -131,7 +131,7 @@ void PhysicsEngine::process()
     {
         Bullet::Ptr b = *b_it;
         b->run();
-        std::cerr << "Enemy Bullets" << b->getid() << "\n";
+        //std::cerr << "Enemy Bullets" << b->getid() << "\n";
 
 
         /*check of Ship with enemy Bullets*/
