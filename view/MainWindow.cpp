@@ -29,6 +29,7 @@ MainWindow::MainWindow(QWidget* parent) :
     m_3DScene = new GLWidget(this);
     m_loadingscreen = new LoadingScreen(this);
     m_scene2d = new Scene2D(this);
+    m_settingsScreen = new settingwindow(this);
 
     //create and config layout
     m_screenStack = new QStackedLayout;
@@ -37,10 +38,15 @@ MainWindow::MainWindow(QWidget* parent) :
     m_screenStack->addWidget(m_loadingscreen);
     m_screenStack->addWidget(m_scene2d);
     m_screenStack->addWidget(m_3DScene);
+    m_screenStack->addWidget(m_settingsScreen);
 
-//    m_screenStack->setCurrentWidget(m_scene2d);
+    m_3DScene->setMinimumSize(size());
+
+   m_screenStack->setCurrentWidget(m_startscreen);
 
 //    setLayout(m_screenStack);
+    m_3DScene->setMinimumSize(QSettings().value("minWidth",1920).toInt(), QSettings().value("minHeight",1080).toInt());
+   // goto3DScene();
 
     // Create a timer object to trigger the main loop
     connect(m_timer.get(), SIGNAL(timeout()), this, SLOT(handleInput()));
@@ -61,6 +67,9 @@ void MainWindow::gotoStartScreen()
 void MainWindow::goto3DScene()
 {
     m_screenStack->setCurrentWidget(m_3DScene);
+
+    m_3DScene->setLevelFile(QSettings().value("levelXML", "./models/level.xml").toString().toStdString());
+    //m_3DScene->loadLevel();
 }
 
 void MainWindow::gotoScene2D()
@@ -71,6 +80,11 @@ void MainWindow::gotoScene2D()
 void MainWindow::gotoLoadingScreen()
 {
     m_screenStack->setCurrentWidget(m_loadingscreen);
+}
+
+void MainWindow::gotoSettingsScreen()
+{
+    m_screenStack->setCurrentWidget(m_settingsScreen);
 }
 
 void MainWindow::closeWindow()

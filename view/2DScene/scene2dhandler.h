@@ -24,6 +24,9 @@ public:
 signals:
     void planetSelected(int);
 
+public slots:
+    void updateRound();
+
 protected:
     /**
      * @brief mouseReleaseEvent
@@ -61,6 +64,20 @@ private:
      * @brief unselectAll removes all selection
      */
     void unselectAll();
+
+    /**
+     * @brief placeFighter every time a new fighter spawns it is placed right beside the planet
+     * where it has been created. If a fighter is moved from planet to another one,
+     * an animation is started which moves it along the edge to its new pos.
+     */
+    void placeFighter();
+
+    /**
+     * @brief placeTransporter every time a new transporter spawns it is placed right beside the planet
+     * where it has been created. If a transporter is moved from one planet to another one, an
+     * animation is started which moves it along the edge to its new pos.
+     */
+    void placeTransporter();
 
     QGraphicsItem* m_currentlySelected;
 };

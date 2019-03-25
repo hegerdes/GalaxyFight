@@ -12,6 +12,7 @@
 #ifndef MAPFACRORY_HPP
 #define MAPFACTORY_HPP
 
+#pragma once
 #include <string>
 
 #include "Map.hpp"

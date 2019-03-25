@@ -94,9 +94,6 @@ Map::Map(std::string mapfile):m_planets(17)
         std::istringstream instring(readline);
         instring >> number_of_vertices;
 
-        //Output for testing
-        std::cout << number_of_vertices << std::endl;
-
         //Read Nodes
         for (int i = 0; i < number_of_vertices; i++)
         {
@@ -211,6 +208,17 @@ void Map::printEdges()
 
     std::cout << "Print Edges" << std::endl; 
     for(it = m_edges.begin(); it !=m_edges.end(); ++it)
+    {
+        it->printVector();
+    }
+}
+
+void Map::printNodes()
+{
+    std::vector<Vector3f>::iterator it;
+
+    std::cout << "Print Edges" << std::endl; 
+    for(it = m_nodes.begin(); it !=m_nodes.end(); ++it)
     {
         it->printVector();
     }

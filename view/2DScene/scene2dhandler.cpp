@@ -149,4 +149,19 @@ void Scene2dHandler::unselectAll()
     update(m_currentlySelected->pos().x()-10, m_currentlySelected->pos().x()-10, 75, 75);
     m_currentlySelected = nullptr;
 }
+
+void Scene2dHandler::placeFighter()
+{
+
+}
+
+void Scene2dHandler::placeTransporter()
+{
+
+}
+
+
+void Scene2dHandler::updateRound() {
+
+}
 }
