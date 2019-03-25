@@ -153,7 +153,8 @@ set(ASTEROID_SOURCES
     util/player.cpp
     util/ManageGame.cpp
     view/GLWidget.cpp
-    view/MainWindow.cpp
+    view/HUDWidget.cpp
+    view/MainWindow.cpp 
     view/Camera.cpp
     view/startscreen.cpp
     view/settingwindow.cpp

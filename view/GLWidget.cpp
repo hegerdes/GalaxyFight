@@ -12,9 +12,11 @@ GLWidget::GLWidget(QWidget* parent)
       m_rotationSpeed(0.025),
       m_moveSpeed(5.0),
       m_lastBullet(0),
-      m_schussFrequenz(500),
-      active(false)
+      active(false),
+      m_schussFrequenz(500), m_firstPerson(false), m_firstPersonAble(true), m_hud(this)
 {
+    m_layout.addWidget(&m_hud);
+    setLayout(&m_layout);
 }
 
 void GLWidget::setLevelFile(const std::string& file)
@@ -147,6 +149,11 @@ void GLWidget::loadLevel()
     //Fügt das Raumschiff der Engine hinzu, damit es richtig explodieren kann
     m_physicsEngine->addSpaceCraft(m_actor);
     m_physicsEngine->addEnemyPlayer(m_enemyPlayer);
+    m_hud.setSpacecraft(m_actor);
+    m_hud.setEnemy(m_enemyPlayer);
+    //setzen dummy variablen
+    hp_actor = 10;
+    hp_enemy = 10;
 }
 
 void GLWidget::paintGL()
@@ -164,17 +171,19 @@ void GLWidget::paintGL()
         // Render all physical objects
         m_physicsEngine->render();
 
-    m_actor->render();
-
+    if(!m_firstPerson)
+    {
+        m_actor->render();
+    }
     m_enemyPlayer->render();
 
     //Debug/Testline
     //m_enemyPlayer->setPosition(Vector<float>(10,100,10));
-    m_playerHPBar->render();
+//    m_playerHPBar->render();
 
-    m_enemyHPBar->render();
+  //  m_enemyHPBar->render();
 
-    m_crossHair->render();
+//    m_crossHair->render();
     }
 }
 
@@ -186,11 +195,25 @@ void GLWidget::step(map<Qt::Key, bool>& keyStates)
 
 
         Bullet_shot bullet_shot = Bullet_shot::not_shot;
-        if(m_actor->spaceCraftStatus() == 0){
+        if(m_actor->spaceCraftStatus() == 0)
+        {
 
 
             m_actor->move(Transformable::FORWARD, m_actor->getCurrentSpeed());
-
+            if(keyStates[Qt::Key_V])
+            {
+                if(m_firstPersonAble)
+                {
+                    m_firstPerson = !m_firstPerson;
+                    m_hud.setFirstPerson(m_firstPerson);
+                    m_camera.setFirstPerson(m_firstPerson);
+                    m_firstPersonAble = false;
+                }
+            }else
+            {
+                m_firstPersonAble = true;
+            }
+            
             if (keyStates[Qt::Key_Up])
             {
                 m_actor->rotate(Transformable::PITCH_RIGHT, m_rotationSpeed);
@@ -207,7 +230,7 @@ void GLWidget::step(map<Qt::Key, bool>& keyStates)
             {
                 m_actor->rotate(Transformable::ROLL_RIGHT, m_rotationSpeed);
             }
-
+        
             if (keyStates[Qt::Key_W])
             {
                 m_actor->accelerate();
@@ -226,29 +249,29 @@ void GLWidget::step(map<Qt::Key, bool>& keyStates)
             }
 
 
-                if(keyStates[Qt::Key_X]){
-                    //Debug/Tesline für Explosion eigenes Raumschiff
-                    m_actor->destroySpaceCraft();
+            if(keyStates[Qt::Key_X]){
+                //Debug/Tesline für Explosion eigenes Raumschiff
+                m_actor->destroySpaceCraft();
+            }
+
+            // Add a bullet to physics engine
+            if(keyStates[Qt::Key_Space])
+            {
+
+                auto now = std::chrono::system_clock::now();
+                auto now_ms = std::chrono::time_point_cast<std::chrono::milliseconds>(now);
+                auto value = now_ms.time_since_epoch();
+                long bulletShot = value.count();
+                ///Ermittelt, wann die letzte Kugel abgeschoßen wurde und erlaubt erst nach
+                if(bulletShot - m_lastBullet > m_schussFrequenz){
+                    Vector3f shipPosition = m_actor->getPosition() + m_actor->getZAxis() * -45 + m_actor->getXAxis() * -175;
+                    Bullet::Ptr bullet = make_shared<Bullet>(Bullet(shipPosition, m_actor->getDirection()));
+                    m_physicsEngine->addBullet(bullet);
+                    m_lastBullet = bulletShot;
+                    bullet_shot = Bullet_shot::shot;
                 }
 
-                // Add a bullet to physics engine
-                if(keyStates[Qt::Key_Space])
-                {
-
-                    auto now = std::chrono::system_clock::now();
-                    auto now_ms = std::chrono::time_point_cast<std::chrono::milliseconds>(now);
-                    auto value = now_ms.time_since_epoch();
-                    long bulletShot = value.count();
-                    ///Ermittelt, wann die letzte Kugel abgeschoßen wurde und erlaubt erst nach
-                    if(bulletShot - m_lastBullet > m_schussFrequenz){
-                        Vector3f shipPosition = m_actor->getPosition() + m_actor->getZAxis() * -45 + m_actor->getXAxis() * -175;
-                        Bullet::Ptr bullet = make_shared<Bullet>(Bullet(shipPosition, m_actor->getDirection()));
-                        m_physicsEngine->addBullet(bullet);
-                        m_lastBullet = bulletShot;
-                        bullet_shot = Bullet_shot::shot;
-                    }
-
-                }
+            }
         }
         if(keyStates[Qt::Key_Y]){
                 //Debug/Tesline für Explosion eigenes Raumschiff
@@ -306,11 +329,24 @@ void GLWidget::step(map<Qt::Key, bool>& keyStates)
             client_global.enemy_shot = Bullet_shot::not_shot;
         }
 
-        std::cout << "Own Health: " << m_actor->getHP() << std::endl;
-        std::cout << "Enemy Health: " << m_enemyPlayer->getHP() << std::endl;
+      
+
+        if(hp_actor != m_actor->getHP())
+        {
+                std::cout << "Own Health: " << m_actor->getHP() << std::endl;
+                hp_actor = m_actor->getHP();
+        }
+
+        if(hp_enemy != m_enemyPlayer->getHP()){
+            std::cout << "Enemy Health: " << m_enemyPlayer->getHP() << std::endl;
+            hp_enemy = m_enemyPlayer->getHP();
+        }
+
+
         m_enemyHPBar->setHP(m_enemyPlayer->getHP());
         m_playerHPBar->setHP(m_actor->getHP());
         this->update();
+        m_hud.update();
     }
 }
 
