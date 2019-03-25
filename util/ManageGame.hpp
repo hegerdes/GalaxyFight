@@ -21,6 +21,7 @@
 
 #include "GameValues.hpp"
 #include "../rendering/2D/MapFactory.hpp"
+#include "../rendering/2D/Map.hpp"
 
 namespace asteroids
 {
@@ -30,6 +31,8 @@ struct attackspacecraft{
     attackspacecraft(int id, int position) : m_id(id), m_position(position), m_change_position(false) {}
     //id für einzelne Schiffe
     int m_id;
+    //owner
+    PlanetChanges::Owner m_owner;
     //aktuelle position des Schiffes
     int m_position;
     //nächste position, wenn aktuelle geändert werden soll
@@ -43,6 +46,8 @@ struct transportspacecraft{
     transportspacecraft(int id, int position) : m_id(id), m_position(position), m_to_new_route(false) {}
     //id für einzelne Schiffe
     int m_id;
+    //owner
+    PlanetChanges::Owner m_owner;
     //aktuelle position
     int m_position;
     //nächste position der route
@@ -68,6 +73,12 @@ class ManageGame : public QObject
 
   public:
 
+    /**
+     * @brief initialize_player initializiert die die ManageGame Instanz
+     * @param player_id ist die eigene id
+     * @param planet_id ist die id vom Hauptquatier
+     * @return
+     */
     static ManageGame* initialize_player(PlanetChanges::Owner player_id, int planet_id);
 
     /**
@@ -82,6 +93,11 @@ class ManageGame : public QObject
      * 
      */
     void updateStats();
+
+    /**
+     * @brief updateSpaceCrafts Alle positionen werden aktualisiert
+     */
+    void updateSpaceCrafts();
 
     std::list<PlanetChanges::Ptr>& get_PlanetCangeList();
 
@@ -143,6 +159,9 @@ class ManageGame : public QObject
 
     //Planets
     Map::VecPtr m_planets;
+
+    //planeten id vom Hauptquatier
+    int m_base;
 
     //Current ressources
     int m_current_resource;
