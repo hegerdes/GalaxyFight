@@ -62,6 +62,7 @@ class Server : public QObject {
 
         //2D Teil
         std::string name = "Name undefined";
+        bool m_first_connect = false;
     };
 
     client_data user_data_1;
@@ -71,6 +72,7 @@ class Server : public QObject {
 private:
     bool already_send_1 = false;
     bool already_send_2 = false;
+    PacketType toSend;
 
     asteroids::Vector3f pos_astr[10];
     asteroids::Vector3f dir_astr[10];

@@ -28,7 +28,7 @@ Server::Server(QObject* parent) : QObject(parent) {
     user_data_2.xAxis[0] = 1;
     user_data_2.yAxis[1] = 1;
     user_data_2.zAxis[2] = 1;
-    user_data_1.shot = Bullet_shot::not_shot;
+    user_data_2.shot = Bullet_shot::not_shot;
 
     // generate asteroids:
     int amount = 10;
@@ -96,25 +96,58 @@ bool Server::writeData(QByteArray const& data) {
     QTcpSocket* socket = static_cast<QTcpSocket*>(sender());
 
     QByteArray response;
+    std::cerr << __PRETTY_FUNCTION__ << "\n";
 
-    PacketType toSend = PacketType::update_3D_C;
+    //toSend = PacketType::update_3D_C;
 
     //to remove
-    if (socket_1 != nullptr && socket_2 != nullptr && !already_send_1 && socket_1 == socket) {
+    if(!user_data_1.m_first_connect || !user_data_2.m_first_connect)
+    {
+    std::cerr << __LINE__ << "\n";
+        return false;
+    }
+    else if(user_data_1.m_first_connect && user_data_2.m_first_connect && PacketType::game_start == toSend)
+    {
+    std::cerr << __LINE__ << "\n";
+        std::cerr << "Both players connected\n";
+    }
+    else if (socket_1 != nullptr && socket_2 != nullptr && !already_send_1 && socket_1 == socket) {
+    std::cerr << __LINE__ << "\n";
         toSend = PacketType::init_3D;
         already_send_1 = true;
     } else if (socket_1 != nullptr && socket_2 != nullptr && !already_send_2 && socket_2 == socket) {
+    std::cerr << __LINE__ << "\n";
         toSend = PacketType::init_3D;
         already_send_2 = true;
     }
 
+    std::cerr << __LINE__ << "\n";
     //determine which packet has to be send
     if (toSend == PacketType::update_3D_C) {
         sendUpdate_3D_S(response, socket);
     } else if (toSend == PacketType::init_3D) {
         sendInit_3D(response, socket);
     } else if(toSend == PacketType::game_start){
-        sendGame_Start(response, socket);
+        bool bytes_written_1 = false;
+        sendGame_Start(response, socket_1);
+        if (socket_1->state() == QAbstractSocket::ConnectedState) {
+            socket_1->write(response); // write the data itself
+            bytes_written_1 = socket_1->waitForBytesWritten();
+        } else {
+            log(LoggingType::INFO, "Client not connected on Address: " + socket->peerAddress().toString().toStdString());
+        }
+
+        bool bytes_written_2 = false;
+        QByteArray response_2;
+        sendGame_Start(response_2, socket_2);
+        if (socket_2->state() == QAbstractSocket::ConnectedState) {
+            socket_2->write(response); // write the data itself
+            bytes_written_2 = socket_2->waitForBytesWritten();
+        } else {
+            log(LoggingType::INFO, "Client not connected on Address: " + socket->peerAddress().toString().toStdString());
+        }
+
+        return bytes_written_1 && bytes_written_2;
     }
 
     if (socket->state() == QAbstractSocket::ConnectedState) {
@@ -209,8 +242,10 @@ void Server::recvReady_T(char* data, QTcpSocket* socket) {
 
     if (socket_1 == socket) {
         user_data_1.name = name;
+        user_data_1.m_first_connect = true;
     } else if (socket_2 == socket) {
         user_data_2.name = name;
+        user_data_2.m_first_connect = true;
     } else {
         //std::cerr << "client socket not recognized\n";
         log(LoggingType::ERROR, "Client not recognized: " + socket->peerAddress().toString().toStdString());
@@ -283,8 +318,10 @@ void Server::sendGame_Start(QByteArray& response, QTcpSocket* socket) {
     response.append(client_data_temp_enemy.name.c_str(), length);
     if (socket_1 == socket) {
         response.append(player_no::first);
+        std::cerr << "socket_1 player_no::first\n";
     } else if (socket_2 == socket) {
         response.append(player_no::second);
+        std::cerr << "socket_2 player_no::first\n";
     }
 
     //TODO send fist map config data
@@ -346,14 +383,19 @@ void Server::readyRead() {
                 PacketType pt = (PacketType) getChar(&data);
                 ////std::cout << pt << std::endl;
 
+                std::cerr << __PRETTY_FUNCTION__ << "\n";
                 //already send / to be removed TODO
                 if (pt == PacketType::update_3D_C && already_send_1 && already_send_2) {
                     recvUpdate_3D_C(data, socket);
+                    toSend = PacketType::update_3D_C;
                 } else if (pt == PacketType::ready_T) {
+                std::cerr << __LINE__ << "_ready_t"  << "\n";
                     recvReady_T(data, socket);
+                    toSend = PacketType::game_start;
                 }
 
                 // direct response after receiving
+                std::cerr << __LINE__ << "before wirteData"  << "\n";
                 this->writeData(nullptr);
             }
         }

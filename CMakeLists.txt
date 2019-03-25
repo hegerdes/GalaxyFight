@@ -90,11 +90,13 @@ find_package( Qt5
     Core
     Network
     Widgets
+    Concurrent
     OpenGL
     REQUIRED
 )
 
 include_directories(${Qt5Widgets_INCLUDE_DIRS})
+include_directories(${Qt5Concurrent_INCLUDE_DIRS})
 include_directories(${Qt5Core_INCLUDE_DIRS})
 include_directories(${Qt5Network_INCLUDE_DIRS})
 include_directories(${Qt5OpenGL_INCLUDE_DIRS})

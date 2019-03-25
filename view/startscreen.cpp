@@ -3,8 +3,12 @@
 #include <QFile>
 #include <QPalette>
 #include <QPixmap>
-#include "global_socket.h"
 #include <QScreen>
+#include <thread>
+#include <future>
+#include "global_socket.h"
+#include <QtConcurrent>
+
 
 namespace asteroids {
 
@@ -49,9 +53,11 @@ void StartScreen::on_playBut_clicked()
     emit gotoLoadingScreen();
     // emit startClient();
     client_global.sendReadyT("eins",4);
-    client_global.wait_for_readData(10000);
-    emit goTo2D();
-
+    QtConcurrent::run(QThreadPool::globalInstance(), [&](){
+        client_global.wait_for_readData(-1);
+        std::cerr << "player_No: " << client_global.player_No << ", id_other: " << client_global.id_other << "\n";
+        emit goTo2D();
+    });
 }
 
 
