@@ -31,6 +31,8 @@ MainWindow::MainWindow(QWidget* parent) :
     m_scene2d = new Scene2D(this);
     m_settingsScreen = new settingwindow(this);
 
+    m_manage_game = ManageGame::getinstance();
+
     //create and config layout
     m_screenStack = new QStackedLayout;
 
@@ -71,7 +73,7 @@ void MainWindow::goto3DScene()
     m_3DScene->loadLevel();
 }
 
-void MainWindow::gotoScene2D()
+void MainWindow::goToScene2D()
 {
     m_screenStack->setCurrentWidget(m_scene2d);
 }
@@ -109,7 +111,10 @@ void MainWindow::keyReleaseEvent(QKeyEvent* event)
 
 void MainWindow::setupConnections()
 {
-  connect(m_startscreen, &StartScreen::closeProgramm , this, &MainWindow::closeWindow);
-  connect(m_startscreen, &StartScreen::goToLoading, this, &MainWindow::gotoLoadingScreen);
+  connect(m_manage_game, &ManageGame::goto3DScene, this, &MainWindow::goto3DScene);
+  connect(m_manage_game, &ManageGame::goToScene2D,this,&MainWindow::goToScene2D);
+  connect(m_startscreen, &StartScreen::gotoLoadingScreen, this, &MainWindow::goToScene2D);
+  connect(m_startscreen, &StartScreen::closeWindow , this, &MainWindow::closeWindow);
+  //connect(m_startscreen, &StartScreen::gotoLoadingScreen, this, &MainWindow::goToLoadingScreen);
 }
 } // namespace asteroids

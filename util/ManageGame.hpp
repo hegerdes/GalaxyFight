@@ -12,23 +12,15 @@
 #ifndef MANAGEGANE_HPP
 #define MANAGEGAME_HPP
 
-#define START_RESOURCE 1000
-#define START_RESOURCE_PER_TIME 100
-#define RESOURCE_PER_MINE 100
-#define COST_PER_ATTACKSPACECRAFT 1000
-#define COST_PER_TRANSPORTSPACECRAFT 1000
-#define COST_PER_MINE 1000
-#define COST_PER_SHIPYARD 100
-#define START_ATTACKSPACECRAFT_NUMBER 1
-#define START_TRANSPORTSPACECRAFT_NUMBER 1
+#pragma once
 
 #include <QObject> 
+#include <iostream>
 #include <list>
 #include <map>
 
+#include "GameValues.hpp"
 #include "../rendering/2D/MapFactory.hpp"
-#include "../rendering/2D/PlanetChanges.hpp"
-#include "../rendering/2D/Map.hpp"
 
 namespace asteroids
 {
@@ -37,6 +29,21 @@ class ManageGame : public QObject
     Q_OBJECT
 
   public:
+
+    /**
+     * @brief Singelton get the instance
+     * 
+     * @return ManageGame& Reference to ManageGame
+     */
+    static ManageGame* getinstance();
+
+    /**
+     * @brief Interates through all planets and counts mine, fighter and transporter
+     * 
+     */
+    void updateStats();
+
+    std::list<PlanetChanges::Ptr>& get_PlanetCangeList();
 
     inline int get_current_resource(){return m_current_resource;}
 
@@ -49,7 +56,10 @@ class ManageGame : public QObject
   signals:
     void gameover();
     void no_resources();
-    void update();
+    void updateInfobar();
+    void not_ur_planet();
+    void goToScene2D();
+    void goto3DScene();
 
   public slots:
     void build_factory(int planet_id);
@@ -59,19 +69,6 @@ class ManageGame : public QObject
     void next_round();
     void end_game();
 
-    /**
-     * @brief Singelton get the instance
-     * 
-     * @return ManageGame& Reference to ManageGame
-     */
-    static ManageGame& getinstance();
-
-    /**
-     * @brief Interates through all planets and counts mine, fighter and transporter
-     * 
-     */
-    void updateStats();
-
 
 
   private:
@@ -80,9 +77,8 @@ class ManageGame : public QObject
      * @brief Construct a new Manage Game object
      * 
      * @param parent 
-     * @param base 
      */
-    explicit ManageGame(QObject *parent = nullptr, int base = 0);
+    explicit ManageGame(QObject *parent = nullptr);
 
     /**
      * @brief Destroy the Manage Game object
@@ -117,7 +113,7 @@ class ManageGame : public QObject
     int m_global_mines;
 
     //id for ownerckeck
-    Planet::Owner m_player_id;
+    PlanetChanges::Owner m_player_id;
 
     //counter für die Kampfschiff-id
     int m_attackspacecraft_id;

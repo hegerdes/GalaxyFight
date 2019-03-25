@@ -17,8 +17,8 @@ public:
     ~StartScreen();
 
 signals:
-    void closeProgramm();
-    void goToLoading();
+    void closeWindow();
+    void gotoLoadingScreen();
     void startClient();
     void goToSetting();
 
