@@ -54,7 +54,21 @@ void StartScreen::on_playBut_clicked()
     // emit startClient();
     client_global.sendReadyT("eins",4);
     QtConcurrent::run(QThreadPool::globalInstance(), [&](){
-        client_global.wait_for_readData(-1);
+       MapFactory& b = MapFactory::getinstance();
+       Map::Ptr a = b.getMap("models/01.map");
+
+       auto game_inst = ManageGame::getinstance();
+
+       client_global.wait_for_readData(-1);
+//TODO USE ONLY IF SERVER IS RUNNUNG
+//       if(client_global.player_No == 0)
+//       {
+//           game_inst->initialize_player(PlanetChanges::PLAYER1,0);
+//       }
+//       else if(client_global.player_No == 1)
+//       {
+//           game_inst->initialize_player(PlanetChanges::PLAYER2,a->getNumberOfPlanets());
+//       }
         std::cerr << "player_No: " << client_global.player_No << ", id_other: " << client_global.id_other << "\n";
         emit goTo2D();
     });
