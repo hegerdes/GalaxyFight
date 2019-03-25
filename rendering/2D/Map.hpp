@@ -73,7 +73,7 @@ class Map
      * @param end_planet  Number of end planet
      * @return std::list<Vector3f> The path
      */
-    std::list<Vector3f> getPath(Vector3f position, int start_planet, int end_planet);
+    std::list<int> getPath(int position, int start_planet, int end_planet);
 
     /**
      * @brief getEdges returns all edges
@@ -111,7 +111,7 @@ class Map
     std::vector<Vector2i> m_edges;
 
     //Nodes
-    std::vector<Vector3f> m_nodes;
+    std::vector<int> m_nodes;
 
     //Map to match the Names to a Index
     std::map<std::string,int> m_planat_dir;
