@@ -227,9 +227,17 @@ void ManageGame::build_transporter(int planet_id)
 void ManageGame::change_Fighter_position(int new_position, int attackSpaceCraft_id){
     for (auto i = m_attackSpaceCraftslist.begin(); i != m_attackSpaceCraftslist.end(); i++) {
         if ((*i)->m_id == attackSpaceCraft_id){
-            (*i)->m_next_position = new_position;
-            (*i)->m_change_position = true;
-            break;
+            auto tmp = m_planetmap->getPath((*i)->m_position, new_position);
+            if(tmp.size() == 2)
+            {
+                (*i)->m_next_position = new_position;
+                (*i)->m_change_position = true;
+                break;
+            }else
+            {
+                emit changeRouteError();
+            }
+
         }
     }
 }
@@ -239,7 +247,8 @@ void ManageGame::change_transport_route(int planet_id, int transportSpaceCraft_i
     if((m_planets[(unsigned long)planet_id])->getOwner() == m_player_id){
         for (auto i = m_transportSpaceCraftslist.begin(); i != m_transportSpaceCraftslist.end(); i++) {
             if ((*i)->m_id == transportSpaceCraft_id){
-
+                (*i)->m_tmp_route = m_planetmap->getPath((*i)->m_position, planet_id);
+                (*i)->m_current_route = m_planetmap->getPath(planet_id, m_base);
                 (*i)->m_route_iterator = (*i)->m_tmp_route.begin();
                 (*i)->m_to_new_route = true;
             }
@@ -345,6 +354,7 @@ void ManageGame::updateSpaceCrafts()
             if((*i)->m_route_iterator == (*i)->m_tmp_route.end()){
                 (*i)->m_route_iterator = (*i)->m_current_route.begin();
                 (*i)->m_to_base = true;
+                (*i)->m_to_mine = false;
                 (*i)->m_to_new_route = false;
                 (*i)->m_position = *((*i)->m_route_iterator++);
                 (*i)->m_next_position = *((*i)->m_route_iterator);
