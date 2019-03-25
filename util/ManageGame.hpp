@@ -122,8 +122,8 @@ class ManageGame : public QObject
     void already_exist();
     void goToScene2D();
     void goto3DScene();
-    void updateScene();
     void changeRouteError();
+    void updateScene();
 
   public slots:
     void change_Fighter_position(int new_position, int attackSpaceCraft_id);
