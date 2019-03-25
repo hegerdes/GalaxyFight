@@ -304,12 +304,13 @@ void GLWidget::step(map<Qt::Key, bool>& keyStates)
     {
         Vector3f shipPosition = m_enemyPlayer->getPosition() + m_enemyPlayer->getZAxis() * -45 + m_enemyPlayer->getXAxis() * -175;
         Bullet::Ptr bullet = make_shared<Bullet>(Bullet(shipPosition, m_enemyPlayer->m_xAxis*-1));
+        bullet->setid(client_global.enemy_shot_id);
         m_physicsEngine->addEnemyBullet(bullet);
         client_global.enemy_shot = Bullet_shot::not_shot;
     }
 
-    std::cout << "Own Health: " << m_actor->getHP() << std::endl;
-    std::cout << "Enemy Health: " << m_enemyPlayer->getHP() << std::endl;
+    //std::cout << "Own Health: " << m_actor->getHP() << std::endl;
+    //std::cout << "Enemy Health: " << m_enemyPlayer->getHP() << std::endl;
     m_enemyHPBar->setHP(m_enemyPlayer->getHP());
     m_playerHPBar->setHP(m_actor->getHP());
     this->update();

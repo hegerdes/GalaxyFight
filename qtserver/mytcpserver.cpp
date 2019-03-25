@@ -28,7 +28,7 @@ Server::Server(QObject* parent) : QObject(parent) {
     user_data_2.xAxis[0] = 1;
     user_data_2.yAxis[1] = 1;
     user_data_2.zAxis[2] = 1;
-    user_data_1.shot = Bullet_shot::not_shot;
+    user_data_2.shot = Bullet_shot::not_shot;
 
     // generate asteroids:
     int amount = 10;
@@ -133,7 +133,7 @@ void Server::sendUpdate_3D_S(QByteArray& response, QTcpSocket* socket) {
         client_data_temp = user_data_2;
         //std::cerr << "Socket send 2";
     } else if (socket_2 == socket) {
-        //client_data_temp = user_data_1;
+        client_data_temp = user_data_1;
         //std::cerr << "Socket send 1";
     } else {
         //std::cerr << "client socket not recognized\n";
@@ -184,6 +184,9 @@ void Server::recvUpdate_3D_C(char* data, QTcpSocket* socket) {
 
     client_data_temp.shot = (Bullet_shot) getChar(&data);
     client_data_temp.bullet_id = getInt(&data);
+    if(client_data_temp.shot == Bullet_shot::shot)
+        log(LoggingType::INFO, "Send Bullet ID: " + std::to_string(client_data_temp.bullet_id));
+
     client_data_temp.living = (Living) getChar(&data);
 
     if (socket_1 == socket) {
@@ -215,6 +218,7 @@ void Server::recvReady_T(char* data, QTcpSocket* socket) {
         //std::cerr << "client socket not recognized\n";
         log(LoggingType::ERROR, "Client not recognized: " + socket->peerAddress().toString().toStdString());
     }
+
 }
 
 void Server::sendInit_3D(QByteArray& response, QTcpSocket* socket) {
@@ -258,6 +262,11 @@ void Server::sendInit_3D(QByteArray& response, QTcpSocket* socket) {
 
         float size = size_astr[i];
         response.append((char*) &size, 4);
+    }
+    if (socket_1 == socket) {
+        response.append(player_no::first);
+    } else if (socket_2 == socket) {
+        response.append(player_no::second);
     }
 }
 
