@@ -40,7 +40,7 @@ Scene2dHandler::Scene2dHandler(QObject* parent)
         addItem(pitem);
     }
 
-    auto ship = new GraphicsFighterItem(PLAYER2, 1);
+    auto ship = new GraphicsFighterItem(PlayerType::PLAYER2, 1);
     auto tship = new GraphicsTransporterItem(1);
     tship->setPos(100, 100);
     addItem(ship);
