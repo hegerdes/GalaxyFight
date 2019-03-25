@@ -362,6 +362,7 @@ void ManageGame::updateSpaceCrafts()
             (*i)->m_position = *((*i)->m_route_iterator++);
             (*i)->m_next_position = *((*i)->m_route_iterator);
         }
+
         if((*i)->m_to_base == true){
             if((*i)->m_route_iterator == (*i)->m_current_route.end()){
                 (*i)->m_to_base = false;
@@ -373,6 +374,7 @@ void ManageGame::updateSpaceCrafts()
                 (*i)->m_next_position = *((*i)->m_route_iterator);
             }
         }
+
         if((*i)->m_to_mine == true){
             if((*i)->m_route_iterator == (*i)->m_current_route.begin()){
                 (*i)->m_to_base = true;
