@@ -118,7 +118,8 @@ void GLWidget::loadLevel()
 {
     active = true;
     // Load level
-    LevelParser lp(m_levelFile, m_actor, m_enemyPlayer, m_skybox, m_asteroidField);
+    //LevelParser lp(m_levelFile, m_actor, m_enemyPlayer, m_skybox, m_asteroidField); @ahaker
+    LevelParser lp("./models/level.xml", m_actor, m_enemyPlayer, m_skybox, m_asteroidField);
 
 
 
@@ -191,25 +192,30 @@ void GLWidget::step(map<Qt::Key, bool>& keyStates)
 
             m_actor->move(Transformable::FORWARD, m_actor->getCurrentSpeed());
 
-            if (keyStates[Qt::Key_Up])
+            if (keyStates[Qt::Key_H])
             {
+                std::cerr << "key_up\n";
                 m_actor->rotate(Transformable::PITCH_RIGHT, m_rotationSpeed);
             }
-            if (keyStates[Qt::Key_Down])
+            if (keyStates[Qt::Key_L])
             {
+                std::cerr << "key_down\n";
                 m_actor->rotate(Transformable::PITCH_LEFT, m_rotationSpeed);
             }
-            if (keyStates[Qt::Key_Left])
+            if (keyStates[Qt::Key_J])
             {
+                std::cerr << "key_left\n";
                 m_actor->rotate(Transformable::ROLL_LEFT, m_rotationSpeed);
             }
-            if (keyStates[Qt::Key_Right])
+            if (keyStates[Qt::Key_K])
             {
+                std::cerr << "key_right\n";
                 m_actor->rotate(Transformable::ROLL_RIGHT, m_rotationSpeed);
             }
 
             if (keyStates[Qt::Key_W])
             {
+                std::cerr << "key_w\n";
                 m_actor->accelerate();
             }
             if (keyStates[Qt::Key_S])

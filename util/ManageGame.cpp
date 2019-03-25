@@ -217,6 +217,7 @@ void ManageGame::next_round()
     updateStats();
 
     emit updateInfobar();
+    emit goto3DScene();
 }
 
 void ManageGame::end_game()

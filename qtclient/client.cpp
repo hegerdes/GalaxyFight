@@ -187,7 +187,6 @@ void Client::game_start(char* data)
     id[length] = '\0';
     id_other = std::string(id);
     player_No = (player_no) getChar(&data);
-    std::cerr << __LINE__ << ", " << player_No << " player_No";
 
     //MapKonfig erste mal laden.
 }
