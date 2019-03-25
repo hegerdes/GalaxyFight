@@ -2,7 +2,7 @@
 #define LOGGINGTYPE_H
 
 enum LoggingType {
-    INFO, ERROR
+    INFO, ERROR, DEBUG
 };
 
 #endif // LOGGINGTYPE_H

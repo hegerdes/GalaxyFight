@@ -12,9 +12,15 @@ GLWidget::GLWidget(QWidget* parent)
       m_rotationSpeed(0.025),
       m_moveSpeed(5.0),
       m_lastBullet(0),
+<<<<<<< HEAD
       m_schussFrequenz(500),
       m_BulletId(0)
+=======
+      m_schussFrequenz(500), m_firstPerson(false), m_firstPersonAble(true), m_hud(this)
+>>>>>>> a3ce296e3dbe1a8e85acd260b5a43f9caf838a17
 {
+    m_layout.addWidget(&m_hud);
+    setLayout(&m_layout);
 }
 
 void GLWidget::setLevelFile(const std::string& file)
@@ -141,6 +147,10 @@ void GLWidget::initializeGL()
     //Fügt das Raumschiff der Engine hinzu, damit es richtig explodieren kann
     m_physicsEngine->addSpaceCraft(m_actor);
     m_physicsEngine->addEnemyPlayer(m_enemyPlayer);
+
+    //setzen dummy variablen
+    hp_actor = 10;
+    hp_enemy = 10;
 }
 
 void GLWidget::paintGL()
@@ -156,15 +166,17 @@ void GLWidget::paintGL()
     // Render all physical objects
     m_physicsEngine->render();
 
-    m_actor->render();
-
+    if(!m_firstPerson)
+    {
+        m_actor->render();
+    }
     m_enemyPlayer->render();
 
     //Debug/Testline
     //m_enemyPlayer->setPosition(Vector<float>(10,100,10));
-    m_playerHPBar->render();
+//    m_playerHPBar->render();
 
-    m_enemyHPBar->render();
+  //  m_enemyHPBar->render();
 
     m_crossHair->render();
 }
@@ -181,6 +193,20 @@ void GLWidget::step(map<Qt::Key, bool>& keyStates)
 
         m_actor->move(Transformable::FORWARD, m_actor->getCurrentSpeed());
 
+        if(keyStates[Qt::Key_V])
+        {
+            if(m_firstPersonAble)
+             {
+                 m_firstPerson = !m_firstPerson;
+                 m_hud.setFirstPerson(m_firstPerson);
+                 m_camera.setFirstPerson(m_firstPerson);
+                 m_firstPersonAble = false;
+             }
+        }else
+        {
+            m_firstPersonAble = true;
+        }
+        
         if (keyStates[Qt::Key_Up])
         {
             m_actor->rotate(Transformable::PITCH_RIGHT, m_rotationSpeed);
@@ -310,11 +336,21 @@ void GLWidget::step(map<Qt::Key, bool>& keyStates)
         client_global.enemy_shot = Bullet_shot::not_shot;
     }
 
-    //std::cout << "Own Health: " << m_actor->getHP() << std::endl;
-    //std::cout << "Enemy Health: " << m_enemyPlayer->getHP() << std::endl;
+    if(hp_actor != m_actor->getHP())
+    {
+         //std::cout << "Own Health: " << m_actor->getHP() << std::endl;
+         hp_actor = m_actor->getHP();
+    }
+
+    if(hp_enemy != m_enemyPlayer->getHP()){
+        //std::cout << "Enemy Health: " << m_enemyPlayer->getHP() << std::endl;
+        hp_enemy = m_enemyPlayer->getHP();
+    }
+   
     m_enemyHPBar->setHP(m_enemyPlayer->getHP());
     m_playerHPBar->setHP(m_actor->getHP());
     this->update();
+    m_hud.update();
 }
 
 void GLWidget::mouseMoveEvent(QMouseEvent* event)
