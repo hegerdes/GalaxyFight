@@ -48,17 +48,16 @@ ManageGame::ManageGame(QObject *parent, PlanetChanges::Owner player_id, int plan
 
 ManageGame* ManageGame::initialize_player(PlanetChanges::Owner player_id, int planet_id)
 {
-   ManageGame::instance = new ManageGame(nullptr,player_id,planet_id);
+    if(!ManageGame::instance)
+    {
+        ManageGame::instance = new ManageGame(nullptr,player_id,planet_id);
+    }
 
    return ManageGame::instance;
 }
 
 ManageGame *ManageGame::getinstance()
 {
-    if (!ManageGame::instance)
-    {
-        ManageGame::instance = new ManageGame;
-    }
     return ManageGame::instance;
 }
 
@@ -228,7 +227,7 @@ void ManageGame::change_Fighter_position(int new_position, int attackSpaceCraft_
     for (auto i = m_attackSpaceCraftslist.begin(); i != m_attackSpaceCraftslist.end(); i++) {
         if ((*i)->m_id == attackSpaceCraft_id){
             auto tmp = m_planetmap->getPath((*i)->m_position, new_position);
-            if(tmp.size() == 2)
+            if(tmp.size() == 1)
             {
                 (*i)->m_next_position = new_position;
                 (*i)->m_change_position = true;
