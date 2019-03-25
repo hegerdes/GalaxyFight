@@ -28,7 +28,7 @@ namespace asteroids {
     class ServerBullet : public ServerPhysicalObject{
         public:
             using Ptr = std::shared_ptr<ServerBullet>;
-            ServerBullet(asteroids::Vector3f pos, asteroids::Vector3f dir, float speed, float radius, int id):
+            ServerBullet(asteroids::Vector3f pos, asteroids::Vector3f dir, int id, float speed = 10, float radius = 10):
                 ServerPhysicalObject (pos, dir, speed, radius, id){}
             int m_livetime = 300;
 

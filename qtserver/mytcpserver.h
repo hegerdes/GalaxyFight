@@ -14,6 +14,7 @@
 
 #include "packettypes.h"
 #include "loggingtype.h"
+#include "serverphysics.h"
 
 class Server : public QObject {
     Q_OBJECT
@@ -75,6 +76,8 @@ private:
     asteroids::Vector3f pos_astr[10];
     asteroids::Vector3f dir_astr[10];
     float size_astr[10];
+
+    asteroids::ServerPhysics physics;
 
     // sending packets
     void sendInit_3D(QByteArray& response, QTcpSocket* socket);

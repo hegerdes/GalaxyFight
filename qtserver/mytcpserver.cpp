@@ -34,9 +34,11 @@ Server::Server(QObject* parent) : QObject(parent) {
     int amount = 10;
     for (int i{0}; i < amount; i++) {
         pos_astr[i] = asteroids::Randomizer::instance()->getRandomVertex(1000);
-        dir_astr[i] = asteroids::Randomizer::instance()->getRandomVertex(1.0) *
-                            asteroids::Randomizer::instance()->getRandomNumber(0, 8);
+        float rand = asteroids::Randomizer::instance()->getRandomNumber(0, 8);
+        dir_astr[i] = asteroids::Randomizer::instance()->getRandomVertex(1.0) * rand;
         size_astr[i] = asteroids::Randomizer::instance()->getRandomNumber(0, 100);
+
+        physics.addAsteroid(asteroids::ServerAsteroid::Ptr(pos_astr[i], dir_astr[i], rand, size_astr[i], i));
     }
 }
 
@@ -187,6 +189,8 @@ void Server::recvUpdate_3D_C(char* data, QTcpSocket* socket) {
     client_data_temp.shot = (Bullet_shot) getChar(&data);
     client_data_temp.bullet_id = getInt(&data);
     if(client_data_temp.shot == Bullet_shot::shot){
+        Vector3f shipPosition = client_data_temp.position + client_data_temp.zAxis * -45 + client_data_temp.xAxis * -175;
+        physics.addBullet(asteroids::ServerBullet::Ptr(shipPosition, client_data_temp.xAxis * -1, client_data_temp.bullet_id));
         log(LoggingType::DEBUG, "Send Bullet ID: " + std::to_string(client_data_temp.bullet_id));
 
     }
