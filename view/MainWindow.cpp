@@ -44,10 +44,10 @@ MainWindow::MainWindow(QWidget* parent) :
 
     m_3DScene->setMinimumSize(size());
 
-//    m_screenStack->setCurrentWidget(m_scene2d);
+   m_screenStack->setCurrentWidget(m_scene2d);
 
 //    setLayout(m_screenStack);
-    goto3DScene();
+    //goto3DScene();
 
     // Create a timer object to trigger the main loop
     connect(m_timer.get(), SIGNAL(timeout()), this, SLOT(handleInput()));
@@ -69,8 +69,8 @@ void MainWindow::goto3DScene()
 {
     m_screenStack->setCurrentWidget(m_3DScene);
 
-    m_3DScene->setLevelFile(QSettings().value("levelXML", "models/level.xml").toString().toStdString());
-    m_3DScene->loadLevel();
+    m_3DScene->setLevelFile(QSettings().value("levelXML", "./models/level.xml").toString().toStdString());
+    //m_3DScene->loadLevel();
 }
 
 void MainWindow::goToScene2D()

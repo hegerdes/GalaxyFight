@@ -50,13 +50,14 @@ public:
     /// Handles keyboard input and updates the physics engine
     void step(map<Qt::Key, bool>& keyStates);
 
+    /// Initialize Level
+    void loadLevel();
+
 protected:
 
     /// Init OpenGL
     virtual void initializeGL() override;
 
-    /// Initialize Level
-    void loadLevel();
 
     /// Render scene
     virtual void paintGL() override;
