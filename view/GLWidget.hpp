@@ -24,10 +24,11 @@
 #include "rendering/HealthBar.hpp"
 #include "rendering/Crosshair.hpp"
 #include "view/Camera.hpp"
-#include "../rendering/SpaceCraft.hpp"
+#include "rendering/SpaceCraft.hpp"
 #include "rendering/Skybox.hpp"
+#include "rendering/Asteroid.hpp"
 #include "util/AsteroidField.hpp"
-#include "../physics/PhysicsEngine.hpp"
+#include "physics/PhysicsEngine.hpp"
 
 using namespace asteroids;
 using namespace std::chrono;
@@ -115,7 +116,7 @@ private:
     QPoint                      m_mousePos;
 
     ///Current BulletId
-    int m_BulletId;
+    int                         m_BulletId;
 
     /// Letzter Zeitpunkt zu dem eine Kugel abgefeurert wurde
     long                m_lastBullet;

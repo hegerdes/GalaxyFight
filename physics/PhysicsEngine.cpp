@@ -20,7 +20,7 @@ namespace asteroids
 {
 
 
-void PhysicsEngine::addDestroyable(PhysicalObject::Ptr& obj)
+void PhysicsEngine::addDestroyable(Asteroid::Ptr& obj)
 {
     m_objects.push_back(obj);
 }
@@ -40,16 +40,21 @@ void PhysicsEngine::addEnemyBullet(Bullet::Ptr& bullet)
 }
 
 
+int PhysicsEngine::removeAster()
+{
+
+}
+
 void PhysicsEngine::process()
 {
     //list<PhysicalObject::Ptr>::iterator p_it;
-    list<PhysicalObject::Ptr>::iterator p_it;
+    list<Asteroid::Ptr>::iterator p_it;
     list<Bullet::Ptr>::iterator b_it;
 
     // Move all objects
     for (p_it = m_objects.begin(); p_it != m_objects.end(); p_it++)
     {
-        PhysicalObject::Ptr p = *p_it;
+        Asteroid::Ptr p = *p_it;
         p->move();
     }
 
@@ -208,14 +213,14 @@ void PhysicsEngine::render()
 {
    
     // Render all objects
-    list<PhysicalObject::Ptr>::iterator p_it;
+    list<Asteroid::Ptr>::iterator p_it;
     list<Bullet::Ptr>::iterator b_it;
     list<Bullet::Ptr>::iterator be_it;
  
 
      for(p_it = m_objects.begin(); p_it != m_objects.end(); p_it++)
         {
-            PhysicalObject::Ptr p = *p_it;
+            Asteroid::Ptr p = *p_it;
             p->render();
         }
 

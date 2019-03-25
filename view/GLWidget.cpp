@@ -177,7 +177,7 @@ void GLWidget::step(map<Qt::Key, bool>& keyStates)
 
     Bullet_shot bullet_shot = Bullet_shot::not_shot;
     if(m_actor->spaceCraftStatus() == 0){
-        
+
 
         m_actor->move(Transformable::FORWARD, m_actor->getCurrentSpeed());
 
@@ -197,7 +197,7 @@ void GLWidget::step(map<Qt::Key, bool>& keyStates)
         {
             m_actor->rotate(Transformable::ROLL_RIGHT, m_rotationSpeed);
         }
-    
+
         if (keyStates[Qt::Key_W])
         {
             m_actor->accelerate();
@@ -220,11 +220,11 @@ void GLWidget::step(map<Qt::Key, bool>& keyStates)
                 //Debug/Tesline für Explosion eigenes Raumschiff
                 m_actor->destroySpaceCraft();
             }
-            
+
             // Add a bullet to physics engine
             if(keyStates[Qt::Key_Space])
             {
-                
+
                 auto now = std::chrono::system_clock::now();
                 auto now_ms = std::chrono::time_point_cast<std::chrono::milliseconds>(now);
                 auto value = now_ms.time_since_epoch();
@@ -239,7 +239,7 @@ void GLWidget::step(map<Qt::Key, bool>& keyStates)
                     m_lastBullet = bulletShot;
                     bullet_shot = Bullet_shot::shot;
                 }
-                
+
             }
     }
     if(keyStates[Qt::Key_Y]){
@@ -276,7 +276,8 @@ void GLWidget::step(map<Qt::Key, bool>& keyStates)
                 //TODO SET ID
             }
             i++;
-            PhysicalObject::Ptr p = std::static_pointer_cast<PhysicalObject>(*it);
+            //PhysicalObject::Ptr p = std::static_pointer_cast<PhysicalObject>(*it);
+            Asteroid::Ptr p = *it;
             m_physicsEngine->addDestroyable(p);
             std::cout << i << ". Asteroid entpackt!";
         }

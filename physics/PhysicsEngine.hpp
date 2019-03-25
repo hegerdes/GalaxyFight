@@ -18,8 +18,9 @@
 
 #include "PhysicalObject.hpp"
 #include "ParticleEngine.hpp"
-#include "../rendering/Bullet.hpp"
-#include "../rendering/SpaceCraft.hpp"
+#include "rendering/Bullet.hpp"
+#include "rendering/SpaceCraft.hpp"
+#include "rendering/Asteroid.hpp"
 
 
 using std::list;
@@ -54,7 +55,7 @@ public:
      *          that can be hit by a bullet (asteroids etc.). Takes ownership of 
      *          the given pointer
      */
-    void addDestroyable(PhysicalObject::Ptr& d);
+    void addDestroyable(Asteroid::Ptr& d);
 
 
     /**
@@ -84,10 +85,20 @@ public:
      */ 
     void addEnemyPlayer(SpaceCraft::Ptr enemyPlayer);
 
+
+    /**
+     * @brief removeBullets
+     * @param dest_bull a std::vector<int> with the ids of the destroyed bullets
+     * @return the number of deleted things
+     */
+    int removeBullets();
+
+    int removeAster();
+
 private:
 
     /// List of destroyable objects
-    list<PhysicalObject::Ptr>    m_objects;
+    list<Asteroid::Ptr>    m_objects;
 
     /// List of active bullets
     list<Bullet::Ptr>            m_bullets;
