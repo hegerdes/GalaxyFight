@@ -9,10 +9,16 @@ static inline qint32 ArrayToInt(QByteArray source);
 Server::Server(QObject* parent) : QObject(parent) {
     server = new QTcpServer(this);
     connect(server, SIGNAL(newConnection()), this, SLOT(newConnection()));
-    qDebug() << "Listening:" << server->listen(QHostAddress::Any, 38291);
-    std::cout << server->serverAddress().toString().toUtf8().constData() << "; serverAdress\n" << std::endl;
-    std::cout << server->serverPort() << "; serverPort" << std::endl;
-    // qDebug() << "Listening:" << server->listen(QHostAddress::LocalHost, 1024);
+    bool connected = server->listen(QHostAddress::Any, 38292);
+    if(connected){
+        log(LoggingType::INFO, "Listening on Address: " + server->serverAddress().toString().toStdString());
+        int port = server->serverPort();
+        log(LoggingType::INFO, "Listening on Port: " + std::to_string(port));
+    }else{
+        log(LoggingType::ERROR, "Could not bind to port!");
+        exit(0);
+    }
+
     user_data_1.position = {-650, 0, 0};
     user_data_1.xAxis[0] = -1;
     user_data_1.yAxis[1] = -1;
@@ -34,10 +40,13 @@ Server::Server(QObject* parent) : QObject(parent) {
 }
 
 void Server::newConnection() {
-    qDebug() << "Listening:\n ";
-    std::cout << "new conneciton" << std::endl;
+    //qDebug() << "Listening:\n ";
+    //std::cout << "new conneciton" << std::endl;
+
     while (server->hasPendingConnections()) {
         QTcpSocket* socket = server->nextPendingConnection();
+        log(LoggingType::INFO, "Client try to connect on Address: " + socket->peerAddress().toString().toStdString());
+
         connect(socket, SIGNAL(readyRead()), this, SLOT(readyRead()));
         connect(socket, SIGNAL(disconnected()), this, SLOT(disconnected()));
 
@@ -56,7 +65,8 @@ void Server::newConnection() {
         qint32* s = new qint32(0);
         buffers.insert(socket, buffer);
         sizes.insert(socket, s);
-        std::cout << "successful connect" << std::endl;
+        //std::cout << "successful connect" << std::endl;
+        log(LoggingType::INFO, "Client connected successful on Address: " + socket->peerAddress().toString().toStdString());
     }
 }
 
@@ -74,7 +84,8 @@ void Server::disconnected() {
     already_send_1 = false;
     already_send_2 = false;
 
-    std::cout << "disconnect success\n";
+    //std::cout << "disconnect success\n";
+    log(LoggingType::INFO, "Client disconnected on Address: " + socket->peerAddress().toString().toStdString());
     socket->deleteLater();
     delete buffer;
     delete s;
@@ -110,7 +121,8 @@ bool Server::writeData(QByteArray const& data) {
         socket->write(response); // write the data itself
         return socket->waitForBytesWritten();
     } else {
-        std::cerr << socket->state() << ": connected State\n";
+        log(LoggingType::INFO, "Client not connected on Address: " + socket->peerAddress().toString().toStdString());
+        //std::cerr << socket->state() << ": connected State\n";
         return false;
     }
 }
@@ -119,12 +131,13 @@ void Server::sendUpdate_3D_S(QByteArray& response, QTcpSocket* socket) {
     client_data client_data_temp;
     if (socket_1 == socket) {
         client_data_temp = user_data_2;
-        std::cerr << "Socket send 2";
+        //std::cerr << "Socket send 2";
     } else if (socket_2 == socket) {
-        client_data_temp = user_data_1;
-        std::cerr << "Socket send 1";
+        //client_data_temp = user_data_1;
+        //std::cerr << "Socket send 1";
     } else {
-        std::cerr << "client socket not recognized\n";
+        //std::cerr << "client socket not recognized\n";
+        log(LoggingType::ERROR, "Client not recognized: " + socket->peerAddress().toString().toStdString());
     }
 
     response.append(PacketType::update_3D_S);
@@ -178,7 +191,8 @@ void Server::recvUpdate_3D_C(char* data, QTcpSocket* socket) {
     } else if (socket_2 == socket) {
         user_data_2 = client_data_temp;
     } else {
-        std::cerr << "client socket not recognized\n";
+        //std::cerr << "client socket not recognized\n";
+        log(LoggingType::ERROR, "Client not recognized: " + socket->peerAddress().toString().toStdString());
     }
 }
 
@@ -198,7 +212,8 @@ void Server::recvReady_T(char* data, QTcpSocket* socket) {
     } else if (socket_2 == socket) {
         user_data_2.name = name;
     } else {
-        std::cerr << "client socket not recognized\n";
+        //std::cerr << "client socket not recognized\n";
+        log(LoggingType::ERROR, "Client not recognized: " + socket->peerAddress().toString().toStdString());
     }
 }
 
@@ -212,7 +227,8 @@ void Server::sendInit_3D(QByteArray& response, QTcpSocket* socket) {
         client_data_temp_own = user_data_2;
         client_data_temp_enemy = user_data_1;
     } else {
-        std::cerr << "client socket not recognized\n";
+        //std::cerr << "client socket not recognized\n";
+        log(LoggingType::ERROR, "Client not recognized: " + socket->peerAddress().toString().toStdString());
     }
 
     response.append(PacketType::init_3D);
@@ -255,7 +271,8 @@ void Server::sendGame_Start(QByteArray& response, QTcpSocket* socket) {
         client_data_temp_own = user_data_2;
         client_data_temp_enemy = user_data_1;
     } else {
-        std::cerr << "client socket not recognized\n";
+        //std::cerr << "client socket not recognized\n";
+        log(LoggingType::ERROR, "Client not recognized: " + socket->peerAddress().toString().toStdString());
     }
 
     response.append(PacketType::game_start);
@@ -271,6 +288,29 @@ void Server::sendGame_Start(QByteArray& response, QTcpSocket* socket) {
     }
 
     //TODO send fist map config data
+}
+
+void Server::log(LoggingType type, std::string msg){
+    time_t rawtime;
+    struct tm * timeinfo;
+    char buffer[80];
+
+    time (&rawtime);
+    timeinfo = localtime(&rawtime);
+
+    strftime(buffer,sizeof(buffer),"%d-%m-%Y %H:%M:%S",timeinfo);
+    std::string str(buffer);
+
+    std::ofstream logfile;
+    logfile.open ("log.txt");
+    if(type == LoggingType::ERROR){
+        std::cerr << "[" << str << " ERROR] " << msg << "\n";
+        logfile << "[" << str << " ERROR] " << msg << "\n";
+    }else if(type == LoggingType::INFO){
+        std::cout << "[" << str << " INFO] " << msg << std::endl;
+        logfile << "[" << str << " INFO] " << msg << std::endl;
+    }
+    logfile.close();
 }
 
 void Server::readyRead() {

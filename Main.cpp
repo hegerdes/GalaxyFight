@@ -23,7 +23,7 @@ int main(int argc, char** argv)
     }
 
     QApplication a(argc, argv);
-    client_global.connect("lennartkaiser.de", 38291);
+    client_global.connect("lennartkaiser.de", 38292);
 
     asteroids::MainWindow mainWindow(argv[1]);
     mainWindow.show();
