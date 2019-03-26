@@ -19,6 +19,10 @@ namespace asteroids
         //Rechteck für Geschwindigkeit des Spielers
         QRect velocityBar;
         QRect textVelocityBar;
+        //Rechteck für die Distanz zum Gegner
+        QRect distanceBarLeft;
+        QRect distanceBarRight;
+        QRect textDistanceBar;
         int crossHairW = width()/200;
         int crossHairH = height()/15-height()/30;
         QRect crossHair[4];
@@ -30,7 +34,7 @@ namespace asteroids
             rightHP = QRect(width()/2 + (width()/2 - width()/2 * m_enemyShip->getHP()/10), 0, width()/2 * m_enemyShip->getHP()/10, height()/50);
             textLeftHP = QRect(0, 0, width()/2 * 1, height()/50);
             textRightHP =  QRect(width()/2 + (width()/2 - width()/2 * 1), 0, width()/2 * 1, height()/50);
-            //Zeigt die Nachrihct an, ob man gewonnen oder verloren hat
+            //Zeigt die Nachricht an, ob man gewonnen oder verloren hat
         }
         else
         {
@@ -38,18 +42,21 @@ namespace asteroids
             leftHP = QRect(2.01*width()/9, height()*90.5/100, width()/6 * m_myShip->getHP()/10, height()/15);
             rightHP = QRect(5.5*width()/9 + (width()/6-width()/6 * m_enemyShip->getHP()/10), height()*90.5/100, width()/6 * m_enemyShip->getHP()/10, height()/15);
             velocityBar = QRect(3.75*width()/9, height()*90.5/100, width()/6 * m_myShip->getCurrentSpeed()/m_myShip->getMaxSpeed() , height()/15);
+            distanceBarRight = QRect(3.75*width()/9, height()*70/100, width()/12 , height()/15);
+            distanceBarLeft = QRect(3.75*width()/9 + width()/12, height()*70/100, width()/12 , height()/15);
             
             textLeftHP = QRect(2.01*width()/9, height()*90.5/100, width()/6 * 1, height()/15);
             textRightHP = QRect(5.5*width()/9 + (width()/6-width()/6 * 1), height()*90.5/100, width()/6 * 1, height()/15);
             textVelocityBar = QRect(3.75*width()/9, height()*90.5/100, width()/6 , height()/15);
-            //Zeigt die Nachrihct an, ob man gewonnen oder verloren hat
-            
+            textDistanceBar = QRect(3.75*width()/9, height()*70/100, width()/6 , height()/15);
+
             
             m_p.begin(this);
             m_p.drawImage(fullScreen, m_cockpit);
             m_p.end();
         }
 
+        //Zeigt die Nachricht an, ob man gewonnen oder verloren hat
         if(m_enemyShip->getHP() == 0 || m_myShip->getHP() == 0)
         {
             endRoundOnScreenMessage = QRect(3.75*width()/9, height()/2.7, width()/6 , height()/15);
@@ -72,8 +79,11 @@ namespace asteroids
         //Erstellt die TextBars die über den InfrmationBars liegen
         m_p.drawRect(textLeftHP);
         m_p.drawRect(textRightHP);
-        m_p.drawRect(textVelocityBar);
-
+        //Erstellt die DistanceBars
+        m_p.drawRect(distanceBarLeft);
+        m_p.drawRect(distanceBarRight);
+        m_p.fillRect(distanceBarLeft, QColor(0, 100, 200));
+        m_p.fillRect(distanceBarRight, QColor(0, 100, 200));
 
         for(QRect r : crossHair)
         {
@@ -86,10 +96,13 @@ namespace asteroids
         m_p.setFont(QFont("liberation",15,99));
         m_p.drawText(textLeftHP, Qt::AlignCenter,"Player 1");
         m_p.drawText(textRightHP, Qt::AlignCenter,"Player 2");
+        
+        
         int currentSpeedInt = m_myShip->getCurrentSpeed()/m_myShip->getMaxSpeed() * 100;
         string currentSpeedString = std::to_string(currentSpeedInt) + "%";
-
         m_p.drawText(textVelocityBar, Qt::AlignCenter, QString::fromStdString(currentSpeedString));
+
+        m_p.drawText(textDistanceBar, Qt::AlignCenter, "Test Distance Bar");
         
         m_p.end();    
 
