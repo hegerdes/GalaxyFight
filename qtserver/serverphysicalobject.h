@@ -43,13 +43,13 @@ namespace asteroids {
     };
 
     class ServerSpacecraft {
-        private:
+
+    public:
             Vector3f m_xAxis;
             Vector3f m_yAxis;
             Vector3f m_zAxis;
             Vector3f m_pos;
 
-        public:
             using Ptr = std::shared_ptr<ServerSpacecraft>;
             int m_hp = 10;
             ServerSpacecraft() = default;
