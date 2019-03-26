@@ -1,8 +1,16 @@
 #include "serverphysics.h"
 #include <QTimer>
+
+#include "serverphysicalobject.h"
+
 namespace asteroids {
 
-    ServerPhysics::ServerPhysics() : m_timer(new QTimer())
+    ServerPhysics::ServerPhysics(client_data &data_socket_1, client_data &data_socket_2) :
+        m_timer(new QTimer()),
+        m_data_socket_1(data_socket_1),
+        m_data_socket_2(data_socket_2),
+        m_first(new ServerSpacecraft()),
+        m_second(new ServerSpacecraft())
     {
         // Create a timer object to trigger the main loop
         connect(m_timer.get(), SIGNAL(timeout()), this, SLOT(updateData()));
@@ -29,29 +37,24 @@ namespace asteroids {
     {
         Removes removed = process();
         //append removed asteroids to changes list from struct
-        m_server->user_data_1.deleted_asteroids_id.insert(
-                    m_server->user_data_1.deleted_asteroids_id.end(),
+        m_data_socket_1.deleted_asteroids_id.insert(
+                    m_data_socket_1.deleted_asteroids_id.end(),
                     removed.aster_changed.begin(),
                     removed.aster_changed.end());
-        m_server->user_data_2.deleted_asteroids_id.insert(
-                    m_server->user_data_2.deleted_asteroids_id.end(),
+        m_data_socket_2.deleted_asteroids_id.insert(
+                    m_data_socket_2.deleted_asteroids_id.end(),
                     removed.aster_changed.begin(),
                     removed.aster_changed.end());
 
         //append removed bullets to changes list from struct
-        m_server->user_data_1.deleted_bullets_id.insert(
-                    m_server->user_data_1.deleted_bullets_id.end(),
+        m_data_socket_1.deleted_bullets_id.insert(
+                    m_data_socket_1.deleted_bullets_id.end(),
                     removed.bullet_changed.begin(),
                     removed.bullet_changed.end());
-        m_server->user_data_2.deleted_bullets_id.insert(
-                    m_server->user_data_2.deleted_bullets_id.end(),
+        m_data_socket_2.deleted_bullets_id.insert(
+                    m_data_socket_2.deleted_bullets_id.end(),
                     removed.bullet_changed.begin(),
                     removed.bullet_changed.end());
-    }
-
-    void ServerPhysics::setParent(Server* serv)
-    {
-        m_server = serv;
     }
 
     Removes ServerPhysics::process(){
@@ -66,6 +69,35 @@ namespace asteroids {
         /*
          * COLLISION
          */
+
+
+        /*
+         * Kollisionstest zwischen Asteroiden und Schiffen
+         * es werden die jeweiligen gotHit() operationen der Schiffe aufgerufen
+         */
+        auto p_it = m_asteroids.begin();
+        while(p_it != m_asteroids.end())
+        {
+            asteroids::ServerAsteroid::Ptr ast = *p_it;
+
+            if(m_first->collide(ast))
+            {
+                m_first->m_hp--;
+
+                p_it = m_asteroids.erase(p_it);
+                std::cerr << "Hit between Spacecraft Socket 1 and Asteroid\n";
+            }
+            else if(m_second->collide(ast))
+            {
+                m_second->m_hp--;
+
+                p_it = m_asteroids.erase(p_it);
+                std::cerr << "Hit between Spacecraft Socket 2 and Asteroid\n";
+            }else
+            {
+                p_it++;
+            }
+        }
 
         //spacecraft1 bullet2 interaction + asteroids
         //Move bullets and test for hits
@@ -100,6 +132,8 @@ namespace asteroids {
                     // Delete destroyed object
                     removed.aster_changed.push_back((*p_it)->getId());
                     p_it = m_asteroids.erase(p_it);
+
+                    std::cerr << "Hit between Bullet and Asteroid\n";
 
                 } else {
                     p_it++;
@@ -151,6 +185,7 @@ namespace asteroids {
                     // Delete destroyed object
                     removed.aster_changed.push_back((*p_it)->getId());
                     p_it = m_asteroids.erase(p_it);
+                    std::cerr << "Hit between Bullet and Asteroid\n";
                 } else {
                     p_it++;
                 }
@@ -164,6 +199,7 @@ namespace asteroids {
                     (*o_it)->m_alive = false;
                     removed.bullet_changed.push_back((*o_it)->getId());
                     o_it = m_first_bullets.erase(o_it);
+                    std::cerr << "Hit between Bullet and Bullet\n";
                 }else{
                     o_it++;
                 }
