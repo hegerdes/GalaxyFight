@@ -169,7 +169,7 @@ void Server::sendUpdate_3D_S(QByteArray& response, QTcpSocket* socket) {
         response.append((char*)&it, 4);
         log(LoggingType::DEBUG, "Bullet removed SEND TO CLIENT: " + std::to_string(it));
     }
-    client_data_temp.deleted_bullets_id.;
+    client_data_temp.deleted_bullets_id.clear();
     // Bullet ids wenn nötig > 0
 
     response.append((char*)&client_data_temp.m_hp, 4);
