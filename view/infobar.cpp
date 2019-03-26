@@ -63,6 +63,14 @@ void Infobar::updateInfobar()
     ui->transporter_value->setNum(m_manage_game->get_transportCpaceCraft_number());
     ui->erz_value->setNum(m_manage_game->get_current_resource());
     ui->ertrag_value->setNum(m_manage_game->get_resource_per_time());
+
+    if(m_selected_planet > 0 && m_selected_planet < m_planetmap->getNumberOfPlanets())
+    {
+        ui->erzvorkommen_value->setNum(m_planets.at((unsigned long) m_selected_planet)->getOre());
+        ui->minenanzahl_value->setNum(m_planets.at((unsigned long)m_selected_planet)->getMine());
+        ui->erzlager_value->setNum(m_planets.at((unsigned long)m_selected_planet)->getStoredOre());
+        ui->planetname->setText(QString::fromStdString(m_planets.at((unsigned long)m_selected_planet)->getname()));
+    }
 }
 
 void Infobar::set_selected_planet(int planet_id)
@@ -76,10 +84,19 @@ void Infobar::set_selected_planet(int planet_id)
 
 }
 
-void Infobar::no_resources()
+void Infobar::no_resources(int num)
 {
     m_popup.setWindowTitle("Fehler");
-    m_popup.setText("Du besitzt nicht genügend Erz um diese Aktion durchzuführen!");
+    if(num == 0)
+    {
+        m_popup.setText("Du besitzt nicht genügend Erz um diese Aktion durchzuführen!");
+    }
+    else
+    {
+        m_popup.setText("Einige Minenen haben kein Erz mehr");
+    }
+    
+    
 
     m_popup.setGeometry(0, 0, 250, 200);
 

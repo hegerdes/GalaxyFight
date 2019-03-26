@@ -55,7 +55,7 @@ public slots:
     void resettime();
 
     //Slots for popups
-    void no_resources();
+    void no_resources(int num);
     void not_ur_planet();
     void not_ur_ship();
     void already_exist();

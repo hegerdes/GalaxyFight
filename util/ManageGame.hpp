@@ -99,8 +99,13 @@ class ManageGame : public QObject
      */
     void updateSpaceCrafts();
 
+    /**
+     * @brief List of all PlanetChanges. This should be send to server
+     * @return List of Planetchanges
+     */
     std::list<PlanetChanges::Ptr>& get_PlanetCangeList();
 
+    //Getter
     inline int get_current_resource(){return m_current_resource;}
 
     inline int get_resource_per_time(){return m_resource_per_time;}
@@ -115,7 +120,7 @@ class ManageGame : public QObject
 
   signals:
     void gameover();
-    void no_resources();
+    void no_resources(int);
     void updateInfobar();
     void not_ur_planet();
     void not_ur_ship();
