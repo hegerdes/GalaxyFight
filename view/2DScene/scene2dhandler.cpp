@@ -201,7 +201,7 @@ void Scene2dHandler::placeFighter()
         for(auto& item : itemList) {
             if(item->type() == ItemTypes::Fighter && ((GraphicsFighterItem*)item)->getID() == fighter->m_id) {
                 auto pos = planets[fighter->m_next_position]->getPos();
-                item->setPos(pos[0], pos[1]);
+                item->setPos(pos[0] - 20, pos[1] - 20);
                 foundFlag = true;
             }
         }
@@ -210,7 +210,7 @@ void Scene2dHandler::placeFighter()
         if(!foundFlag) {
             auto newFighter = new GraphicsFighterItem(PlayerType::PLAYER1, fighter->m_id);
             auto pos = planets[fighter->m_position]->getPos();
-            newFighter->setPos(pos[0], pos[1]);
+            newFighter->setPos(pos[0] - 20, pos[1] - 20);
             addItem(newFighter);
         }
     }
@@ -232,7 +232,7 @@ void Scene2dHandler::placeTransporter()
         for(auto& item : itemList) {
             if(item->type() == ItemTypes::Transporter && static_cast<GraphicsTransporterItem*>(item)->getID() == transporter->m_id) {
                 auto pos = planets[transporter->m_next_position]->getPos();
-                item->setPos(pos[0], pos[1]);
+                item->setPos(pos[0] + 50, pos[1] + 50);
                 foundFlag = true;
             }
         }
@@ -241,7 +241,7 @@ void Scene2dHandler::placeTransporter()
         if(!foundFlag) {
             auto newTransporter = new GraphicsTransporterItem(transporter->m_id);
             auto pos = planets[transporter->m_position]->getPos();
-            newTransporter->setPos(pos[0], pos[1]);
+            newTransporter->setPos(pos[0] + 50, pos[1] + 50);
             addItem(newTransporter);
         }
     }
