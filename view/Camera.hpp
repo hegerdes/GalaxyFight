@@ -100,6 +100,8 @@ public:
      * @param speed         The new move speed
      */
     void setMoveSpeed(const float& speed) { m_moveSpeed = speed;}
+
+    void setFirstPerson(const bool b) {m_firstPerson = b;}
     
 private:
     /// View up vector
@@ -116,6 +118,8 @@ private:
 
     /// Move speed in world units per call
     float   m_moveSpeed;
+
+    bool    m_firstPerson;
 };
 
 } // namespace asteroids
