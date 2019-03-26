@@ -132,6 +132,7 @@ class ManageGame : public QObject
     void build_mine(int planet_id);
     void build_fighter(int planet_id);
     void build_transporter(int planet_id);
+    void destroy_fighter(int fighter_id);
     void next_round();
     void end_game();
 

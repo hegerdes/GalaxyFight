@@ -27,7 +27,7 @@ int Planet::init()
     m_num_fighters = 0;
     m_num_mine = 0;
     m_num_transporter = 0;
-    m_num_of_ore = 10;
+    m_num_of_ore = 10000;
     m_stored_ore = 0;
     m_owned = PlanetChanges::UNASSIGN;
     return 1;
@@ -40,12 +40,17 @@ int Planet::init()
     m_num_fighters += updates->getFighter();
     m_num_mine += updates->getMines();
     m_num_transporter += updates->getTransports();
-    m_num_of_ore += updates->getOre();
+    //m_num_of_ore += updates->getOre();
     m_stored_ore += updates->getStoredOre();
     if(updates->getOwner() != PlanetChanges::UNASSIGN)
     {
         m_owned = updates->getOwner();
     }
+
+    //update ore
+    m_num_of_ore -= m_num_mine * RESOURCE_PER_MINE;
+    m_stored_ore += m_num_mine * RESOURCE_PER_MINE;
+
     return 0;
  }
 

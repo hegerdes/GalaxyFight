@@ -219,6 +219,25 @@ void ManageGame::build_transporter(int planet_id)
     }
 }
 
+void ManageGame::destroy_fighter(int fighter_id)
+{
+    if(m_initialised)
+    {
+        for (auto i = m_attackSpaceCraftslist.begin(); i != m_attackSpaceCraftslist.end(); i++) {
+                if ((*i)->m_id == fighter_id){
+                    i = m_attackSpaceCraftslist.erase(i);
+                    m_attackSpaceCraft_number -= 1;
+                    break;
+                }
+        }
+
+    }else
+    {
+        throwError();
+    }
+
+}
+
 void ManageGame::change_Fighter_position(int new_position, int attackSpaceCraft_id)
 {
     if(m_initialised)
@@ -327,8 +346,6 @@ void ManageGame::end_game()
 void ManageGame::updateStats()
 {
     //Reset items
-    m_attackSpaceCraft_number = 0;
-    m_transportSpaceCraft_number = 0;
     m_resource_per_time = 0;
     m_global_mines = 0;
 
@@ -338,14 +355,12 @@ void ManageGame::updateStats()
         //Update only if the planet is owned by player
         if (planet->getOwner() == m_player_id)
         {
-            m_attackSpaceCraft_number += planet->getFighter();
-            m_transportSpaceCraft_number += planet->getTransporter();
             m_global_mines += planet->getMine();
         }
+
     }
     //Update current resource and resource_per time
     m_resource_per_time = m_global_mines * RESOURCE_PER_MINE;
-    m_current_resource += m_resource_per_time;
 
     emit updateInfobar();
 }
@@ -382,6 +397,37 @@ void ManageGame::updateSpaceCrafts()
                 (*i)->m_to_new_route = false;
                 (*i)->m_position = (*i)->m_next_position;
                 (*i)->m_next_position = *((*i)->m_route_iterator++);
+
+                //Check for alrady existing change for this planet
+                auto search = m_round_changes_map.find((*i)->m_position);
+                if (search != m_round_changes_map.end())
+                {
+                    if(m_planets[(*i)->m_position]->getStoredOre() >= 200)
+                    {
+                        search->second->setStoredOre(-200);
+                        (*i)->m_ore = -200;
+                    }else
+                    {
+                        search->second->setStoredOre(-m_planets[(*i)->m_position]->getStoredOre());
+                        (*i)->m_ore = m_planets[(*i)->m_position]->getStoredOre();
+                    }
+                }
+                else
+                {
+                    PlanetChanges::Ptr change = std::make_shared<PlanetChanges>(PlanetChanges((*i)->m_position));
+
+                    if(m_planets[(*i)->m_position]->getStoredOre() >= 200)
+                    {
+                        change->setStoredOre(-200);
+                        (*i)->m_ore = -200;
+                    }else
+                    {
+                        change->setStoredOre(-m_planets[(*i)->m_position]->getStoredOre());
+                        (*i)->m_ore = m_planets[(*i)->m_position]->getStoredOre();
+                    }
+
+                    m_round_changes_map[(*i)->m_position] = change;
+                }
             }else
             {
                 (*i)->m_position = (*i)->m_next_position;
@@ -398,6 +444,9 @@ void ManageGame::updateSpaceCrafts()
                 (*i)->m_position = (*i)->m_next_position;
                 (*i)->m_route_iterator--;
                 (*i)->m_next_position = *((*i)->m_route_iterator--);
+
+                m_current_resource += (*i)->m_ore;
+                (*i)->m_ore = 0;
 
             }else {
                 (*i)->m_position = (*i)->m_next_position;
