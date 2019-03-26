@@ -3,7 +3,9 @@
 namespace asteroids {
     ServerPhysics::ServerPhysics()
     {
-
+        m_timer = new Q_Timer();
+        // Create a timer object to trigger the main loop
+        connect(m_timer.get(), SIGNAL(timeout()), this, SLOT(updateData()));
     }
 
     void ServerPhysics::addBullet(ServerBullet::Ptr bullet){
@@ -18,11 +20,26 @@ namespace asteroids {
         m_asteroids.push_back(aster);
     }
 
+    void ServerPhysics::run()
+    {
+        m_timer->start(1000 / 30.0);
+    }
+
+    void ServerPhysics::updateData()
+    {
+        Removes removed = process();
+
+    }
+
+    void ServerPhysics::setParent(Server* serv)
+    {
+        m_server = serv;
+    }
+
     Removes ServerPhysics::process(){
-        //Bullet Moving: TODO
         Removes removed;
 
-        //Asteroid Moving: TODO
+        //Asteroid Moving
 
         for(auto it : m_asteroids){
             it->move();

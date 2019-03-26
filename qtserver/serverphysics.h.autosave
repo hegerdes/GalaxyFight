@@ -25,7 +25,7 @@ namespace asteroids {
         void addBullet(ServerBullet::Ptr bullet);
         void addAsteroid(ServerAsteroid::Ptr aster);
         void run();
-        void updateData();
+        void updateData();  
         Removes process();
 
         QTimer m_timer;

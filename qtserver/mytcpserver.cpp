@@ -19,6 +19,8 @@ Server::Server(QObject* parent) : QObject(parent) {
         exit(0);
     }
 
+    physics->setParrent(this);
+
     user_data_1.position = {-650, 0, 0};
     user_data_1.xAxis[0] = -1;
     user_data_1.yAxis[1] = -1;

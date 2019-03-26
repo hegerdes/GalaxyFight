@@ -11,6 +11,7 @@
 #include <QtCore>
 #include <QtNetwork>
 #include <fstream>
+#include <vector>
 
 #include "packettypes.h"
 #include "loggingtype.h"
@@ -60,6 +61,12 @@ class Server : public QObject {
         Bullet_shot shot;
         int bullet_id;
         Living living;
+
+        //physics stuff
+        std::vector<int> deleted_bullets_id;
+        std::vector<int> deleted_asteroids_id;
+        int m_hp;
+        int m_enem_hp;
 
         //2D Teil
         std::string name = "Name undefined";
