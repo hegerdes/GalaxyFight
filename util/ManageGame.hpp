@@ -29,7 +29,7 @@ namespace asteroids
 
 struct attackspacecraft{
     //constructor
-    attackspacecraft(int id, int position) : m_id(id), m_position(position), m_next_position(-1), m_change_position(false) {}
+    attackspacecraft(int id, int position) : m_id(id), m_position(position), m_next_position(position), m_change_position(false) {}
     //id für einzelne Schiffe
     int m_id;
     //owner
@@ -54,6 +54,8 @@ struct transportspacecraft{
     int m_position;
     //nächste position der route
     int m_next_position;
+    //geladenes
+    int m_ore;
     //flag ob Schiff noch zur route fliegen muss
     bool m_to_new_route;
     //flag ob Schiff zur base fliegt
