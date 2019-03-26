@@ -28,7 +28,31 @@ Infobar::Infobar(QWidget *parent) :
     connect(this, &Infobar::build_transporter,m_manage_game, &asteroids::ManageGame::build_transporter);
 
     connect(m_manage_game, &asteroids::ManageGame::updateInfobar,this,&Infobar::updateInfobar);
+
+    connect(m_manage_game, &asteroids::ManageGame::no_resources, this, &Infobar::no_resources);
+
+    connect( &m_takt, &QTimer::timeout, [this](){set_time(m_timer.remainingTime()/1000);});
+
+    connect( &m_timer, &QTimer::timeout, m_manage_game, &asteroids::ManageGame::next_round);
+
+    //connect( m_manage_game, &asteroids::ManageGame::startTimer, this, &Infobar::resettime); //TODO Fix and use this line instead of the next 3 lines
+    connect( &m_timer, &QTimer::timeout, this, &Infobar::resettime);
+    m_takt.start(1000);
+    m_timer.start(6000);
 }
+
+void Infobar::set_time(int time)
+{
+    ui->timer->display(time);
+    m_takt.start(1000);
+}
+
+void Infobar::resettime()
+{
+    m_takt.start(1000);
+    m_timer.start(60000);
+}
+
 
 void Infobar::updateInfobar()
 {
@@ -47,6 +71,27 @@ void Infobar::set_selected_planet(int planet_id)
     ui->erzlager_value->setNum(m_planets.at((unsigned long)m_selected_planet)->getStoredOre());
     ui->planetname->setText(QString::fromStdString(m_planets.at((unsigned long)m_selected_planet)->getname()));
 
+}
+
+void Infobar::no_resources()
+{
+    m_fehler.setWindowTitle("Fehler");
+    m_fehler.setText("Du besitzt nicht genügend Erz um diese Aktion durchzuführen!");
+
+    m_fehler.setGeometry(0, 0, 250, 200);
+
+    m_fehler.setWindowFlags(Qt::FramelessWindowHint);
+    m_fehler.setAttribute(Qt::WA_NoSystemBackground);
+    m_fehler.setAttribute(Qt::WA_TranslucentBackground);
+    m_fehler.setAttribute(Qt::WA_TransparentForMouseEvents);
+
+    m_fehler.setStyleSheet("color: rgb(255, 255, 255)");
+
+    m_fehler.setStandardButtons(0);
+
+    QTimer::singleShot(2000, &m_fehler, SLOT(hide()));
+
+    m_fehler.exec();
 }
 
 //For button clicks
