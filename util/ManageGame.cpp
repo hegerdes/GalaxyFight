@@ -25,9 +25,14 @@ ManageGame::ManageGame(QObject *parent) : QObject(parent), m_initialised(false)
     m_transportSpaceCraft_number = START_TRANSPORTSPACECRAFT_NUMBER;
     m_attackspacecraft_id = m_attackSpaceCraft_number;
 
+    //Init of members
     MapFactory& b = MapFactory::getinstance();
     m_planetmap = b.getMap("models/01.map");
     m_planets = m_planetmap->getPlanets();
+    m_round_changes_map = std::map<int,PlanetChanges::Ptr>();
+    m_round_changes_list = std::list<PlanetChanges::Ptr>();
+    m_attackSpaceCraftslist = std::list<Fighter>();
+    m_transportSpaceCraftslist = std::list<Transporter>();
 
     updateStats();
 }
@@ -58,16 +63,11 @@ void ManageGame::build_factory(int planet_id)
 
                 //Check for alrady existing change for this planet
                 auto search = m_round_changes_map.find(planet_id);
-                if (search != m_round_changes_map.end())
+                if (search == m_round_changes_map.end())
                 {
-                    search->second->setFactorys(1);
+                    m_round_changes_map[planet_id] = std::make_shared<PlanetChanges>(PlanetChanges(planet_id));
                 }
-                else
-                {
-                    PlanetChanges::Ptr change = std::make_shared<PlanetChanges>(PlanetChanges(planet_id));
-                    change->setFactorys(1);
-                    m_round_changes_map[planet_id] = change;
-                }
+                m_round_changes_map[planet_id]->setFactorys(1);
                 //update signal für die info bar
                 emit updateInfobar();
             }
@@ -78,7 +78,6 @@ void ManageGame::build_factory(int planet_id)
         throwError();
     } 
 }
-
 void ManageGame::build_mine(int planet_id)
 {
     if(m_initialised)
@@ -102,16 +101,11 @@ void ManageGame::build_mine(int planet_id)
 
                 //Check for alrady existing change for this planet
                 auto search = m_round_changes_map.find(planet_id);
-                if (search != m_round_changes_map.end())
+                if (search == m_round_changes_map.end())
                 {
-                    search->second->setMines(1);
+                    m_round_changes_map[planet_id] = std::make_shared<PlanetChanges>(PlanetChanges(planet_id));
                 }
-                else
-                {
-                    PlanetChanges::Ptr change = std::make_shared<PlanetChanges>(PlanetChanges(planet_id));
-                    change->setMines(1);
-                    m_round_changes_map[planet_id] = change;
-                }
+                m_round_changes_map[planet_id]->setMines(1);
                 //update signal für die info bar
                 emit updateInfobar();
             }
@@ -151,16 +145,12 @@ void ManageGame::build_fighter(int planet_id)
 
                 //Check for alrady existing change for this planet
                 auto search = m_round_changes_map.find(planet_id);
-                if (search != m_round_changes_map.end())
+                if (search == m_round_changes_map.end())
                 {
-                    search->second->setFighter(1);
+                    m_round_changes_map[planet_id] = std::make_shared<PlanetChanges>(PlanetChanges(planet_id));
                 }
-                else
-                {
-                    PlanetChanges::Ptr change = std::make_shared<PlanetChanges>(PlanetChanges(planet_id));
-                    change->setFighter(1);
-                    m_round_changes_map[planet_id] = change;
-                }
+                m_round_changes_map[planet_id]->setFighter(1);
+
                 //update signal für die info bar
                 emit updateInfobar();
             }
@@ -198,16 +188,12 @@ void ManageGame::build_transporter(int planet_id)
 
                 //Check for alrady existing change for this planet
                 auto search = m_round_changes_map.find(planet_id);
-                if (search != m_round_changes_map.end())
+                if (search == m_round_changes_map.end())
                 {
-                    search->second->setTransports(1);
+                    m_round_changes_map[planet_id] = std::make_shared<PlanetChanges>(PlanetChanges(planet_id));
                 }
-                else
-                {
-                    PlanetChanges::Ptr change = std::make_shared<PlanetChanges>(PlanetChanges(planet_id));
-                    change->setTransports(1);
-                    m_round_changes_map[planet_id] = change;
-                }
+                m_round_changes_map[planet_id]->setTransports(1);
+
                 //update signal für die info bar
                 emit updateInfobar();
             }
@@ -285,6 +271,19 @@ void ManageGame::next_round()
 {
     if(m_initialised)
     {
+        for (auto it_p = m_planets.begin(); it_p != m_planets.end(); ++it_p)
+        {
+            int tmp = (*it_p)->getID();
+            auto search = m_round_changes_map.find(tmp);
+            if (search == m_round_changes_map.end())
+            {
+                //Add in not found
+                m_round_changes_map[tmp] = std::make_shared<PlanetChanges>(PlanetChanges(tmp));
+            }
+            m_round_changes_map[tmp]->setOre( -1 * (*it_p)->getMine() * RESOURCE_PER_MINE);
+            m_round_changes_map[tmp]->setStoredOre((*it_p)->getMine() * RESOURCE_PER_MINE);
+        }
+
         //Convert to list to send
         m_round_changes_list = get_PlanetCangeList();
 
@@ -305,8 +304,6 @@ void ManageGame::next_round()
 
         for (auto it_c = m_round_changes_list.begin(); it_c != m_round_changes_list.end(); it_c++)
         {
-            //Add ore change to round_changes. depends on planet_id and mines on this planet
-            it_c->get()->setOre(m_planets.at((unsigned long)it_c->get()->getID())->getMine() * RESOURCE_PER_MINE);
             //Applay changes
             m_planets.at((unsigned long)it_c->get()->getID())->updatePlanet(*(it_c));
         }
@@ -470,7 +467,7 @@ void ManageGame::initialize_player(PlanetChanges::Owner player_id, int planet_id
     }
     else
     {
-        throwError();
+        throw std::logic_error("Alrady initialized");
     }
 
 
@@ -478,11 +475,14 @@ void ManageGame::initialize_player(PlanetChanges::Owner player_id, int planet_id
 
 void ManageGame::throwError()
 {
-    throw std::logic_error("Alrady initialized");
+    throw std::logic_error("Not initialized");
 }
 
 ManageGame::~ManageGame()
 {
-    //TODO
+    if(!ManageGame::instance)
+    {
+        delete ManageGame::instance;
+    }
 }
 } // namespace asteroids
