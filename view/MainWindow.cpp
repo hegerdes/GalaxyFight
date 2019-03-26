@@ -45,7 +45,7 @@ MainWindow::MainWindow(QWidget* parent) :
 
     m_3DScene->setMinimumSize(size());
 
-   m_screenStack->setCurrentWidget(m_startscreen);
+    m_screenStack->setCurrentWidget(m_startscreen);
 
 //    setLayout(m_screenStack);
     m_3DScene->setMinimumSize(QSettings().value("minWidth",1920).toInt(), QSettings().value("minHeight",1080).toInt());

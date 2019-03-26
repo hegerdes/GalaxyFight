@@ -61,7 +61,7 @@ Scene2dHandler::Scene2dHandler(QObject* parent)
 void Scene2dHandler::mouseReleaseEvent(QGraphicsSceneMouseEvent* mouseEvent)
 {
 
-    updateRound();
+//    updateRound();
     //get item on click with left mouse button
     if (mouseEvent->button() == Qt::LeftButton) {
         //get item
@@ -94,7 +94,7 @@ void Scene2dHandler::mouseReleaseEvent(QGraphicsSceneMouseEvent* mouseEvent)
             //ignore all other items in the scene
             return;
         }
-    } else if (mouseEvent->button() == Qt::RightButton) { //handle fighter movement
+    } else if (mouseEvent->button() == Qt::RightButton) { //handle fighter movement and transporter path change
         //get item
         QGraphicsItem* item;
         item = itemAt(mouseEvent->scenePos(), QTransform());
@@ -102,12 +102,19 @@ void Scene2dHandler::mouseReleaseEvent(QGraphicsSceneMouseEvent* mouseEvent)
         if(item == nullptr)
             return;
 
-        //fighter can only move to planets
+        //fighter/transporter can only move to planets
         if(item->type() != ItemTypes::Planet)
             return;
 
-        ManageGame::getinstance()->change_Fighter_position(static_cast<GraphicsPlanetItem*>(item)->getID(),
-                                                           static_cast<GraphicsFighterItem*>(m_currentlySelected)->getID());
+        if(m_currentlySelected->type() == ItemTypes::Fighter)
+            ManageGame::getinstance()->change_Fighter_position(static_cast<GraphicsPlanetItem*>(item)->getID(),
+                                                               static_cast<GraphicsFighterItem*>(m_currentlySelected)->getID());
+        if(m_currentlySelected->type() == ItemTypes::Transporter)
+            ManageGame::getinstance()->change_transport_route(static_cast<GraphicsPlanetItem*>(item)->getID(),
+                                                               static_cast<GraphicsTransporterItem*>(m_currentlySelected)->getID());
+
+
+
     } else {
         return;
     }
@@ -244,9 +251,23 @@ void Scene2dHandler::placeTransporter()
     update(0, 0, 1920, 1080);
 }
 
+void Scene2dHandler::updateMap()
+{
+    auto planets = MapFactory::getinstance().getMap("./models/01.map")->getPlanets();
+    auto itemList = items();
+
+    for(auto& item : itemList) {
+        if (item->type() == ItemTypes::Planet) {
+            static_cast<GraphicsPlanetItem*>(item)->setOwner(planets[static_cast<GraphicsPlanetItem*>(item)->getID()]->getOwner());
+        }
+    }
+
+}
+
 void Scene2dHandler::updateRound() {
     std::cout << "update round" << std::endl;
     placeFighter();
     placeTransporter();
+    updateMap();
 }
 }
