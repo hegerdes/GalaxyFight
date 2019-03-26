@@ -9,8 +9,18 @@
 #include "serverphysicalobject.h"
 
 namespace asteroids {
-    class ServerPhysics
+
+    struct Removes {
+        std::vector<int> bullet_changed;
+        std::vector<int> aster_changed;
+
+        int health_socket_1;
+        int health_socket_2;
+    };
+
+    class ServerPhysics : public QObject
     {
+        Q_OBJECT
     private:
         std::list<ServerBullet::Ptr> m_first_bullets;
         std::list<ServerBullet::Ptr> m_second_bullets;
@@ -25,16 +35,12 @@ namespace asteroids {
         void addBullet(ServerBullet::Ptr bullet);
         void addAsteroid(ServerAsteroid::Ptr aster);
         void run();
-        void updateData();
         Removes process();
 
-        QTimer m_timer;
+        std::shared_ptr<QTimer> m_timer;
         Server* m_server;
-    };
-
-    struct Removes {
-        std::vector<int> bullet_changed;
-        std::vector<int> aster_changed;
+    public Q_SLOTS:
+        void updateData();
     };
 }
 

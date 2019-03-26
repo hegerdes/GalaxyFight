@@ -19,7 +19,7 @@ Server::Server(QObject* parent) : QObject(parent) {
         exit(0);
     }
 
-    physics->setParrent(this);
+    physics->setParent(this);
 
     user_data_1.position = {-650, 0, 0};
     user_data_1.xAxis[0] = -1;
@@ -40,6 +40,7 @@ Server::Server(QObject* parent) : QObject(parent) {
         dir_astr[i] = asteroids::Randomizer::instance()->getRandomVertex(1.0) * rand;
         size_astr[i] = asteroids::Randomizer::instance()->getRandomNumber(0, 100);
 
+        physics
         physics.addAsteroid(asteroids::ServerAsteroid::Ptr(pos_astr[i], dir_astr[i], rand, size_astr[i], i));
     }
 }
@@ -108,6 +109,7 @@ bool Server::writeData(QByteArray const& data) {
     if (socket_1 != nullptr && socket_2 != nullptr && !already_send_1 && socket_1 == socket) {
         toSend = PacketType::init_3D;
         already_send_1 = true;
+        physics.run();
     } else if (socket_1 != nullptr && socket_2 != nullptr && !already_send_2 && socket_2 == socket) {
         toSend = PacketType::init_3D;
         already_send_2 = true;
@@ -151,15 +153,28 @@ void Server::sendUpdate_3D_S(QByteArray& response, QTcpSocket* socket) {
     response.append((char*) &client_data_temp.yAxis, 3 * 4);
     response.append((char*) &client_data_temp.zAxis, 3 * 4);
 
-    response.append(2, char{}); // anzahl zerstörter asteroidend short eine shor null
+    short length = client_data_temp.deleted_asteroids_id.size();
+    response.append((char*)&length, 2); // anzahl zerstörter asteroidend short eine shor null
+    for(auto it : client_data_temp.deleted_asteroids_id){
+        response.append((char*)&it, 4);
+    }
+    client_data_temp.deleted_asteroids_id.clear();
     // Asteroiden ids wenn nötig > 0
 
     response.append(client_data_temp.shot);
     response.append((char*) &client_data_temp.bullet_id, 4);
     response.append(Hit::hit);
 
-    response.append(4, char{}); // zerstörte bullets
+    int b_length = client_data_temp.deleted_bullets_id.size();
+    response.append((char*)&b_length, 4); // anzahl zerstörter asteroidend short eine shor null
+    for(auto it : client_data_temp.deleted_bullets_id){
+        response.append((char*)&it, 4);
+    }
+    client_data_temp.deleted_bullets_id.clear();
     // Bullet ids wenn nötig > 0
+
+    response.append((char*)&client_data_temp.m_hp, 4);
+    response.append((char*)&client_data_temp.m_enem_hp, 4);
 }
 
 void Server::recvUpdate_3D_C(char* data, QTcpSocket* socket) {

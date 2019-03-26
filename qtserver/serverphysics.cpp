@@ -1,9 +1,9 @@
 #include "serverphysics.h"
-
+#include <QTimer>
 namespace asteroids {
-    ServerPhysics::ServerPhysics()
+
+    ServerPhysics::ServerPhysics() : m_timer(new QTimer())
     {
-        m_timer = new Q_Timer();
         // Create a timer object to trigger the main loop
         connect(m_timer.get(), SIGNAL(timeout()), this, SLOT(updateData()));
     }
@@ -28,7 +28,25 @@ namespace asteroids {
     void ServerPhysics::updateData()
     {
         Removes removed = process();
+        //append removed asteroids to changes list from struct
+        m_server->user_data_1.deleted_asteroids_id.insert(
+                    m_server->user_data_1.deleted_asteroids_id.end(),
+                    removed.aster_changed.begin(),
+                    removed.aster_changed.end());
+        m_server->user_data_2.deleted_asteroids_id.insert(
+                    m_server->user_data_2.deleted_asteroids_id.end(),
+                    removed.aster_changed.begin(),
+                    removed.aster_changed.end());
 
+        //append removed bullets to changes list from struct
+        m_server->user_data_1.deleted_bullets_id.insert(
+                    m_server->user_data_1.deleted_bullets_id.end(),
+                    removed.bullet_changed.begin(),
+                    removed.bullet_changed.end());
+        m_server->user_data_2.deleted_bullets_id.insert(
+                    m_server->user_data_2.deleted_bullets_id.end(),
+                    removed.bullet_changed.begin(),
+                    removed.bullet_changed.end());
     }
 
     void ServerPhysics::setParent(Server* serv)
@@ -67,6 +85,7 @@ namespace asteroids {
             {
                 b->m_alive = false;
                 m_second->m_hp--;
+                removed.health_socket_2 = m_second->m_hp;
             }
 
             // Check for collisions with present objects
@@ -117,6 +136,7 @@ namespace asteroids {
             {
                 b->m_alive = false;
                 m_first->m_hp--;
+                removed.health_socket_1 = m_first->m_hp;
             }
 
             // Check for collisions with present objects
