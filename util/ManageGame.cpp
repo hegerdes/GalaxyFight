@@ -51,7 +51,7 @@ void ManageGame::build_factory(int planet_id)
             //Ceck for ressources
             if (m_current_resource < COST_PER_SHIPYARD)
             {
-                emit no_resources();
+                emit no_resources(0);
             }
             else if(m_planets.at((unsigned long)planet_id)->getFactorys() != 0||
                     m_round_changes_map.find(planet_id)->second->getFactorys() == 1)
@@ -92,7 +92,7 @@ void ManageGame::build_mine(int planet_id)
             //Ceck for ressources
             if (m_current_resource < COST_PER_MINE)
             {
-                emit no_resources();
+                emit no_resources(0);
             }
             else
             {
@@ -130,7 +130,7 @@ void ManageGame::build_fighter(int planet_id)
             //Ceck for ressources
             if (m_current_resource < COST_PER_ATTACKSPACECRAFT)
             {
-                emit no_resources();
+                emit no_resources(0);
             }
             else
             {
@@ -175,7 +175,7 @@ void ManageGame::build_transporter(int planet_id)
             //Ceck for ressources
             if (m_current_resource < COST_PER_TRANSPORTSPACECRAFT)
             {
-                emit no_resources();
+                emit no_resources(0);
             }
             else
             {
@@ -290,17 +290,24 @@ void ManageGame::next_round()
 {
     if(m_initialised)
     {
+        //Update all Ore and Stored ore on PlayerChanges
         for (auto it_p = m_planets.begin(); it_p != m_planets.end(); ++it_p)
         {
-            int tmp = (*it_p)->getID();
-            auto search = m_round_changes_map.find(tmp);
-            if (search == m_round_changes_map.end())
+            if((*it_p)->getOwner() == m_player_id)
             {
-                //Add in not found
-                m_round_changes_map[tmp] = std::make_shared<PlanetChanges>(PlanetChanges(tmp));
+                if((*it_p)->getOre() >= RESOURCE_PER_MINE)
+                {
+                    int tmp = (*it_p)->getID();
+                    auto search = m_round_changes_map.find(tmp);
+                    if (search == m_round_changes_map.end())
+                    {
+                        //Add in not found
+                        m_round_changes_map[tmp] = std::make_shared<PlanetChanges>(PlanetChanges(tmp));
+                    }
+                    m_round_changes_map[tmp]->setOre( -1 * (*it_p)->getMine() * RESOURCE_PER_MINE);
+                    m_round_changes_map[tmp]->setStoredOre((*it_p)->getMine() * RESOURCE_PER_MINE);
+                }
             }
-            m_round_changes_map[tmp]->setOre( -1 * (*it_p)->getMine() * RESOURCE_PER_MINE);
-            m_round_changes_map[tmp]->setStoredOre((*it_p)->getMine() * RESOURCE_PER_MINE);
         }
 
         //Convert to list to send
@@ -342,6 +349,9 @@ void ManageGame::end_game()
 
 void ManageGame::updateStats()
 {
+    //save for compare
+    int tmp = m_global_mines;
+
     //Reset items
     m_resource_per_time = 0;
     m_global_mines = 0;
@@ -352,9 +362,16 @@ void ManageGame::updateStats()
         //Update only if the planet is owned by player
         if (planet->getOwner() == m_player_id)
         {
-            m_global_mines += planet->getMine();
+            if(planet->getOre() >= 0)
+            {
+                m_global_mines += planet->getMine();
+            }
         }
 
+    }
+    if(tmp > m_global_mines)
+    {
+        emit no_resources(tmp - m_global_mines);
     }
     //Update current resource and resource_per time
     m_resource_per_time = m_global_mines * RESOURCE_PER_MINE;
@@ -368,7 +385,8 @@ std::list<PlanetChanges::Ptr> &ManageGame::get_PlanetCangeList()
     for (auto it = m_round_changes_map.begin(); it != m_round_changes_map.end(); it++)
     {
         m_round_changes_list.push_back(it->second);
-        it->second->print();
+        //For Debug
+        //it->second->print();
     }
     return m_round_changes_list;
 }

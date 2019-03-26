@@ -120,7 +120,7 @@ class ManageGame : public QObject
 
   signals:
     void gameover();
-    void no_resources();
+    void no_resources(int);
     void updateInfobar();
     void not_ur_planet();
     void not_ur_ship();
