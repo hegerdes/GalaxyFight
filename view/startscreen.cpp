@@ -54,8 +54,14 @@ void StartScreen::on_playBut_clicked()
     // emit startClient();
     client_global.sendReadyT("name",4);
     QtConcurrent::run(QThreadPool::globalInstance(), [&](){
-        client_global.wait_for_readData(-1);
-        std::cerr << "player_No: " << client_global.player_No << ", id_other: " << client_global.id_other << "\n";
+        std::cerr << __LINE__ << ", " << __PRETTY_FUNCTION__ << "\n";
+        while(!client_global.wait_for_readData(500))
+        {
+            client_global.sendReadyT("name",4);
+            sleep(1);
+            std::cerr << __LINE__ << "\n";
+        }
+        std::cerr << __LINE__ << ", player_No: " << client_global.player_No << ", id_other: " << client_global.id_other << "\n";
         emit goTo2D();
     });
 }

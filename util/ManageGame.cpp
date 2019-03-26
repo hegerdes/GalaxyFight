@@ -10,6 +10,7 @@
  */
 
 #include "ManageGame.hpp"
+#include "global_socket.h"
 
 namespace asteroids
 {
@@ -218,6 +219,19 @@ void ManageGame::next_round()
 
     emit updateInfobar();
     // @ahaker send initpacket
+    std::list<PlanetChanges> changes;
+    PlanetChanges planetchanges(PlanetChanges::Owner::PLAYER1 ,1,1,1,1,1,1,1);
+    changes.push_back(planetchanges);
+    std::cerr << __LINE__ << ", " << __PRETTY_FUNCTION__ << ", changes.size()" << changes.size() << "\n";
+    client_global.SendPlanetChanges(changes.size(), changes);
+    std::cerr << __LINE__ << "\n";
+    client_global.wait_for_readData(-1);
+    while(!client_global.init_received) {
+        client_global.SendPlanetChanges(changes.size(), changes);
+        client_global.wait_for_readData(-1);
+        sleep(1);
+    }
+    std::cerr << __LINE__ << "\n";
     emit goto3DScene();
 }
 

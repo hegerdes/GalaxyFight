@@ -8,6 +8,7 @@
 #include <qtserver/flags.h>
 #include <qtserver/packettypes.h>
 #include <vector>
+#include "../rendering/2D/PlanetChanges.hpp"
 
 namespace asteroids {
 class Client {
@@ -63,7 +64,9 @@ class Client {
     void sendUpdate_3D_C(Vector<float> pos, Vector<float> xAxis, Vector<float> yAxis, Vector<float> zAxis,
                          Bullet_shot shot, Living living, int bullet_id);
     void readData();
-    void wait_for_readData(int timeout);
+    bool wait_for_readData(int timeout);
+    void SendPlanetChanges(int size,std::list<PlanetChanges> changes );
+    void recivePlanetChanges(char * data);
 
 
     //start_2D

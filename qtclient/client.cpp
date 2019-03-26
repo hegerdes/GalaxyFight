@@ -20,6 +20,79 @@ QByteArray IntToArray(qint32 source) // Use qint32 to ensure that the number hav
     return temp;
 }
 
+
+void Client::recivePlanetChanges(char * data)
+{
+    int size = getInt(&data);
+    std::cout << size << "size of recived package\n";
+    std::list<PlanetChanges> p_changes;
+    for (int i {0} ; i < size ; i++)
+    {
+        PlanetChanges::Owner m_own  = (PlanetChanges::Owner)getChar(&data);
+        int m_id = getInt(&data);
+        int m_num_of_ore = getInt(&data);
+        std::cout << m_num_of_ore <<"y\n";
+        int num_factory = getInt(&data);
+        int num_mine = getInt(&data);
+        int num_fighters = getInt(&data);
+        int num_transporter = getInt(&data);
+        bool m_attack_planet = (bool)getChar(&data);
+        bool m_attack;
+        if(m_attack_planet == 1)
+        {
+            m_attack = true;
+        } else
+        {
+            m_attack = false;
+        }
+        p_changes.push_back(PlanetChanges(m_own, m_id, m_num_of_ore,
+                                          num_factory, num_mine, num_fighters,
+                                          num_transporter, m_attack));
+        std::cout << m_own << ","<< m_id << "," << m_num_of_ore <<"," << num_factory <<"," << num_mine << "," <<num_fighters << ","   <<num_transporter << "," <<m_attack_planet << "\n";
+    }
+}
+
+
+void Client::SendPlanetChanges(int size,std::list<PlanetChanges> changes )
+{
+    QByteArray data;
+    // packettype
+    data.append(PacketType::planet_changes2d);
+
+    // size of list
+    data.append((char*)&size, 4);
+    // start iterating through every element of the list
+    for(auto it =changes.begin() ; it!= changes.end(); it++)
+    {
+        asteroids::PlanetChanges::Owner owner =(*it).getOwner();
+        int m_id = (*it).getID();
+        int m_num_of_ore = (*it).getOre();
+        int num_factory = (*it).getFactorys();
+        int num_mine = (*it).getMines();
+        int num_fighters = (*it).getFighter();
+        int num_transporter = (*it).getTransports();
+        bool m_attack_planet =(*it).getInitFight();
+        char m_attack = 0;
+        if(m_attack_planet == true)
+        {
+            m_attack = 1;
+        } else
+        {
+            m_attack = 0;
+        }
+        data.append(owner);
+        data.append((char*)&m_id, sizeof(m_id));
+        data.append((char*)&m_num_of_ore, 4);
+        data.append((char*)&num_factory, 4);
+        data.append((char*)&num_mine, 4);
+        data.append((char*)&num_fighters, 4);
+        data.append((char*)&num_transporter, 4);
+        data.append((char*)&m_attack,1);
+
+        writeData(data);
+    }
+}
+
 void Client::sendUpdate_3D_C(Vector<float> pos, Vector<float> xAxis, Vector<float> yAxis, Vector<float> zAxis,
                              Bullet_shot shot, Living living, int bullet_id) {
     QByteArray data;
@@ -99,6 +172,10 @@ void Client::init_3d(char* data) {
 
         size_astr[i] = getFloat(&data);
     }
+
+
+    // TODO:: TESTING___________________________________________
+    player_No = (player_no) getChar(&data);
 }
 
 void Client::update_3D_S(char* data) {
@@ -192,6 +269,7 @@ void Client::game_start(char* data)
 }
 
 void Client::interpreteAnswer() {
+    //std::cerr << __LINE__ << ", " << __PRETTY_FUNCTION__ << "\n";
     QByteArray answer = socket.readAll();
     if (answer.length() > 0) {
         // std::cerr << socket.waitForBytesWritten() << "; waitForBytesWritten\n";
@@ -202,29 +280,45 @@ void Client::interpreteAnswer() {
         // std::cerr << "pid: " << pt << ", length" << answer.length() << "\n";
         if (pt == PacketType::init_3D) {
             // Own
+            std::cerr << __LINE__ << "\n";
             init_3d(data);
             init_received = true;
         } else if (pt == PacketType::update_3D_S) {
+            //std::cerr << __LINE__ << "\n";
             // std::cerr << "packtetype_udpate_3d_s\n";
             update_3D_S(data);
+        } else if(pt == PacketType::planet_changes2d) {
+            std::cerr << __LINE__ << "\n";
+                std::cout << "planet changes got recived\n";
+                recivePlanetChanges(data);
+
         } else if (pt == PacketType::end_3D) {
+            std::cerr << __LINE__ << "\n";
             winner_no = getChar(&data);
         } else if (pt == PacketType::start_2D) {
+            std::cerr << __LINE__ << "\n";
             // TODO BLOCK WAITING:::
         } else if(pt == PacketType::game_start)
         {
+            std::cerr << __LINE__ << "\n";
             game_start(data);
+        } else {
+            std::cerr << __LINE__ << "\n";
+
         }
     }
+    //std::cerr << __LINE__ << ", end_________" << __PRETTY_FUNCTION__ << "\n";
 }
 
-void Client::wait_for_readData(int timeout) {
+bool Client::wait_for_readData(int timeout) {
     // std::cerr << "read data\n";
+    bool read_status = false;
     if (socket.state() == QAbstractSocket::ConnectedState) {
         // empfange die positionen des anderen
-        socket.waitForReadyRead(timeout);
+        read_status = socket.waitForReadyRead(timeout);
         interpreteAnswer();
     }
+    return read_status;
 }
 float Client::getFloat(char** ptr) {
     float* jo = (float*) *ptr;

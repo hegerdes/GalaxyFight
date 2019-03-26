@@ -3,6 +3,7 @@
 
 #include "../math/Randomizer.hpp"
 #include "../math/Vector.hpp"
+#include "../rendering/2D/PlanetChanges.hpp"
 #include "flags.h"
 #include <QDebug>
 #include <QObject>
@@ -50,6 +51,17 @@ class Server : public QObject {
     char getChar(char** ptr);
     int getInt(char** ptr);
 
+    struct pchanges_data{
+           asteroids::PlanetChanges::Owner m_own;
+           int m_id;
+           int m_num_of_ore;
+           int num_factory;
+           int num_mine;
+           int num_fighters;
+           int num_transporter;
+           bool m_attack_planet;
+       };
+
     struct client_data {
         //3D Teil
         asteroids::Vector<float> position;
@@ -73,15 +85,31 @@ private:
     bool already_send_1 = false;
     bool already_send_2 = false;
     PacketType toSend;
+    bool end3D;
+    int winner;
+    int pchanges_size1;
+    int pchanges_size2;
 
     asteroids::Vector3f pos_astr[10];
     asteroids::Vector3f dir_astr[10];
+    bool send_changes;
+    std::vector<pchanges_data> pchanges_data1;
+    std::vector<pchanges_data> pchanges_data2;
+    std::vector<pchanges_data> outstanding_fights;
+    std::vector<pchanges_data> pchanges_committ;
+    // data from player that did not start the fight so
+    // that we can take his data if he wins the 3d fight
+    std::vector<pchanges_data> other_player_data;
     float size_astr[10];
 
     // sending packets
     void sendInit_3D(QByteArray& response, QTcpSocket* socket);
     void sendUpdate_3D_S(QByteArray& response, QTcpSocket* socket);
     void sendGame_Start(QByteArray &response, QTcpSocket *socket);
+    void update_planet_changes();
+    void sendUpdatedPlanetChanges();
+    void sendEnd3D(QByteArray &response, QTcpSocket *socket);
+    void recvPlanetChanges(char* data, QTcpSocket* socket);
 
     // receive packets
     void recvUpdate_3D_C(char* data, QTcpSocket* socket);

@@ -256,10 +256,6 @@ void GLWidget::step(map<Qt::Key, bool>& keyStates)
                 m_enemyPlayer->destroySpaceCraft();
             }
         // Trigger update, i.e., redraw via paintGL()
-        client_global.sendUpdate_3D_C(m_actor->m_position, m_actor->m_xAxis,
-                                     m_actor->m_yAxis, m_actor->m_zAxis,
-                                     bullet_shot, Living::alive, 0);
-        client_global.readData();
         if(client_global.init_received)
         {
             m_actor->m_position = client_global.ownPos;
@@ -287,11 +283,16 @@ void GLWidget::step(map<Qt::Key, bool>& keyStates)
                 i++;
                 PhysicalObject::Ptr p = std::static_pointer_cast<PhysicalObject>(*it);
                 m_physicsEngine->addDestroyable(p);
-                std::cout << i << ". Asteroid entpackt!";
+                std::cout << i << ". Asteroid entpackt!\n";
             }
 
             client_global.init_received = false;
-            std::cerr << "erhaletn----------------------------------------------\n";
+            std::cerr << "erhalten----------------------------------------------\n";
+        } else {
+            client_global.sendUpdate_3D_C(m_actor->m_position, m_actor->m_xAxis,
+                                         m_actor->m_yAxis, m_actor->m_zAxis,
+                                         bullet_shot, Living::alive, 0);
+            client_global.readData();
         }
 
         m_enemyPlayer->m_position = client_global.enemyPos;
@@ -307,8 +308,8 @@ void GLWidget::step(map<Qt::Key, bool>& keyStates)
             client_global.enemy_shot = Bullet_shot::not_shot;
         }
 
-        std::cout << "Own Health: " << m_actor->getHP() << std::endl;
-        std::cout << "Enemy Health: " << m_enemyPlayer->getHP() << std::endl;
+        //std::cout << "Own Health: " << m_actor->getHP() << std::endl;
+        //std::cout << "Enemy Health: " << m_enemyPlayer->getHP() << std::endl;
         m_enemyHPBar->setHP(m_enemyPlayer->getHP());
         m_playerHPBar->setHP(m_actor->getHP());
         this->update();
