@@ -54,6 +54,17 @@ namespace asteroids {
     }
 
     Removes ServerPhysics::process(){
+
+        //Update positions of spacecrafts
+        m_first->m_xAxis = m_data_socket_1.xAxis;
+        m_first->m_yAxis = m_data_socket_1.yAxis;
+        m_first->m_zAxis = m_data_socket_1.zAxis;
+        m_first->m_pos = m_data_socket_1.position;
+
+        m_second->m_xAxis = m_data_socket_2.xAxis;
+        m_second->m_yAxis = m_data_socket_2.yAxis;
+        m_second->m_zAxis = m_data_socket_2.zAxis;
+        m_second->m_pos = m_data_socket_2.positon;
         Removes removed;
 
         //Asteroid Moving
@@ -80,12 +91,16 @@ namespace asteroids {
             {
                 m_first->m_hp--;
 
+                removed.aster_changed.push_back(ast->getId());
+
                 p_it = m_asteroids.erase(p_it);
                 std::cerr << "Hit between Spacecraft Socket 1 and Asteroid\n";
             }
             else if(m_second->collide(ast))
             {
                 m_second->m_hp--;
+
+                removed.aster_changed.push_back(ast->getId());
 
                 p_it = m_asteroids.erase(p_it);
                 std::cerr << "Hit between Spacecraft Socket 2 and Asteroid\n";
@@ -171,7 +186,7 @@ namespace asteroids {
                 b->m_alive = false;
                 m_first->m_hp--;
                 removed.health_socket_1 = m_first->m_hp;
-                std::cerr << "Hit between Spacecraft 2 and Bullet\n";
+                std::cerr << "Hit between Spacecraft 1 and Bullet\n";
             }
 
             // Check for collisions with present objects
