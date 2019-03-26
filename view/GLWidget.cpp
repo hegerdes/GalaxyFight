@@ -118,8 +118,8 @@ void GLWidget::loadLevel()
 {
     active = true;
     // Load level
-    LevelParser lp(m_levelFile, m_actor, m_enemyPlayer, m_skybox, m_asteroidField);
-
+    //LevelParser lp(m_levelFile, m_actor, m_enemyPlayer, m_skybox, m_asteroidField);
+    LevelParser lp("./models/level.xml", m_actor, m_enemyPlayer, m_skybox, m_asteroidField);
 
 
     // Setup physics//
