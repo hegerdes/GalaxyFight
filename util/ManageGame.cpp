@@ -49,7 +49,7 @@ void ManageGame::build_factory(int planet_id)
                 emit no_resources();
             }
             else if(m_planets.at((unsigned long)planet_id)->getFactorys() != 0||
-                    m_round_changes_map.find(planet_id)->second->getFactorys() != 0)
+                    m_round_changes_map.find(planet_id)->second->getFactorys() == 1)
             {
                 emit already_exist();
             }else
