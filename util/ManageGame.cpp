@@ -334,7 +334,6 @@ void ManageGame::next_round()
         updateStats();
 
         emit updateScene();
-        std::cout << "updateScene called " << __LINE__ << std::endl;
         emit updateInfobar();
     }
 
@@ -406,7 +405,8 @@ void ManageGame::updateSpaceCrafts()
                     if(m_planets[(*i)->m_position]->getStoredOre() >= 200)
                     {
                         search->second->setStoredOre(-200);
-                        (*i)->m_ore = -200;
+                        (*i)->m_ore = 200;
+
                     }else
                     {
                         search->second->setStoredOre(-m_planets[(*i)->m_position]->getStoredOre());
@@ -420,10 +420,11 @@ void ManageGame::updateSpaceCrafts()
                     if(m_planets[(*i)->m_position]->getStoredOre() >= 200)
                     {
                         change->setStoredOre(-200);
-                        (*i)->m_ore = -200;
+                        (*i)->m_ore = 200;
+
                     }else
                     {
-                        change->setStoredOre(-m_planets[(*i)->m_position]->getStoredOre());
+                        change->setStoredOre(-m_planets[-(*i)->m_position]->getStoredOre());
                         (*i)->m_ore = m_planets[(*i)->m_position]->getStoredOre();
                     }
 
@@ -449,6 +450,8 @@ void ManageGame::updateSpaceCrafts()
                 m_current_resource += (*i)->m_ore;
                 (*i)->m_ore = 0;
 
+                emit updateInfobar();
+
             }else {
                 (*i)->m_position = (*i)->m_next_position;
                 (*i)->m_next_position = *((*i)->m_route_iterator++);
@@ -465,6 +468,39 @@ void ManageGame::updateSpaceCrafts()
 
                 (*i)->m_position = (*i)->m_next_position;
                 (*i)->m_next_position = *((*i)->m_route_iterator++);
+
+                //Check for alrady existing change for this planet
+                auto search = m_round_changes_map.find((*i)->m_position);
+                if (search != m_round_changes_map.end())
+                {
+                    if(m_planets[(*i)->m_next_position]->getStoredOre() >= 200)
+                    {
+                        search->second->setStoredOre(-200);
+                        (*i)->m_ore = 200;
+
+                    }else
+                    {
+                        search->second->setStoredOre(-m_planets[(*i)->m_next_position]->getStoredOre());
+                        (*i)->m_ore = m_planets[(*i)->m_next_position]->getStoredOre();
+                    }
+                }
+                else
+                {
+                    PlanetChanges::Ptr change = std::make_shared<PlanetChanges>(PlanetChanges((*i)->m_next_position));
+
+                    if(m_planets[(*i)->m_next_position]->getStoredOre() >= 200)
+                    {
+                        change->setStoredOre(-200);
+                        (*i)->m_ore = 200;
+
+                    }else
+                    {
+                        change->setStoredOre(-m_planets[-(*i)->m_next_position]->getStoredOre());
+                        (*i)->m_ore = m_planets[(*i)->m_next_position]->getStoredOre();
+                    }
+
+                    m_round_changes_map[(*i)->m_next_position] = change;
+                }
 
             }else {
                 (*i)->m_position = (*i)->m_next_position;
