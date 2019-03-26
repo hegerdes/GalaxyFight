@@ -70,6 +70,7 @@ void Infobar::updateInfobar()
         ui->minenanzahl_value->setNum(m_planets.at((unsigned long)m_selected_planet)->getMine());
         ui->erzlager_value->setNum(m_planets.at((unsigned long)m_selected_planet)->getStoredOre());
         ui->planetname->setText(QString::fromStdString(m_planets.at((unsigned long)m_selected_planet)->getname()));
+        set_selected_planet(m_selected_planet);
     }
 }
 
