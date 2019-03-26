@@ -39,15 +39,17 @@ namespace asteroids {
         //append removed asteroids to changes list from struct
         for(int i : removed.aster_changed)
         {
+            int temp = i;
             m_data_socket_1.deleted_asteroids_id.push_back(i);
-            m_data_socket_2.deleted_asteroids_id.push_back(i);
+            m_data_socket_2.deleted_asteroids_id.push_back(temp);
         }
 
         //Append deleted bullets to each list.
         for(int i : removed.bullet_changed)
         {
+            int temp = i;
             m_data_socket_1.deleted_bullets_id.push_back(i);
-            m_data_socket_2.deleted_bullets_id.push_back(i);
+            m_data_socket_2.deleted_bullets_id.push_back(temp);
         }
     }
 
