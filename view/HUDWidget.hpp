@@ -6,6 +6,7 @@
 #include <QRect>
 #include <QImage>
 #include <iostream>
+#include <chrono>
 
 #include "rendering/SpaceCraft.hpp"
 
@@ -51,6 +52,10 @@ class HUDWidget : public QWidget
          */
         void paintEvent(QPaintEvent* event);
     private:
+
+        ///Last Time an Alert was displayed on screen
+        long m_lastAlert;
+
         /// Painter to be used for painting the HUD
         QPainter m_p;
 
