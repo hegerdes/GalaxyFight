@@ -9,7 +9,6 @@
 #include "global_socket.h"
 #include <QtConcurrent>
 
-
 namespace asteroids {
 
 StartScreen::StartScreen(QWidget *parent) :
@@ -85,7 +84,7 @@ void StartScreen::on_quitBut_clicked()
 void StartScreen::on_settingBut_clicked()
 {
     //sends Signal when "Einstellungen" was clicked
-    emit goToSetting();
+    emit goto3DScene();
 }
 
 void StartScreen::setupConnections()
