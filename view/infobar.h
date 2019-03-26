@@ -3,6 +3,8 @@
 
 #pragma once
 #include <QWidget>
+#include <QMessageBox>
+#include <QTimer>
 #include "../util/ManageGame.hpp"
 
 namespace Ui {
@@ -68,6 +70,12 @@ public slots:
 
     void weiter_enable();
 
+    void set_time(int time);
+
+    void resettime();
+
+    void no_resources();
+
 private:
 
     //GameManager
@@ -81,6 +89,12 @@ private:
 
     //Current selected planet
     int m_selected_planet;
+
+    QMessageBox m_fehler;
+
+    QTimer m_timer;
+
+    QTimer m_takt;
 
     Ui::Infobar *ui;
 };
