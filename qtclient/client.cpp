@@ -6,8 +6,8 @@ Client::Client() {
 }
 
 void Client::connect(QString addr, quint16 port) {
-    socket.connectToHost(QHostAddress::LocalHost, 38292);
-    //socket.connectToHost(addr, port);
+    //socket.connectToHost(QHostAddress::LocalHost, 38292);
+    socket.connectToHost(addr, port);
     std::cerr << socket.waitForConnected() << ": socket.waitForConnected\n";
 }
 
