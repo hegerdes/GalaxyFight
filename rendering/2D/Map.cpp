@@ -154,9 +154,6 @@ Map::VecPtr& Map::getPlanets()
 
 std::list<int> Map::getPath(int start, int goal)
 {
-    std::cout << "Start: " << start  << " " <<  m_planets[start]->getname() 
-        << "\n" << "End: " << goal << " " << m_planets[goal]->getname() << std::endl;
-
     typedef Graph::vertex_descriptor vertex;
 
     std::vector<Graph::vertex_descriptor> p(num_vertices(g));
@@ -172,7 +169,7 @@ std::list<int> Map::getPath(int start, int goal)
     
     } catch(found_goal fg)
     {
-        std::cout << "Found Goal" << std::endl; 
+        //Found Goal
         std::list<int> shortest_path;
         for(vertex v = goal;; v = p[v]) {
             shortest_path.push_front(m_nodes[v]);
