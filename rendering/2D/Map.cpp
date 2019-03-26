@@ -62,7 +62,7 @@ private:
 	Vertex m_goal;
 };
 
-Map::Map(std::string mapfile):m_planets(17)
+Map::Map(std::string mapfile)
 {
     using namespace boost;
     try
@@ -96,6 +96,7 @@ Map::Map(std::string mapfile):m_planets(17)
         std::istringstream instring(readline);
         instring >> number_of_vertices;
         m_num_of_planets = number_of_vertices;
+        m_planets = std::vector<Planet::Ptr>(m_num_of_planets);
 
         //Read Nodes
         for (int i = 0; i < number_of_vertices; i++)

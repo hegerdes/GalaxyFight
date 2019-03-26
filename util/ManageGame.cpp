@@ -48,7 +48,8 @@ void ManageGame::build_factory(int planet_id)
             {
                 emit no_resources();
             }
-            else if(m_planets.at((unsigned long)planet_id)->getFactorys() != 0)
+            else if(m_planets.at((unsigned long)planet_id)->getFactorys() != 0||
+                    m_round_changes_map.find(planet_id)->second->getFactorys() == 1)
             {
                 emit already_exist();
             }else
@@ -492,6 +493,12 @@ void ManageGame::initialize_player(PlanetChanges::Owner player_id, int planet_id
 
         //TODO For DEBUG
         m_player_id = PlanetChanges::UNASSIGN;
+
+        //set Satrt planet Owner
+        //This is HQ
+        // PlanetChanges::Ptr change = std::make_shared<PlanetChanges>(PlanetChanges(planet_id));
+        // change->setOwner(m_player_id);
+        // m_planets.at((unsigned long)planet_id)->updatePlanet(change);
 
         //Die am Start verfügbaren Schiffe werden den Listen hinzugefügt
         for (int i = 0; i < m_attackSpaceCraft_number;i++)
