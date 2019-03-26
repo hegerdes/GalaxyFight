@@ -456,6 +456,15 @@ void Server::readyRead() {
                     recvUpdate_3D_C(data, socket);
                     toSend = PacketType::update_3D_C;
                     this->writeData(nullptr);
+                } else if (pt == PacketType::reset_planet_changes) {
+                    if(socket_1 == socket)
+                    {
+                        m_socket_1_pchange_received = false;
+                    }
+                    if(socket_2 == socket)
+                    {
+                        m_socket_2_pchange_received = false;
+                    }
                 } else if (pt == PacketType::end_3D) {
                     recv_end_3D(data, socket);
                     if(player1_outstanding_fights.empty())
@@ -496,8 +505,10 @@ void Server::recv_end_3D(char* data, QTcpSocket* socket){
         std::cerr << __LINE__ << "\n";
         if(player_no_temp == player_no::first)
         {
+            player1_outstanding_fights.front().m_own = asteroids::PlanetChanges::Owner::PLAYER1;
             pchanges_committ.push_back(player1_outstanding_fights.front());
         } else {
+            player2_outstanding_fights.front().m_own = asteroids::PlanetChanges::Owner::PLAYER2;
             pchanges_committ.push_back(player2_outstanding_fights.front());
         }
         auto it1 = player1_outstanding_fights.begin();
@@ -506,6 +517,7 @@ void Server::recv_end_3D(char* data, QTcpSocket* socket){
         player2_outstanding_fights.erase(it2);
         m_player1_end_3d_received = true;
     } else {
+        /*
         std::cerr << __LINE__ << "\n";
         if(player_no_temp == player_no::first)
         {
@@ -518,8 +530,9 @@ void Server::recv_end_3D(char* data, QTcpSocket* socket){
         auto it2 = player2_outstanding_fights.begin();
         player2_outstanding_fights.erase(it2);
         m_player1_end_3d_received = true;
-
+        */
     }
+        std::cerr << __LINE__ << "\n";
 }
 
 void Server::recvPlanetChanges(char* data, QTcpSocket* socket)

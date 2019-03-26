@@ -313,6 +313,12 @@ void Client::interpreteAnswer() {
     //std::cerr << __LINE__ << ", end_________" << __PRETTY_FUNCTION__ << "\n";
 }
 
+void Client::send_reset_planet_changes(){
+    QByteArray data;
+    data.append(PacketType::reset_planet_changes);
+    writeData(data);
+};
+
 void Client::send_end_3d(player_no player_3d_winner){
     QByteArray data;
     data.append(PacketType::end_3D);
