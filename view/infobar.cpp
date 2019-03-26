@@ -20,7 +20,9 @@ Infobar::Infobar(QWidget *parent) :
     updateInfobar();
 
     //Connects
-    connect(this, &Infobar::end_game,m_manage_game, &asteroids::ManageGame::end_game);
+    connect(this, &Infobar::end_game, this, &Infobar::surrender);
+    connect(this, &Infobar::on_yes_clicked, m_manage_game, &asteroids::ManageGame::gameover);
+
     connect(this, &Infobar::next_round,m_manage_game, &asteroids::ManageGame::next_round);
     connect(this, &Infobar::build_mine,m_manage_game, &asteroids::ManageGame::build_mine);
     connect(this, &Infobar::build_fighter,m_manage_game, &asteroids::ManageGame::build_fighter);
@@ -75,23 +77,104 @@ void Infobar::set_selected_planet(int planet_id)
 
 void Infobar::no_resources()
 {
-    m_fehler.setWindowTitle("Fehler");
-    m_fehler.setText("Du besitzt nicht genügend Erz um diese Aktion durchzuführen!");
+    m_popup.setWindowTitle("Fehler");
+    m_popup.setText("Du besitzt nicht genügend Erz um diese Aktion durchzuführen!");
 
-    m_fehler.setGeometry(0, 0, 250, 200);
+    m_popup.setGeometry(0, 0, 250, 200);
 
-    m_fehler.setWindowFlags(Qt::FramelessWindowHint);
-    m_fehler.setAttribute(Qt::WA_NoSystemBackground);
-    m_fehler.setAttribute(Qt::WA_TranslucentBackground);
-    m_fehler.setAttribute(Qt::WA_TransparentForMouseEvents);
+    m_popup.setWindowFlags(Qt::FramelessWindowHint);
+    m_popup.setAttribute(Qt::WA_NoSystemBackground);
+    m_popup.setAttribute(Qt::WA_TranslucentBackground);
+    m_popup.setAttribute(Qt::WA_TransparentForMouseEvents);
 
-    m_fehler.setStyleSheet("color: rgb(255, 255, 255)");
+    m_popup.setStyleSheet("color: rgb(255, 255, 255)");
 
-    m_fehler.setStandardButtons(0);
+    m_popup.setStandardButtons(0);
 
-    QTimer::singleShot(2000, &m_fehler, SLOT(hide()));
+    QTimer::singleShot(2000, &m_popup, SLOT(hide()));
 
-    m_fehler.exec();
+    m_popup.exec();
+}
+
+void Infobar::surrender()
+{
+    m_popup.setWindowTitle("Nimm dir einen Moment Zeit");
+    m_popup.setText("Bist du sicher, dass du aufgeben willst?");
+
+    //m_fehler.setStyleSheet("color: rgb(255, 255, 255)");
+
+    m_popup.setStandardButtons(QMessageBox::No);
+    m_popup.addButton(QMessageBox::Yes);
+
+    m_popup.exec();
+}
+
+void Infobar::on_yes_clicked()
+{
+    emit this->end_game();
+}
+
+void Infobar::not_ur_planet()
+{
+    m_popup.setWindowTitle("Fehler");
+    m_popup.setText("Du besitzt nicht genügend Erz um diese Aktion durchzuführen!");
+
+    m_popup.setGeometry(0, 0, 250, 200);
+
+    m_popup.setWindowFlags(Qt::FramelessWindowHint);
+    m_popup.setAttribute(Qt::WA_NoSystemBackground);
+    m_popup.setAttribute(Qt::WA_TranslucentBackground);
+    m_popup.setAttribute(Qt::WA_TransparentForMouseEvents);
+
+    m_popup.setStyleSheet("color: rgb(255, 255, 255)");
+
+    m_popup.setStandardButtons(0);
+
+    QTimer::singleShot(2000, &m_popup, SLOT(hide()));
+
+    m_popup.exec();
+}
+
+void Infobar::not_ur_ship()
+{
+    m_popup.setWindowTitle("Fehler");
+    m_popup.setText("Dieses Raumschiff gehört dir nicht!");
+
+    m_popup.setGeometry(0, 0, 250, 200);
+
+    m_popup.setWindowFlags(Qt::FramelessWindowHint);
+    m_popup.setAttribute(Qt::WA_NoSystemBackground);
+    m_popup.setAttribute(Qt::WA_TranslucentBackground);
+    m_popup.setAttribute(Qt::WA_TransparentForMouseEvents);
+
+    m_popup.setStyleSheet("color: rgb(255, 255, 255)");
+
+    m_popup.setStandardButtons(0);
+
+    QTimer::singleShot(2000, &m_popup, SLOT(hide()));
+
+    m_popup.exec();
+}
+
+void Infobar::already_exist()
+{
+    m_popup.setWindowTitle("Fehler");
+    m_popup.setText("Du besitzt auf diesem Planeten bereits eine Werft!");
+
+    m_popup.setGeometry(0, 0, 250, 200);
+
+    m_popup.setWindowFlags(Qt::FramelessWindowHint);
+    m_popup.setAttribute(Qt::WA_NoSystemBackground);
+    m_popup.setAttribute(Qt::WA_TranslucentBackground);
+    m_popup.setAttribute(Qt::WA_TransparentForMouseEvents);
+
+    m_popup.setStyleSheet("color: rgb(255, 255, 255)");
+
+    m_popup.setStandardButtons(0);
+
+    QTimer::singleShot(2000, &m_popup, SLOT(hide()));
+
+    m_popup.exec();
 }
 
 //For button clicks
@@ -143,11 +226,6 @@ void Infobar::on_transporter_bauen_clicked()
     {
         emit this->build_transporter(m_selected_planet);
     }
-}
-
-void Infobar::on_aufgeben_clicked()
-{
-    emit this->end_game();
 }
 
 void Infobar::on_weiter_clicked()

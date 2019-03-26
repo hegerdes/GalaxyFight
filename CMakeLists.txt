@@ -167,6 +167,7 @@ set(ASTEROID_SOURCES
     view/2DScene/graphicsfactoryitem.cpp
     view/2DScene/graphicsfighteritem.cpp
     view/2DScene/graphicstransporteritem.cpp
+    view/2DScene/graphicshqitem.cpp
     qtclient/client.cpp
 )
 set(ASTEROID_MOCS

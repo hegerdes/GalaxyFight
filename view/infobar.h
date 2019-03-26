@@ -76,6 +76,16 @@ public slots:
 
     void no_resources();
 
+    void surrender();
+
+    void on_yes_clicked();
+
+    void not_ur_planet();
+
+    void not_ur_ship();
+
+    void already_exist();
+
 private:
 
     //GameManager
@@ -90,7 +100,7 @@ private:
     //Current selected planet
     int m_selected_planet;
 
-    QMessageBox m_fehler;
+    QMessageBox m_popup;
 
     QTimer m_timer;
 
