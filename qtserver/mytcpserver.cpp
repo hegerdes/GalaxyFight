@@ -3,10 +3,11 @@
 #include "mytcpserver.h"
 #include <iostream>
 
+
 static inline QByteArray IntToArray(qint32 source);
 static inline qint32 ArrayToInt(QByteArray source);
 
-Server::Server(QObject* parent) : QObject(parent) {
+Server::Server(QObject* parent) : QObject(parent), physics(user_data_1, user_data_2) {
     server = new QTcpServer(this);
     connect(server, SIGNAL(newConnection()), this, SLOT(newConnection()));
     bool connected = server->listen(QHostAddress::Any, 38292);
@@ -18,8 +19,6 @@ Server::Server(QObject* parent) : QObject(parent) {
         log(LoggingType::ERROR, "Could not bind to port!");
         exit(0);
     }
-
-    physics->setParent(this);
 
     user_data_1.position = {-650, 0, 0};
     user_data_1.xAxis[0] = -1;
@@ -40,8 +39,7 @@ Server::Server(QObject* parent) : QObject(parent) {
         dir_astr[i] = asteroids::Randomizer::instance()->getRandomVertex(1.0) * rand;
         size_astr[i] = asteroids::Randomizer::instance()->getRandomNumber(0, 100);
 
-        physics
-        physics.addAsteroid(asteroids::ServerAsteroid::Ptr(pos_astr[i], dir_astr[i], rand, size_astr[i], i));
+        physics.addAsteroid(asteroids::ServerAsteroid::Ptr(new asteroids::ServerAsteroid(pos_astr[i], dir_astr[i], rand, size_astr[i], i)));
     }
 }
 
@@ -206,8 +204,8 @@ void Server::recvUpdate_3D_C(char* data, QTcpSocket* socket) {
     client_data_temp.shot = (Bullet_shot) getChar(&data);
     client_data_temp.bullet_id = getInt(&data);
     if(client_data_temp.shot == Bullet_shot::shot){
-        Vector3f shipPosition = client_data_temp.position + client_data_temp.zAxis * -45 + client_data_temp.xAxis * -175;
-        physics.addBullet(asteroids::ServerBullet::Ptr(shipPosition, client_data_temp.xAxis * -1, client_data_temp.bullet_id));
+        asteroids::Vector3f shipPosition = client_data_temp.position + client_data_temp.zAxis * -45 + client_data_temp.xAxis * -175;
+        physics.addBullet(asteroids::ServerBullet::Ptr(new asteroids::ServerBullet(shipPosition, client_data_temp.xAxis * -1, client_data_temp.bullet_id)));
         log(LoggingType::DEBUG, "Send Bullet ID: " + std::to_string(client_data_temp.bullet_id));
 
     }

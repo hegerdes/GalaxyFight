@@ -36,4 +36,5 @@ HEADERS += \
     loggingtype.h \
     flags.h \
     serverphysics.h \
-    serverphysicalobject.h
+    serverphysicalobject.h \
+    client_data.h

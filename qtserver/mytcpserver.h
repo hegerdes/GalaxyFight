@@ -16,6 +16,9 @@
 #include "packettypes.h"
 #include "loggingtype.h"
 #include "serverphysics.h"
+#include "serverphysicalobject.h"
+
+#include "client_data.h"
 
 class Server : public QObject {
     Q_OBJECT
@@ -51,26 +54,6 @@ class Server : public QObject {
     short getShort(char** ptr);
     char getChar(char** ptr);
     int getInt(char** ptr);
-
-    struct client_data {
-        //3D Teil
-        asteroids::Vector<float> position;
-        asteroids::Vector<float> xAxis;
-        asteroids::Vector<float> yAxis;
-        asteroids::Vector<float> zAxis;
-        Bullet_shot shot;
-        int bullet_id;
-        Living living;
-
-        //physics stuff
-        std::vector<int> deleted_bullets_id;
-        std::vector<int> deleted_asteroids_id;
-        int m_hp;
-        int m_enem_hp;
-
-        //2D Teil
-        std::string name = "Name undefined";
-    };
 
     client_data user_data_1;
     client_data user_data_2;

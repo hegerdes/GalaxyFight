@@ -2,11 +2,14 @@
 #define SERVERPHYSICS_H
 
 #include "../math/Vector.hpp"
-#include "mytcpserver.h"
 #include <memory>
 #include <list>
 #include <vector>
+#include <QObject>
+#include <QTimer>
 #include "serverphysicalobject.h"
+
+#include "client_data.h"
 
 namespace asteroids {
 
@@ -29,19 +32,22 @@ namespace asteroids {
         ServerSpacecraft::Ptr m_first;
         ServerSpacecraft::Ptr m_second;
     public:
-        ServerPhysics();
+        ServerPhysics() = delete;
+        ServerPhysics(client_data &data_socket_1, client_data &data_socket_2);
 
-        void setParent(Server* serv);
+        void setParent(client_data &data_socket_1, client_data &data_socket_2);
         void addBullet(ServerBullet::Ptr bullet);
         void addAsteroid(ServerAsteroid::Ptr aster);
         void run();
         Removes process();
 
         std::shared_ptr<QTimer> m_timer;
-        Server* m_server;
+        client_data &m_data_socket_1;
+        client_data &m_data_socket_2;
     public Q_SLOTS:
         void updateData();
     };
+
 }
 
 
