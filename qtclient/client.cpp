@@ -50,6 +50,7 @@ void Client::recivePlanetChanges(char * data)
                                           num_transporter, m_attack));
         std::cout << m_own << ","<< m_id << "," << m_num_of_ore <<"," << num_factory <<"," << num_mine << "," <<num_fighters << ","   <<num_transporter << "," <<m_attack_planet << "\n";
     }
+    m_planet_changes_received = true;
 }
 
 
@@ -103,7 +104,6 @@ void Client::sendUpdate_3D_C(Vector<float> pos, Vector<float> xAxis, Vector<floa
     data.append((char*) &zAxis, 3 * 4);
     data.append(shot);
     data.append((char*) &bullet_id, 4);
-
     // TODO if shot save in list
     data.append(living);
 
@@ -309,6 +309,14 @@ void Client::interpreteAnswer() {
     }
     //std::cerr << __LINE__ << ", end_________" << __PRETTY_FUNCTION__ << "\n";
 }
+
+void Client::send_end_3d(player_no player_3d_winner){
+    QByteArray data;
+    data.append(PacketType::end_3D);
+    data.append(player_3d_winner);
+    data.append(player_No);
+    writeData(data);
+};
 
 bool Client::wait_for_readData(int timeout) {
     // std::cerr << "read data\n";

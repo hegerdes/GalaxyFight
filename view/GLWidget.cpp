@@ -258,6 +258,10 @@ void GLWidget::step(map<Qt::Key, bool>& keyStates)
         // Trigger update, i.e., redraw via paintGL()
         if(client_global.init_received)
         {
+            m_actor->m_hp = 10;
+            m_enemyPlayer->m_hp = 10;
+            m_enemyPlayer->m_status = 0;
+            m_actor->m_status = 0;
             m_actor->m_position = client_global.ownPos;
             m_actor->m_xAxis = client_global.ownxAxis;
             m_actor->m_yAxis = client_global.ownyAxis;
@@ -294,6 +298,27 @@ void GLWidget::step(map<Qt::Key, bool>& keyStates)
                                          bullet_shot, Living::alive, 0);
             client_global.readData();
         }
+
+        if(m_actor->getHP() < 1 || m_enemyPlayer->getHP() < 1)
+        {
+            player_no player_3d_winner;
+            if(m_actor->getHP()<1) {
+                player_3d_winner = player_no::loser;
+            } else {
+                player_3d_winner = player_no::winner;
+            }
+            client_global.send_end_3d(player_3d_winner);
+
+            //client_global.wait_for_readData(-1);
+            client_global.readData();
+        }
+
+        if(client_global.m_planet_changes_received){
+            active = false;
+            client_global.m_planet_changes_received = false;
+            emit goToScene2D();
+        }
+
 
         m_enemyPlayer->m_position = client_global.enemyPos;
         m_enemyPlayer->m_xAxis = client_global.enemyxAxis;

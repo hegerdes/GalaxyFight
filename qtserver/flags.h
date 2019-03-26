@@ -14,7 +14,7 @@ enum Hit{
 };
 
 enum player_no {
-    first, second
+    first, second, winner, loser
 };
 
 #endif // FLAGS_H

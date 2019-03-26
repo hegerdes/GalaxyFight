@@ -89,17 +89,20 @@ private:
     int winner;
     int pchanges_size1;
     int pchanges_size2;
+    bool m_socket_1_pchange_received = false;
+    bool m_socket_2_pchange_received = false;
+    bool m_end_3d_received = false;
 
     asteroids::Vector3f pos_astr[10];
     asteroids::Vector3f dir_astr[10];
     bool send_changes;
     std::vector<pchanges_data> pchanges_data1;
     std::vector<pchanges_data> pchanges_data2;
-    std::vector<pchanges_data> outstanding_fights;
+    std::vector<pchanges_data> player1_outstanding_fights;
     std::vector<pchanges_data> pchanges_committ;
     // data from player that did not start the fight so
     // that we can take his data if he wins the 3d fight
-    std::vector<pchanges_data> other_player_data;
+    std::vector<pchanges_data> player2_outstanding_fights;
     float size_astr[10];
 
     // sending packets
@@ -110,6 +113,7 @@ private:
     void sendUpdatedPlanetChanges();
     void sendEnd3D(QByteArray &response, QTcpSocket *socket);
     void recvPlanetChanges(char* data, QTcpSocket* socket);
+    void recv_end_3D(char* data, QTcpSocket* socket);
 
     // receive packets
     void recvUpdate_3D_C(char* data, QTcpSocket* socket);

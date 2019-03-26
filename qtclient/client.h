@@ -95,6 +95,9 @@ class Client {
 
     void connect(QString addr, quint16 port);
     bool init_received;
+    void send_end_3d(player_no);
+    bool m_planet_changes_received = false;
+    int m_own_received_hp = 0;
 
   private:
     void writeData(QByteArray const& data);

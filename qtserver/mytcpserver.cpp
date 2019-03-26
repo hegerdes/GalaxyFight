@@ -122,6 +122,16 @@ bool Server::writeData(QByteArray const& data) {
     else if (toSend == PacketType::init_3D) {
         //std::cerr << __LINE__ << "\n";
         //sendInit_3D(response, socket);
+        user_data_1.position = {-1500, 50, 50};
+        user_data_1.xAxis[0] = -1;
+        user_data_1.yAxis[1] = -1;
+        user_data_1.zAxis[2] = 1;
+        user_data_1.shot = Bullet_shot::not_shot;
+        user_data_2.position = {1500, -50, -50};
+        user_data_2.xAxis[0] = 1;
+        user_data_2.yAxis[1] = 1;
+        user_data_2.zAxis[2] = 1;
+        user_data_2.shot = Bullet_shot::not_shot;
         std::cerr << __LINE__ << "\n";
         bool bytes_written_1 = false;
         sendInit_3D(response, socket_1);
@@ -244,8 +254,8 @@ void Server::recvUpdate_3D_C(char* data, QTcpSocket* socket) {
     // std::cout << client_data_temp.zAxis << std::endl;
 
     client_data_temp.shot = (Bullet_shot) getChar(&data);
-    client_data_temp.bullet_id = getInt(&data);
     client_data_temp.living = (Living) getChar(&data);
+    client_data_temp.bullet_id = getInt(&data);
 
     if (socket_1 == socket) {
         user_data_1 = client_data_temp;
@@ -431,7 +441,7 @@ void Server::readyRead() {
                 //already send / to be removed TODO
                 if(pt == PacketType::planet_changes2d)
                 {
-                    if(outstanding_fights.empty()){
+                    if(player1_outstanding_fights.empty()){
                     std::cerr << __LINE__ << "\n";
                         recvPlanetChanges(data, socket);
                     } else {
@@ -445,6 +455,18 @@ void Server::readyRead() {
                     recvUpdate_3D_C(data, socket);
                     toSend = PacketType::update_3D_C;
                     this->writeData(nullptr);
+                    m_end_3d_received = false;
+                } else if (pt == PacketType::end_3D) {
+                    recv_end_3D(data, socket);
+                    if(player1_outstanding_fights.empty())
+                    {
+                        std::cerr << __LINE__ << "_____________________________________________________\n";
+                        sendUpdatedPlanetChanges();
+                    } else {
+                        std::cerr << __LINE__ << "_____________________________________________________\n";
+                        toSend = PacketType::init_3D;
+                        this->writeData(nullptr);
+                    }
                 } else if (pt == PacketType::ready_T) {
                     std::cerr << __LINE__ << "\n";
                     recvReady_T(data, socket);
@@ -464,6 +486,24 @@ void Server::readyRead() {
     std::cerr << "end\n";
 }
 
+void Server::recv_end_3D(char* data, QTcpSocket* socket){
+    player_no winner_loser = (player_no) getChar(&data);
+    player_no player_no_temp = (player_no) getChar(&data);
+    if(!m_end_3d_received && (player_no::winner == winner_loser)){
+        if(player_no_temp == player_no::first)
+        {
+            pchanges_committ.push_back(player1_outstanding_fights.front());
+        } else {
+            pchanges_committ.push_back(player2_outstanding_fights.front());
+        }
+        auto it1 = player1_outstanding_fights.begin();
+        player1_outstanding_fights.erase(it1);
+        auto it2 = player2_outstanding_fights.begin();
+        player2_outstanding_fights.erase(it2);
+        m_end_3d_received = true;
+    }
+}
+
 void Server::recvPlanetChanges(char* data, QTcpSocket* socket)
 {
     std::cerr << __LINE__ << ", " << __PRETTY_FUNCTION__ << " packet received sucevfully \n";
@@ -471,10 +511,12 @@ void Server::recvPlanetChanges(char* data, QTcpSocket* socket)
     if(socket_1 == socket)
     {
         pchanges_size1 = size;
+        m_socket_1_pchange_received = true;
     }
     if(socket_2 == socket)
     {
         pchanges_size2 = size;
+        m_socket_2_pchange_received = true;
     }
     for(int i = 0 ; i < size ; i++)
     {
@@ -505,11 +547,11 @@ void Server::recvPlanetChanges(char* data, QTcpSocket* socket)
         }
         //std::cout << pchanges_data1[0].m_own << ","<< pchanges_data1[0].m_id << "," << pchanges_data1[0].m_num_of_ore <<"," << tmp.num_factory <<"," << tmp.num_mine << "," <<tmp.num_fighters << ","   <<tmp.num_transporter << "," <<tmp.m_attack_planet << "\n";
     }
-    if((pchanges_size1 > 0) && (pchanges_size2  > 0))
+    if((m_socket_1_pchange_received) && (m_socket_2_pchange_received))
     {
         std::cerr << __LINE__ << "\n";
-        pchanges_size1 = -1;
-        pchanges_size2 = -1;
+        //pchanges_size1 = -1;
+        //pchanges_size2 = -1;
         update_planet_changes();
     }
     std::cerr << "\n";
@@ -570,84 +612,83 @@ void Server::sendUpdatedPlanetChanges()
 void Server::update_planet_changes()
 {
     std::cerr << __LINE__ << ", " << __PRETTY_FUNCTION__ << " updating changes\n";
+    // player1 attack
     for(auto it =pchanges_data1.begin() ; it!=pchanges_data1.end();)
     {
         if((*it).m_attack_planet == true)
         {
             //std::cout<< "planet attacking = true\n";
-            outstanding_fights.push_back((*it));
+            std::cerr << __LINE__ << "\n";
+            player1_outstanding_fights.push_back((*it));
             int id = it->m_id;
             it = pchanges_data1.erase(it);
-            std::cerr << __LINE__ << "\n";
             for(auto it2 =pchanges_data2.begin() ; it2!=pchanges_data2.end();)
             {
                 if(it2->m_id == id)
                 {
-                    other_player_data.push_back((*it2));
+                    player2_outstanding_fights.push_back((*it2));
                     it2 = pchanges_data2.erase(it2);
-                    std::cerr << __LINE__ << "\n";
                 }  else
                 {
                     it2++;
                 }
 
             }
-
-        }
-
-        /*
-        std::cerr << __LINE__ << " pchanges_data2.size(): " << pchanges_data2.size() << "d\n";
-        if(pchanges_data2.size() > 0)
-        {
-            std::cerr << __LINE__ << "\n";
-            for(auto it2 =pchanges_data2.begin() ; it2!=pchanges_data2.end();)
-            {
-
-                std::cerr <<"the first " << it->m_id << "id is \n";
-                std::cerr <<"the second" << it2->m_id << "id is \n";
-                if(it2->m_id == it->m_id)
-                {
-                    outstanding_fights.push_back(*it);
-                    it = pchanges_data1.erase(it);
-                    other_player_data.push_back(*it2);
-                    pchanges_data2.erase(it2);
-                } else  {
-                    it2++;
-                }
-            }
-        } else{
-            std::cerr << __LINE__ << "\n";
+        } else {
             it++;
         }
-        */
     }
+
     std::cerr << __LINE__ << "\n";
+    // player2 attack
     for(auto it = pchanges_data2.begin() ; it!=pchanges_data2.end(); )
     {
-        std::cerr << __LINE__ << "\n";
         if((*it).m_attack_planet)
         {
-            other_player_data.push_back((*it));
+            std::cerr << __LINE__ << "\n";
+            player2_outstanding_fights.push_back((*it));
             int id = it->m_id;
             it = pchanges_data2.erase(it);
-            if(pchanges_data1.size() > 0)
+            for(auto it1 =pchanges_data1.begin() ; it1!=pchanges_data1.end();)
             {
-                for(auto it1 =pchanges_data1.begin() ; it1!=pchanges_data1.end();)
+                if(it1->m_id == id)
                 {
-                    if(it1->m_id == id)
-                    {
-                        outstanding_fights.push_back(*it1);
-                        it1 = pchanges_data1.erase(it1);
-                    } else
-                    {
-                        it1++;
-                    }
-
+                    player1_outstanding_fights.push_back(*it1);
+                    it1 = pchanges_data1.erase(it1);
+                } else
+                {
+                    it1++;
                 }
+
             }
         } else {
-            std::cerr << __LINE__ << "\n";
             it++;
+        }
+    }
+
+    std::cerr << __LINE__ << "\n";
+    // player2 and player1 want same planet
+    for(auto it2 = pchanges_data2.begin() ; it2!=pchanges_data2.end(); )
+    {
+        std::cerr << __LINE__ << "\n";
+        bool erased = false;
+        for(auto it1 =pchanges_data1.begin() ; it1!=pchanges_data1.end();)
+        {
+            if(it2->m_id == it1->m_id)
+            {
+                player1_outstanding_fights.push_back((*it1));
+                it1 = pchanges_data1.erase(it1);
+                player2_outstanding_fights.push_back((*it2));
+                it2 = pchanges_data2.erase(it2);
+                erased = true;
+                break;
+            } else {
+                it1++;
+            }
+        }
+        if(!erased)
+        {
+            it2++;
         }
     }
 
@@ -663,8 +704,8 @@ void Server::update_planet_changes()
         pchanges_committ.push_back((*it));
     }
 
-    std::cout << __LINE__ << " size of fight: " << outstanding_fights.size() << "\n";
-    if(outstanding_fights.empty())
+    std::cout << __LINE__ << " size of fight: " << player1_outstanding_fights.size() << "\n";
+    if(player1_outstanding_fights.empty())
     {
         std::cerr << __LINE__ << "\n";
         sendUpdatedPlanetChanges();

@@ -220,8 +220,10 @@ void ManageGame::next_round()
     emit updateInfobar();
     // @ahaker send initpacket
     std::list<PlanetChanges> changes;
-    PlanetChanges planetchanges(PlanetChanges::Owner::PLAYER1 ,1,1,1,1,1,1,1);
+    PlanetChanges planetchanges(PlanetChanges::Owner::PLAYER1 ,1,1,1,1,1,1,0);
+    PlanetChanges planetchangess(PlanetChanges::Owner::PLAYER1 ,2,1,1,1,1,1,0);
     changes.push_back(planetchanges);
+    changes.push_back(planetchangess);
     std::cerr << __LINE__ << ", " << __PRETTY_FUNCTION__ << ", changes.size()" << changes.size() << "\n";
     client_global.SendPlanetChanges(changes.size(), changes);
     std::cerr << __LINE__ << "\n";

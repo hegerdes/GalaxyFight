@@ -52,6 +52,8 @@ public:
 
     /// Initialize Level
     void loadLevel();
+    signals:
+    void goToScene2D();
 
 protected:
 
