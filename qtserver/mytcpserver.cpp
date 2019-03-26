@@ -167,8 +167,9 @@ void Server::sendUpdate_3D_S(QByteArray& response, QTcpSocket* socket) {
     response.append((char*)&b_length, 4); // anzahl zerstörter asteroidend short eine shor null
     for(auto it : client_data_temp.deleted_bullets_id){
         response.append((char*)&it, 4);
+        log(LoggingType::DEBUG, "Bullet removed SEND TO CLIENT: " + std::to_string(it));
     }
-    client_data_temp.deleted_bullets_id.clear();
+    client_data_temp.deleted_bullets_id.;
     // Bullet ids wenn nötig > 0
 
     response.append((char*)&client_data_temp.m_hp, 4);
@@ -207,7 +208,6 @@ void Server::recvUpdate_3D_C(char* data, QTcpSocket* socket) {
         asteroids::Vector3f shipPosition = client_data_temp.position + client_data_temp.zAxis * -45 + client_data_temp.xAxis * -175;
         physics.addBullet(asteroids::ServerBullet::Ptr(new asteroids::ServerBullet(shipPosition, client_data_temp.xAxis * -1, client_data_temp.bullet_id)));
         log(LoggingType::DEBUG, "Send Bullet ID: " + std::to_string(client_data_temp.bullet_id));
-
     }
 
     client_data_temp.living = (Living) getChar(&data);
@@ -341,6 +341,9 @@ void Server::log(LoggingType type, std::string msg){
     }else if(type == LoggingType::INFO){
         std::cout << "[" << str << " INFO] " << msg << std::endl;
         logfile << "[" << str << " INFO] " << msg << std::endl;
+    }else if(type == LoggingType::DEBUG){
+        std::cout << "[" << str << " DEBUG] " << msg << std::endl;
+        logfile << "[" << str << " DEBUG] " << msg << std::endl;
     }
     logfile.close();
 }
