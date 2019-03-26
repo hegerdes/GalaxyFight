@@ -6,8 +6,8 @@ Client::Client() {
 }
 
 void Client::connect(QString addr, quint16 port) {
-    //socket.connectToHost(QHostAddress::LocalHost, 38292);
-    socket.connectToHost(addr, port);
+    socket.connectToHost(QHostAddress::LocalHost, 38292);
+    //socket.connectToHost(addr, port);
     std::cerr << socket.waitForConnected() << ": socket.waitForConnected\n";
 }
 
@@ -24,14 +24,13 @@ QByteArray IntToArray(qint32 source) // Use qint32 to ensure that the number hav
 void Client::recivePlanetChanges(char * data)
 {
     int size = getInt(&data);
-    std::cout << size << "size of recived package\n";
+    std::cerr << __LINE__ << ", " << size << "size of recived package\n";
     std::list<PlanetChanges> p_changes;
     for (int i {0} ; i < size ; i++)
     {
         PlanetChanges::Owner m_own  = (PlanetChanges::Owner)getChar(&data);
         int m_id = getInt(&data);
         int m_num_of_ore = getInt(&data);
-        std::cout << m_num_of_ore <<"y\n";
         int num_factory = getInt(&data);
         int num_mine = getInt(&data);
         int num_fighters = getInt(&data);
@@ -48,7 +47,13 @@ void Client::recivePlanetChanges(char * data)
         p_changes.push_back(PlanetChanges(m_own, m_id, m_num_of_ore,
                                           num_factory, num_mine, num_fighters,
                                           num_transporter, m_attack));
-        std::cout << m_own << ","<< m_id << "," << m_num_of_ore <<"," << num_factory <<"," << num_mine << "," <<num_fighters << ","   <<num_transporter << "," <<m_attack_planet << "\n";
+        std::cerr << __LINE__ << ", m_own: " << m_own << ", m_id:" << m_id
+                  << ", m_num_ore: " << m_num_of_ore
+                  << ", num_factory: " << num_factory
+                  << ", num_mine: " << num_mine
+                  << ", num_fighters: " << num_fighters
+                  << ", num_transporter: " << num_transporter
+                  << ", attack_planet: " << m_attack_planet << "\n";
     }
     m_planet_changes_received = true;
 }
@@ -90,8 +95,8 @@ void Client::SendPlanetChanges(int size,std::list<PlanetChanges> changes )
         data.append((char*)&num_transporter, 4);
         data.append((char*)&m_attack,1);
 
-        writeData(data);
     }
+    writeData(data);
 }
 
 void Client::sendUpdate_3D_C(Vector<float> pos, Vector<float> xAxis, Vector<float> yAxis, Vector<float> zAxis,
@@ -288,10 +293,8 @@ void Client::interpreteAnswer() {
             // std::cerr << "packtetype_udpate_3d_s\n";
             update_3D_S(data);
         } else if(pt == PacketType::planet_changes2d) {
-            std::cerr << __LINE__ << "\n";
-                std::cout << "planet changes got recived\n";
+                std::cerr << __LINE__  << ", planet changes got recived\n";
                 recivePlanetChanges(data);
-
         } else if (pt == PacketType::end_3D) {
             std::cerr << __LINE__ << "\n";
             winner_no = getChar(&data);

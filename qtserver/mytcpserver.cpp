@@ -19,12 +19,12 @@ Server::Server(QObject* parent) : QObject(parent) {
         exit(0);
     }
 
-    user_data_1.position = {-1500, 50, 50};
+    user_data_1.position = {-100, 0, 0};
     user_data_1.xAxis[0] = -1;
     user_data_1.yAxis[1] = -1;
     user_data_1.zAxis[2] = 1;
     user_data_1.shot = Bullet_shot::not_shot;
-    user_data_2.position = {1500, -50, -50};
+    user_data_2.position = {100, -0, -0};
     user_data_2.xAxis[0] = 1;
     user_data_2.yAxis[1] = 1;
     user_data_2.zAxis[2] = 1;
@@ -122,12 +122,13 @@ bool Server::writeData(QByteArray const& data) {
     else if (toSend == PacketType::init_3D) {
         //std::cerr << __LINE__ << "\n";
         //sendInit_3D(response, socket);
-        user_data_1.position = {-1500, 50, 50};
+        m_player1_end_3d_received = false;
+        user_data_1.position = {-100, 0, 0};
         user_data_1.xAxis[0] = -1;
         user_data_1.yAxis[1] = -1;
         user_data_1.zAxis[2] = 1;
         user_data_1.shot = Bullet_shot::not_shot;
-        user_data_2.position = {1500, -50, -50};
+        user_data_2.position = {100, -0, -0};
         user_data_2.xAxis[0] = 1;
         user_data_2.yAxis[1] = 1;
         user_data_2.zAxis[2] = 1;
@@ -455,7 +456,6 @@ void Server::readyRead() {
                     recvUpdate_3D_C(data, socket);
                     toSend = PacketType::update_3D_C;
                     this->writeData(nullptr);
-                    m_end_3d_received = false;
                 } else if (pt == PacketType::end_3D) {
                     recv_end_3D(data, socket);
                     if(player1_outstanding_fights.empty())
@@ -487,9 +487,13 @@ void Server::readyRead() {
 }
 
 void Server::recv_end_3D(char* data, QTcpSocket* socket){
+    std::cerr << __LINE__ << ", " << __PRETTY_FUNCTION__ << " packet received sucevfully \n";
     player_no winner_loser = (player_no) getChar(&data);
     player_no player_no_temp = (player_no) getChar(&data);
-    if(!m_end_3d_received && (player_no::winner == winner_loser)){
+    std::cerr << __LINE__ << ", player_no" << player_no_temp << ", winner_loser: " << winner_loser << "\n";
+    //if(!m_player1_end_3d_received && (player_no::winner == winner_loser)){
+    if((player_no::winner == winner_loser)){
+        std::cerr << __LINE__ << "\n";
         if(player_no_temp == player_no::first)
         {
             pchanges_committ.push_back(player1_outstanding_fights.front());
@@ -500,52 +504,95 @@ void Server::recv_end_3D(char* data, QTcpSocket* socket){
         player1_outstanding_fights.erase(it1);
         auto it2 = player2_outstanding_fights.begin();
         player2_outstanding_fights.erase(it2);
-        m_end_3d_received = true;
+        m_player1_end_3d_received = true;
+    } else {
+        std::cerr << __LINE__ << "\n";
+        if(player_no_temp == player_no::first)
+        {
+            pchanges_committ.push_back(player2_outstanding_fights.front());
+        } else {
+            pchanges_committ.push_back(player1_outstanding_fights.front());
+        }
+        auto it1 = player1_outstanding_fights.begin();
+        player1_outstanding_fights.erase(it1);
+        auto it2 = player2_outstanding_fights.begin();
+        player2_outstanding_fights.erase(it2);
+        m_player1_end_3d_received = true;
+
     }
 }
 
 void Server::recvPlanetChanges(char* data, QTcpSocket* socket)
 {
     std::cerr << __LINE__ << ", " << __PRETTY_FUNCTION__ << " packet received sucevfully \n";
-    int size = getInt(&data);
+    bool this_socket_already_received = false;
     if(socket_1 == socket)
     {
-        pchanges_size1 = size;
-        m_socket_1_pchange_received = true;
+        std::cerr << __LINE__ << "\n";
+        if( m_socket_1_pchange_received) {
+            this_socket_already_received = true;
+        }
     }
     if(socket_2 == socket)
     {
-        pchanges_size2 = size;
-        m_socket_2_pchange_received = true;
+        std::cerr << __LINE__ << "\n";
+        if( m_socket_2_pchange_received) {
+            this_socket_already_received = true;
+        }
     }
-    for(int i = 0 ; i < size ; i++)
-    {
-        pchanges_data tmp;
-        tmp.m_own = (asteroids::PlanetChanges::Owner)getChar(&data);
-        tmp.m_id = getInt(&data);
-        tmp.m_num_of_ore =getInt(&data) ;
-        tmp.num_factory = getInt(&data);
-        tmp.num_mine = getInt(&data);
-        tmp.num_fighters = getInt(&data);
-        tmp.num_transporter = getInt(&data);
-        char m_attack_planet  = getChar(&data);
+    if(!this_socket_already_received){
+        int size = getInt(&data);
+        for(int i = 0 ; i < size ; i++)
+        {
+            pchanges_data tmp;
+            tmp.m_own = (asteroids::PlanetChanges::Owner)getChar(&data);
+            tmp.m_id = getInt(&data);
+            tmp.m_num_of_ore =getInt(&data) ;
+            tmp.num_factory = getInt(&data);
+            tmp.num_mine = getInt(&data);
+            tmp.num_fighters = getInt(&data);
+            tmp.num_transporter = getInt(&data);
+            char m_attack_planet  = getChar(&data);
 
-        if(m_attack_planet == 1)
-        {
-            tmp.m_attack_planet = true;
-        }else
-        {
-            tmp.m_attack_planet = false;
+            std::cerr << __LINE__ << ", m_own: " << tmp.m_own << "\n";
+            std::cerr << ", id " << tmp.m_id  << "\n";
+            std::cerr << ", ore" << tmp.m_num_of_ore  << "\n";
+            std::cerr << ", facto" << tmp.num_factory  << "\n";
+            std::cerr << ", mine" << tmp.num_mine  << "\n";
+            std::cerr << ", fight" << tmp.num_fighters  << "\n";
+            std::cerr << ", trans" << tmp.num_transporter  << "\n";
+            std::cerr << ", attack" << m_attack_planet << "\n";
+
+
+            if(m_attack_planet == 1)
+            {
+                tmp.m_attack_planet = true;
+            }else
+            {
+                tmp.m_attack_planet = false;
+            }
+            if(socket_1 == socket)
+            {
+                pchanges_data1.push_back(tmp);
+            }
+            if(socket_2 == socket)
+            {
+                pchanges_data2.push_back(tmp);
+            }
+            //std::cout << pchanges_data1[0].m_own << ","<< pchanges_data1[0].m_id << "," << pchanges_data1[0].m_num_of_ore <<"," << tmp.num_factory <<"," << tmp.num_mine << "," <<tmp.num_fighters << ","   <<tmp.num_transporter << "," <<tmp.m_attack_planet << "\n";
         }
         if(socket_1 == socket)
         {
-            pchanges_data1.push_back(tmp);
+            std::cerr << __LINE__ << "\n";
+            pchanges_size1 = size;
+            m_socket_1_pchange_received = true;
         }
         if(socket_2 == socket)
         {
-            pchanges_data2.push_back(tmp);
+            std::cerr << __LINE__ << "\n";
+            pchanges_size2 = size;
+            m_socket_2_pchange_received = true;
         }
-        //std::cout << pchanges_data1[0].m_own << ","<< pchanges_data1[0].m_id << "," << pchanges_data1[0].m_num_of_ore <<"," << tmp.num_factory <<"," << tmp.num_mine << "," <<tmp.num_fighters << ","   <<tmp.num_transporter << "," <<tmp.m_attack_planet << "\n";
     }
     if((m_socket_1_pchange_received) && (m_socket_2_pchange_received))
     {
@@ -562,7 +609,7 @@ void Server::sendUpdatedPlanetChanges()
     std::cerr << __LINE__ << ", " << __PRETTY_FUNCTION__ << "\n";
     QByteArray data;
     int size = pchanges_committ.size();
-    std::cout <<pchanges_committ.size() << "size of vector\n";
+    std::cerr << __LINE__ << ", " <<pchanges_committ.size() << ", size of vector\n";
     data.append(PacketType::planet_changes2d);
     data.append((char*)&size, 4);
     for(unsigned int i= 0 ; i < pchanges_committ.size(); i++)
@@ -587,24 +634,22 @@ void Server::sendUpdatedPlanetChanges()
           data.append(d);
       }
       send_changes = true;
-
-
-      if(socket_1->state() == QAbstractSocket::ConnectedState)
-      {
-          std::cout << "writing something into socket";
-          socket_1->write(data); //write the data itself
-          socket_1->waitForBytesWritten();
-      }
-      if(socket_2->state() == QAbstractSocket::ConnectedState)
-      {
-          socket_2->write(data); //write the data itself
-          socket_2->waitForBytesWritten();
-      }
-      pchanges_committ.clear();
-      pchanges_data1.clear();
-      pchanges_data2.clear();
-
     }
+    if(socket_1->state() == QAbstractSocket::ConnectedState)
+    {
+        std::cerr << __LINE__ << ", writing something into socket";
+        socket_1->write(data); //write the data itself
+        socket_1->waitForBytesWritten();
+    }
+    if(socket_2->state() == QAbstractSocket::ConnectedState)
+    {
+        std::cerr << __LINE__ << ", writing something into socket";
+        socket_2->write(data); //write the data itself
+        socket_2->waitForBytesWritten();
+    }
+    pchanges_committ.clear();
+    pchanges_data1.clear();
+    pchanges_data2.clear();
     std::cerr << "\n";
 }
 
@@ -612,6 +657,7 @@ void Server::sendUpdatedPlanetChanges()
 void Server::update_planet_changes()
 {
     std::cerr << __LINE__ << ", " << __PRETTY_FUNCTION__ << " updating changes\n";
+    std::cerr << __LINE__ << ", pachnges.commit.siz() " << pchanges_committ.size() << "\n";
     // player1 attack
     for(auto it =pchanges_data1.begin() ; it!=pchanges_data1.end();)
     {
@@ -666,45 +712,50 @@ void Server::update_planet_changes()
         }
     }
 
+    std::cerr << __LINE__ << ", pchanges_data1.size: " << pchanges_data1.size() << "\n";
+    std::cerr << __LINE__ << ", pchanges_data2.size: " << pchanges_data2.size() << "\n";
     std::cerr << __LINE__ << "\n";
     // player2 and player1 want same planet
     for(auto it2 = pchanges_data2.begin() ; it2!=pchanges_data2.end(); )
     {
         std::cerr << __LINE__ << "\n";
-        bool erased = false;
+        bool increment = true;
         for(auto it1 =pchanges_data1.begin() ; it1!=pchanges_data1.end();)
         {
             if(it2->m_id == it1->m_id)
             {
+                std::cerr << __LINE__ << " \n";
                 player1_outstanding_fights.push_back((*it1));
                 it1 = pchanges_data1.erase(it1);
                 player2_outstanding_fights.push_back((*it2));
                 it2 = pchanges_data2.erase(it2);
-                erased = true;
+                increment = false;
                 break;
             } else {
+                std::cerr << __LINE__ << " \n";
                 it1++;
             }
         }
-        if(!erased)
+        if(increment)
         {
             it2++;
         }
     }
 
-    std::cerr << __LINE__ << "\n";
+    std::cerr << __LINE__ << ", pchanges_data1.size: " << pchanges_data1.size() << "\n";
+    std::cerr << __LINE__ << ", pchanges_data2.size: " << pchanges_data2.size() << "\n";
     for(auto it = pchanges_data1.begin(); it != pchanges_data1.end() ; it++)
     {
+        std::cerr << __LINE__ << "\n";
         pchanges_committ.push_back((*it));
     }
 
-    std::cerr << __LINE__ << "\n";
     for(auto it = pchanges_data2.begin(); it != pchanges_data2.end() ; it++)
     {
+        std::cerr << __LINE__<< "\n";
         pchanges_committ.push_back((*it));
     }
 
-    std::cout << __LINE__ << " size of fight: " << player1_outstanding_fights.size() << "\n";
     if(player1_outstanding_fights.empty())
     {
         std::cerr << __LINE__ << "\n";
@@ -712,10 +763,13 @@ void Server::update_planet_changes()
     }
     else
     {
-        std::cerr << __LINE__ << "\n";
+        std::cerr << __LINE__ << ", ";
+        std::cerr << "player_outstanding_fights, " << player1_outstanding_fights.size() << "\n";
+        std::cerr << "player_outstanding_fights, " << player2_outstanding_fights.size() << "\n";
         toSend = PacketType::init_3D;
         this->writeData(nullptr);
     }
+    std::cerr << __LINE__ << ", pachnges.commit.siz() " << pchanges_committ.size() << "\n";
     std::cerr << "\n";
 }
 

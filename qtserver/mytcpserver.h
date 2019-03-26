@@ -91,7 +91,8 @@ private:
     int pchanges_size2;
     bool m_socket_1_pchange_received = false;
     bool m_socket_2_pchange_received = false;
-    bool m_end_3d_received = false;
+    bool m_player1_end_3d_received = false;
+    bool m_player2_end_3d_received = false;
 
     asteroids::Vector3f pos_astr[10];
     asteroids::Vector3f dir_astr[10];
