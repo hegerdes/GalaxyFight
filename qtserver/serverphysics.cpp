@@ -61,10 +61,17 @@ namespace asteroids {
         m_first->m_zAxis = m_data_socket_1.zAxis;
         m_first->m_pos = m_data_socket_1.position;
 
+        /*
+        m_first->update(m_data_socket_1.xAxis, m_data_socket_1.yAxis, m_data_socket_1.zAxis, m_data_socket_1.position);
+        m_second->update(m_data_socket_2.xAxis, m_data_socket_2.yAxis, m_data_socket_2.zAxis, m_data_socket_2.position);
+*/
         m_second->m_xAxis = m_data_socket_2.xAxis;
         m_second->m_yAxis = m_data_socket_2.yAxis;
         m_second->m_zAxis = m_data_socket_2.zAxis;
-        m_second->m_pos = m_data_socket_2.positon;
+        m_second->m_pos = m_data_socket_2.position;
+
+        std::cerr << "Position of 1: " << m_first->m_pos << "\nPosition of 2: " << m_second->m_pos << "\n";
+
         Removes removed;
 
         //Asteroid Moving
