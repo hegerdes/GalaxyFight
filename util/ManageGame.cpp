@@ -227,7 +227,7 @@ void ManageGame::change_Fighter_position(int new_position, int attackSpaceCraft_
         {
             if ((*i)->m_id == attackSpaceCraft_id){
                 auto tmp = m_planetmap->getPath((*i)->m_position, new_position);
-                if(tmp.size() == 1)
+                if(tmp.size() == 2)
                 {
                     (*i)->m_next_position = new_position;
                     (*i)->m_change_position = true;
@@ -286,7 +286,7 @@ void ManageGame::next_round()
         m_round_changes_map.clear();
 
         //Raumschiffrouten aktualisieren
-        //updateSpaceCrafts();
+        updateSpaceCrafts();
 
         //TODO Sent List
         //inet network

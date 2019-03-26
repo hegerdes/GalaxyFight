@@ -47,13 +47,6 @@ Scene2dHandler::Scene2dHandler(QObject* parent)
 
     updateRound();
 
-    //debug ships
-//    auto ship = new GraphicsFighterItem(PlayerType::PLAYER2, 1);
-//    auto tship = new GraphicsTransporterItem(1);
-//    tship->setPos(100, 100);
-//    addItem(ship);
-//    addItem(tship);
-
     //connections
     connect(ManageGame::getinstance(), &ManageGame::updateScene, this, &Scene2dHandler::updateRound);
 }
@@ -106,13 +99,19 @@ void Scene2dHandler::mouseReleaseEvent(QGraphicsSceneMouseEvent* mouseEvent)
         if(item->type() != ItemTypes::Planet)
             return;
 
-        if(m_currentlySelected->type() == ItemTypes::Fighter)
+        std::cout << "ship movement planet selction finisched" << std::endl;
+
+        if(m_currentlySelected->type() == ItemTypes::Fighter) {
             ManageGame::getinstance()->change_Fighter_position(static_cast<GraphicsPlanetItem*>(item)->getID(),
                                                                static_cast<GraphicsFighterItem*>(m_currentlySelected)->getID());
-        if(m_currentlySelected->type() == ItemTypes::Transporter)
+
+            std::cout << "move fighter; current:" << QString::number( static_cast<GraphicsFighterItem*>(m_currentlySelected)->getID()).toStdString() << " new: " << QString::number(static_cast<GraphicsFighterItem*>(m_currentlySelected)->getID()).toStdString()  << std::endl;
+        }
+        if(m_currentlySelected->type() == ItemTypes::Transporter) {
             ManageGame::getinstance()->change_transport_route(static_cast<GraphicsPlanetItem*>(item)->getID(),
                                                                static_cast<GraphicsTransporterItem*>(m_currentlySelected)->getID());
-
+            std::cout << "move transporter" << std::endl;
+        }
 
 
     } else {
@@ -193,10 +192,9 @@ void Scene2dHandler::placeFighter()
 
     //start animation and placement
     for (const auto& fighter : fighters) {
-        std::cout << "place fighter: " + QString::number(fighter->m_id).toStdString() << std::endl;
-        //skip fighter if nothing changed
-        if (!fighter->m_change_position)
-            continue;
+        //debug
+        std::cout << "place fighter: " + QString::number(fighter->m_id).toStdString() << " planet: " << QString::number(fighter->m_position).toStdString() << " next: " << QString::number(fighter->m_next_position).toStdString() << std::endl;
+
 
         bool foundFlag = false;
         //get current GraphicsItem
@@ -261,6 +259,9 @@ void Scene2dHandler::updateMap()
             static_cast<GraphicsPlanetItem*>(item)->setOwner(planets[static_cast<GraphicsPlanetItem*>(item)->getID()]->getOwner());
         }
     }
+
+    //TODO: display icons
+
 
 }
 
