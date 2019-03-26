@@ -34,6 +34,9 @@ private:
      */
     Infobar *m_infobar;
 
+    /**
+     * @brief m_scenehandler handels all GraphicsItems and user interactions in the map
+     */
     Scene2dHandler *m_scenehandler;
 
 };

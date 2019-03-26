@@ -1,4 +1,4 @@
-/**
+﻿/**
  * @file 2DMap.cpp
  * @author Henrik Gerdes (hegerdes@uni-osnabrueck.de)
  * @brief 
@@ -21,16 +21,18 @@ class distance_heuristic : public astar_heuristic<Graph, CostType>
 {
 public:
 	typedef typename graph_traits<Graph>::vertex_descriptor Vertex;
-	distance_heuristic(LocMap l, Vertex goal) :
+    distance_heuristic(LocMap l, Vertex goal, Map::VecPtr planets) :
 		m_location(l), m_goal(goal)
 	{
+        m_boost_planets = planets;
 	}
 	CostType operator()(Vertex u)
-	{   
-        //Calls Vector3f dist
-        return m_location[m_goal].dist(m_location[u]);
+    {
+        return m_boost_planets[m_location[u]]->getPos().dist2d(m_boost_planets[m_location[u]]->getPos());
+
 	}
 private:
+    Map::VecPtr m_boost_planets;
 	LocMap m_location;
 	Vertex m_goal;
 };
@@ -93,6 +95,7 @@ Map::Map(std::string mapfile):m_planets(17)
 
         std::istringstream instring(readline);
         instring >> number_of_vertices;
+        m_num_of_planets = number_of_vertices;
 
         //Read Nodes
         for (int i = 0; i < number_of_vertices; i++)
@@ -104,10 +107,10 @@ Map::Map(std::string mapfile):m_planets(17)
             instring >> strname >> x >> y >> z;
 
             //Create Map with all planets
-            m_planets[i] = std::make_shared<Planet>(Planet(i, strname, Vector3f(x,y,z)));
+            m_planets[(unsigned long)i] = std::make_shared<Planet>(Planet(i, strname, Vector3f(x,y,z)));
             
             //Nodes for Graph
-            m_nodes.push_back(Vector3f(x,y,z));
+            m_nodes.push_back(i);
             m_planat_dir.insert(std::pair<std::string,int>(strname, i));
         }
 
@@ -121,7 +124,7 @@ Map::Map(std::string mapfile):m_planets(17)
             //create edge list
             m_edges.push_back(Vector2i(pair1, pair2));
             
-            float distance = m_nodes[pair1].dist2d(m_nodes[pair2]);
+            float distance = m_planets[(unsigned long) pair1]->getPos().dist2d(m_planets[(unsigned long)pair2]->getPos());
 
             //graph_traits<Graph>::edge_descriptor e;
             Graph::edge_descriptor e;
@@ -148,7 +151,7 @@ Map::VecPtr& Map::getPlanets()
     return m_planets;
 }
 
-std::list<Vector3f > Map::getPath(Vector3f position, int start, int goal)
+std::list<int> Map::getPath(int start, int goal)
 {
     std::cout << "Start: " << start  << " " <<  m_planets[start]->getname() 
         << "\n" << "End: " << goal << " " << m_planets[goal]->getname() << std::endl;
@@ -160,8 +163,8 @@ std::list<Vector3f > Map::getPath(Vector3f position, int start, int goal)
 
     try {
       //call astar named parameter interface
-        astar_search(g, start, distance_heuristic<Graph, float, std::vector<Vector3f> >
-            (m_nodes, goal),
+        astar_search(g, start, distance_heuristic<Graph, float, std::vector<int> >
+            (m_nodes, goal, m_planets),
             predecessor_map(&p[0]).distance_map(&d[0]).
             visitor(star_graph_visitor<vertex>(goal)));
     
@@ -169,8 +172,7 @@ std::list<Vector3f > Map::getPath(Vector3f position, int start, int goal)
     } catch(found_goal fg)
     {
         std::cout << "Found Goal" << std::endl; 
-        std::list<Vector3f> shortest_path;
-        shortest_path.push_front(position);
+        std::list<int> shortest_path;
         for(vertex v = goal;; v = p[v]) {
             shortest_path.push_front(m_nodes[v]);
             if(p[v] == v)
@@ -183,8 +185,7 @@ std::list<Vector3f > Map::getPath(Vector3f position, int start, int goal)
 
     //If there is no solution
     std::cout << "Found no Path" << std::endl;
-    std::list<Vector3f > solutionPath;
-    solutionPath.push_front(position);
+    std::list<int> solutionPath;
     return solutionPath;
 }
 
@@ -210,12 +211,10 @@ void Map::printEdges()
 
 void Map::printNodes()
 {
-    std::vector<Vector3f>::iterator it;
-
-    std::cout << "Print Edges" << std::endl; 
-    for(it = m_nodes.begin(); it !=m_nodes.end(); ++it)
-    {
-        it->printVector();
-    }
+    std::cout << "Print Nodes" << std::endl;
+     for(auto it = m_nodes.begin(); it !=m_nodes.end(); ++it)
+     {
+         std::cout << "PlanetID: " << *(it) << std::endl;
+     }
 }
 }

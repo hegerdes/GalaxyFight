@@ -65,6 +65,8 @@ class Planet
 
     inline int getMine(){return m_num_mine;}
 
+    inline int getStoredOre(){return m_stored_ore;}
+
     inline PlanetChanges::Owner getOwner(){return m_owned;}
 
     inline Vector3f& getPos(){return m_planet_pos;}
@@ -87,6 +89,9 @@ class Planet
 
     //Number of ore on planet
     int m_num_of_ore;
+
+    //Number of stored ore
+    int m_stored_ore;
 
     //Position in 3D space
     Vector3f m_planet_pos;

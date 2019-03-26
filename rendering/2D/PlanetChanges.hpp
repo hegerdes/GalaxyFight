@@ -37,7 +37,7 @@ class PlanetChanges
      */
     PlanetChanges(int id)
     {
-        id = m_id;
+        m_id = id;
         init();
     }
 
@@ -53,7 +53,7 @@ class PlanetChanges
      * @param transporter How many new transporters
      * @param attack If wants to attack a the planet
      */
-    PlanetChanges(Owner own, int id, int ore, int factory, int mine, int fighters, int transporter, bool attack)
+    PlanetChanges(Owner own, int id, int ore, int factory, int mine, int fighters, int transporter, bool attack, int storedOre)
     {
         m_owned = own;
         m_id = id;
@@ -63,6 +63,7 @@ class PlanetChanges
         m_num_fighters = fighters;
         m_num_transporter = transporter;
         m_attack_planet = attack;
+        m_store_ore = storedOre;
     }   
     
     inline int getID(){return m_id;}    
@@ -70,14 +71,16 @@ class PlanetChanges
     inline int getMines(){return m_num_mine;}   
     inline int getOre(){return m_num_of_ore;}   
     inline int getFighter(){return m_num_fighters;} 
-    inline int getTransports(){return m_num_transporter;}   
+    inline int getTransports(){return m_num_transporter;} 
+    inline int getStoredOre(){return m_store_ore;}  
     inline bool getInitFight(){return m_attack_planet;} 
     inline Owner getOwner(){return m_owned;} 
     inline void setFactorys(int factorys){m_num_factory += factorys;}    
     inline void setMines(int mines){m_num_mine += mines;}    
     inline void setOre(int ore){m_num_of_ore += ore;}    
     inline void setFighter(int fighter){m_num_fighters += fighter;}  
-    inline void setTransports(int transporter){m_num_transporter += transporter;}    
+    inline void setTransports(int transporter){m_num_transporter += transporter;}
+    inline void setStoredOre(int ore){m_store_ore += ore;}    
     inline void setInitFight(bool startFight){m_attack_planet = startFight;}    
     inline void setOwner(Owner o){m_owned = o;} 
     
@@ -87,7 +90,7 @@ class PlanetChanges
      */
     inline void print()
     {
-        std::cout << "PlanetNr: " << m_id << " ChangeOwner: " << m_owned << " OreChange: " 
+        std::cout << "PlanetNr: " << m_id << " ChangeOwner: " << m_owned << " OreChange: "
         <<  m_num_of_ore << " FighterCange: " << m_num_fighters << " TransportChange: " 
         <<  m_num_transporter << " MineCange: " << m_num_mine << " FactoryChange: " 
         << m_num_factory << " Attack: " << m_attack_planet << std::endl;
@@ -107,6 +110,7 @@ class PlanetChanges
         m_num_mine = 0;
         m_num_fighters = 0;
         m_num_transporter = 0;
+        m_store_ore = 0; 
         m_attack_planet = false;
     }
 
@@ -124,6 +128,9 @@ class PlanetChanges
 
     //Number of fighters on planet
     int m_num_fighters;
+
+    //Stored ore change
+    int m_store_ore;
 
     //Number of transporters on planet
     int m_num_transporter;

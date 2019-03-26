@@ -125,9 +125,6 @@ private:
 
     /// 60 fps timer
     std::shared_ptr<QTimer>          m_timer;
-
-    ///GameManager
-    ManageGame* m_manage_game;
 };
 
 }

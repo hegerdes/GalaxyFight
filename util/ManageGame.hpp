@@ -17,18 +17,73 @@
 #include <QObject> 
 #include <iostream>
 #include <list>
+#include <stdexcept>
 #include <map>
 
 #include "GameValues.hpp"
 #include "../rendering/2D/MapFactory.hpp"
+#include "../rendering/2D/Map.hpp"
 
 namespace asteroids
 {
+
+struct attackspacecraft{
+    //constructor
+    attackspacecraft(int id, int position) : m_id(id), m_position(position), m_next_position(-1), m_change_position(false) {}
+    //id für einzelne Schiffe
+    int m_id;
+    //owner
+    PlanetChanges::Owner m_owner;
+    //aktuelle position des Schiffes
+    int m_position;
+    //nächste position, wenn aktuelle geändert werden soll
+    int m_next_position;
+    //flag ob es ein positionswechsel in der nächsten runde geben soll
+    bool m_change_position;
+};
+
+struct transportspacecraft{
+    //constructor
+    transportspacecraft(int id, int position) : m_id(id), m_position(position), m_next_position(position),
+        m_to_new_route(false), m_to_base(false), m_to_mine(false), m_current_route(), m_tmp_route(), m_route_iterator() {}
+    //id für einzelne Schiffe
+    int m_id;
+    //owner
+    PlanetChanges::Owner m_owner;
+    //aktuelle position
+    int m_position;
+    //nächste position der route
+    int m_next_position;
+    //flag ob Schiff noch zur route fliegen muss
+    bool m_to_new_route;
+    //flag ob Schiff zur base fliegt
+    bool m_to_base;
+    //flag ob Schiff zur miene fliegt
+    bool m_to_mine;
+    //liste der planeten für die aktuelle dauerhafte route
+    std::list<int> m_current_route;
+    //liste der planeten, um zum planeten des routenbegins zu kommen
+    std::list<int> m_tmp_route;
+    //iterator um durh die liste zu gehen
+    std::list<int>::iterator m_route_iterator;
+};
+
+
 class ManageGame : public QObject 
 {
     Q_OBJECT
 
   public:
+    using Fighter = std::shared_ptr<attackspacecraft>;
+    using Transporter = std::shared_ptr<transportspacecraft>;
+
+    /**
+     * @brief initialize_player initializiert die die ManageGame Instanz
+     * @param player_id ist die eigene id
+     * @param planet_id ist die id vom Hauptquatier
+     * @return
+     */
+    void initialize_player(PlanetChanges::Owner player_id, int planet_id);
 
     /**
      * @brief Singelton get the instance
@@ -38,10 +93,9 @@ class ManageGame : public QObject
     static ManageGame* getinstance();
 
     /**
-     * @brief Interates through all planets and counts mine, fighter and transporter
-     * 
+     * @brief updateSpaceCrafts Alle positionen werden aktualisiert
      */
-    void updateStats();
+    void updateSpaceCrafts();
 
     std::list<PlanetChanges::Ptr>& get_PlanetCangeList();
 
@@ -53,15 +107,25 @@ class ManageGame : public QObject
 
     inline int get_attackSpaceCraft_number(){return m_attackSpaceCraft_number;}
 
+    inline std::list<Fighter>& get_attackSpaceCraftList(){return m_attackSpaceCraftslist;}
+
+    inline std::list<Transporter>& get_transportSpaceCraftList(){return m_transportSpaceCraftslist;}
+
   signals:
     void gameover();
     void no_resources();
     void updateInfobar();
     void not_ur_planet();
+    void not_ur_ship();
+    void already_exist();
     void goToScene2D();
     void goto3DScene();
+    void changeRouteError();
+    void updateScene();
 
   public slots:
+    void change_Fighter_position(int new_position, int attackSpaceCraft_id);
+    void change_transport_route(int planet_id, int transportSpaceCraft_id);
     void build_factory(int planet_id);
     void build_mine(int planet_id);
     void build_fighter(int planet_id);
@@ -81,8 +145,19 @@ class ManageGame : public QObject
     explicit ManageGame(QObject *parent = nullptr);
 
     /**
+     * @brief Interates through all planets and counts mine, fighter and transporter
+     *
+     */
+    void updateStats();
+
+    /**
+     * @brief Throws a error if not inizlized
+     */
+    [[ noreturn ]] void throwError();
+
+    /**
      * @brief Destroy the Manage Game object
-     * 
+     *
      */
     virtual ~ManageGame();
 
@@ -91,11 +166,17 @@ class ManageGame : public QObject
     //The instance
     static ManageGame* instance;
 
+    //If alrady initialise
+    bool m_initialised;
+
     //Pointer to the map
     Map::Ptr m_planetmap;
 
     //Planets
     Map::VecPtr m_planets;
+
+    //planeten id vom Hauptquatier
+    int m_base;
 
     //Current ressources
     int m_current_resource;
@@ -124,6 +205,11 @@ class ManageGame : public QObject
     //save changes in map
     std::map<int,PlanetChanges::Ptr> m_round_changes_map;
 
+    //liste von Kampfschiffen
+    std::list<Fighter> m_attackSpaceCraftslist;
+
+    //liste von Transportschiffen
+    std::list<Transporter> m_transportSpaceCraftslist;
 
 };
 

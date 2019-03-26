@@ -3,6 +3,8 @@
 
 #pragma once
 #include <QWidget>
+#include <QMessageBox>
+#include <QTimer>
 #include "../util/ManageGame.hpp"
 
 namespace Ui {
@@ -22,6 +24,7 @@ signals:
     void build_mine(int planet_id);
     void build_fighter(int planet_id);
     void build_transporter(int planet_id);
+    void nothingSelected();
     void next_round();
     void end_game();
 
@@ -67,19 +70,31 @@ public slots:
 
     void weiter_enable();
 
+    void set_time(int time);
+
+    void resettime();
+
+    void no_resources();
+
 private:
 
     //GameManager
     asteroids::ManageGame* m_manage_game;
 
     //The map
-     asteroids::Map::Ptr m_planetmap;
+    asteroids::Map::Ptr m_planetmap;
 
     //All planets
     asteroids::Map::VecPtr m_planets;
 
     //Current selected planet
     int m_selected_planet;
+
+    QMessageBox m_fehler;
+
+    QTimer m_timer;
+
+    QTimer m_takt;
 
     Ui::Infobar *ui;
 };

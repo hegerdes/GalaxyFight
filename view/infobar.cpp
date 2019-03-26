@@ -7,14 +7,19 @@ Infobar::Infobar(QWidget *parent) :
 {
     ui->setupUi(this);
 
+    //Set singelton instances
     asteroids::MapFactory& factory = asteroids::MapFactory::getinstance();
     m_manage_game = asteroids::ManageGame::getinstance();
 
+    //Set map and planets
     m_planetmap = factory.getMap("models/01.map");
     m_planets = m_planetmap->getPlanets();
-    m_selected_planet = 0;
-    
+    m_selected_planet = -1;
 
+    //Draw default ressources on infobar
+    updateInfobar();
+
+    //Connects
     connect(this, &Infobar::end_game,m_manage_game, &asteroids::ManageGame::end_game);
     connect(this, &Infobar::next_round,m_manage_game, &asteroids::ManageGame::next_round);
     connect(this, &Infobar::build_mine,m_manage_game, &asteroids::ManageGame::build_mine);
@@ -24,8 +29,30 @@ Infobar::Infobar(QWidget *parent) :
 
     connect(m_manage_game, &asteroids::ManageGame::updateInfobar,this,&Infobar::updateInfobar);
 
-    m_manage_game->updateStats();
+    connect(m_manage_game, &asteroids::ManageGame::no_resources, this, &Infobar::no_resources);
+
+    connect( &m_takt, &QTimer::timeout, [this](){set_time(m_timer.remainingTime()/1000);});
+
+    connect( &m_timer, &QTimer::timeout, m_manage_game, &asteroids::ManageGame::next_round);
+
+    //connect( m_manage_game, &asteroids::ManageGame::startTimer, this, &Infobar::resettime); //TODO Fix and use this line instead of the next 3 lines
+    connect( &m_timer, &QTimer::timeout, this, &Infobar::resettime);
+    m_takt.start(1000);
+    m_timer.start(6000);
 }
+
+void Infobar::set_time(int time)
+{
+    ui->timer->display(time);
+    m_takt.start(1000);
+}
+
+void Infobar::resettime()
+{
+    m_takt.start(1000);
+    m_timer.start(60000);
+}
+
 
 void Infobar::updateInfobar()
 {
@@ -38,35 +65,84 @@ void Infobar::updateInfobar()
 void Infobar::set_selected_planet(int planet_id)
 {
     m_selected_planet = planet_id;
-    m_selected_planet = 0;
 
-    ui->erz_value->setNum(m_planets.at(m_selected_planet)->getOre());
-    ui->minenanzahl_value->setNum(m_planets.at(m_selected_planet)->getMine());
-    m_manage_game->updateStats();
+    ui->erzvorkommen_value->setNum(m_planets.at((unsigned long) m_selected_planet)->getOre());
+    ui->minenanzahl_value->setNum(m_planets.at((unsigned long)m_selected_planet)->getMine());
+    ui->erzlager_value->setNum(m_planets.at((unsigned long)m_selected_planet)->getStoredOre());
+    ui->planetname->setText(QString::fromStdString(m_planets.at((unsigned long)m_selected_planet)->getname()));
 
+}
+
+void Infobar::no_resources()
+{
+    m_fehler.setWindowTitle("Fehler");
+    m_fehler.setText("Du besitzt nicht genügend Erz um diese Aktion durchzuführen!");
+
+    m_fehler.setGeometry(0, 0, 250, 200);
+
+    m_fehler.setWindowFlags(Qt::FramelessWindowHint);
+    m_fehler.setAttribute(Qt::WA_NoSystemBackground);
+    m_fehler.setAttribute(Qt::WA_TranslucentBackground);
+    m_fehler.setAttribute(Qt::WA_TransparentForMouseEvents);
+
+    m_fehler.setStyleSheet("color: rgb(255, 255, 255)");
+
+    m_fehler.setStandardButtons(0);
+
+    QTimer::singleShot(2000, &m_fehler, SLOT(hide()));
+
+    m_fehler.exec();
 }
 
 //For button clicks
 //TODO Set other color if presssed
 //TODO Send planet_id insted of 1
 void Infobar::on_mine_bauen_clicked()
-{
-    emit this->build_mine(m_selected_planet);
+{   
+    if(m_selected_planet < 0 || m_selected_planet >= m_planetmap.get()->getNumberOfPlanets())
+    {
+        emit nothingSelected();
+    }
+    else
+    {
+        emit this->build_mine(m_selected_planet);
+    }
 }
 
 void Infobar::on_werft_bauen_clicked()
-{
-    emit this->build_factory(m_selected_planet);
+{   
+    if(m_selected_planet < 0 || m_selected_planet >= m_planetmap.get()->getNumberOfPlanets())
+    {
+        emit nothingSelected();
+    }
+    else
+    {
+        emit this->build_factory(m_selected_planet);
+    }
 }
 
 void Infobar::on_kampfschiff_bauen_clicked()
 {
-    emit this->build_fighter(m_selected_planet);
+    if(m_selected_planet < 0 || m_selected_planet >= m_planetmap.get()->getNumberOfPlanets())
+    {
+        emit nothingSelected();
+    }
+    else
+    {
+        emit this->build_fighter(m_selected_planet);
+    }
 }
 
 void Infobar::on_transporter_bauen_clicked()
 {
-    emit this->build_transporter(m_selected_planet);
+    if(m_selected_planet < 0 || m_selected_planet >= m_planetmap.get()->getNumberOfPlanets())
+    {
+        emit nothingSelected();
+    }
+    else
+    {
+        emit this->build_transporter(m_selected_planet);
+    }
 }
 
 void Infobar::on_aufgeben_clicked()
