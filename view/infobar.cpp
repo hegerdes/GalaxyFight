@@ -84,10 +84,19 @@ void Infobar::set_selected_planet(int planet_id)
 
 }
 
-void Infobar::no_resources()
+void Infobar::no_resources(int num)
 {
     m_popup.setWindowTitle("Fehler");
-    m_popup.setText("Du besitzt nicht genügend Erz um diese Aktion durchzuführen!");
+    if(num == 0)
+    {
+        m_popup.setText("Du besitzt nicht genügend Erz um diese Aktion durchzuführen!");
+    }
+    else
+    {
+        m_popup.setText("Einige Minenen haben kein Erz mehr");
+    }
+    
+    
 
     m_popup.setGeometry(0, 0, 250, 200);
 
