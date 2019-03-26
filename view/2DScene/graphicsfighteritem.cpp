@@ -25,7 +25,7 @@ void GraphicsFighterItem::paint(QPainter* painter, const QStyleOptionGraphicsIte
         icon = QIcon("./models/fighter_player1.svg").pixmap(25, 25);
         break;
     case PlayerType::PLAYER2:
-        icon = QIcon("./models/fighter_player1.svg").pixmap(25, 25);
+        icon = QIcon("./models/fighter_player2.svg").pixmap(25, 25);
         break;
     default:
         //show nothing

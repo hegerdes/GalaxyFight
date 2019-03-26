@@ -51,6 +51,9 @@ void StartScreen::on_playBut_clicked()
     //sends Signals when "Spielen" was clicked
     emit gotoLoadingScreen();
     // emit startClient();
+    //testing
+    ManageGame::getinstance()->initialize_player(PlanetChanges::PLAYER2, 16);
+
     client_global.sendReadyT("eins",4);
     QtConcurrent::run(QThreadPool::globalInstance(), [&](){
        MapFactory& b = MapFactory::getinstance();
@@ -66,7 +69,7 @@ void StartScreen::on_playBut_clicked()
 //       }
 //       else if(client_global.player_No == 1)
 //       {
-//           game_inst->initialize_player(PlanetChanges::PLAYER2,a->getNumberOfPlanets());
+//           game_inst->initialize_player(PlanetChanges::PLAYER2,a->getNumberOfPlanets() - 1);
 //       }
         std::cerr << "player_No: " << client_global.player_No << ", id_other: " << client_global.id_other << "\n";
         emit goTo2D();

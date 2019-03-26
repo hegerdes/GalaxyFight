@@ -54,7 +54,7 @@ struct transportspacecraft{
     int m_position;
     //nächste position der route
     int m_next_position;
-    //geladenes
+    //geladenes erz
     int m_ore;
     //flag ob Schiff noch zur route fliegen muss
     bool m_to_new_route;

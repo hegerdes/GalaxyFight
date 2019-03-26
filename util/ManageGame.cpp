@@ -368,27 +368,25 @@ void ManageGame::updateSpaceCrafts()
         if((*i)->m_change_position){
                 (*i)->m_position = (*i)->m_next_position;
                 (*i)->m_change_position = false;
-            std::cout << "change fighter position: " + std::to_string((*i)->m_id) << std::endl;
         }
     }
 
     //transportrouten aktualisieren
     for(auto i = m_transportSpaceCraftslist.begin(); i != m_transportSpaceCraftslist.end(); i ++){
         if((*i)->m_to_new_route){
+
             if((*i)->m_route_iterator == (*i)->m_tmp_route.end()){
                 (*i)->m_route_iterator = (*i)->m_current_route.begin();
                 (*i)->m_to_base = true;
                 (*i)->m_to_mine = false;
                 (*i)->m_to_new_route = false;
-                (*i)->m_position = *((*i)->m_route_iterator);
-                (*i)->m_route_iterator++;
-                (*i)->m_next_position = *((*i)->m_route_iterator);
-                std::cout << "transport change route mine -> base: " + std::to_string((*i)->m_id) << std::endl;
+                (*i)->m_position = (*i)->m_next_position;
+                (*i)->m_next_position = *((*i)->m_route_iterator++);
+            }else
+            {
+                (*i)->m_position = (*i)->m_next_position;
+                (*i)->m_next_position = *((*i)->m_route_iterator++);
             }
-            (*i)->m_position = *((*i)->m_route_iterator);
-            (*i)->m_route_iterator++;
-            (*i)->m_next_position = *((*i)->m_route_iterator);
-            std::cout << "transport position -> new route: "+ std::to_string((*i)->m_id) << std::endl;
         }
 
         if((*i)->m_to_base){
@@ -396,15 +394,16 @@ void ManageGame::updateSpaceCrafts()
                 (*i)->m_to_base = false;
                 (*i)->m_to_mine = true;
                 (*i)->m_to_new_route = false;
-                (*i)->m_position = *((*i)->m_route_iterator);
+
+                (*i)->m_position = (*i)->m_next_position;
                 (*i)->m_route_iterator--;
-                (*i)->m_next_position = *((*i)->m_route_iterator);
-                std::cout << "transport change route base->mine: "+ std::to_string((*i)->m_id) << std::endl;
+                (*i)->m_next_position = *((*i)->m_route_iterator--);
+
             }else {
-                (*i)->m_position = *((*i)->m_route_iterator);
-                (*i)->m_route_iterator++;
-                (*i)->m_next_position = *((*i)->m_route_iterator);
-                std::cout << "transport mine -> base: " + std::to_string((*i)->m_id) << std::endl;
+                (*i)->m_position = (*i)->m_next_position;
+                (*i)->m_next_position = *((*i)->m_route_iterator++);
+
+
             }
         }
 
@@ -413,16 +412,14 @@ void ManageGame::updateSpaceCrafts()
                 (*i)->m_to_base = true;
                 (*i)->m_to_mine = false;
                 (*i)->m_to_new_route= false;
-                (*i)->m_position = *((*i)->m_route_iterator);
-                (*i)->m_route_iterator++;
-                (*i)->m_next_position = *((*i)->m_route_iterator);
-                std::cout << "transport change route mine -> base: " + std::to_string((*i)->m_id) << std::endl;
+
+                (*i)->m_position = (*i)->m_next_position;
+                (*i)->m_next_position = *((*i)->m_route_iterator++);
 
             }else {
-                (*i)->m_position = *((*i)->m_route_iterator);
-                (*i)->m_route_iterator--;
-                (*i)->m_next_position = *((*i)->m_route_iterator);
-                std::cout << "transport base -> mine: " + std::to_string((*i)->m_id) << std::endl;
+                (*i)->m_position = (*i)->m_next_position;
+                (*i)->m_next_position = *((*i)->m_route_iterator--);
+
             }
         }
     }
