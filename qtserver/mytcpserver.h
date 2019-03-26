@@ -60,6 +60,7 @@ class Server : public QObject {
            int num_fighters;
            int num_transporter;
            bool m_attack_planet;
+           int stored_ore;
        };
 
     struct client_data {

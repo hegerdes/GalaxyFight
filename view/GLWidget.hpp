@@ -45,6 +45,9 @@ class GLWidget : public QOpenGLWidget
 public:
     GLWidget(QWidget* parent = NULL);
 
+    /// Determines whether game should be loaded
+    bool                        active;
+
     /// Parses a level file and loads all supported objects
     void setLevelFile(const std::string& file);
 
@@ -114,9 +117,6 @@ private:
 
     /// Last set mouse position
     QPoint                      m_mousePos;
-
-    /// Determines whether game should be loaded
-    bool                        active;
 
     /// Letzter Zeitpunkt zu dem eine Kugel abgefeurert wurde
     long                        m_lastBullet;

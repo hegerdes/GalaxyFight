@@ -24,7 +24,7 @@ QByteArray IntToArray(qint32 source) // Use qint32 to ensure that the number hav
 void Client::recivePlanetChanges(char * data)
 {
     int size = getInt(&data);
-    std::cerr << __LINE__ << ", " << size << "size of recived package\n";
+    std::cerr << __LINE__ << ", " << size << ", size of recived package\n";
     std::list<PlanetChanges> p_changes;
     for (int i {0} ; i < size ; i++)
     {
@@ -36,6 +36,7 @@ void Client::recivePlanetChanges(char * data)
         int num_fighters = getInt(&data);
         int num_transporter = getInt(&data);
         bool m_attack_planet = (bool)getChar(&data);
+        int stored_ore = getInt(&data);
         bool m_attack;
         if(m_attack_planet == 1)
         {
@@ -46,16 +47,16 @@ void Client::recivePlanetChanges(char * data)
         }
         p_changes.push_back(PlanetChanges(m_own, m_id, m_num_of_ore,
                                           num_factory, num_mine, num_fighters,
-                                          num_transporter, m_attack));
+                                          num_transporter, m_attack, stored_ore));
         std::cerr << __LINE__ << ", m_own: " << m_own << ", m_id:" << m_id
                   << ", m_num_ore: " << m_num_of_ore
                   << ", num_factory: " << num_factory
                   << ", num_mine: " << num_mine
                   << ", num_fighters: " << num_fighters
                   << ", num_transporter: " << num_transporter
-                  << ", attack_planet: " << m_attack_planet << "\n";
+                  << ", attack_planet: " << m_attack_planet
+                  << ", stored_ore: " << stored_ore << "\n";
     }
-    m_planet_changes_received = true;
 }
 
 
@@ -78,6 +79,7 @@ void Client::SendPlanetChanges(int size,std::list<PlanetChanges> changes )
         int num_fighters = (*it).getFighter();
         int num_transporter = (*it).getTransports();
         bool m_attack_planet =(*it).getInitFight();
+        int stored_ore = (*it).getOre();
         char m_attack = 0;
         if(m_attack_planet == true)
         {
@@ -94,6 +96,7 @@ void Client::SendPlanetChanges(int size,std::list<PlanetChanges> changes )
         data.append((char*)&num_fighters, 4);
         data.append((char*)&num_transporter, 4);
         data.append((char*)&m_attack,1);
+        data.append((char*)&stored_ore, 4);
 
     }
     writeData(data);
@@ -161,19 +164,19 @@ void Client::init_3d(char* data) {
     enemyzAxis[2] = getFloat(&data);
 
     count_astr = getInt(&data);
-    std::cerr << count_astr << " count_astr --------------------\n";
+    //std::cerr << count_astr << " count_astr --------------------\n";
     for (int i{0}; i < count_astr; i++) {
         id_astr[i] = getInt(&data);
 
         pos_astr[i][0] = getFloat(&data);
         pos_astr[i][1] = getFloat(&data);
         pos_astr[i][2] = getFloat(&data);
-        std::cerr << "Astr Pos: " << pos_astr[i] << "\n";
+        //std::cerr << "Astr Pos: " << pos_astr[i] << "\n";
 
         dir_astr[i][0] = getFloat(&data);
         dir_astr[i][1] = getFloat(&data);
         dir_astr[i][2] = getFloat(&data);
-        std::cerr << "Astr dir: " << dir_astr[i] << "\n";
+        //std::cerr << "Astr dir: " << dir_astr[i] << "\n";
 
         size_astr[i] = getFloat(&data);
     }
@@ -274,7 +277,7 @@ void Client::game_start(char* data)
 }
 
 void Client::interpreteAnswer() {
-    //std::cerr << __LINE__ << ", " << __PRETTY_FUNCTION__ << "\n";
+    std::cerr << __LINE__ << ", " << __PRETTY_FUNCTION__ << "\n";
     QByteArray answer = socket.readAll();
     if (answer.length() > 0) {
         // std::cerr << socket.waitForBytesWritten() << "; waitForBytesWritten\n";
@@ -295,6 +298,7 @@ void Client::interpreteAnswer() {
         } else if(pt == PacketType::planet_changes2d) {
                 std::cerr << __LINE__  << ", planet changes got recived\n";
                 recivePlanetChanges(data);
+                m_planet_changes_received = true;
         } else if (pt == PacketType::end_3D) {
             std::cerr << __LINE__ << "\n";
             winner_no = getChar(&data);

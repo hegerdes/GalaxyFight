@@ -188,7 +188,7 @@ void Scene2dHandler::placeFighter()
     auto planets = MapFactory::getinstance().getMap("./models/01.map")->getPlanets();
     auto itemList = items();
 
-    std::cout << "start fighter placement: num:" << fighters.size() << std::endl;
+    std::cerr << __LINE__ << ", " << __PRETTY_FUNCTION__ << "\n";
 
 
     //start animation and placement
@@ -265,7 +265,7 @@ void Scene2dHandler::updateMap()
 }
 
 void Scene2dHandler::updateRound() {
-    std::cout << "update round" << std::endl;
+    std::cerr << __LINE__ << ", " << __PRETTY_FUNCTION__ << "\n";
     placeFighter();
     placeTransporter();
     updateMap();

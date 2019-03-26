@@ -38,7 +38,7 @@ Infobar::Infobar(QWidget *parent) :
     //connect( m_manage_game, &asteroids::ManageGame::startTimer, this, &Infobar::resettime); //TODO Fix and use this line instead of the next 3 lines
     connect( &m_timer, &QTimer::timeout, this, &Infobar::resettime);
     m_takt.start(1000);
-    m_timer.start(6000);
+    m_timer.start(60000); // @ahaker m_timer to short with 6000
 }
 
 void Infobar::set_time(int time)

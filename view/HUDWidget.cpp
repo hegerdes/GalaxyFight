@@ -170,10 +170,6 @@ namespace asteroids
         m_firstPerson = b;
     }
 
-    void HUDWidget::activateAlertScreen()
-    {
-        
-           
-           
-    }
+    //void HUDWidget::activateAlertScreen() {    }
+
 }

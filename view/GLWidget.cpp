@@ -300,11 +300,11 @@ void GLWidget::step(map<Qt::Key, bool>& keyStates)
                 if(i < client_global.count_astr)
                 {
                     (*it)->m_position = client_global.pos_astr[i];
-                    std::cerr << "m_position " << (*it)->m_position << "\n";
+                    //std::cerr << "m_position " << (*it)->m_position << "\n";
                     (*it)->m_radius = client_global.size_astr[i];
-                    std::cerr << "m_radius " << (*it)->m_radius << "\n";
+                    //std::cerr << "m_radius " << (*it)->m_radius << "\n";
                     (*it)->m_direction = client_global.dir_astr[i];
-                    std::cerr << "m_direction " << (*it)->m_direction << "\n";
+                    //std::cerr << "m_direction " << (*it)->m_direction << "\n";
                     //TODO SET ID
                 }
                 i++;
@@ -314,7 +314,7 @@ void GLWidget::step(map<Qt::Key, bool>& keyStates)
             }
 
             client_global.init_received = false;
-            std::cerr << "erhalten----------------------------------------------\n";
+            //std::cerr << "erhalten----------------------------------------------\n";
         } else {
             client_global.sendUpdate_3D_C(m_actor->m_position, m_actor->m_xAxis,
                                          m_actor->m_yAxis, m_actor->m_zAxis,
@@ -372,6 +372,7 @@ void GLWidget::step(map<Qt::Key, bool>& keyStates)
 
         m_enemyHPBar->setHP(m_enemyPlayer->getHP());
         m_playerHPBar->setHP(m_actor->getHP());
+        //std::cerr << __LINE__ << "\n";
         this->update();
         m_hud.update();
     }

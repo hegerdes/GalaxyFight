@@ -67,9 +67,12 @@ void MainWindow::gotoStartScreen()
 
 void MainWindow::goto3DScene()
 {
+    std::cerr << __LINE__ << ", " << __PRETTY_FUNCTION__ << "\n";
     m_screenStack->setCurrentWidget(m_3DScene);
 
     m_3DScene->setLevelFile(QSettings().value("levelXML", "./models/level.xml").toString().toStdString());
+    std::cerr << __LINE__ << "\n";
+    m_3DScene->active = true;
     //m_3DScene->loadLevel();
 }
 
@@ -116,7 +119,7 @@ void MainWindow::setupConnections()
   connect(m_startscreen, &StartScreen::gotoLoadingScreen, this, &MainWindow::gotoLoadingScreen);
   connect(m_startscreen, &StartScreen::closeWindow , this, &MainWindow::closeWindow);
   connect(m_startscreen, &StartScreen::goTo2D, this, &MainWindow::goToScene2D);
-  connect(m_3DScene, &GLWidget::goToScene2D,this,&MainWindow::goToScene2D); // @ahaker möglicher mergefehler
+  connect(m_3DScene, &GLWidget::goToScene2D,this,&MainWindow::goToScene2D);
   connect(m_startscreen, &StartScreen::goto3DScene, this, &MainWindow::goto3DScene);
   //connect(m_startscreen, &StartScreen::gotoLoadingScreen, this, &MainWindow::goToLoadingScreen);
 }

@@ -1,12 +1,12 @@
 /**
  * @file ManageGame.cpp
  * @author Henrik Gerdes (hegerdes@uni-osnabrueck.de)
- * @brief 
+ * @brief
  * @version 0.1
  * @date 2019-03-21
- * 
+ *
  * @copyright Copyright (c) 2019
- * 
+ *
  */
 
 #include "ManageGame.hpp"
@@ -76,7 +76,7 @@ void ManageGame::build_factory(int planet_id)
     else
     {
         throwError();
-    } 
+    }
 }
 
 void ManageGame::build_mine(int planet_id)
@@ -278,6 +278,7 @@ void ManageGame::change_transport_route(int planet_id, int transportSpaceCraft_i
 
 void ManageGame::next_round()
 {
+    std::cerr << __LINE__ << ", " << __PRETTY_FUNCTION__ << "\n";
     if(m_initialised)
     {
         //Convert to list to send
@@ -310,29 +311,37 @@ void ManageGame::next_round()
         updateStats();
 
         emit updateScene();
-        std::cout << "updateScene called " << __LINE__ << std::endl;
+        std::cerr << __LINE__ << " updateScene called " << __LINE__ << std::endl;
         emit updateInfobar();
     }
 
     emit updateInfobar();
     // @ahaker send initpacket
     std::list<PlanetChanges> changes;
-    PlanetChanges planetchanges(PlanetChanges::Owner::UNASSIGN ,1,1,1,1,1,1,0);
-    PlanetChanges planetchangess(PlanetChanges::Owner::UNASSIGN ,2,1,1,1,1,1,0);
-    changes.push_back(planetchangess);
+    PlanetChanges planetchanges(PlanetChanges::Owner::UNASSIGN ,2,1,1,1,1,1,0,1);
+    //PlanetChanges planetchangess(PlanetChanges::Owner::UNASSIGN ,2,1,1,1,1,1,0,1);
+    //changes.push_back(planetchangess);
     changes.push_back(planetchanges);
     std::cerr << __LINE__ << ", " << __PRETTY_FUNCTION__ << ", changes.size()" << changes.size() << "\n";
     client_global.SendPlanetChanges(changes.size(), changes);
     std::cerr << __LINE__ << "\n";
     client_global.wait_for_readData(-1);
-    while(!client_global.init_received) {
+    //client_global.init_received = false;
+    while(!client_global.init_received || !client_global.m_planet_changes_received) {
         client_global.SendPlanetChanges(changes.size(), changes);
         client_global.wait_for_readData(-1);
+        if(client_global.init_received){
+            emit goto3DScene();
+            break;
+        }else if (client_global.m_planet_changes_received) {
+            break;
+        }
         sleep(1);
+        std::cerr << __LINE__ << "\n";
     }
+    client_global.m_planet_changes_received = false;
     client_global.send_reset_planet_changes();
     std::cerr << __LINE__ << "\n";
-    emit goto3DScene();
 }
 
 void ManageGame::end_game()
