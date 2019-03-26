@@ -97,6 +97,8 @@ void Scene2dHandler::mouseReleaseEvent(QGraphicsSceneMouseEvent* mouseEvent)
         if(m_currentlySelected->type() == ItemTypes::Fighter) {
             ManageGame::getinstance()->change_Fighter_position(static_cast<GraphicsPlanetItem*>(item)->getID(),
                                                                static_cast<GraphicsFighterItem*>(m_currentlySelected)->getID());
+
+            std::cout << "fighter: " << static_cast<GraphicsPlanetItem*>(item)->getID() << " new planet: " << static_cast<GraphicsFighterItem*>(m_currentlySelected)->getID();
         }
         if(m_currentlySelected->type() == ItemTypes::Transporter) {
             ManageGame::getinstance()->change_transport_route(static_cast<GraphicsPlanetItem*>(item)->getID(),
@@ -186,6 +188,9 @@ void Scene2dHandler::placeFighter()
                 auto pos = planets[fighter->m_next_position]->getPos();
                 item->setPos(pos[0] - 20, pos[1] - 20);
                 foundFlag = true;
+
+                //testing
+                std::cout << "planet: " << fighter->m_next_position << std::endl;
             }
         }
 
@@ -247,7 +252,7 @@ void Scene2dHandler::updateMap()
     //draw mines and factorys
     for(const auto& planet : planets) {
         //create a new mine if required
-        std::cout << "Planet: " << planet->getname() << " ID: " << planet->getID() << " Mines: " << planet->getMine() << " Factorys" << planet->getFactorys() << std::endl;
+//        std::cout << "Planet: " << planet->getname() << " ID: " << planet->getID() << " Mines: " << planet->getMine() << " Factorys" << planet->getFactorys() << std::endl;
         if (itemAt(planet->getPos()[0], planet->getPos()[1], QTransform())->type() != ItemTypes::Mine
                 && planet->getMine()) {
             auto mineItem = new GraphicsMineItem();
