@@ -63,6 +63,14 @@ void Infobar::updateInfobar()
     ui->transporter_value->setNum(m_manage_game->get_transportCpaceCraft_number());
     ui->erz_value->setNum(m_manage_game->get_current_resource());
     ui->ertrag_value->setNum(m_manage_game->get_resource_per_time());
+
+    if(m_selected_planet > 0 && m_selected_planet < m_planetmap->getNumberOfPlanets())
+    {
+        ui->erzvorkommen_value->setNum(m_planets.at((unsigned long) m_selected_planet)->getOre());
+        ui->minenanzahl_value->setNum(m_planets.at((unsigned long)m_selected_planet)->getMine());
+        ui->erzlager_value->setNum(m_planets.at((unsigned long)m_selected_planet)->getStoredOre());
+        ui->planetname->setText(QString::fromStdString(m_planets.at((unsigned long)m_selected_planet)->getname()));
+    }
 }
 
 void Infobar::set_selected_planet(int planet_id)
