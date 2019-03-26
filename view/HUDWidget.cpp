@@ -28,6 +28,11 @@ namespace asteroids
         QRect crossHair[4];
         QRect fullScreen;
         QRect endRoundOnScreenMessage;
+        //Berechnet Distanz; diese wird später in der textDistanceBar ausgegeben
+        Vector3f posMyShip = m_myShip->getPosition();
+        Vector3f posEnemyShip = m_enemyShip->getPosition();
+        float distance = sqrt(pow(posEnemyShip[0] - posMyShip[0],2) + pow(posEnemyShip[1] - posMyShip[1],2) + pow(posEnemyShip[2] - posMyShip[2],2));
+        float distanceFunction =1/(log(distance/100 +2));
         if(!m_firstPerson)
         {
             leftHP = QRect(0, 0, width()/2 * m_myShip->getHP()/10, height()/50);
@@ -42,12 +47,20 @@ namespace asteroids
             leftHP = QRect(2.01*width()/9, height()*90.5/100, width()/6 * m_myShip->getHP()/10, height()/15);
             rightHP = QRect(5.5*width()/9 + (width()/6-width()/6 * m_enemyShip->getHP()/10), height()*90.5/100, width()/6 * m_enemyShip->getHP()/10, height()/15);
             velocityBar = QRect(3.75*width()/9, height()*90.5/100, width()/6 * m_myShip->getCurrentSpeed()/m_myShip->getMaxSpeed() , height()/15);
-            distanceBarRight = QRect(3.75*width()/9, height()*70/100, width()/12 , height()/15);
-            distanceBarLeft = QRect(3.75*width()/9 + width()/12, height()*70/100, width()/12 , height()/15);
+            
+
             
             textLeftHP = QRect(2.01*width()/9, height()*90.5/100, width()/6 * 1, height()/15);
             textRightHP = QRect(5.5*width()/9 + (width()/6-width()/6 * 1), height()*90.5/100, width()/6 * 1, height()/15);
             textVelocityBar = QRect(3.75*width()/9, height()*90.5/100, width()/6 , height()/15);
+            
+            
+            
+
+            distanceBarRight = QRect(3.75*width()/9, height()*70/100, width()/12 * distanceFunction, height()/15);
+            distanceBarLeft = QRect((3.75*width()/9)  + (width()/6 - width()/12 * distanceFunction), height()*70/100, width()/12 * distanceFunction, height()/15);
+            
+            
             textDistanceBar = QRect(3.75*width()/9, height()*70/100, width()/6 , height()/15);
 
             
@@ -102,7 +115,8 @@ namespace asteroids
         string currentSpeedString = std::to_string(currentSpeedInt) + "%";
         m_p.drawText(textVelocityBar, Qt::AlignCenter, QString::fromStdString(currentSpeedString));
 
-        m_p.drawText(textDistanceBar, Qt::AlignCenter, "Test Distance Bar");
+        int distance_int = distance;
+        m_p.drawText(textDistanceBar, Qt::AlignCenter, QString::number(distance_int));
         
         m_p.end();    
 

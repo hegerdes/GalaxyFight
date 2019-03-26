@@ -17,6 +17,7 @@ GLWidget::GLWidget(QWidget* parent)
 {
     m_layout.addWidget(&m_hud);
     setLayout(&m_layout);
+    setFocusPolicy(Qt::StrongFocus);
 }
 
 void GLWidget::setLevelFile(const std::string& file)
