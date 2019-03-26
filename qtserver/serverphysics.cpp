@@ -37,24 +37,18 @@ namespace asteroids {
     {
         Removes removed = process();
         //append removed asteroids to changes list from struct
-        m_data_socket_1.deleted_asteroids_id.insert(
-                    m_data_socket_1.deleted_asteroids_id.end(),
-                    removed.aster_changed.begin(),
-                    removed.aster_changed.end());
-        m_data_socket_2.deleted_asteroids_id.insert(
-                    m_data_socket_2.deleted_asteroids_id.end(),
-                    removed.aster_changed.begin(),
-                    removed.aster_changed.end());
+        for(int i : removed.aster_changed)
+        {
+            m_data_socket_1.deleted_asteroids.push_back(i);
+            m_data_socket_2.deleted_asteroids:push_back(i);
+        }
 
-        //append removed bullets to changes list from struct
-        m_data_socket_1.deleted_bullets_id.insert(
-                    m_data_socket_1.deleted_bullets_id.end(),
-                    removed.bullet_changed.begin(),
-                    removed.bullet_changed.end());
-        m_data_socket_2.deleted_bullets_id.insert(
-                    m_data_socket_2.deleted_bullets_id.end(),
-                    removed.bullet_changed.begin(),
-                    removed.bullet_changed.end());
+        //Append deleted bullets to each list.
+        for(int i : removed.bullet_changed)
+        {
+            m_data_socket_1.deleted_bullets.push_back(i);
+            m_data_socket_2.deleted_bullets:push_back(i);
+        }
     }
 
     Removes ServerPhysics::process(){
