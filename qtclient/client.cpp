@@ -24,7 +24,7 @@ QByteArray IntToArray(qint32 source) // Use qint32 to ensure that the number hav
 void Client::recivePlanetChanges(char * data)
 {
     int size = getInt(&data);
-    std::cerr << __LINE__ << ", " << size << ", size of recived package\n";
+    std::cerr << __LINE__ << ", " <<  __PRETTY_FUNCTION__ << ", " << size << ", size of recived package\n";
     std::list<PlanetChanges> p_changes;
     for (int i {0} ; i < size ; i++)
     {
@@ -48,7 +48,7 @@ void Client::recivePlanetChanges(char * data)
         p_changes.push_back(PlanetChanges(m_own, m_id, m_num_of_ore,
                                           num_factory, num_mine, num_fighters,
                                           num_transporter, m_attack, stored_ore));
-        std::cerr << __LINE__ << ", m_own: " << m_own << ", m_id:" << m_id
+        std::cerr << "\t" << __LINE__ << __FUNCTION__ << ", m_own: " << m_own << ", m_id:" << m_id
                   << ", m_num_ore: " << m_num_of_ore
                   << ", num_factory: " << num_factory
                   << ", num_mine: " << num_mine
@@ -133,7 +133,7 @@ void Client::init_3d(char* data) {
     ownPos[0] = getFloat(&data);
     ownPos[1] = getFloat(&data);
     ownPos[2] = getFloat(&data);
-    std::cerr << ownPos << "\n";
+    std::cerr << __LINE__ << ", " << __PRETTY_FUNCTION__ << "\t" << ownPos << "\n";
 
     ownxAxis[0] = getFloat(&data);
     ownxAxis[1] = getFloat(&data);
@@ -278,7 +278,7 @@ void Client::game_start(char* data)
 }
 
 void Client::interpreteAnswer() {
-    //std::cerr << __LINE__ << ", " << __PRETTY_FUNCTION__ << "\n";
+    std::cerr << __LINE__ << ", " << __PRETTY_FUNCTION__ << "\n";
     QByteArray answer = socket.readAll();
     if (answer.length() > 0) {
         // std::cerr << socket.waitForBytesWritten() << "; waitForBytesWritten\n";
@@ -289,7 +289,7 @@ void Client::interpreteAnswer() {
         // std::cerr << "pid: " << pt << ", length" << answer.length() << "\n";
         if (pt == PacketType::init_3D) {
             // Own
-            std::cerr << __LINE__ << "\n";
+            std::cerr << "\t" << __LINE__ << __FUNCTION__ << "\n";
             init_3d(data);
             init_received = true;
         } else if (pt == PacketType::update_3D_S) {
@@ -297,21 +297,21 @@ void Client::interpreteAnswer() {
             // std::cerr << "packtetype_udpate_3d_s\n";
             update_3D_S(data);
         } else if(pt == PacketType::planet_changes2d) {
-                std::cerr << __LINE__  << ", planet changes got recived\n";
+                std::cerr << "\t" << __LINE__ << __FUNCTION__ << ", planet changes got recived\n";
                 recivePlanetChanges(data);
                 m_planet_changes_received = true;
         } else if (pt == PacketType::end_3D) {
-            std::cerr << __LINE__ << "\n";
+            std::cerr << "\t" << __LINE__ << __FUNCTION__ << "\n";
             winner_no = getChar(&data);
         } else if (pt == PacketType::start_2D) {
-            std::cerr << __LINE__ << "\n";
+            std::cerr << "\t" << __LINE__ << __FUNCTION__ << "\n";
             // TODO BLOCK WAITING:::
         } else if(pt == PacketType::game_start)
         {
-            std::cerr << __LINE__ << "\n";
+            std::cerr << "\t" << __LINE__ << __FUNCTION__ << "\n";
             game_start(data);
         } else {
-            std::cerr << __LINE__ << "\n";
+            std::cerr << "\t" << __LINE__ << __FUNCTION__ << "\n";
 
         }
     }

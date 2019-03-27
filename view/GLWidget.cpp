@@ -191,6 +191,7 @@ void GLWidget::paintGL()
 void GLWidget::step(map<Qt::Key, bool>& keyStates)
 {
     if(active){
+        std::cerr << "\t" << __LINE__ << __PRETTY_FUNCTION__ << "\n";
         // Get keyboard states and handle model movement
         m_physicsEngine->process();
 

@@ -370,26 +370,26 @@ void ManageGame::next_round()
         updateStats();
 
         emit updateScene();
-        std::cerr << __LINE__ << " updateScene called " << __LINE__ << std::endl;
+        std::cerr << "\t " << __LINE__ << __FUNCTION__ << " updateScene called " << __LINE__ << std::endl;
         emit updateInfobar();
     }
 
     emit updateInfobar();
     // @ahaker send initpacket
     std::list<PlanetChanges> changes;
-    /*
-    for(auto x : m_round_changes_map)
+    std::cerr << "\t" << __LINE__ << ", size of m_round_changes_list: " << m_round_changes_list.size() << "\n" ;
+    for(auto x : m_round_changes_list)
     {
-        changes.push_back(x.first);
+        std::cerr << "\t" << __LINE__ << __FUNCTION__ << ", size of m_round_changes_list: " << m_round_changes_list.size() << "\n" ;
+        changes.push_back(*x);
     }
-    */
-    PlanetChanges planetchanges(PlanetChanges::Owner::UNASSIGN ,3,1,1,1,1,1,0,1);
-    changes.push_back(planetchanges);
+    //PlanetChanges planetchanges(PlanetChanges::Owner::UNASSIGN ,3,1,1,1,1,1,0,1);
+    //changes.push_back(planetchanges);
     //PlanetChanges planetchangess(PlanetChanges::Owner::UNASSIGN ,1,1,1,1,1,1,0,1);
     //changes.push_back(planetchangess);
 
     client_global.m_planet_changes_received = false;
-    std::cerr << __LINE__ << ", " << __PRETTY_FUNCTION__ << ", changes.size()" << changes.size() << "\n";
+    std::cerr << "\t" << __LINE__ << __FUNCTION__ << ", " << ", changes.size()" << changes.size() << "\n";
     client_global.SendPlanetChanges(changes.size(), changes);
     if(!changes.empty())
     {
@@ -397,10 +397,10 @@ void ManageGame::next_round()
     }
     client_global.readData();
     if(client_global.init_received){
-        std::cerr << __LINE__ << "----------------------------------------\n";
+        std::cerr << "\t" << __LINE__ << __FUNCTION__<< "----------------------------------------\n";
         emit goto3DScene();
     }else if (client_global.m_planet_changes_received) {
-        std::cerr << __LINE__ << "----------------------------------------\n";
+        std::cerr << "\t" << __LINE__ << __FUNCTION__<< "----------------------------------------\n";
         //apply changes
     }
     //client_global.init_received = false;
@@ -415,12 +415,12 @@ void ManageGame::next_round()
             break;
         }
         sleep(1);
-        std::cerr << __LINE__ << "\n";
+        std::cerr << "\t" << __LINE__ << __FUNCTION__ << "\n";
     }
     //client_global.send_reset_planet_changes(); @ahaker beim merge wegefallen
     //client_global.m_planet_changes_received = false; @ahaker beim merge wegefallen
     //client_global.wait_for_readData(100);
-    std::cerr << __LINE__ << "\n";
+    std::cerr << "\t" << __LINE__ << __FUNCTION__<< "\n";
 }
 
 void ManageGame::end_game()
@@ -602,7 +602,7 @@ void ManageGame::initialize_player(PlanetChanges::Owner player_id, int planet_id
     {
         m_player_id = player_id;
         m_base = planet_id;
-		std::cerr << "\t" << __LINE__ << ", m_player_id: " << m_player_id << ", m_base: " << m_base << "\n";
+        std::cerr << "\t" << __LINE__ << __FUNCTION__ << ", m_player_id: " << m_player_id << ", m_base: " << m_base << "\n";
         //TODO For DEBUG @ahaker
         //m_player_id = PlanetChanges::UNASSIGN;
 
@@ -612,7 +612,7 @@ void ManageGame::initialize_player(PlanetChanges::Owner player_id, int planet_id
          change->setOwner(m_player_id);
          m_planets.at((unsigned long)planet_id)->updatePlanet(change);
 
-    std::cerr << __LINE__ << "\n";
+    std::cerr << "\t" << __LINE__ << __FUNCTION__ << "\n";
         //Die am Start verfügbaren Schiffe werden den Listen hinzugefügt
         for (int i = 0; i < m_attackSpaceCraft_number;i++)
         {

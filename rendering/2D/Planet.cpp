@@ -37,25 +37,16 @@ int Planet::init()
  {
     std::cerr << __LINE__ << ", " << __PRETTY_FUNCTION__ << "\n";
     if(m_id != updates->getID()) return 1;
-    std::cerr << "\t" << __LINE__ << "\n";
     m_num_factory += updates->getFactorys();
-    std::cerr << "\t" << __LINE__ << "\n";
     m_num_fighters += updates->getFighter();
-    std::cerr << "\t" << __LINE__ << "\n";
     m_num_mine += updates->getMines();
-    std::cerr << "\t" << __LINE__ << "\n";
     m_num_transporter += updates->getTransports();
-    std::cerr << "\t" << __LINE__ << "\n";
     m_num_of_ore += updates->getOre();
-    std::cerr << "\t" << __LINE__ << "\n";
     m_stored_ore += updates->getStoredOre();
-    std::cerr << "\t" << __LINE__ << "\n";
     if(updates->getOwner() != PlanetChanges::UNASSIGN)
     {
-    std::cerr << "\t" << __LINE__ << "\n";
         m_owned = updates->getOwner();
     }
-    std::cerr << "\t" << __LINE__ << "\n";
 
     //update ore
     //m_num_of_ore -= m_num_mine * RESOURCE_PER_MINE;

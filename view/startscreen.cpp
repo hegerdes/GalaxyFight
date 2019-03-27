@@ -54,7 +54,7 @@ void StartScreen::on_playBut_clicked()
     // emit startClient();
     client_global.sendReadyT("name",4);
     QtConcurrent::run(QThreadPool::globalInstance(), [&](){
-		std::cerr << __LINE__ << ", " << __PRETTY_FUNCTION__ << "\n";
+        std::cerr << "\t" << __LINE__ << ", " << __PRETTY_FUNCTION__ << "\n";
 		MapFactory& b = MapFactory::getinstance();
 		Map::Ptr a = b.getMap("models/01.map");
 
@@ -68,13 +68,13 @@ void StartScreen::on_playBut_clicked()
        if(client_global.player_No == 0)
        {
            game_inst->initialize_player(PlanetChanges::PLAYER1,0);
-       std::cerr << __LINE__ << "\n";
+       std::cerr << "\t" << __LINE__ << __FUNCTION__ << "\n";
        }
        else if(client_global.player_No == 1)
        {
            game_inst->initialize_player(PlanetChanges::PLAYER2,0);
            //game_inst->initialize_player(PlanetChanges::PLAYER2,a->getNumberOfPlanets()-1); @ahaker
-       std::cerr << __LINE__ << "\n";
+       std::cerr << "\t" << __LINE__ << __FUNCTION__ << "\n";
        }
         emit goTo2D();
     });
