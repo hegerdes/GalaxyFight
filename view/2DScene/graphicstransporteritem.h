@@ -49,6 +49,12 @@ public:
      */
     void selected(bool flag = true);
 
+    /**
+     * @brief setOwner
+     * @param owner
+     */
+    void setOwner(PlayerType owner);
+
 private:
     PlayerType m_player;
     int m_id;

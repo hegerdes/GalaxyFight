@@ -26,7 +26,7 @@ void GraphicsTransporterItem::paint(QPainter* painter, const QStyleOptionGraphic
         icon = QIcon("./models/transporter_player1.svg").pixmap(20, 20);
         break;
     case PlayerType::PLAYER2:
-        icon = QIcon("./models/transporter_player1.svg").pixmap(20, 20);
+        icon = QIcon("./models/transporter_player2.svg").pixmap(20, 20);
         break;
     default:
         //show nothing
@@ -52,6 +52,11 @@ int GraphicsTransporterItem::getID()
 void GraphicsTransporterItem::selected(bool flag)
 {
     m_selected = flag;
+}
+
+void GraphicsTransporterItem::setOwner(PlayerType owner)
+{
+    m_player = owner;
 }
 
 }
