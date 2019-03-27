@@ -8,6 +8,8 @@
 #include <future>
 #include "global_socket.h"
 #include <QtConcurrent>
+#include <QSettings>
+#include <QString>
 
 namespace asteroids {
 
@@ -15,9 +17,10 @@ StartScreen::StartScreen(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::StartScreen)
 {
+
     // background-picture
     ui->setupUi(this);
-    QPixmap pic("models/start.jpg");
+    QPixmap pic(setting.value("Dateipfade/Hintergrund", ".").toString());
     ui->piclabel->setPixmap(pic);
 
     QScreen *screen = QGuiApplication::primaryScreen();
@@ -54,16 +57,18 @@ void StartScreen::on_playBut_clicked()
     // emit startClient();
     client_global.sendReadyT("name",4);
     QtConcurrent::run(QThreadPool::globalInstance(), [&](){
-        std::cerr << "\t" << __LINE__ << ", " << __PRETTY_FUNCTION__ << "\n";
-		MapFactory& b = MapFactory::getinstance();
-		Map::Ptr a = b.getMap("models/01.map");
+       std::cerr << "\t" << __LINE__ << ", " << __PRETTY_FUNCTION__ << "\n";
+       MapFactory& b = MapFactory::getinstance();
+       Map::Ptr a = b.getMap(setting.value("Dateipfade/Map").toString().toStdString());
 
-		auto game_inst = ManageGame::getinstance();
+       auto game_inst = ManageGame::getinstance();
 		while(!client_global.wait_for_readData(500))
 		{
 			client_global.sendReadyT("name",4);
 			sleep(1);
 		}
+
+       client_global.wait_for_readData(-1);
 //TODO USE ONLY IF SERVER IS RUNNUNG
        if(client_global.player_No == 0)
        {

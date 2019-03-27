@@ -125,6 +125,7 @@ private:
 
     /// 60 fps timer
     std::shared_ptr<QTimer>          m_timer;
+
 };
 
 }

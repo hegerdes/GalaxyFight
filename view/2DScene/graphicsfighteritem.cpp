@@ -2,10 +2,12 @@
 #include <QIcon>
 #include <QPixmap>
 #include <QPainter>
+#include "init_file.h"
 
 namespace asteroids {
 
-GraphicsFighterItem::GraphicsFighterItem(PlayerType type, int id) : m_player(type), m_id(id), m_selected(false)
+GraphicsFighterItem::GraphicsFighterItem(PlayerType type, int id)
+    : m_player(type), m_id(id), m_selected(false)
 {
 
 }
@@ -22,10 +24,10 @@ void GraphicsFighterItem::paint(QPainter* painter, const QStyleOptionGraphicsIte
     //draw ship
     switch (m_player) {
     case PlayerType::PLAYER1:
-        icon = QIcon("./models/fighter_player1.svg").pixmap(25, 25);
+        icon = QIcon(setting.value("Dateipfade/Player1fighter").toString()).pixmap(25, 25);
         break;
     case PlayerType::PLAYER2:
-        icon = QIcon("./models/fighter_player2.svg").pixmap(25, 25);
+        icon = QIcon(setting.value("Dateipfade/Player2fighter").toString()).pixmap(25, 25);
         break;
     default:
         //show nothing

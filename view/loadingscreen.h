@@ -2,6 +2,7 @@
 #define LOADINGSCREEN_H
 
 #include <QWidget>
+#include <QSettings>
 
 namespace Ui {
 class LoadingScreen;

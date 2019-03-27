@@ -27,7 +27,7 @@ int Planet::init()
     m_num_fighters = 0;
     m_num_mine = 0;
     m_num_transporter = 0;
-    m_num_of_ore = 10000;
+    m_num_of_ore = setting.value("Resourcen/Planetenerz").toInt();
     m_stored_ore = 0;
     m_owned = PlanetChanges::UNASSIGN;
     return 1;

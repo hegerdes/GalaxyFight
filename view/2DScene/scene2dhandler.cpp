@@ -1,11 +1,13 @@
 #include "scene2dhandler.h"
 #include <QGraphicsRectItem>
 #include <QGraphicsSceneMouseEvent>
+#include <memory>
+#include <QDebug>
+#include <QPropertyAnimation>
 #include "../../util/ManageGame.hpp"
 #include "../../rendering/2D/MapFactory.hpp"
 #include "itemtypes.h"
-#include <memory>
-#include <QDebug>
+#include "init_file.h"
 
 
 namespace asteroids {
@@ -14,15 +16,11 @@ Scene2dHandler::Scene2dHandler(QObject* parent)
     : QGraphicsScene (parent)
 {
     //config appearance
-    QPixmap background("./models/box3.jpg");
+    QPixmap background(setting.value("Dateipfade/Hintergrund2D").toString());
     setBackgroundBrush(QBrush(background));
 
-    //debug
-    auto gameManager = ManageGame::getinstance();
-    //gameManager->initialize_player(PlanetChanges::UNASSIGN, 0);
-
     //draw map
-    auto map = MapFactory::getinstance().getMap("./models/01.map");
+    auto map = MapFactory::getinstance().getMap(setting.value("Dateipfade/Map").toString().toStdString());
     auto planets = map->getPlanets();
     auto edges = map->getEdges();
 
@@ -43,6 +41,9 @@ Scene2dHandler::Scene2dHandler(QObject* parent)
         GraphicsPlanetItem* pitem = new GraphicsPlanetItem(planet->getID());
         pitem->setOwner(planet->getOwner());
         pitem->setPos(QPointF(planet->getPos()[0], planet->getPos()[1]));
+
+        if(planet->getID() == 0 || planet->getID() == planets.size()-1)
+            pitem->setIsHQ(true);
 
         addItem(pitem);
     }
@@ -120,7 +121,7 @@ void Scene2dHandler::mouseReleaseEvent(QGraphicsSceneMouseEvent* mouseEvent)
 void Scene2dHandler::handlePlanetSelection(GraphicsPlanetItem* planet)
 {
     planet->selected();
-    update(0, 0, 1920, 1080);
+    update();
     m_currentlySelected = planet;
     emit planetSelected(planet->getID());
 }
@@ -138,14 +139,14 @@ void Scene2dHandler::handleFactorySelection()
 void Scene2dHandler::handleFighterSelection(GraphicsFighterItem* fighter)
 {
     fighter->selected();
-    update(0, 0, 1920, 1080);
+    update();
     m_currentlySelected = fighter;
 }
 
 void Scene2dHandler::handleTransporterSelection(GraphicsTransporterItem* transporter)
 {
     transporter->selected();
-    update(0, 0, 1920, 1080);
+    update();
     m_currentlySelected = transporter;
 }
 
@@ -175,14 +176,14 @@ void Scene2dHandler::unselectAll()
         break;
     }
 
-    update(0, 0, 1920, 1080);
+    update();
     m_currentlySelected = nullptr;
 }
 
 void Scene2dHandler::placeFighter()
 {
     auto fighters = ManageGame::getinstance()->get_attackSpaceCraftList();
-    auto planets = MapFactory::getinstance().getMap("./models/01.map")->getPlanets();
+    auto planets = MapFactory::getinstance().getMap(setting.value("Dateipfade/Map").toString().toStdString())->getPlanets();
     auto itemList = items();
 
     std::cerr << __LINE__ << ", " << __PRETTY_FUNCTION__ << "\n";
@@ -194,30 +195,36 @@ void Scene2dHandler::placeFighter()
         for(auto& item : itemList) {
             if(item->type() == ItemTypes::Fighter && ((GraphicsFighterItem*)item)->getID() == fighter->m_id) {
                 auto pos = planets[fighter->m_next_position]->getPos();
-                item->setPos(pos[0] - 20, pos[1] - 20);
                 foundFlag = true;
 
-                //testing
-                //std::cout << "planet: " << fighter->m_next_position << std::endl;
+                //create and start animation
+                auto animation = new QPropertyAnimation(static_cast<GraphicsFighterItem*>(item), "pos");
+                animation->setDuration(2000);
+                animation->setStartValue(item->pos());
+                animation->setEndValue(QPointF(pos[0] - 20, pos[1] - 20));
+
+                animation->setEasingCurve(QEasingCurve::InOutCubic);
+
+                animation->start();
             }
         }
 
         //if no fighter found, create a new one
         if(!foundFlag) {
-            auto newFighter = new GraphicsFighterItem(PlayerType::PLAYER2, fighter->m_id);
+            auto newFighter = new GraphicsFighterItem(fighter->m_owner, fighter->m_id);
             auto pos = planets[fighter->m_position]->getPos();
             newFighter->setPos(pos[0] - 20, pos[1] - 20);
             addItem(newFighter);
         }
     }
 
-    update(-20000, -20000, 192000, 108000);
+    update();
 }
 
 void Scene2dHandler::placeTransporter()
 {
     auto transporters = ManageGame::getinstance()->get_transportSpaceCraftList();
-    auto planets = MapFactory::getinstance().getMap("./models/01.map")->getPlanets();
+    auto planets = MapFactory::getinstance().getMap(setting.value("Dateipfade/Map").toString().toStdString())->getPlanets();
     auto itemList = items();
 
     //start animation and placement
@@ -226,9 +233,20 @@ void Scene2dHandler::placeTransporter()
         bool foundFlag = false;
         //get current GraphicsItem
         for(auto& item : itemList) {
+            //move fighter if planet changed
             if(item->type() == ItemTypes::Transporter && static_cast<GraphicsTransporterItem*>(item)->getID() == transporter->m_id) {
                 auto pos = planets[transporter->m_next_position]->getPos();
-                item->setPos(pos[0] + 50, pos[1] + 50);
+
+                //create and start animation
+                auto animation = new QPropertyAnimation(static_cast<GraphicsTransporterItem*>(item), "pos");
+                animation->setDuration(2000);
+                animation->setStartValue(item->pos());
+                animation->setEndValue(QPointF(pos[0] + 50, pos[1] + 50));
+
+                animation->setEasingCurve(QEasingCurve::InOutCubic);
+
+                animation->start();
+                //set flag
                 foundFlag = true;
             }
         }
@@ -243,13 +261,13 @@ void Scene2dHandler::placeTransporter()
         }
     }
 
-    update(0, 0, 1920, 1080);
+    update();
 }
 
 void Scene2dHandler::updateMap()
 {
     MapFactory& f = MapFactory::getinstance();
-    auto map = f.getMap("models/01.map");
+    auto map = f.getMap(setting.value("Dateipfade/Map").toString().toStdString());
     auto planets = map->getPlanets();
     auto itemList = items();
 
@@ -267,13 +285,13 @@ void Scene2dHandler::updateMap()
         if (itemAt(planet->getPos()[0], planet->getPos()[1], QTransform())->type() != ItemTypes::Mine
                 && planet->getMine()) {
             auto mineItem = new GraphicsMineItem();
-            mineItem->setPos(planet->getPos()[0] + 5, planet->getPos()[1]);
+            mineItem->setPos(planet->getPos()[0] + 5, planet->getPos()[1] + 10);
             addItem(mineItem);
         }
         if (itemAt(planet->getPos()[0], planet->getPos()[1], QTransform())->type() != ItemTypes::Factory
                 && planet->getFactorys()) {
             auto mineItem = new GraphicsFactoryItem();
-            mineItem->setPos(planet->getPos()[0] + 10, planet->getPos()[1] + 20);
+            mineItem->setPos(planet->getPos()[0] + 25, planet->getPos()[1] + 10);
             addItem(mineItem);
         }
     }
