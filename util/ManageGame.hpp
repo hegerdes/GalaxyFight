@@ -20,10 +20,9 @@
 #include <stdexcept>
 #include <map>
 
-#include "GameValues.hpp"
-#include "../init_file.h"
 #include "../rendering/2D/MapFactory.hpp"
 #include "../rendering/2D/Map.hpp"
+#include "init_file.h"
 
 namespace asteroids
 {
