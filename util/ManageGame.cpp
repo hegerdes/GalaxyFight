@@ -158,6 +158,7 @@ void ManageGame::build_fighter(int planet_id)
 
                 m_round_changes_map[planet_id] = std::make_shared<PlanetChanges>(PlanetChanges(planet_id));
                 m_round_changes_map[planet_id]->setFighter(1);
+                updateBase(-COST_PER_ATTACKSPACECRAFT);
 
             }
             else
@@ -175,6 +176,7 @@ void ManageGame::build_fighter(int planet_id)
                     m_attackSpaceCraftslist.push_back(attackSpaceCraft);
 
                     m_round_changes_map[planet_id]->setFighter(1);
+                    updateBase(-COST_PER_ATTACKSPACECRAFT);
 
                 }
                 else
@@ -226,6 +228,7 @@ void ManageGame::build_transporter(int planet_id)
                 m_round_changes_map[planet_id] = std::make_shared<PlanetChanges>(PlanetChanges(planet_id));
             }
             m_round_changes_map[planet_id]->setTransports(1);
+            updateBase(-COST_PER_TRANSPORTSPACECRAFT);
 
             //update signal für die info bar
             emit updateInfobar();
