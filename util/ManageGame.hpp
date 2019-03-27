@@ -120,6 +120,8 @@ class ManageGame : public QObject
 
     int transporter_stored_ore(int transporter_position);
 
+    void updateBase(int ore);
+
   signals:
     void gameover();
     void no_resources(int);
