@@ -5,7 +5,8 @@
 
 namespace asteroids {
 
-GraphicsFighterItem::GraphicsFighterItem(PlayerType type, int id) : m_player(type), m_id(id), m_selected(false)
+GraphicsFighterItem::GraphicsFighterItem(PlayerType type, int id)
+    : m_player(type), m_id(id), m_selected(false)
 {
 
 }

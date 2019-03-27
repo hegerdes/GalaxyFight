@@ -6,6 +6,7 @@
 #include "itemtypes.h"
 #include <memory>
 #include <QDebug>
+#include <QPropertyAnimation>
 
 
 namespace asteroids {
@@ -119,7 +120,7 @@ void Scene2dHandler::mouseReleaseEvent(QGraphicsSceneMouseEvent* mouseEvent)
 void Scene2dHandler::handlePlanetSelection(GraphicsPlanetItem* planet)
 {
     planet->selected();
-    update(0, 0, 1920, 1080);
+    update();
     m_currentlySelected = planet;
     emit planetSelected(planet->getID());
 }
@@ -137,14 +138,14 @@ void Scene2dHandler::handleFactorySelection()
 void Scene2dHandler::handleFighterSelection(GraphicsFighterItem* fighter)
 {
     fighter->selected();
-    update(0, 0, 1920, 1080);
+    update();
     m_currentlySelected = fighter;
 }
 
 void Scene2dHandler::handleTransporterSelection(GraphicsTransporterItem* transporter)
 {
     transporter->selected();
-    update(0, 0, 1920, 1080);
+    update();
     m_currentlySelected = transporter;
 }
 
@@ -174,7 +175,7 @@ void Scene2dHandler::unselectAll()
         break;
     }
 
-    update(0, 0, 1920, 1080);
+    update();
     m_currentlySelected = nullptr;
 }
 
@@ -191,11 +192,17 @@ void Scene2dHandler::placeFighter()
         for(auto& item : itemList) {
             if(item->type() == ItemTypes::Fighter && ((GraphicsFighterItem*)item)->getID() == fighter->m_id) {
                 auto pos = planets[fighter->m_next_position]->getPos();
-                item->setPos(pos[0] - 20, pos[1] - 20);
                 foundFlag = true;
 
-                //testing
-                //std::cout << "planet: " << fighter->m_next_position << std::endl;
+                //create and start animation
+                auto animation = new QPropertyAnimation(static_cast<GraphicsFighterItem*>(item), "pos");
+                animation->setDuration(2000);
+                animation->setStartValue(item->pos());
+                animation->setEndValue(QPointF(pos[0] - 20, pos[1] - 20));
+
+                animation->setEasingCurve(QEasingCurve::InOutCubic);
+
+                animation->start();
             }
         }
 
@@ -208,7 +215,7 @@ void Scene2dHandler::placeFighter()
         }
     }
 
-    update(-20000, -20000, 192000, 108000);
+    update();
 }
 
 void Scene2dHandler::placeTransporter()
@@ -223,9 +230,20 @@ void Scene2dHandler::placeTransporter()
         bool foundFlag = false;
         //get current GraphicsItem
         for(auto& item : itemList) {
+            //move fighter if planet changed
             if(item->type() == ItemTypes::Transporter && static_cast<GraphicsTransporterItem*>(item)->getID() == transporter->m_id) {
                 auto pos = planets[transporter->m_next_position]->getPos();
-                item->setPos(pos[0] + 50, pos[1] + 50);
+
+                //create and start animation
+                auto animation = new QPropertyAnimation(static_cast<GraphicsTransporterItem*>(item), "pos");
+                animation->setDuration(2000);
+                animation->setStartValue(item->pos());
+                animation->setEndValue(QPointF(pos[0] + 50, pos[1] + 50));
+
+                animation->setEasingCurve(QEasingCurve::InOutCubic);
+
+                animation->start();
+                //set flag
                 foundFlag = true;
             }
         }
@@ -240,7 +258,7 @@ void Scene2dHandler::placeTransporter()
         }
     }
 
-    update(0, 0, 1920, 1080);
+    update();
 }
 
 void Scene2dHandler::updateMap()
