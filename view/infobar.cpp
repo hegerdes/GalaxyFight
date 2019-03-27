@@ -12,7 +12,7 @@ Infobar::Infobar(QWidget *parent) :
     m_manage_game = asteroids::ManageGame::getinstance();
 
     //Set map and planets
-    m_planetmap = factory.getMap("models/01.map");
+    m_planetmap = factory.getMap(setting.value("Dateipfade/Map").toString().toStdString());
     m_planets = m_planetmap->getPlanets();
     m_selected_planet = -1;
 
