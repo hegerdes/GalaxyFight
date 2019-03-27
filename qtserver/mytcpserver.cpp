@@ -456,27 +456,6 @@ void Server::readyRead() {
                     recvUpdate_3D_C(data, socket);
                     toSend = PacketType::update_3D_C;
                     this->writeData(nullptr);
-                } else if (pt == PacketType::reset_planet_changes) {
-                    if(socket_1 == socket)
-                    {
-                        std::cerr << "\t" << __LINE__ << "++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n";
-                        m_socket_1_pchange_received = false;
-                        m_socket_1_pchanges_commit_deletable = true;
-                        pchanges_data1.clear();
-                    }
-                    if(socket_2 == socket)
-                    {
-                        std::cerr << "\t" << __LINE__ << "++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n";
-                        m_socket_2_pchange_received = false;
-                        m_socket_2_pchanges_commit_deletable = true;
-                        pchanges_data2.clear();
-                    }
-                    if(m_socket_1_pchanges_commit_deletable && m_socket_2_pchanges_commit_deletable){
-                        std::cerr << "\t" << __LINE__ << "#######################################\n";
-                        m_socket_1_pchanges_commit_deletable = false;
-                        m_socket_2_pchanges_commit_deletable = false;
-                        pchanges_committ.clear();
-                    }
                 } else if (pt == PacketType::rerequest_planet_changes) {
                     if(socket_1 == socket)
                     {
@@ -684,21 +663,27 @@ void Server::sendUpdatedPlanetChanges()
       //send_changes = true;
       data.append((char*)&tmp.stored_ore, 4);
     }
+
+
+    std::cerr << __LINE__ << "pchanges size: " << pchanges_committ.size() << "\n";
     if(socket_1->state() == QAbstractSocket::ConnectedState)
     {
+        m_socket_1_pchange_received = false;
+        m_socket_2_pchanges_commit_deletable = true;
         std::cerr << "\t" << __LINE__ << ", writing something into socket";
         socket_1->write(data); //write the data itself
         socket_1->waitForBytesWritten();
     }
     if(socket_2->state() == QAbstractSocket::ConnectedState)
     {
+        m_socket_2_pchange_received = false;
         std::cerr << "\t" << __LINE__ << ", writing something into socket";
         socket_2->write(data); //write the data itself
         socket_2->waitForBytesWritten();
     }
     //pchanges_committ.clear();
-    pchanges_data1.clear();
-    pchanges_data2.clear();
+
+
     std::cerr << "\n";
 }
 
@@ -792,28 +777,22 @@ void Server::update_planet_changes()
 
     std::cerr << "\t" << __LINE__ << ", pchanges_data1.size: " << pchanges_data1.size() << "\n";
     std::cerr << "\t" << __LINE__ << ", pchanges_data2.size: " << pchanges_data2.size() << "\n";
-    bool clear_pchanges_1 = false;
+
     for(auto it = pchanges_data1.begin(); it != pchanges_data1.end() ; it++)
     {
         std::cerr << "\t" << __LINE__ << "\n";
-        clear_pchanges_1 = true;
+
         pchanges_committ.push_back((*it));
     }
-    if(clear_pchanges_1){
-        pchanges_data1.clear();
-    }
 
-    bool clear_pchanges_2 = false;
     for(auto it = pchanges_data2.begin(); it != pchanges_data2.end() ; it++)
     {
         std::cerr << "\t" << __LINE__<< "\n";
-        clear_pchanges_2 = true;
+
         pchanges_committ.push_back((*it));
     }
-    if(clear_pchanges_2){
-        pchanges_data2.clear();
-    }
-
+    pchanges_data2.clear();
+    pchanges_data1.clear();
     if(player1_outstanding_fights.empty())
     {
         std::cerr << "\t" << __LINE__ << "\n";
