@@ -132,7 +132,7 @@ class ManageGame : public QObject
     void changeRouteError();
     void updateScene();
     void noFactory();
-    void stopTimer():
+    void stopTimer();
     void resetTimer();
 
   public slots:
