@@ -61,7 +61,7 @@ int PhysicsEngine::removeAster()
         }
         it++;
     }
-    client_global.bullet_deleted.clear();
+    client_global.asteroids_deleted.clear();
 
     return n;
 }
@@ -77,8 +77,8 @@ int PhysicsEngine::removeBullets()
         auto it_2 = m_bullets.begin();
         while(m_bullets.end() != it_2){
             if((*it_2)->getid() == *it){
+                std::cerr << "Bullet No: " << *it << " wurde definitiv gelöscht.\n" << " Dies ist an Position " << (*it_2)->getPosition() << " passiert\n";
                 it_2 = m_bullets.erase(it_2);
-                std::cerr << "Bullet No: " << *it << " wurde definitiv gelöscht.\n";
                 n++;
                 break;
             } else {
@@ -89,8 +89,8 @@ int PhysicsEngine::removeBullets()
         it_2 = m_bullets_enemy.begin();
         while(m_bullets_enemy.end() != it_2){
             if((*it_2)->getid() == *it){
+                std::cerr << "Bullet No: " << *it << " wurde definitiv gelöscht.\n" << " Dies ist an Position " << (*it_2)->getPosition() << " passiert\n";
                 it_2 = m_bullets_enemy.erase(it_2);
-                std::cerr << "Bullet No: " << *it << " wurde definitiv gelöscht.\n";
                 n++;
                 break;
             } else {

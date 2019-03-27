@@ -17,7 +17,7 @@ namespace asteroids {
     }
 
     void ServerPhysics::addBullet(ServerBullet::Ptr bullet){
-        if(bullet->getId() > 0){
+        if(bullet->getId() < 0){
             m_first_bullets.push_back(bullet);
         } else {
             m_second_bullets.push_back(bullet);
@@ -108,6 +108,8 @@ namespace asteroids {
          * COLLISION
          */
 
+
+        auto b_it
 
         /*
          * Kollisionstest zwischen Asteroiden und Schiffen
