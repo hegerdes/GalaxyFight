@@ -345,6 +345,8 @@ void ManageGame::next_round()
         //Raumschiffrouten aktualisieren
         updateSpaceCrafts();
 
+        emit stopTimer():
+
         //TODO Sent List
         //inet network
         //sent changes
@@ -354,6 +356,7 @@ void ManageGame::next_round()
         //get changes
         //Go through all receved changes
 
+        // emit resetTimer();
         for (auto it_c = m_round_changes_list.begin(); it_c != m_round_changes_list.end(); it_c++)
         {
             //Applay changes
