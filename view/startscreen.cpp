@@ -8,6 +8,8 @@
 #include <future>
 #include "global_socket.h"
 #include <QtConcurrent>
+#include <QSettings>
+#include <QString>
 
 namespace asteroids {
 
@@ -15,9 +17,10 @@ StartScreen::StartScreen(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::StartScreen)
 {
+
     // background-picture
     ui->setupUi(this);
-    QPixmap pic("models/start.jpg");
+    QPixmap pic(setting.value("Dateipfade/Hintergrund", ".").toString());
     ui->piclabel->setPixmap(pic);
 
     QScreen *screen = QGuiApplication::primaryScreen();
@@ -57,7 +60,7 @@ void StartScreen::on_playBut_clicked()
     client_global.sendReadyT("eins",4);
     QtConcurrent::run(QThreadPool::globalInstance(), [&](){
        MapFactory& b = MapFactory::getinstance();
-       Map::Ptr a = b.getMap("models/01.map");
+       Map::Ptr a = b.getMap(setting.value("Dateipfade/Map").toString().toStdString());
 
        auto game_inst = ManageGame::getinstance();
 

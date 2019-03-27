@@ -21,6 +21,7 @@
 #include <map>
 
 #include "GameValues.hpp"
+#include "../init_file.h"
 #include "../rendering/2D/MapFactory.hpp"
 #include "../rendering/2D/Map.hpp"
 
@@ -119,6 +120,8 @@ class ManageGame : public QObject
     inline std::list<Transporter>& get_transportSpaceCraftList(){return m_transportSpaceCraftslist;}
 
     int transporter_stored_ore(int transporter_position);
+
+    void updateBase(int ore);
 
   signals:
     void gameover();
