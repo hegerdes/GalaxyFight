@@ -50,7 +50,7 @@ void PhysicsEngine::updateBullets()
 {
     if(client_global.updated_pos)
     {
-        std::list<Bullet::Ptr> new_bullets;
+        //std::list<Bullet::Ptr> new_bullets;
         if(client_global.bullet_ids.size() != client_global.bullet_pos.size() || client_global.bullet_dirs.size() != client_global.bullet_ids.size())
         {
             throw std::exception();
@@ -72,20 +72,20 @@ void PhysicsEngine::updateBullets()
 
 
             }
-            if(!existed)
+            /*if(!existed)
             {
                 Bullet::Ptr bp = Bullet::Ptr(new Bullet(client_global.bullet_pos[arr_pos], client_global.bullet_dirs[arr_pos]));
                 bp->setid(it);
                 std::cerr << "new id: " << it << "\n";
                 new_bullets.push_back(bp);
-            }
+            }*/
             arr_pos++;
         }
 
         //Adding missing bullets to bullets lists
 
-        m_bullets.insert(m_bullets.end(), new_bullets.begin(), new_bullets.end());
-        new_bullets.clear();
+        //m_bullets.insert(m_bullets.end(), new_bullets.begin(), new_bullets.end());
+        //new_bullets.clear();
         client_global.bullet_ids.clear();
         client_global.bullet_pos.clear();
         client_global.bullet_dirs.clear();
