@@ -111,16 +111,6 @@ void PhysicsEngine::addBullet(Bullet::Ptr& bullet)
     m_bullets.push_back(bullet);
 }
 
-
-void PhysicsEngine::addEnemyBullet(Bullet::Ptr& bullet)
-{
-
-    std::cerr << "Use of deprecated function.\n";
-    m_particles.addEffect(ParticleEffect::createBulletTail(bullet->getPosition(), bullet->direction(), bullet->lifetime()));
-    m_bullets_enemy.push_back(bullet);
-}
-
-
 int PhysicsEngine::removeAster()
 {
     int n = 0;
@@ -166,91 +156,11 @@ int PhysicsEngine::removeBullets()
             }
         }
 
-        it_2 = m_bullets_enemy.begin();
-        while(m_bullets_enemy.end() != it_2){
-            std::cerr << "use of deprecated function\n";
-            if((*it_2)->getid() == *it){
-                std::cerr << "Bullet No: " << *it << " wurde definitiv gelöscht.\n" << " Dies ist an Position " << (*it_2)->getPosition() << " passiert\n";
-                it_2 = m_bullets_enemy.erase(it_2);
-                n++;
-                break;
-            } else {
-                it_2++;
-            }
-        }
-
         it++;
     }
     client_global.bullet_deleted.clear();
 
     return n;
-
-    /*
-    while(client_global.bullet_deleted.end() != it)
-    {
-        list<Bullet::Ptr>::iterator b_it;
-        b_it = m_bullets.begin();
-        std::cerr << __LINE__ << "\n";
-        while(b_it != m_bullets.end() && !deleted)
-        {
-            std::cerr << __LINE__ << "\n";
-            Bullet::Ptr b = *b_it;
-            std::cerr << __LINE__ << "\n";
-            if(it == client_global.bullet_deleted.end())
-            {
-                std::cerr<<"HAHAH\n";
-            }
-            int temp = *it;
-            if(b->getid() == temp)
-            {
-                b_it = m_bullets.erase(b_it);
-                n++;
-                it = client_global.bullet_deleted.erase(it);
-                deleted = true;
-            } else
-            {
-                b_it++;
-            }
-            std::cerr << __LINE__ << "\n";
-            if(it == client_global.bullet_deleted.end())
-            {
-                std::cerr<<"HAHAH\n";
-            }
-
-            std::cerr << __LINE__ << "\n";
-
-        }
-        if(deleted)
-        {
-            deleted = false;
-        } else
-        {
-            it++;
-        }
-
-        std::cerr << __LINE__ << "\n";
-    }
-    std::cerr << __LINE__ << "\n";
-    while(client_global.bullet_deleted.end() != it)
-    {
-        list<Bullet::Ptr>::iterator b_it;
-        b_it = m_bullets_enemy.begin();
-        while(b_it != m_bullets.end())
-        {
-            Bullet::Ptr b = *b_it;
-            if(b->getid() == *it)
-            {
-                b_it = m_bullets_enemy.erase(b_it);
-                n++;
-                it = client_global.bullet_deleted.erase(it);
-            } else
-            {
-                b_it++;
-            }
-        }
-    }*/
-    //std::cerr << __LINE__ << "\n";
-    //return n;
 }
 
 void PhysicsEngine::process()
@@ -309,23 +219,6 @@ void PhysicsEngine::process()
 
     }
 
-    //Move enemy bullets and test for hits
-    b_it = m_bullets_enemy.begin();
-    while (b_it != m_bullets_enemy.end())
-    {
-        Bullet::Ptr b = *b_it;
-        b->run();
-        std::cerr << "use of deprecated function\n";
-        if (!b->alive())
-        {
-            b_it = m_bullets_enemy.erase(b_it);
-        }
-        else
-        {
-            b_it++;
-        }
-    }
-
     m_particles.update();
 
 }
@@ -352,17 +245,6 @@ void PhysicsEngine::render()
         Bullet::Ptr b = (*b_it);
         b->render();
         b_it++;
-    }
-
-
-
-    // Render active bullets and delete inactive ones
-    be_it = m_bullets_enemy.begin();
-    while(be_it != m_bullets_enemy.end())
-    {
-        Bullet::Ptr b = (*be_it);
-        b->render();
-        be_it++;
     }
 
     m_particles.render();

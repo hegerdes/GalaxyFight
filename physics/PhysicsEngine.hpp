@@ -106,8 +106,6 @@ private:
     SpaceCraft::Ptr              m_enemyPlayer;
 
     ParticleEngine               m_particles;
-
-    list<Bullet::Ptr>           m_bullets_enemy;
 };
 
 } /* namespace asteroids */
