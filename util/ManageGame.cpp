@@ -404,6 +404,8 @@ void ManageGame::next_round()
         //Raumschiffrouten aktualisieren
         updateSpaceCrafts();
 
+        emit stopTimer();
+
         //TODO Sent List
         //inet network
         //sent changes
@@ -413,6 +415,7 @@ void ManageGame::next_round()
         //get changes
         //Go through all receved changes
 
+        // emit resetTimer();
         for (auto it_c = m_round_changes_list.begin(); it_c != m_round_changes_list.end(); it_c++)
         {
             //Applay changes
@@ -613,9 +616,9 @@ void ManageGame::initialize_player(PlanetChanges::Owner player_id, int planet_id
 
         //set Satrt planet Owner
         //This is HQ
-        // PlanetChanges::Ptr change = std::make_shared<PlanetChanges>(PlanetChanges(planet_id));
-        // change->setOwner(m_player_id);
-        // m_planets.at((unsigned long)planet_id)->updatePlanet(change);
+         PlanetChanges::Ptr change = std::make_shared<PlanetChanges>(PlanetChanges(planet_id));
+         change->setOwner(m_player_id);
+         m_planets.at((unsigned long)planet_id)->updatePlanet(change);
 
         //Die am Start verfügbaren Schiffe werden den Listen hinzugefügt
         for (int i = 0; i < m_attackSpaceCraft_number;i++)
@@ -633,6 +636,7 @@ void ManageGame::initialize_player(PlanetChanges::Owner player_id, int planet_id
             m_transportSpaceCraftslist.push_back(transportSpaceCraft);
         }
         m_initialised = true;
+        emit updateScene();
     }
     else
     {

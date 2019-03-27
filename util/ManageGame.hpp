@@ -132,6 +132,8 @@ class ManageGame : public QObject
     void changeRouteError();
     void updateScene();
     void noFactory();
+    void stopTimer();
+    void resetTimer();
     void fighter_already_exist();
 
   public slots:

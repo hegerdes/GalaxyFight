@@ -32,6 +32,8 @@ Scene2dHandler::Scene2dHandler(QObject* parent)
                 p2->getPos()[0] + 25, p2->getPos()[1] + 25, linePen);
     }
 
+    m_currentlySelected = nullptr;
+
     //draw Planets
     for (const auto& planet : planets) {
         GraphicsPlanetItem* pitem = new GraphicsPlanetItem(planet->getID());
@@ -230,6 +232,7 @@ void Scene2dHandler::placeTransporter()
             auto newTransporter = new GraphicsTransporterItem(transporter->m_id);
             auto pos = planets[transporter->m_position]->getPos();
             newTransporter->setPos(pos[0] + 50, pos[1] + 50);
+            newTransporter->setOwner(transporter->m_owner);
             addItem(newTransporter);
         }
     }
