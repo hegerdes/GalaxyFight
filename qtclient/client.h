@@ -42,13 +42,19 @@ class Client {
     Vector<float> enemyzAxis;
     Bullet_shot enemy_shot;
     int enemy_shot_id;
-
     std::vector<int> asteroids_deleted;
     std::vector<int> bullet_deleted;
     Hit own_hit;
 
     int own_health = 10;
     int enemy_health = 10;
+
+    std::vector<int> bullet_ids;
+    std::vector<Vector3f> bullet_pos;
+    std::vector<Vector3f> bullet_dirs;
+    std::vector<int> asteroid_ids;
+    std::vector<Vector3f> asteroid_pos;
+    bool updated_pos = false;
 
     // end_3D
     char winner_no;

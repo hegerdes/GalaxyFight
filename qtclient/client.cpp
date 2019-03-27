@@ -157,6 +157,57 @@ void Client::update_3D_S(char* data) {
     enemy_health = getInt(&data);
     //std::cerr << "Enemy health " << enemy_health << " Own_Health: " << own_health << "\n";
 
+
+    int num_bull_ids = getInt(&data);
+    if(num_bull_ids != 0)
+    {
+        bullet_ids.clear();
+        bullet_pos.clear();
+        bullet_dirs.clear();
+        asteroid_ids.clear();
+        asteroid_pos.clear();
+        updated_pos = true;
+    }
+    for(int i = num_bull_ids; i > 0; --i)
+    {
+
+        bullet_ids.push_back(getInt(&data));
+        //adding and constructing new Vector3f to updated direction vector.
+        Vector3f temp;
+        temp[0] = getFloat(&data);
+        temp[1] = getFloat(&data);
+        temp[2] = getFloat(&data);
+        bullet_pos.push_back(temp);
+        //adding and constructing new Vector3f to updated direction vector.
+        temp[0] = getFloat(&data);
+        temp[1] = getFloat(&data);
+        temp[2] = getFloat(&data);
+        bullet_dirs.push_back(temp);
+
+    }
+
+    int num_aster_ids = getInt(&data);
+    if(num_aster_ids != 0)
+    {
+        bullet_ids.clear();
+        bullet_pos.clear();
+        bullet_dirs.clear();
+        asteroid_ids.clear();
+        asteroid_pos.clear();
+        updated_pos = true;
+    }
+    for(int i = num_aster_ids; i > 0; i--)
+    {
+        asteroid_ids.push_back(getInt(&data));
+        //adding and constructing new Vector3f to updated
+        Vector3f temp;
+        temp[0] = getFloat(&data);
+        temp[1] = getFloat(&data);
+        temp[2] = getFloat(&data);
+        asteroid_pos.push_back(temp);
+    }
+
+
 }
 
 void Client::readData() {
@@ -201,10 +252,7 @@ void Client::game_start(char* data)
 void Client::interpreteAnswer() {
     QByteArray answer = socket.readAll();
     if (answer.length() > 0) {
-        if(answer.length() != 69)
-        {
-            std::cerr << "answer.length()" << answer.length() << "\n";
-        }
+
         // std::cerr << socket.waitForBytesWritten() << "; waitForBytesWritten\n";
         socket.waitForBytesWritten();
         char* data = (char*) answer.data();
