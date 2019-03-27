@@ -28,6 +28,7 @@ int main(int argc, char** argv)
 //    auto planets = map->getPlanets();
 //    map->getPath(Vector3f(0,0,0),1,5);
 
+
     QApplication a(argc, argv);
     client_global.connect("lennartkaiser.de", 38292);
 
