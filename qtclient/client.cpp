@@ -57,6 +57,7 @@ void Client::recivePlanetChanges(char * data)
                   << ", attack_planet: " << m_attack_planet
                   << ", stored_ore: " << stored_ore << "\n";
     }
+    p_changes_current = p_changes;
 }
 
 

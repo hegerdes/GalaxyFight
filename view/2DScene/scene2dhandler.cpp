@@ -19,7 +19,7 @@ Scene2dHandler::Scene2dHandler(QObject* parent)
 
     //debug
     auto gameManager = ManageGame::getinstance();
-    gameManager->initialize_player(PlanetChanges::UNASSIGN, 0);
+    //gameManager->initialize_player(PlanetChanges::UNASSIGN, 0);
 
     //draw map
     auto map = MapFactory::getinstance().getMap("./models/01.map");

@@ -49,6 +49,7 @@ StartScreen::~StartScreen()
 void StartScreen::on_playBut_clicked()
 {
     //sends Signals when "Spielen" was clicked
+    std::cerr << __LINE__ << ", " << __PRETTY_FUNCTION__ << "\n";
     emit gotoLoadingScreen();
     // emit startClient();
     client_global.sendReadyT("name",4);
@@ -66,16 +67,21 @@ void StartScreen::on_playBut_clicked()
 		}
 		std::cerr << __LINE__ << ", player_No: " << client_global.player_No << ", id_other: " << client_global.id_other << "\n";
 //TODO USE ONLY IF SERVER IS RUNNUNG
-//       if(client_global.player_No == 0)
-//       {
-//           game_inst->initialize_player(PlanetChanges::PLAYER1,0);
-//       }
-//       else if(client_global.player_No == 1)
-//       {
-//           game_inst->initialize_player(PlanetChanges::PLAYER2,a->getNumberOfPlanets());
-//       }
+       std::cerr << __LINE__ << "\n";
+       if(client_global.player_No == 0)
+       {
+           game_inst->initialize_player(PlanetChanges::PLAYER1,0);
+       std::cerr << __LINE__ << "\n";
+       }
+       else if(client_global.player_No == 1)
+       {
+           game_inst->initialize_player(PlanetChanges::PLAYER2,a->getNumberOfPlanets());
+       std::cerr << __LINE__ << "\n";
+       }
+       std::cerr << __LINE__ << "\n";
         emit goTo2D();
     });
+       std::cerr << __LINE__ << "\n";
 }
 
 

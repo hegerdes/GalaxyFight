@@ -100,6 +100,7 @@ class Client {
     int m_own_received_hp = 0;
     void send_reset_planet_changes();
     void rerequest_planet_changes();
+    std::list<PlanetChanges> p_changes_current;
 
   private:
     void writeData(QByteArray const& data);

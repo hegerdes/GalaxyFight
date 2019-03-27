@@ -319,9 +319,15 @@ void ManageGame::next_round()
     // @ahaker send initpacket
     std::list<PlanetChanges> changes;
     PlanetChanges planetchanges(PlanetChanges::Owner::UNASSIGN ,2,1,1,1,1,1,0,1);
-    //PlanetChanges planetchangess(PlanetChanges::Owner::UNASSIGN ,2,1,1,1,1,1,0,1);
-    //changes.push_back(planetchangess);
     changes.push_back(planetchanges);
+        //PlanetChanges planetchangess(PlanetChanges::Owner::UNASSIGN ,2,1,1,1,1,1,0,1);
+        //changes.push_back(planetchangess);
+    /*
+    for(auto x : m_round_changes_map)
+    {
+        changes.push_back(x.first);
+    }
+    */
     client_global.m_planet_changes_received = false;
     std::cerr << __LINE__ << ", " << __PRETTY_FUNCTION__ << ", changes.size()" << changes.size() << "\n";
     client_global.SendPlanetChanges(changes.size(), changes);
@@ -331,6 +337,7 @@ void ManageGame::next_round()
         emit goto3DScene();
     }else if (client_global.m_planet_changes_received) {
         std::cerr << __LINE__ << "----------------------------------------\n";
+        //apply changes
     }
     //client_global.init_received = false;
     while(!client_global.init_received || !client_global.m_planet_changes_received) {
@@ -340,12 +347,14 @@ void ManageGame::next_round()
             emit goto3DScene();
             break;
         }else if (client_global.m_planet_changes_received) {
+        //apply changes
             break;
         }
         sleep(1);
         std::cerr << __LINE__ << "\n";
     }
     client_global.send_reset_planet_changes();
+    client_global.m_planet_changes_received = false;
     //client_global.wait_for_readData(100);
     std::cerr << __LINE__ << "\n";
 }
@@ -454,13 +463,14 @@ ManageGame *ManageGame::getinstance()
 
 void ManageGame::initialize_player(PlanetChanges::Owner player_id, int planet_id)
 {
+    std::cerr << __LINE__ << ", " << __PRETTY_FUNCTION__ << "\n";
     if(!m_initialised)
     {
         m_player_id = player_id;
+std::cerr << "\t" << __LINE__ << ", m_player_id: " << m_player_id << "\n";
         m_base = planet_id;
-
         //TODO For DEBUG
-        m_player_id = PlanetChanges::UNASSIGN;
+        //m_player_id = PlanetChanges::UNASSIGN;
 
         //Die am Start verfügbaren Schiffe werden den Listen hinzugefügt
         for (int i = 1; i <= m_attackSpaceCraft_number;i++)
@@ -481,10 +491,8 @@ void ManageGame::initialize_player(PlanetChanges::Owner player_id, int planet_id
     }
     else
     {
-        throwError();
+        //throwError();
     }
-
-
 }
 
 void ManageGame::throwError()
