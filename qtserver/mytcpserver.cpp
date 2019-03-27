@@ -646,6 +646,7 @@ void Server::recvPlanetChanges(char* data, QTcpSocket* socket)
         std::cerr << "\t" << __LINE__ << "\n";
         //pchanges_size1 = -1;
         //pchanges_size2 = -1;
+        pchanges_committ.clear();
         update_planet_changes();
     }
     std::cerr << "\n";

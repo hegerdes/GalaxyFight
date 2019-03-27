@@ -318,7 +318,7 @@ void ManageGame::next_round()
     emit updateInfobar();
     // @ahaker send initpacket
     std::list<PlanetChanges> changes;
-    PlanetChanges planetchanges(PlanetChanges::Owner::UNASSIGN ,1,1,1,1,1,1,0,1);
+    PlanetChanges planetchanges(PlanetChanges::Owner::UNASSIGN ,2,1,1,1,1,1,0,1);
     //PlanetChanges planetchangess(PlanetChanges::Owner::UNASSIGN ,2,1,1,1,1,1,0,1);
     //changes.push_back(planetchangess);
     changes.push_back(planetchanges);
