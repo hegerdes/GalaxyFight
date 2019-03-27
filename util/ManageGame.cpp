@@ -380,7 +380,7 @@ void ManageGame::next_round()
         {
             if((*it_p)->getOwner() == m_player_id)
             {
-                if((*it_p)->getOre() >= RESOURCE_PER_MINE)
+                if((*it_p)->getOre() >= RESOURCE_PER_MINE * (*it_p)->getMine())
                 {
                     int tmp = (*it_p)->getID();
                     auto search = m_round_changes_map.find(tmp);
@@ -391,6 +391,18 @@ void ManageGame::next_round()
                     }
                     m_round_changes_map[tmp]->setOre( -1 * (*it_p)->getMine() * RESOURCE_PER_MINE);
                     m_round_changes_map[tmp]->setStoredOre((*it_p)->getMine() * RESOURCE_PER_MINE);
+                }else
+                {
+                    int tmp = (*it_p)->getID();
+                    auto search = m_round_changes_map.find(tmp);
+                    if (search == m_round_changes_map.end())
+                    {
+                        //Add in not found
+                        m_round_changes_map[tmp] = std::make_shared<PlanetChanges>(PlanetChanges(tmp));
+                    }
+                    m_round_changes_map[tmp]->setOre(-(*it_p)->getOre());
+                    m_round_changes_map[tmp]->setStoredOre((*it_p)->getOre());
+
                 }
             }
         }
@@ -450,7 +462,7 @@ void ManageGame::updateStats()
         //Update only if the planet is owned by player
         if (planet->getOwner() == m_player_id)
         {
-            if(planet->getOre() >= 0)
+            if(planet->getOre() > 0)
             {
                 m_global_mines += planet->getMine();
             }
