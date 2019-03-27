@@ -134,6 +134,7 @@ class ManageGame : public QObject
     void noFactory();
     void stopTimer();
     void resetTimer();
+    void fighter_already_exist();
 
   public slots:
     void change_Fighter_position(int new_position, int attackSpaceCraft_id);

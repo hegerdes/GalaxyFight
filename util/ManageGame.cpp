@@ -133,28 +133,49 @@ void ManageGame::build_fighter(int planet_id)
         {
             emit noFactory();
         }
+        else if(m_planets.at((unsigned long)planet_id)->getFighter() > 0 )
+        {
+            emit fighter_already_exist();
+        }
         else
         {
-
-            m_current_resource -= COST_PER_ATTACKSPACECRAFT;
-
-            m_attackspacecraft_id += 1;
-            m_attackSpaceCraft_number +=1;
-            Fighter attackSpaceCraft = std::make_shared<attackspacecraft>(m_attackspacecraft_id, planet_id);
-            attackSpaceCraft->m_next_position = planet_id;
-            attackSpaceCraft->m_change_position = true;
-            attackSpaceCraft->m_owner = m_player_id;
-            m_attackSpaceCraftslist.push_back(attackSpaceCraft);
-
-            //Check for alrady existing change for this planet
             auto search = m_round_changes_map.find(planet_id);
-            if (search == m_round_changes_map.end())
+            if(search == m_round_changes_map.end())
             {
+                m_current_resource -= COST_PER_ATTACKSPACECRAFT;
+
+                m_attackspacecraft_id += 1;
+                m_attackSpaceCraft_number +=1;
+                Fighter attackSpaceCraft = std::make_shared<attackspacecraft>(m_attackspacecraft_id, planet_id);
+                attackSpaceCraft->m_next_position = planet_id;
+                attackSpaceCraft->m_change_position = true;
+                attackSpaceCraft->m_owner = m_player_id;
+                m_attackSpaceCraftslist.push_back(attackSpaceCraft);
+
                 m_round_changes_map[planet_id] = std::make_shared<PlanetChanges>(PlanetChanges(planet_id));
+                m_round_changes_map[planet_id]->setFighter(1);
+
+            }else
+            {
+                if(m_round_changes_map[planet_id]->getFighter() == 0)
+                {
+                    m_current_resource -= COST_PER_ATTACKSPACECRAFT;
+
+                    m_attackspacecraft_id += 1;
+                    m_attackSpaceCraft_number +=1;
+                    Fighter attackSpaceCraft = std::make_shared<attackspacecraft>(m_attackspacecraft_id, planet_id);
+                    attackSpaceCraft->m_next_position = planet_id;
+                    attackSpaceCraft->m_change_position = true;
+                    attackSpaceCraft->m_owner = m_player_id;
+                    m_attackSpaceCraftslist.push_back(attackSpaceCraft);
+
+                    m_round_changes_map[planet_id]->setFighter(1);
+                }
+                else
+                {
+                    emit fighter_already_exist();
+                }
             }
-
-            m_round_changes_map[planet_id]->setFighter(1);
-
             //update signal für die info bar
             emit updateInfobar();
 
@@ -253,6 +274,13 @@ void ManageGame::change_Fighter_position(int new_position, int attackSpaceCraft_
                         m_round_changes_map[new_position]->setFighter(1);
                         m_round_changes_map[new_position]->setOwner(m_player_id);
 
+                        search = m_round_changes_map.find((*i)->m_position);
+                        if (search == m_round_changes_map.end())
+                        {
+                            m_round_changes_map[(*i)->m_position] = std::make_shared<PlanetChanges>(PlanetChanges((*i)->m_position));
+                        }
+                        m_round_changes_map[(*i)->m_position]->setFighter(-1);
+
                     }else if (m_planets[new_position]->getOwner() != m_player_id)
                     {
                         //Check for alrady existing change for this planet
@@ -263,6 +291,37 @@ void ManageGame::change_Fighter_position(int new_position, int attackSpaceCraft_
                         }
                         m_round_changes_map[new_position]->setFighter(1);
                         m_round_changes_map[new_position]->setInitFight(true);
+
+                        search = m_round_changes_map.find((*i)->m_position);
+                        if (search == m_round_changes_map.end())
+                        {
+                            m_round_changes_map[(*i)->m_position] = std::make_shared<PlanetChanges>(PlanetChanges((*i)->m_position));
+                        }
+                        m_round_changes_map[(*i)->m_position]->setFighter(-1);
+                    }
+                    else
+                    {
+                        if(m_planets[new_position]->getFighter() == 0)
+                        {
+                            auto search = m_round_changes_map.find(new_position);
+                            if (search == m_round_changes_map.end())
+                            {
+                                m_round_changes_map[new_position] = std::make_shared<PlanetChanges>(PlanetChanges(new_position));
+                            }
+                            m_round_changes_map[new_position]->setFighter(1);
+
+                            search = m_round_changes_map.find((*i)->m_position);
+                            if (search == m_round_changes_map.end())
+                            {
+                                m_round_changes_map[(*i)->m_position] = std::make_shared<PlanetChanges>(PlanetChanges((*i)->m_position));
+                            }
+                            m_round_changes_map[(*i)->m_position]->setFighter(-1);
+
+                        }
+                        else
+                        {
+                            emit changeRouteError();
+                        }
                     }
                     break;
                 }
@@ -285,7 +344,7 @@ void ManageGame::change_transport_route(int planet_id, int transportSpaceCraft_i
     if(m_initialised)
     {
         //checken ob der planet mit der neuen route auch dem player gehört
-        if((m_planets[(unsigned long)planet_id])->getOwner() == m_player_id)
+        if((m_planets[(unsigned long)planet_id])->getOwner() == m_player_id && (planet_id != m_base))
         {
             for (auto i = m_transportSpaceCraftslist.begin(); i != m_transportSpaceCraftslist.end(); i++)
             {
@@ -498,7 +557,7 @@ void ManageGame::updateSpaceCrafts()
 
 int ManageGame::transporter_stored_ore(int transporter_position)
 {
-    int tmp;
+    int tmp = 0;
     //Check for alrady existing change for this planet
     auto search = m_round_changes_map.find(transporter_position);
     if (search != m_round_changes_map.end())
@@ -532,6 +591,7 @@ int ManageGame::transporter_stored_ore(int transporter_position)
 
         m_round_changes_map[transporter_position] = change;
     }
+    std::cout << tmp << std::endl;
     return tmp;
 }
 
@@ -556,9 +616,24 @@ void ManageGame::initialize_player(PlanetChanges::Owner player_id, int planet_id
 
         //set Satrt planet Owner
         //This is HQ
-         PlanetChanges::Ptr change = std::make_shared<PlanetChanges>(PlanetChanges(planet_id));
-         change->setOwner(m_player_id);
-         m_planets.at((unsigned long)planet_id)->updatePlanet(change);
+        if(player_id == PlanetChanges::PLAYER1)
+        {
+            PlanetChanges::Ptr change1 = std::make_shared<PlanetChanges>(PlanetChanges(planet_id));
+            change1->setOwner(PlanetChanges::PLAYER1);
+            PlanetChanges::Ptr change2 = std::make_shared<PlanetChanges>(PlanetChanges(m_planetmap->getNumberOfPlanets()));
+            change2->setOwner(PlanetChanges::PLAYER2);
+            m_planets.at((unsigned long)planet_id)->updatePlanet(change1);
+            m_planets.at((unsigned long)m_planetmap->getNumberOfPlanets())->updatePlanet(change2);
+        }
+        if(player_id == PlanetChanges::PLAYER2)
+        {
+            PlanetChanges::Ptr change1 = std::make_shared<PlanetChanges>(PlanetChanges(planet_id));
+            change1->setOwner(PlanetChanges::PLAYER1);
+            PlanetChanges::Ptr change2 = std::make_shared<PlanetChanges>(PlanetChanges(m_planetmap->getNumberOfPlanets()));
+            change2->setOwner(PlanetChanges::PLAYER2);
+            m_planets.at((unsigned long)planet_id)->updatePlanet(change1);
+            m_planets.at((unsigned long)m_planetmap->getNumberOfPlanets())->updatePlanet(change2);
+        }
 
         //Die am Start verfügbaren Schiffe werden den Listen hinzugefügt
         for (int i = 0; i < m_attackSpaceCraft_number;i++)
