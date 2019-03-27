@@ -27,7 +27,7 @@ ManageGame::ManageGame(QObject *parent) : QObject(parent), m_initialised(false)
 
     //Init of members
     MapFactory& b = MapFactory::getinstance();
-    m_planetmap = b.getMap("models/01.map");
+    m_planetmap = b.getMap(setting.value("Dateipfade/Map").toString().toStdString());
     m_planets = m_planetmap->getPlanets();
     m_round_changes_map = std::map<int,PlanetChanges::Ptr>();
     m_round_changes_list = std::list<PlanetChanges::Ptr>();

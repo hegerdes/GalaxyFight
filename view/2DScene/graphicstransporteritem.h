@@ -10,8 +10,10 @@ namespace asteroids {
  * @brief The GraphicsTransporterItem class represents a transporter
  * @author lkreienbrink
  */
-class GraphicsTransporterItem : public QGraphicsItem
+class GraphicsTransporterItem : public QObject, public QGraphicsItem
 {
+    Q_OBJECT
+    Q_PROPERTY(QPointF pos READ pos WRITE setPos)
 public:
     GraphicsTransporterItem(int id);
 
