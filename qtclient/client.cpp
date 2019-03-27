@@ -232,6 +232,7 @@ void Client::sendReadyT(char* player_id, int length)
 void Client::conLost()
 {
     enemy_disconnected = true;
+    std::cerr << "Lost connection to server!\n";
 }
 
 void Client::game_start(char* data)
