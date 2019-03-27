@@ -166,6 +166,9 @@ void PhysicsEngine::process()
     updateAsteroidPos();
     updateBullets();
 
+    removeAster();
+    removeBullets();
+
     if(m_enemyPlayer->spaceCraftStatus() == 1)
     {
         m_particles.addEffect(ParticleEffect::createExplosionSphere(m_enemyPlayer->getPosition()));

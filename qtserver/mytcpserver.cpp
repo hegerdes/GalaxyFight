@@ -183,7 +183,7 @@ void Server::sendUpdate_3D_S(QByteArray& response, QTcpSocket* socket) {
     }
 
     int b_length = ids.size();
-    response.append((char*)&b_length, 4); // anzahl zerstörter asteroidend short eine shor null
+    response.append((char*)&b_length, 4); // anzahl zerstörter Bullets short eine shor null
 
     for(auto it : ids){
         response.append((char*)&it, 4);
