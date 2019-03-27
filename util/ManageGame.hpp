@@ -131,6 +131,7 @@ class ManageGame : public QObject
     void goto3DScene();
     void changeRouteError();
     void updateScene();
+    void noFactory();
 
   public slots:
     void change_Fighter_position(int new_position, int attackSpaceCraft_id);
