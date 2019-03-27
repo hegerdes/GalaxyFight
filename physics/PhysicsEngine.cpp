@@ -43,7 +43,6 @@ void PhysicsEngine::updateAsteroidPos()
             }
             arr_pos++;
         }
-        client_global.updated_pos = false;
     }
 }
 
@@ -71,22 +70,13 @@ void PhysicsEngine::updateBullets()
                     break;
                 }
 
+
             }
-            /*for(auto b : m_bullets_enemy)
-            {
-                if(it == b->getid())
-                {
-                    b->setPosition(client_global.bullet_pos[arr_pos]);
-                    b->setDirection(client_global.bullet_dirs[arr_pos]);
-                    existed = true;
-                    break;
-                }
-            }*/
-            //Missing bullets constructing
             if(!existed)
             {
                 Bullet::Ptr bp = Bullet::Ptr(new Bullet(client_global.bullet_pos[arr_pos], client_global.bullet_dirs[arr_pos]));
                 bp->setid(it);
+                std::cerr << "new id: " << it << "\n";
                 new_bullets.push_back(bp);
             }
             arr_pos++;
@@ -95,6 +85,10 @@ void PhysicsEngine::updateBullets()
         //Adding missing bullets to bullets lists
 
         m_bullets.insert(m_bullets.end(), new_bullets.begin(), new_bullets.end());
+        new_bullets.clear();
+        client_global.bullet_ids.clear();
+        client_global.bullet_pos.clear();
+        client_global.bullet_dirs.clear();
         client_global.updated_pos = false;
     }
 }
@@ -170,47 +164,7 @@ void PhysicsEngine::process()
     list<Bullet::Ptr>::iterator b_it;
 
     updateAsteroidPos();
-
-    if(client_global.bullet_deleted.size() != removeBullets())
-    {
-        std::cerr << "Nicht alle Bullets removed;" << __LINE__;
-    }
-    if(client_global.asteroids_deleted.size() != removeAster())
-    {
-        std::cerr << "Nicht alle asteroiden gelöscht" << __LINE__;
-    }
-
-    // Move all objects
-    for (p_it = m_objects.begin(); p_it != m_objects.end(); p_it++)
-    {
-        Asteroid::Ptr p = *p_it;
-        p->move();
-    }
-
-    //Move bullets and test for hits
-    b_it = m_bullets.begin();
-    while (b_it != m_bullets.end())    {
-        Bullet::Ptr b = *b_it;
-        b->run();
-
-        // Check if bullet is dead. If it is, remove from
-        // bullet list. Otherwise continue with next bullet.
-        if (!b->alive())
-        {
-            b_it = m_bullets.erase(b_it);
-        }
-        else
-        {
-            b_it++;
-        }
-    }
-    //Gibt dem Raumschiff eine Explosion beim verschwinden
-    if(m_spacecraft->spaceCraftStatus() == 1)
-    {
-        m_particles.addEffect(ParticleEffect::createExplosionSphere(m_spacecraft->getPosition()));
-        m_spacecraft->endDestruction();
-    }
-    
+    updateBullets();
 
     if(m_enemyPlayer->spaceCraftStatus() == 1)
     {

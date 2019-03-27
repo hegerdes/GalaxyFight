@@ -164,8 +164,6 @@ void Client::update_3D_S(char* data) {
         bullet_ids.clear();
         bullet_pos.clear();
         bullet_dirs.clear();
-        asteroid_ids.clear();
-        asteroid_pos.clear();
         updated_pos = true;
     }
     for(int i = num_bull_ids; i > 0; --i)
@@ -189,9 +187,6 @@ void Client::update_3D_S(char* data) {
     int num_aster_ids = getInt(&data);
     if(num_aster_ids != 0)
     {
-        bullet_ids.clear();
-        bullet_pos.clear();
-        bullet_dirs.clear();
         asteroid_ids.clear();
         asteroid_pos.clear();
         updated_pos = true;
