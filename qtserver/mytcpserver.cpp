@@ -461,12 +461,42 @@ void Server::readyRead() {
                     {
                         std::cerr << "\t" << __LINE__ << "++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n";
                         m_socket_1_pchange_received = false;
+                        m_socket_1_pchanges_commit_deletable = true;
+                        pchanges_data1.clear();
                     }
                     if(socket_2 == socket)
                     {
                         std::cerr << "\t" << __LINE__ << "++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n";
                         m_socket_2_pchange_received = false;
+                        m_socket_2_pchanges_commit_deletable = true;
+                        pchanges_data2.clear();
                     }
+                    if(m_socket_1_pchanges_commit_deletable && m_socket_2_pchanges_commit_deletable){
+                        std::cerr << "\t" << __LINE__ << "#######################################\n";
+                        m_socket_1_pchanges_commit_deletable = false;
+                        m_socket_2_pchanges_commit_deletable = false;
+                        pchanges_committ.clear();
+                    }
+                } else if (pt == PacketType::rerequest_planet_changes) {
+                    if(socket_1 == socket)
+                    {
+                        std::cerr << "\t" << __LINE__ << "++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n";
+                        pchanges_data1.clear();
+                    }
+                    if(socket_2 == socket)
+                    {
+                        std::cerr << "\t" << __LINE__ << "++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n";
+                        pchanges_data2.clear();
+                    }
+                    if(player1_outstanding_fights.empty()){
+                        std::cerr << "\t" << __LINE__ << "\n";
+                        sendUpdatedPlanetChanges();
+                    } else {
+                        std::cerr << "\t" << __LINE__ << "\n";
+                        toSend = PacketType::init_3D;
+                        this->writeData(nullptr);
+                    }
+
                 } else if (pt == PacketType::end_3D) {
                     recv_end_3D(data, socket);
                     if(player1_outstanding_fights.empty())
@@ -485,7 +515,7 @@ void Server::readyRead() {
                     this->writeData(nullptr);
                 } else {
                     toSend=pt;
-                    std::cerr << "\t" << __LINE__ << ", packet_type: " << pt << "\n";
+                    std::cerr << "\t" << __LINE__ << ", packet_type: " << pt << " errrrrrrrrrrrrrooooooooor\n";
                     this->writeData(nullptr);
                 }
 
@@ -665,17 +695,16 @@ void Server::sendUpdatedPlanetChanges()
         socket_2->write(data); //write the data itself
         socket_2->waitForBytesWritten();
     }
-    pchanges_committ.clear();
+    //pchanges_committ.clear();
     pchanges_data1.clear();
     pchanges_data2.clear();
     std::cerr << "\n";
 }
 
-
 void Server::update_planet_changes()
 {
     std::cerr << __LINE__ << ", " << __PRETTY_FUNCTION__ << " updating changes\n";
-    std::cerr << "\t" << __LINE__ << ", pachnges.commit.siz() " << pchanges_committ.size() << "\n";
+    std::cerr << "\t" << __LINE__ << ", pchanges.commit.siz() " << pchanges_committ.size() << "\n";
     // player1 attack
     for(auto it =pchanges_data1.begin() ; it!=pchanges_data1.end();)
     {
@@ -762,16 +791,26 @@ void Server::update_planet_changes()
 
     std::cerr << "\t" << __LINE__ << ", pchanges_data1.size: " << pchanges_data1.size() << "\n";
     std::cerr << "\t" << __LINE__ << ", pchanges_data2.size: " << pchanges_data2.size() << "\n";
+    bool clear_pchanges_1 = false;
     for(auto it = pchanges_data1.begin(); it != pchanges_data1.end() ; it++)
     {
         std::cerr << "\t" << __LINE__ << "\n";
+        clear_pchanges_1 = true;
         pchanges_committ.push_back((*it));
     }
+    if(clear_pchanges_1){
+        pchanges_data1.clear();
+    }
 
+    bool clear_pchanges_2 = false;
     for(auto it = pchanges_data2.begin(); it != pchanges_data2.end() ; it++)
     {
         std::cerr << "\t" << __LINE__<< "\n";
+        clear_pchanges_2 = true;
         pchanges_committ.push_back((*it));
+    }
+    if(clear_pchanges_2){
+        pchanges_data2.clear();
     }
 
     if(player1_outstanding_fights.empty())
@@ -787,7 +826,7 @@ void Server::update_planet_changes()
         toSend = PacketType::init_3D;
         this->writeData(nullptr);
     }
-    std::cerr << "\t" << __LINE__ << ", pachnges.commit.siz() " << pchanges_committ.size() << "\n";
+    std::cerr << "\t" << __LINE__ << ", pchanges.commit.size() " << pchanges_committ.size() << "\n";
     std::cerr << "\n";
 }
 

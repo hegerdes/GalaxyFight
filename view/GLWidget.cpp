@@ -279,6 +279,7 @@ void GLWidget::step(map<Qt::Key, bool>& keyStates)
                 m_enemyPlayer->destroySpaceCraft();
             }
         // Trigger update, i.e., redraw via paintGL()
+        std::cerr << __LINE__ <<"\n";
         if(client_global.init_received)
         {
             m_actor->m_hp = 10;
@@ -315,13 +316,16 @@ void GLWidget::step(map<Qt::Key, bool>& keyStates)
 
             client_global.init_received = false;
             //std::cerr << "erhalten----------------------------------------------\n";
+        std::cerr << __LINE__ <<"\n";
         } else {
+        std::cerr << __LINE__ <<"\n";
             client_global.sendUpdate_3D_C(m_actor->m_position, m_actor->m_xAxis,
                                          m_actor->m_yAxis, m_actor->m_zAxis,
                                          bullet_shot, Living::alive, 0);
-            client_global.readData();
+            client_global.wait_for_readData(20);
         }
 
+        std::cerr << __LINE__ <<"\n";
         if(m_actor->getHP() < 1 || m_enemyPlayer->getHP() < 1)
         {
             player_no player_3d_winner;
@@ -332,22 +336,16 @@ void GLWidget::step(map<Qt::Key, bool>& keyStates)
             }
             client_global.send_end_3d(player_3d_winner);
 
-            //client_global.wait_for_readData(-1);
-            client_global.readData();
+            client_global.wait_for_readData(20);
+            //client_global.readData();
         }
-
-        if(client_global.m_planet_changes_received){
-            active = false;
-            client_global.m_planet_changes_received = false;
-            emit goToScene2D();
-        }
-
 
         m_enemyPlayer->m_position = client_global.enemyPos;
         m_enemyPlayer->m_xAxis = client_global.enemyxAxis;
         m_enemyPlayer->m_yAxis = client_global.enemyyAxis;
         m_enemyPlayer->m_zAxis = client_global.enemyzAxis;
 
+        std::cerr << __LINE__ <<"\n";
         if(client_global.enemy_shot == Bullet_shot::shot)
         {
             Vector3f shipPosition = m_enemyPlayer->getPosition() + m_enemyPlayer->getZAxis() * -45 + m_enemyPlayer->getXAxis() * -175;
@@ -364,6 +362,7 @@ void GLWidget::step(map<Qt::Key, bool>& keyStates)
                 hp_actor = m_actor->getHP();
         }
 
+        std::cerr << __LINE__ <<"\n";
         if(hp_enemy != m_enemyPlayer->getHP()){
             std::cout << "Enemy Health: " << m_enemyPlayer->getHP() << std::endl;
             hp_enemy = m_enemyPlayer->getHP();
@@ -372,9 +371,17 @@ void GLWidget::step(map<Qt::Key, bool>& keyStates)
 
         m_enemyHPBar->setHP(m_enemyPlayer->getHP());
         m_playerHPBar->setHP(m_actor->getHP());
-        //std::cerr << __LINE__ << "\n";
+        std::cerr << __LINE__ <<"\n";
         this->update();
         m_hud.update();
+        std::cerr << __LINE__ <<"\n";
+        if(client_global.m_planet_changes_received){
+            active = false;
+            client_global.m_planet_changes_received = false;
+            emit goToScene2D();
+        }
+
+
     }
 }
 

@@ -99,6 +99,7 @@ class Client {
     bool m_planet_changes_received = false;
     int m_own_received_hp = 0;
     void send_reset_planet_changes();
+    void rerequest_planet_changes();
 
   private:
     void writeData(QByteArray const& data);

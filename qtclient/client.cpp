@@ -277,7 +277,7 @@ void Client::game_start(char* data)
 }
 
 void Client::interpreteAnswer() {
-    std::cerr << __LINE__ << ", " << __PRETTY_FUNCTION__ << "\n";
+    //std::cerr << __LINE__ << ", " << __PRETTY_FUNCTION__ << "\n";
     QByteArray answer = socket.readAll();
     if (answer.length() > 0) {
         // std::cerr << socket.waitForBytesWritten() << "; waitForBytesWritten\n";
@@ -320,6 +320,12 @@ void Client::interpreteAnswer() {
 void Client::send_reset_planet_changes(){
     QByteArray data;
     data.append(PacketType::reset_planet_changes);
+    writeData(data);
+};
+
+void Client::rerequest_planet_changes(){
+    QByteArray data;
+    data.append(PacketType::rerequest_planet_changes);
     writeData(data);
 };
 
