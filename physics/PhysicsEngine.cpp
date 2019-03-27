@@ -21,6 +21,41 @@ namespace asteroids
 {
 
 
+void PhysicsEngine::updateAsteroidPos()
+{
+    if(client_global.updated_pos)
+    {
+
+        if(client_global.asteroid_ids.size() != client_global.asteroid_pos.size())
+        {
+            throw std::exception();
+        }
+        int arr_pos = 0;
+        for(auto it : client_global.asteroid_ids)
+        {
+            for(auto b : m_objects)
+            {
+                if(it == b->getid())
+                {
+                    b->setPosition(client_global.asteroid_pos[arr_pos]);
+                    std::cerr << "Position of asteroi: " << it << ": " << b->getPosition() << "\n";
+                }
+                /*if(it == 8)
+                {*/
+
+                //}
+            }
+            arr_pos++;
+        }
+        client_global.updated_pos = false;
+    }
+}
+
+void PhysicsEngine::updateBullets()
+{
+
+}
+
 void PhysicsEngine::addDestroyable(Asteroid::Ptr& obj)
 {
     m_objects.push_back(obj);
@@ -186,6 +221,10 @@ void PhysicsEngine::process()
     {
         std::cerr << "Nicht alle asteroiden gelöscht" << __LINE__;
     }
+
+    updateAsteroidPos();
+
+
     // Move all objects
     for (p_it = m_objects.begin(); p_it != m_objects.end(); p_it++)
     {

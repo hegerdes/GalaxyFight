@@ -58,6 +58,8 @@ public:
      */
     void addDestroyable(Asteroid::Ptr& d);
 
+    void updateBullets();
+    void updateAsteroidPos();
 
     /**
      * @brief   Adds a bullet to the scene. Takes ownership of the given pointer
