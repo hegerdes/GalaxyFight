@@ -204,7 +204,6 @@ namespace asteroids
     void HUDWidget::setBulletReady(long lastBulletShot)
     {
         m_lastBulletShot = lastBulletShot;
-        std::cout << m_lastBulletShot << ": m_lastBulletShot " << lastBulletShot << ": lastBulletShot"<<std::endl;
     }
 
     void HUDWidget::setFirstPerson(bool b)
