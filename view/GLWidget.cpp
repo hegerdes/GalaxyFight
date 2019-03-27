@@ -13,7 +13,7 @@ GLWidget::GLWidget(QWidget* parent)
       m_moveSpeed(5.0),
       m_lastBullet(0),
       active(false),
-      m_schussFrequenz(500), m_firstPerson(false), m_firstPersonAble(true), m_hud(this)
+      m_schussFrequenz(500), m_firstPerson(false), m_firstPersonAble(true), m_hud(this), m_rapidFire(false)
 {
     m_layout.addWidget(&m_hud);
     setLayout(&m_layout);
@@ -252,9 +252,10 @@ void GLWidget::step(map<Qt::Key, bool>& keyStates)
 
 
             if(keyStates[Qt::Key_X]){
-                //Debug/Tesline für Explosion eigenes Raumschiff
+                //Debug/Testline für Explosion eigenes Raumschiff
                 m_actor->destroySpaceCraft();
             }
+
 
             // Add a bullet to physics engine
             if(keyStates[Qt::Key_Space])
@@ -264,21 +265,46 @@ void GLWidget::step(map<Qt::Key, bool>& keyStates)
                 auto now_ms = std::chrono::time_point_cast<std::chrono::milliseconds>(now);
                 auto value = now_ms.time_since_epoch();
                 long bulletShot = value.count();
-                ///Ermittelt, wann die letzte Kugel abgeschoßen wurde und erlaubt erst nach
-                if(bulletShot - m_lastBullet > m_schussFrequenz){
+                
+                ///Ermittelt, wann die letzte Kugel abgeschoßen wurde und erlaubt erst nachdem die Zeit angegeben in
+                ///m_schussFrequenz abgelaufen ist
+                if(bulletShot - m_lastBullet > m_schussFrequenz)
+                {                    
                     Vector3f shipPosition = m_actor->getPosition() + m_actor->getZAxis() * -45 + m_actor->getXAxis() * -175;
                     Bullet::Ptr bullet = make_shared<Bullet>(Bullet(shipPosition, m_actor->getDirection()));
                     m_physicsEngine->addBullet(bullet);
                     m_lastBullet = bulletShot;
                     bullet_shot = Bullet_shot::shot;
-                }
 
+                    ///Gibt der Anzeige in m_hud die Zeit an der die letzte Bullet abgeschoßen wurde
+                    m_hud.setBulletReady(value.count());                    
+
+                    ///Der Folgende Codeblock liefert dem shotReadyRect in HUDWidget die notwendigen Informationen, damit es
+                    ///korrekt anzeigen kann, ob das Schiff bereit zum schießen ist
+                    //Start Rapidfire Anzeigeinformationen
+                    if(m_rapidFire)
+                    {                        
+                        m_hud.setBulletReady(-1); 
+                    }                                                     
+
+                                     
+                }else
+                {
+                    m_rapidFire= true;
+                }                
+
+            }else
+            {
+                m_rapidFire = false;
+                m_hud.setBulletReady(0); 
             }
+            //Ende Rapidfire Anzeigeinformationen
         }
-        if(keyStates[Qt::Key_Y]){
-                //Debug/Tesline für Explosion eigenes Raumschiff
-                m_enemyPlayer->destroySpaceCraft();
-            }
+        //TestKnopf zum zerstören vom Gegnerschiff
+        if(keyStates[Qt::Key_Y])
+        {               
+            m_enemyPlayer->destroySpaceCraft();
+        }
         // Trigger update, i.e., redraw via paintGL()
         client_global.sendUpdate_3D_C(m_actor->m_position, m_actor->m_xAxis,
                                      m_actor->m_yAxis, m_actor->m_zAxis,
@@ -329,9 +355,7 @@ void GLWidget::step(map<Qt::Key, bool>& keyStates)
             Bullet::Ptr bullet = make_shared<Bullet>(Bullet(shipPosition, m_enemyPlayer->m_xAxis*-1));
             m_physicsEngine->addEnemyBullet(bullet);
             client_global.enemy_shot = Bullet_shot::not_shot;
-        }
-
-      
+        }      
 
         if(hp_actor != m_actor->getHP())
         {

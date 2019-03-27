@@ -4,7 +4,7 @@
 
 namespace asteroids
 {
-    HUDWidget::HUDWidget(QWidget* parent):QWidget(parent), m_cockpit("models/spaceship-cockpit-png-3.png"), m_firstPerson(false), m_lastAlert(0)
+    HUDWidget::HUDWidget(QWidget* parent):QWidget(parent), m_cockpit("models/spaceship-cockpit-png-3.png"), m_firstPerson(false), m_lastAlert(0), m_lastBulletShot(0)
     {
     }
 
@@ -13,12 +13,15 @@ namespace asteroids
         //HP-Balken
         QRect leftHP;
         QRect rightHP;
+        
         //Durchsichtige Rechtecke auf denen der Name der Spieler steht
         QRect textLeftHP;
         QRect textRightHP;
+        
         //Rechteck für Geschwindigkeit des Spielers
         QRect velocityBar;
         QRect textVelocityBar;
+        
         //Rechteck für die Distanz zum Gegner
         QRect distanceBarLeft;
         QRect distanceBarRight;
@@ -29,8 +32,11 @@ namespace asteroids
         QRect crossHair[4];
         QRect fullScreen;
 
-        //Rechteck indem Sieges/Niederlage/Alaramnachricht steht
+        //Rechteck in dem Sieges/Niederlage/Alaramnachricht steht
         QRect onScreenMessage;
+
+        //Rechteck indem ein Kreis sitzt der anzeigt ob ein Schuß bereit ist
+        QRect shotReadyRect;
         
         //Berechnet Distanz; diese wird später in der textDistanceBar ausgegeben
         Vector3f posMyShip = m_myShip->getPosition();
@@ -62,6 +68,8 @@ namespace asteroids
             distanceBarLeft = QRect((3.75*width()/9)  + (width()/6 - width()/12 * distanceFunction), height()*70/100, width()/12 * distanceFunction, height()/15);
             
             textDistanceBar = QRect(3.75*width()/9, height()*70/100, width()/6 , height()/15);
+
+            shotReadyRect = QRect(3.1*width()/9, height()*67/100, width()/18, height()/12);
  
             m_p.begin(this);
             m_p.drawImage(fullScreen, m_cockpit);
@@ -76,26 +84,21 @@ namespace asteroids
         crossHair[3] = QRect(width()/2 - crossHairW/2, height()/2 - crossHairH/2 - crossHairH, crossHairW, crossHairH);
         
         m_p.begin(this);
-        //Erstellt die InformationBars
-        m_p.drawRect(leftHP);
-        m_p.drawRect(rightHP);
-        m_p.drawRect(velocityBar);
+        
         //Färbt die AnzeigeBars ein
         m_p.fillRect(leftHP, QColor(0, 100, 0));
         m_p.fillRect(rightHP, QColor(155, 0, 0));
         m_p.fillRect(velocityBar, QColor(255,165,0));
-        //Erstellt die TextBars die über den InfrmationBars liegen
-        m_p.drawRect(textLeftHP);
-        m_p.drawRect(textRightHP);
+        
         //Erstellt die DistanceBars
-        m_p.drawRect(distanceBarLeft);
-        m_p.drawRect(distanceBarRight);
         m_p.fillRect(distanceBarLeft, QColor(0, 100, 200));
         m_p.fillRect(distanceBarRight, QColor(0, 100, 200));
 
+        
+        
+
         for(QRect r : crossHair)
         {
-            m_p.drawRect(r);
             m_p.fillRect(r, QColor(0, 100, 0));
         }
         
@@ -114,7 +117,45 @@ namespace asteroids
         int distance_int = distance;
         m_p.drawText(textDistanceBar, Qt::AlignCenter, QString::number(distance_int));
         
-        m_p.end();    
+        m_p.end();  
+
+        auto now = std::chrono::system_clock::now();
+        auto now_ms = std::chrono::time_point_cast<std::chrono::milliseconds>(now);
+        auto value = now_ms.time_since_epoch();
+        long longNow = value.count();  
+
+        //Erstellt den Schußanzeige Button
+        
+        //TODO: 500 ist die Schusfrequenz. Getter dafür bauen !!
+        m_p.begin(this);
+        //std::cout << m_lastBulletShot << std::endl;
+        
+        if(m_lastBulletShot == -1 )
+        {
+            m_p.setBrush(QColor(255,165,0));
+            m_p.drawEllipse(shotReadyRect);
+            m_p.setPen(Qt::white);
+            m_p.setFont(QFont("liberation",19,99));
+            m_p.drawText(shotReadyRect, Qt::AlignCenter,"RAPID");
+        }
+        else if(longNow - m_lastBulletShot > 500)
+        {               
+            m_p.setBrush(QColor(100,200,0));
+            m_p.drawEllipse(shotReadyRect);
+            m_p.setPen(Qt::white);
+            m_p.setFont(QFont("liberation",19,99));
+            m_p.drawText(shotReadyRect, Qt::AlignCenter,"SHOOT");
+        }
+        else if(longNow - m_lastBulletShot < 500)
+        {
+            m_p.setBrush(QColor(255,0,0));
+            m_p.drawEllipse(shotReadyRect);
+            m_p.setPen(Qt::white);
+            m_p.setFont(QFont("liberation",20,99));
+            m_p.drawText(shotReadyRect, Qt::AlignCenter,"WAIT");
+        }
+        
+        m_p.end();
 
         //Gibt eine Siegesnachricht aus, wenn das Gegnerraumschiff zerstört wurde
         if(m_enemyShip->getHP() == 0 && m_myShip->getHP() != 0)
@@ -139,41 +180,35 @@ namespace asteroids
         //Zeigt eine Alarmnachricht wenn die HP unter 3 sind
         else if(m_myShip->getHP() < 3 && m_myShip->getHP() != 0)
         {
-            auto now = std::chrono::system_clock::now();
-            auto now_ms = std::chrono::time_point_cast<std::chrono::milliseconds>(now);
-            auto value = now_ms.time_since_epoch();
-            long alertNow = value.count();
-            if((alertNow - m_lastAlert > 2000 ) || (m_lastAlert + 1000 >= alertNow)){
+                if((longNow - m_lastAlert > 2000 ) || (m_lastAlert + 1000 >= longNow)){
                 m_p.begin(this);
                 onScreenMessage = QRect(3.75*width()/9, height()/2.7, width()/6 , height()/15);
                 m_p.setPen(Qt::red);
                 m_p.setFont(QFont("liberation",30,99));
                 m_p.drawText(onScreenMessage, Qt::AlignCenter,">> A L E R T <<");
                 m_p.end(); 
-                if(!(m_lastAlert + 1000 >= alertNow))
+                if(!(m_lastAlert + 1000 >= longNow))
                 {
-                    m_lastAlert = alertNow;
+                    m_lastAlert = longNow;
                 }
                 
 
             }
-        }
+        }      
         
-        
 
 
 
+    }
+
+    void HUDWidget::setBulletReady(long lastBulletShot)
+    {
+        m_lastBulletShot = lastBulletShot;
+        std::cout << m_lastBulletShot << ": m_lastBulletShot " << lastBulletShot << ": lastBulletShot"<<std::endl;
     }
 
     void HUDWidget::setFirstPerson(bool b)
     {
         m_firstPerson = b;
-    }
-
-    void HUDWidget::activateAlertScreen()
-    {
-        
-           
-           
     }
 }
