@@ -58,6 +58,7 @@ public:
     void loadLevel();
     signals:
     void goToScene2D();
+    void planet_apply_updates();
 
 protected:
 

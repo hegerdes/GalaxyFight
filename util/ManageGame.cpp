@@ -465,7 +465,7 @@ void ManageGame::next_round()
     std::cerr << "\t" << __LINE__ << ", size of m_round_changes_list: " << m_round_changes_list.size() << "\n" ;
     for(auto x : m_round_changes_list)
     {
-        std::cerr << "\t" << __LINE__ << __FUNCTION__ << ", size of m_round_changes_list: " << m_round_changes_list.size() << "\n" ;
+        //std::cerr << "\t" << __LINE__ << __FUNCTION__ << ", size of m_round_changes_list: " << m_round_changes_list.size() << "\n" ;
         changes.push_back(*x);
     }
     //PlanetChanges planetchanges(PlanetChanges::Owner::UNASSIGN ,3,1,1,1,1,1,0,1);
@@ -491,7 +491,7 @@ void ManageGame::next_round()
     //client_global.init_received = false;
     while(!client_global.init_received || !client_global.m_planet_changes_received) {
         client_global.rerequest_planet_changes();
-        client_global.wait_for_readData(-1);
+        client_global.wait_for_readData(100);
         if(client_global.init_received){
             emit goto3DScene();
             break;
@@ -506,7 +506,18 @@ void ManageGame::next_round()
     //client_global.m_planet_changes_received = false; @ahaker beim merge wegefallen
     //client_global.wait_for_readData(100);
     std::cerr << "\t" << __LINE__ << __FUNCTION__<< "\n";
+    std::cerr << "\t" << __LINE__ << __FUNCTION__<< " p_changes_current.size(): " << client_global.p_changes_current.size() << "\n";
     // @ahaker apply all changes
+    for (auto it_c = client_global.p_changes_current.begin(); it_c != client_global.p_changes_current.end(); it_c++)
+    {
+        //std::cerr << "\t" << __LINE__ << __FUNCTION__<< " apply planet changes\n";
+        //Applay changes
+        m_planets.at((unsigned long)it_c->getID())->updatePlanet(std::make_shared<PlanetChanges>(*(it_c)));
+    }
+}
+
+void ManageGame::planet_apply_updates()
+{
     for (auto it_c = client_global.p_changes_current.begin(); it_c != client_global.p_changes_current.end(); it_c++)
     {
         std::cerr << "\t" << __LINE__ << __FUNCTION__<< " apply planet changes\n";

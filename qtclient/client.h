@@ -27,7 +27,7 @@ class Client {
 
     //game_start
     std::string id_other;
-    player_no player_No;
+    player_no player_No = player_no::unassigned;
     //Map Konfig am start fehlt
 
     Vector3f pos_astr[10];

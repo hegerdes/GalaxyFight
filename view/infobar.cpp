@@ -43,25 +43,27 @@ Infobar::Infobar(QWidget *parent) :
     //connect( m_manage_game, &asteroids::ManageGame::reset_timer, this, &Infobar::continue_timer);
     connect( &m_timer, &QTimer::timeout, this, &Infobar::reset_timer);
     m_takt.start(10);
-    m_timer.start(6000);
+    m_timer.start(60000);
 
     //Initialize popup
     m_popup.setParent(this);
     m_popup.setGeometry(400, 0, 250, 200);
     m_popup.setStyleSheet("background: rgb(46, 52, 54); color: rgb(255, 255, 255)");
     m_popup.setStandardButtons(0);
-}
 
-//@ahaker resettime
-void Infobar::resettime()
-{
-    m_takt.start(10);
-    m_timer.start(6000);
     m_popup.setWindowFlags(Qt::FramelessWindowHint);
     m_popup.setAttribute(Qt::WA_NoSystemBackground);
     m_popup.setAttribute(Qt::WA_TranslucentBackground);
     m_popup.setAttribute(Qt::WA_TransparentForMouseEvents);
 }
+
+//@ahaker resettime
+/*
+void Infobar::resettime() {
+    m_takt.start(10);
+    m_timer.start(6000);
+}
+*/
 
 void Infobar::updateInfobar()
 {

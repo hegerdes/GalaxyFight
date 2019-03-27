@@ -35,7 +35,7 @@ int Planet::init()
 
  int Planet::updatePlanet(PlanetChanges::Ptr updates)
  {
-    std::cerr << __LINE__ << ", " << __PRETTY_FUNCTION__ << "\n";
+    //std::cerr << __LINE__ << ", " << __PRETTY_FUNCTION__ << "\n";
     if(m_id != updates->getID()) return 1;
     m_num_factory += updates->getFactorys();
     m_num_fighters += updates->getFighter();

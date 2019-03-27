@@ -121,6 +121,7 @@ void MainWindow::setupConnections()
   connect(m_startscreen, &StartScreen::goTo2D, this, &MainWindow::goToScene2D);
   connect(m_3DScene, &GLWidget::goToScene2D,this,&MainWindow::goToScene2D);
   connect(m_startscreen, &StartScreen::goto3DScene, this, &MainWindow::goto3DScene);
+  connect(m_3DScene, &GLWidget::planet_apply_updates, ManageGame::getinstance(), &ManageGame::planet_apply_updates);
   //connect(m_startscreen, &StartScreen::gotoLoadingScreen, this, &MainWindow::goToLoadingScreen);
 }
 } // namespace asteroids

@@ -118,6 +118,8 @@ private:
     void sendEnd3D(QByteArray &response, QTcpSocket *socket);
     void recvPlanetChanges(char* data, QTcpSocket* socket);
     void recv_end_3D(char* data, QTcpSocket* socket);
+    void resend_UpdatedPlanetChanges(QTcpSocket* socket);
+    void resend_init_3d(QTcpSocket* socket);
 
     // receive packets
     void recvUpdate_3D_C(char* data, QTcpSocket* socket);

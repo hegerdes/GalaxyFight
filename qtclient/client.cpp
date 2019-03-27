@@ -20,7 +20,6 @@ QByteArray IntToArray(qint32 source) // Use qint32 to ensure that the number hav
     return temp;
 }
 
-
 void Client::recivePlanetChanges(char * data)
 {
     int size = getInt(&data);
@@ -59,7 +58,6 @@ void Client::recivePlanetChanges(char * data)
     }
     p_changes_current = p_changes;
 }
-
 
 void Client::SendPlanetChanges(int size,std::list<PlanetChanges> changes )
 {
@@ -247,7 +245,6 @@ void Client::readData() {
     }
 }
 
-
 void Client::sendReadyT(char* player_id, int length)
 {
     QByteArray data;
@@ -348,6 +345,7 @@ bool Client::wait_for_readData(int timeout) {
     }
     return read_status;
 }
+
 float Client::getFloat(char** ptr) {
     float* jo = (float*) *ptr;
     float f = *jo;

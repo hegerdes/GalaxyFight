@@ -117,6 +117,7 @@ void GLWidget::initializeGL()
 
     loadLevel();
 }
+
 void GLWidget::loadLevel()
 {
     active = true;
@@ -312,13 +313,14 @@ void GLWidget::step(map<Qt::Key, bool>& keyStates)
             m_enemyPlayer->destroySpaceCraft();
         }
         // Trigger update, i.e., redraw via paintGL()
-        std::cerr << "\t" << __FUNCTION__ << __LINE__ <<"\n";
+        std::cerr << "\t" << __LINE__ << __FUNCTION__ << "\n";
         if(client_global.init_received)
         {
             m_actor->m_hp = 10;
             m_enemyPlayer->m_hp = 10;
             m_enemyPlayer->m_status = 0;
             m_actor->m_status = 0;
+            std::cerr << "\t" << __FUNCTION__ << __LINE__ <<"nnnone\n";
             m_actor->m_position = client_global.ownPos;
             m_actor->m_xAxis = client_global.ownxAxis;
             m_actor->m_yAxis = client_global.ownyAxis;
@@ -350,17 +352,9 @@ void GLWidget::step(map<Qt::Key, bool>& keyStates)
             client_global.init_received = false;
             //std::cerr << "\t" << << "erhalten----------------------------------------------\n";
         std::cerr << "\t" << __FUNCTION__ << __LINE__ <<"\n";
-        } else {
-        std::cerr << "\t" << __FUNCTION__<< __LINE__ <<"\n";
-            client_global.sendUpdate_3D_C(m_actor->m_position, m_actor->m_xAxis,
-                                         m_actor->m_yAxis, m_actor->m_zAxis,
-                                         bullet_shot, Living::alive, 0);
-            client_global.wait_for_readData(20);
-        }
-
-        std::cerr << "\t" << __FUNCTION__<< __LINE__ <<"\n";
-        if(m_actor->getHP() < 1 || m_enemyPlayer->getHP() < 1)
+        } else if(m_actor->getHP() < 1 || m_enemyPlayer->getHP() < 1)
         {
+            std::cerr << "\t" << __FUNCTION__<< __LINE__ <<"\n";
             player_no player_3d_winner;
             if(m_actor->getHP()<1) {
                 player_3d_winner = player_no::loser;
@@ -371,7 +365,14 @@ void GLWidget::step(map<Qt::Key, bool>& keyStates)
 
             client_global.wait_for_readData(20);
             //client_global.readData();
+        } else {
+        std::cerr << "\t" << __FUNCTION__<< __LINE__ <<"\n";
+            client_global.sendUpdate_3D_C(m_actor->m_position, m_actor->m_xAxis,
+                                         m_actor->m_yAxis, m_actor->m_zAxis,
+                                         bullet_shot, Living::alive, 0);
+            client_global.wait_for_readData(20);
         }
+
 
         m_enemyPlayer->m_position = client_global.enemyPos;
         m_enemyPlayer->m_xAxis = client_global.enemyxAxis;
@@ -409,7 +410,11 @@ void GLWidget::step(map<Qt::Key, bool>& keyStates)
         if(client_global.m_planet_changes_received){
             active = false;
             client_global.m_planet_changes_received = false;
+            std::cerr << "\t" << __FUNCTION__<< __LINE__ <<" m_planet_changes_received\n";
+            emit planet_apply_updates();
+            std::cerr << "\t" << __FUNCTION__<< __LINE__ <<" m_planet_changes_received\n";
             emit goToScene2D();
+            std::cerr << "\t" << __FUNCTION__<< __LINE__ <<" m_planet_changes_received\n";
         }
 
 

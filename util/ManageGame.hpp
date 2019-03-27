@@ -148,6 +148,7 @@ class ManageGame : public QObject
     void destroy_fighter(int fighter_id);
     void next_round();
     void end_game();
+    void planet_apply_updates();
 
 
 

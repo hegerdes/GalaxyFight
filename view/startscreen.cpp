@@ -55,16 +55,25 @@ void StartScreen::on_playBut_clicked()
     std::cerr << __LINE__ << ", " << __PRETTY_FUNCTION__ << "\n";
     emit gotoLoadingScreen();
     // emit startClient();
-    client_global.sendReadyT("name",4);
     QtConcurrent::run(QThreadPool::globalInstance(), [&](){
+       client_global.sendReadyT("name",4);
        std::cerr << "\t" << __LINE__ << ", " << __PRETTY_FUNCTION__ << "\n";
        MapFactory& b = MapFactory::getinstance();
+       std::cerr << "\t" << __LINE__ << __FUNCTION__ << "\n";
        Map::Ptr a = b.getMap(setting.value("Dateipfade/Map").toString().toStdString());
+       std::cerr << "\t" << __LINE__ << __FUNCTION__ << "\n";
 
+       std::cerr << "\t" << __LINE__ << __FUNCTION__ << "\n";
        auto game_inst = ManageGame::getinstance();
-		while(!client_global.wait_for_readData(500))
-		{
-			client_global.sendReadyT("name",4);
+       std::cerr << "\t" << __LINE__ << __FUNCTION__ << "\n";
+       bool end_loop = false;
+        while(!end_loop)
+        {
+            std::cerr << "\t" << __LINE__ << __FUNCTION__ << "\n";
+            end_loop = client_global.wait_for_readData(500);
+            std::cerr << "\t" << __LINE__ << __FUNCTION__ << "\n";
+            std::cerr << "\t" << __LINE__ << __FUNCTION__ << "\n";
+            client_global.sendReadyT("name",4);
 			sleep(1);
 		}
 
@@ -77,8 +86,8 @@ void StartScreen::on_playBut_clicked()
        }
        else if(client_global.player_No == 1)
        {
-           game_inst->initialize_player(PlanetChanges::PLAYER2,1);
-           //game_inst->initialize_player(PlanetChanges::PLAYER2,a->getNumberOfPlanets()-1); @ahaker
+           //game_inst->initialize_player(PlanetChanges::PLAYER2,1);
+           game_inst->initialize_player(PlanetChanges::PLAYER2,a->getNumberOfPlanets()-1); //@ahaker
        std::cerr << "\t" << __LINE__ << __FUNCTION__ << "\n";
        }
         emit goTo2D();
