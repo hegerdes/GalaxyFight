@@ -30,7 +30,7 @@ namespace asteroids {
 
     void ServerPhysics::run()
     {
-        m_timer->start(1000 / 30.0);
+        m_timer->start(1000 / 15.0);
     }
 
     void ServerPhysics::updateData()
@@ -190,6 +190,7 @@ namespace asteroids {
             {
                 removed.bullet_changed.push_back((*b_it)->getId());
                 std::cerr << "bullet removed1 " << (*b_it)->getId() << "\n";
+                std::cerr << "BULLET POS 1: " << (*b_it)->m_pos << "\n";
                 b_it = m_first_bullets.erase(b_it);
             }
             else
@@ -259,6 +260,7 @@ namespace asteroids {
             {
                 removed.bullet_changed.push_back((*b_it)->getId());
                 std::cerr << "bullet removed2 " << (*b_it)->getId() << "\n";
+                std::cerr << "BULLET POS 2: " << (*b_it)->m_pos << "\n";
                 b_it = m_second_bullets.erase(b_it);
             }
             else
