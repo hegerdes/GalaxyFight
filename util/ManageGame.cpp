@@ -237,7 +237,29 @@ void ManageGame::change_Fighter_position(int new_position, int attackSpaceCraft_
                 {
                     (*i)->m_next_position = new_position;
                     (*i)->m_change_position = true;
-                    std::cout << "new fighter route: " + std::to_string((*i)->m_id) << std::endl;
+
+                    if(m_planets[new_position]->getOwner() == PlanetChanges::UNASSIGN)
+                    {
+                        //Check for alrady existing change for this planet
+                        auto search = m_round_changes_map.find(new_position);
+                        if (search == m_round_changes_map.end())
+                        {
+                            m_round_changes_map[new_position] = std::make_shared<PlanetChanges>(PlanetChanges(new_position));
+                        }
+                        m_round_changes_map[new_position]->setFighter(1);
+                        m_round_changes_map[new_position]->setOwner(m_player_id);
+
+                    }else if (m_planets[new_position]->getOwner() != m_player_id)
+                    {
+                        //Check for alrady existing change for this planet
+                        auto search = m_round_changes_map.find(new_position);
+                        if (search == m_round_changes_map.end())
+                        {
+                            m_round_changes_map[new_position] = std::make_shared<PlanetChanges>(PlanetChanges(new_position));
+                        }
+                        m_round_changes_map[new_position]->setFighter(1);
+                        m_round_changes_map[new_position]->setInitFight(true);
+                    }
                     break;
                 }
                 else
@@ -413,38 +435,9 @@ void ManageGame::updateSpaceCrafts()
                 (*i)->m_position = (*i)->m_next_position;
                 (*i)->m_next_position = *((*i)->m_route_iterator++);
 
-                //Check for alrady existing change for this planet
-                auto search = m_round_changes_map.find((*i)->m_position);
-                if (search != m_round_changes_map.end())
-                {
-                    if(m_planets[(*i)->m_position]->getStoredOre() >= 200)
-                    {
-                        search->second->setStoredOre(-200);
-                        (*i)->m_ore = 200;
+                //transporter lädt erz
+                (*i)->m_ore = transporterOreSystem((*i)->m_position);
 
-                    }else
-                    {
-                        search->second->setStoredOre(-m_planets[(*i)->m_position]->getStoredOre());
-                        (*i)->m_ore = m_planets[(*i)->m_position]->getStoredOre();
-                    }
-                }
-                else
-                {
-                    PlanetChanges::Ptr change = std::make_shared<PlanetChanges>(PlanetChanges((*i)->m_position));
-
-                    if(m_planets[(*i)->m_position]->getStoredOre() >= 200)
-                    {
-                        change->setStoredOre(-200);
-                        (*i)->m_ore = 200;
-
-                    }else
-                    {
-                        change->setStoredOre(-m_planets[-(*i)->m_position]->getStoredOre());
-                        (*i)->m_ore = m_planets[(*i)->m_position]->getStoredOre();
-                    }
-
-                    m_round_changes_map[(*i)->m_position] = change;
-                }
             }else
             {
                 (*i)->m_position = (*i)->m_next_position;
@@ -484,38 +477,8 @@ void ManageGame::updateSpaceCrafts()
                 (*i)->m_position = (*i)->m_next_position;
                 (*i)->m_next_position = *((*i)->m_route_iterator++);
 
-                //Check for alrady existing change for this planet
-                auto search = m_round_changes_map.find((*i)->m_position);
-                if (search != m_round_changes_map.end())
-                {
-                    if(m_planets[(*i)->m_next_position]->getStoredOre() >= 200)
-                    {
-                        search->second->setStoredOre(-200);
-                        (*i)->m_ore = 200;
-
-                    }else
-                    {
-                        search->second->setStoredOre(-m_planets[(*i)->m_next_position]->getStoredOre());
-                        (*i)->m_ore = m_planets[(*i)->m_next_position]->getStoredOre();
-                    }
-                }
-                else
-                {
-                    PlanetChanges::Ptr change = std::make_shared<PlanetChanges>(PlanetChanges((*i)->m_next_position));
-
-                    if(m_planets[(*i)->m_next_position]->getStoredOre() >= 200)
-                    {
-                        change->setStoredOre(-200);
-                        (*i)->m_ore = 200;
-
-                    }else
-                    {
-                        change->setStoredOre(-m_planets[-(*i)->m_next_position]->getStoredOre());
-                        (*i)->m_ore = m_planets[(*i)->m_next_position]->getStoredOre();
-                    }
-
-                    m_round_changes_map[(*i)->m_next_position] = change;
-                }
+                //transporter lädt erz
+                (*i)->m_ore = transporterOreSystem((*i)->m_next_position);
 
             }else {
                 (*i)->m_position = (*i)->m_next_position;
@@ -524,6 +487,44 @@ void ManageGame::updateSpaceCrafts()
             }
         }
     }
+}
+
+int ManageGame::transporterOreSystem(int transporter_position)
+{
+    //Check for alrady existing change for this planet
+    auto search = m_round_changes_map.find(transporter_position);
+    if (search != m_round_changes_map.end())
+    {
+        if(m_planets[transporter_position]->getStoredOre() >= 200)
+        {
+            search->second->setStoredOre(-200);
+            return 200;
+
+        }else if(m_planets[transporter_position]->getStoredOre() != 0)
+        {
+            search->second->setStoredOre(-(m_planets[transporter_position]->getStoredOre()));
+            return m_planets[transporter_position]->getStoredOre();
+        }
+    }
+    else
+    {
+        PlanetChanges::Ptr change = std::make_shared<PlanetChanges>(PlanetChanges(transporter_position));
+
+        if(m_planets[transporter_position]->getStoredOre() >= 200)
+        {
+            change->setStoredOre(-200);
+            return 200;
+
+
+        }else if(m_planets[transporter_position]->getStoredOre() != 0)
+        {
+            change->setStoredOre(-(m_planets[transporter_position]->getStoredOre()));
+            return m_planets[transporter_position]->getStoredOre();
+        }
+
+        m_round_changes_map[transporter_position] = change;
+    }
+    return 0;
 }
 
 ManageGame *ManageGame::getinstance()

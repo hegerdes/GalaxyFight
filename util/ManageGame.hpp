@@ -118,6 +118,8 @@ class ManageGame : public QObject
 
     inline std::list<Transporter>& get_transportSpaceCraftList(){return m_transportSpaceCraftslist;}
 
+    int transporterOreSystem(int transporter_position);
+
   signals:
     void gameover();
     void no_resources(int);
