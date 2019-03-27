@@ -118,6 +118,8 @@ class ManageGame : public QObject
 
     inline std::list<Transporter>& get_transportSpaceCraftList(){return m_transportSpaceCraftslist;}
 
+    int transporter_stored_ore(int transporter_position);
+
   signals:
     void gameover();
     void no_resources(int);
@@ -129,6 +131,7 @@ class ManageGame : public QObject
     void goto3DScene();
     void changeRouteError();
     void updateScene();
+    void noFactory();
 
   public slots:
     void change_Fighter_position(int new_position, int attackSpaceCraft_id);
