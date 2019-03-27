@@ -462,8 +462,17 @@ void ManageGame::next_round()
 
 }
 
-void ManageGame::end_game()
+void ManageGame::end_game(bool winning)
 {
+    if(winning)
+    {
+        emit goToWin();
+    }
+    else
+    {
+        emit gotoLoose();
+    }
+    
 }
 
 void ManageGame::updateStats()

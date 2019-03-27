@@ -218,7 +218,7 @@ void Infobar::on_aufgeben_clicked()
     surrender.exec();
 
     if (surrender.clickedButton() == pButtonYes) {
-        m_manage_game->end_game();
+        m_manage_game->end_game(false);
     }
 }
 
