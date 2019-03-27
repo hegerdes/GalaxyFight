@@ -208,12 +208,12 @@ void Server::sendUpdate_3D_S(QByteArray& response, QTcpSocket* socket) {
     int changed_count = physics.m_first_bullets.size() + physics.m_second_bullets.size();
     response.append((char*)&changed_count, 4);
     for(auto it : physics.m_first_bullets){
-        response.append(it->m_id);
+        response.append((char*) &it->m_id, 4);
         response.append((char*) &it->m_pos, 3 * 4);
         response.append((char*) &it->m_dir, 3 * 4);
     }
     for(auto it : physics.m_second_bullets){
-        response.append(it->m_id);
+        response.append((char*) &it->m_id, 4);
         response.append((char*) &it->m_pos, 3 * 4);
         response.append((char*) &it->m_dir, 3 * 4);
     }
@@ -221,8 +221,9 @@ void Server::sendUpdate_3D_S(QByteArray& response, QTcpSocket* socket) {
     int astr_count = physics.m_asteroids.size();
     response.append((char*)&astr_count, 4);
     for(auto it : physics.m_asteroids){
-        response.append(it->m_id);
+        response.append((char*) &it->m_id, 4);
         response.append((char*) &it->m_pos, 3 * 4);
+        //std::cerr << it->m_id <<"pos von astr : ||" << it->m_pos << "||";
     }
 }
 

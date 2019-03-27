@@ -133,7 +133,7 @@ namespace asteroids {
                 removed.aster_changed.push_back(ast->getId());
 
                 p_it = m_asteroids.erase(p_it);
-                std::cerr << "Hit between Spacecraft Socket 1 and Asteroid\n";
+                //std::cerr << "Hit between Spacecraft Socket 1 and Asteroid\n";
             }
             else if(m_second->collide(ast))
             {
@@ -142,7 +142,7 @@ namespace asteroids {
                 removed.aster_changed.push_back(ast->getId());
 
                 p_it = m_asteroids.erase(p_it);
-                std::cerr << "Hit between Spacecraft Socket 2 and Asteroid\n";
+//              std::cerr << "Hit between Spacecraft Socket 2 and Asteroid\n";
             }else
             {
                 p_it++;
@@ -160,7 +160,7 @@ namespace asteroids {
             b->m_livetime--;
             if(b->m_livetime == 0){
                 b->m_alive = false;
-                std::cerr << "bullet died1 " << (*b_it)->getId() << "\n";
+//                std::cerr << "bullet died1 " << (*b_it)->getId() << "\n";
             }
 
             //Collision between second spacecraft and bullet
@@ -169,7 +169,7 @@ namespace asteroids {
                 b->m_alive = false;
                 m_second->m_hp--;
                 removed.health_socket_2 = m_second->m_hp;
-                std::cerr << "Hit between Spacecraft 2 and Bullet\n";
+//                std::cerr << "Hit between Spacecraft 2 and Bullet\n";
             }
 
             // Check for collisions with present objects
@@ -185,7 +185,7 @@ namespace asteroids {
                     removed.aster_changed.push_back((*p_it)->getId());
                     p_it = m_asteroids.erase(p_it);
 
-                    std::cerr << "Hit between Bullet and Asteroid\n";
+//                    std::cerr << "Hit between Bullet and Asteroid\n";
 
                 } else {
                     p_it++;
@@ -197,8 +197,8 @@ namespace asteroids {
             if (!b->m_alive)
             {
                 removed.bullet_changed.push_back((*b_it)->getId());
-                std::cerr << "bullet removed1 " << (*b_it)->getId() << "\n";
-                std::cerr << "BULLET POS 1: " << (*b_it)->m_pos << "\n";
+                //std::cerr << "bullet removed1 " << (*b_it)->getId() << "\n";
+                //std::cerr << "BULLET POS 1: " << (*b_it)->m_pos << "\n";
                 b_it = m_first_bullets.erase(b_it);
             }
             else
@@ -217,7 +217,7 @@ namespace asteroids {
             b->m_livetime--;
             if(b->m_livetime == 0){
                 b->m_alive = false;
-                std::cerr << "bullet died2 " << (*b_it)->getId() << "\n";
+                //std::cerr << "bullet died2 " << (*b_it)->getId() << "\n";
             }
 
             //Collision between second spacecraft and bullet
@@ -226,7 +226,7 @@ namespace asteroids {
                 b->m_alive = false;
                 m_first->m_hp--;
                 removed.health_socket_1 = m_first->m_hp;
-                std::cerr << "Hit between Spacecraft 1 and Bullet\n";
+                //std::cerr << "Hit between Spacecraft 1 and Bullet\n";
             }
 
             // Check for collisions with present objects
@@ -241,7 +241,7 @@ namespace asteroids {
                     // Delete destroyed object
                     removed.aster_changed.push_back((*p_it)->getId());
                     p_it = m_asteroids.erase(p_it);
-                    std::cerr << "Hit between Bullet and Asteroid\n";
+                    //std::cerr << "Hit between Bullet and Asteroid\n";
                 } else {
                     p_it++;
                 }
@@ -255,7 +255,7 @@ namespace asteroids {
                     (*o_it)->m_alive = false;
                     removed.bullet_changed.push_back((*o_it)->getId());
                     o_it = m_first_bullets.erase(o_it);
-                    std::cerr << "Hit between Bullet and Bullet\n";
+                    //std::cerr << "Hit between Bullet and Bullet\n";
                 }else{
                     o_it++;
                 }
@@ -267,8 +267,8 @@ namespace asteroids {
             if (!b->m_alive)
             {
                 removed.bullet_changed.push_back((*b_it)->getId());
-                std::cerr << "bullet removed2 " << (*b_it)->getId() << "\n";
-                std::cerr << "BULLET POS 2: " << (*b_it)->m_pos << "\n";
+                //std::cerr << "bullet removed2 " << (*b_it)->getId() << "\n";
+                //std::cerr << "BULLET POS 2: " << (*b_it)->m_pos << "\n";
                 b_it = m_second_bullets.erase(b_it);
             }
             else
