@@ -20,6 +20,7 @@
 
 #include "PlanetChanges.hpp"
 #include "../../math/Vector.hpp"
+#include "util/GameValues.hpp"
 
 namespace asteroids
 {

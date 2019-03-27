@@ -20,7 +20,8 @@ Infobar::Infobar(QWidget *parent) :
     updateInfobar();
 
     //Connects
-    connect(this, &Infobar::end_game,m_manage_game, &asteroids::ManageGame::end_game);
+    connect(this, &Infobar::end_game, m_manage_game, &asteroids::ManageGame::end_game);
+
     connect(this, &Infobar::next_round,m_manage_game, &asteroids::ManageGame::next_round);
     connect(this, &Infobar::build_mine,m_manage_game, &asteroids::ManageGame::build_mine);
     connect(this, &Infobar::build_fighter,m_manage_game, &asteroids::ManageGame::build_fighter);
@@ -29,10 +30,13 @@ Infobar::Infobar(QWidget *parent) :
 
     connect(m_manage_game, &asteroids::ManageGame::updateInfobar,this,&Infobar::updateInfobar);
 
-    connect(m_manage_game, &asteroids::ManageGame::no_resources, this, &Infobar::no_resources);
+    connect(m_manage_game, &asteroids::ManageGame::no_resources, this, &Infobar::no_resources); 
+    connect(m_manage_game, &asteroids::ManageGame::not_ur_planet, this, &Infobar::not_ur_planet);
+    connect(m_manage_game, &asteroids::ManageGame::not_ur_ship, this, &Infobar::not_ur_ship);
+    connect(m_manage_game, &asteroids::ManageGame::already_exist, this, &Infobar::already_exist);
+    connect(this, &Infobar::nothingSelected, this, &Infobar::nothingSelectedReceiver);
 
     connect( &m_takt, &QTimer::timeout, [this](){set_time(m_timer.remainingTime()/1000);});
-
     connect( &m_timer, &QTimer::timeout, m_manage_game, &asteroids::ManageGame::next_round);
 
     //connect( m_manage_game, &asteroids::ManageGame::startTimer, this, &Infobar::resettime); //TODO Fix and use this line instead of the next 3 lines
@@ -53,13 +57,21 @@ void Infobar::resettime()
     m_timer.start(600000);
 }
 
-
 void Infobar::updateInfobar()
 {
     ui->kampschiffe_value->setNum(m_manage_game->get_attackSpaceCraft_number());
     ui->transporter_value->setNum(m_manage_game->get_transportCpaceCraft_number());
     ui->erz_value->setNum(m_manage_game->get_current_resource());
     ui->ertrag_value->setNum(m_manage_game->get_resource_per_time());
+
+    if(m_selected_planet > 0 && m_selected_planet < m_planetmap->getNumberOfPlanets())
+    {
+        ui->erzvorkommen_value->setNum(m_planets.at((unsigned long) m_selected_planet)->getOre());
+        ui->minenanzahl_value->setNum(m_planets.at((unsigned long)m_selected_planet)->getMine());
+        ui->erzlager_value->setNum(m_planets.at((unsigned long)m_selected_planet)->getStoredOre());
+        ui->planetname->setText(QString::fromStdString(m_planets.at((unsigned long)m_selected_planet)->getname()));
+        set_selected_planet(m_selected_planet);
+    }
 }
 
 void Infobar::set_selected_planet(int planet_id)
@@ -73,27 +85,119 @@ void Infobar::set_selected_planet(int planet_id)
 
 }
 
-void Infobar::no_resources()
+void Infobar::no_resources(int num)
 {
-    m_fehler.setWindowTitle("Fehler");
-    m_fehler.setText("Du besitzt nicht genügend Erz um diese Aktion durchzuführen!");
+    m_popup.setWindowTitle("Fehler");
+    if(num == 0)
+    {
+        m_popup.setText("Du besitzt nicht genügend Erz um diese Aktion durchzuführen!");
+    }
+    else
+    {
+        m_popup.setText("Einige Minenen haben kein Erz mehr");
+    }
+    
+    
 
-    m_fehler.setGeometry(0, 0, 250, 200);
+    m_popup.setGeometry(0, 0, 250, 200);
 
-    m_fehler.setWindowFlags(Qt::FramelessWindowHint);
-    m_fehler.setAttribute(Qt::WA_NoSystemBackground);
-    m_fehler.setAttribute(Qt::WA_TranslucentBackground);
-    m_fehler.setAttribute(Qt::WA_TransparentForMouseEvents);
+    m_popup.setWindowFlags(Qt::FramelessWindowHint);
+    m_popup.setAttribute(Qt::WA_NoSystemBackground);
+    m_popup.setAttribute(Qt::WA_TranslucentBackground);
+    m_popup.setAttribute(Qt::WA_TransparentForMouseEvents);
 
-    m_fehler.setStyleSheet("color: rgb(255, 255, 255)");
+    m_popup.setStyleSheet("color: rgb(255, 255, 255)");
 
-    m_fehler.setStandardButtons(0);
+    m_popup.setStandardButtons(0);
 
-    QTimer::singleShot(2000, &m_fehler, SLOT(hide()));
+    QTimer::singleShot(2000, &m_popup, SLOT(hide()));
 
-    m_fehler.exec();
+    m_popup.exec();
 }
 
+void Infobar::not_ur_planet()
+{
+    m_popup.setWindowTitle("Fehler");
+    m_popup.setText("Dieser Planet gehört dir noch nicht!");
+
+    m_popup.setGeometry(0, 0, 250, 200);
+
+    m_popup.setWindowFlags(Qt::FramelessWindowHint);
+    m_popup.setAttribute(Qt::WA_NoSystemBackground);
+    m_popup.setAttribute(Qt::WA_TranslucentBackground);
+    m_popup.setAttribute(Qt::WA_TransparentForMouseEvents);
+
+    m_popup.setStyleSheet("color: rgb(255, 255, 255)");
+
+    m_popup.setStandardButtons(0);
+
+    QTimer::singleShot(2000, &m_popup, SLOT(hide()));
+
+    m_popup.exec();
+}
+
+void Infobar::not_ur_ship()
+{
+    m_popup.setWindowTitle("Fehler");
+    m_popup.setText("Dieses Raumschiff gehört dir nicht und du kannst es auch nicht stehlen, weil stehlen böse ist!");
+
+    m_popup.setGeometry(0, 0, 250, 200);
+
+    m_popup.setWindowFlags(Qt::FramelessWindowHint);
+    m_popup.setAttribute(Qt::WA_NoSystemBackground);
+    m_popup.setAttribute(Qt::WA_TranslucentBackground);
+    m_popup.setAttribute(Qt::WA_TransparentForMouseEvents);
+
+    m_popup.setStyleSheet("color: rgb(255, 255, 255)");
+
+    m_popup.setStandardButtons(0);
+
+    QTimer::singleShot(3000, &m_popup, SLOT(hide()));
+
+    m_popup.exec();
+}
+
+void Infobar::already_exist()
+{
+    m_popup.setWindowTitle("Fehler");
+    m_popup.setText("Du besitzt auf diesem Planeten bereits eine Werft!");
+
+    m_popup.setGeometry(0, 0, 250, 200);
+
+    m_popup.setWindowFlags(Qt::FramelessWindowHint);
+    m_popup.setAttribute(Qt::WA_NoSystemBackground);
+    m_popup.setAttribute(Qt::WA_TranslucentBackground);
+    m_popup.setAttribute(Qt::WA_TransparentForMouseEvents);
+
+    m_popup.setStyleSheet("color: rgb(255, 255, 255)");
+
+    m_popup.setStandardButtons(0);
+
+    QTimer::singleShot(2000, &m_popup, SLOT(hide()));
+
+    m_popup.exec();
+}
+
+void Infobar::nothingSelectedReceiver()
+{
+    m_popup.setWindowTitle("Fehler");
+    m_popup.setText("Du hast kein Raumschiff oder Planenten ausgewählt!");
+
+    m_popup.setGeometry(0, 0, 250, 200);
+
+    m_popup.setWindowFlags(Qt::FramelessWindowHint);
+    m_popup.setAttribute(Qt::WA_NoSystemBackground);
+    m_popup.setAttribute(Qt::WA_TranslucentBackground);
+    m_popup.setAttribute(Qt::WA_TransparentForMouseEvents);
+
+    m_popup.setStyleSheet("color: rgb(255, 255, 255)");
+
+    m_popup.setStandardButtons(0);
+
+    QTimer::singleShot(2000, &m_popup, SLOT(hide()));
+
+    m_popup.exec();
+}
 //For button clicks
 //TODO Set other color if presssed
 //TODO Send planet_id insted of 1
@@ -145,16 +249,28 @@ void Infobar::on_transporter_bauen_clicked()
     }
 }
 
-void Infobar::on_aufgeben_clicked()
-{
-    emit this->end_game();
-}
-
 void Infobar::on_weiter_clicked()
 {
     emit this->next_round();
 }
 
+void Infobar::on_aufgeben_clicked()
+{
+    m_popup.setWindowTitle("Nimm dir einen Moment Zeit");
+    m_popup.setText("Bist du sicher, dass du aufgeben willst?");
+
+    //m_fehler.setStyleSheet("color: rgb(255, 255, 255)");
+
+    m_popup.setStandardButtons(QMessageBox::No);
+    m_popup.addButton(QMessageBox::Yes);
+
+    m_popup.exec();
+}
+
+void Infobar::on_yes_clicked()
+{
+    emit this->end_game();
+}
 
 
 //For button enable/disable

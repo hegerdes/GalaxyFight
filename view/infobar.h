@@ -26,6 +26,7 @@ signals:
     void build_transporter(int planet_id);
     void nothingSelected();
     void next_round();
+    void surrender();
     void end_game();
 
 public slots:
@@ -36,18 +37,28 @@ public slots:
     //Set selected planet
     void set_selected_planet(int);
 
+    void nothingSelectedReceiver();
+
     //Slots for button klicks
     void on_mine_bauen_clicked();
-
     void on_werft_bauen_clicked();
-
     void on_kampfschiff_bauen_clicked();
-
     void on_transporter_bauen_clicked();
 
     void on_aufgeben_clicked();
+    void on_yes_clicked();
 
     void on_weiter_clicked();
+
+    //Slots for timer
+    void set_time(int time);
+    void resettime();
+
+    //Slots for popups
+    void no_resources(int num);
+    void not_ur_planet();
+    void not_ur_ship();
+    void already_exist();
 
     //Slots for button enable/disable
     void mine_bauen_disable();
@@ -70,12 +81,6 @@ public slots:
 
     void weiter_enable();
 
-    void set_time(int time);
-
-    void resettime();
-
-    void no_resources();
-
 private:
 
     //GameManager
@@ -90,7 +95,7 @@ private:
     //Current selected planet
     int m_selected_planet;
 
-    QMessageBox m_fehler;
+    QMessageBox m_popup;
 
     QTimer m_timer;
 

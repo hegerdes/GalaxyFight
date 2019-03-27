@@ -29,7 +29,7 @@ namespace asteroids
 
 struct attackspacecraft{
     //constructor
-    attackspacecraft(int id, int position) : m_id(id), m_position(position), m_next_position(-1), m_change_position(false) {}
+    attackspacecraft(int id, int position) : m_id(id), m_position(position), m_next_position(position), m_change_position(false) {}
     //id für einzelne Schiffe
     int m_id;
     //owner
@@ -54,6 +54,8 @@ struct transportspacecraft{
     int m_position;
     //nächste position der route
     int m_next_position;
+    //geladenes erz
+    int m_ore;
     //flag ob Schiff noch zur route fliegen muss
     bool m_to_new_route;
     //flag ob Schiff zur base fliegt
@@ -97,8 +99,13 @@ class ManageGame : public QObject
      */
     void updateSpaceCrafts();
 
+    /**
+     * @brief List of all PlanetChanges. This should be send to server
+     * @return List of Planetchanges
+     */
     std::list<PlanetChanges::Ptr>& get_PlanetCangeList();
 
+    //Getter
     inline int get_current_resource(){return m_current_resource;}
 
     inline int get_resource_per_time(){return m_resource_per_time;}
@@ -111,9 +118,11 @@ class ManageGame : public QObject
 
     inline std::list<Transporter>& get_transportSpaceCraftList(){return m_transportSpaceCraftslist;}
 
+    int transporter_stored_ore(int transporter_position);
+
   signals:
     void gameover();
-    void no_resources();
+    void no_resources(int);
     void updateInfobar();
     void not_ur_planet();
     void not_ur_ship();
@@ -122,6 +131,9 @@ class ManageGame : public QObject
     void goto3DScene();
     void changeRouteError();
     void updateScene();
+    void noFactory();
+    void stopTimer();
+    void resetTimer();
 
   public slots:
     void change_Fighter_position(int new_position, int attackSpaceCraft_id);
@@ -130,6 +142,7 @@ class ManageGame : public QObject
     void build_mine(int planet_id);
     void build_fighter(int planet_id);
     void build_transporter(int planet_id);
+    void destroy_fighter(int fighter_id);
     void next_round();
     void end_game();
 
