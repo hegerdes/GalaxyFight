@@ -40,9 +40,10 @@ MainWindow::MainWindow(QWidget* parent) :
     m_screenStack->addWidget(m_3DScene);
     m_screenStack->addWidget(m_settingsScreen);
 
+
     m_3DScene->setMinimumSize(size());
 
-   m_screenStack->setCurrentWidget(m_startscreen);
+    m_screenStack->setCurrentWidget(m_startscreen);
 
 //    setLayout(m_screenStack);
     m_3DScene->setMinimumSize(QSettings().value("minWidth",1920).toInt(), QSettings().value("minHeight",1080).toInt());
@@ -72,7 +73,7 @@ void MainWindow::goto3DScene()
     //m_3DScene->loadLevel();
 }
 
-void MainWindow::gotoScene2D()
+void MainWindow::goToScene2D()
 {
     m_screenStack->setCurrentWidget(m_scene2d);
 }
@@ -110,7 +111,12 @@ void MainWindow::keyReleaseEvent(QKeyEvent* event)
 
 void MainWindow::setupConnections()
 {
-  connect(m_startscreen, &StartScreen::closeProgramm , this, &MainWindow::closeWindow);
-  connect(m_startscreen, &StartScreen::goToLoading, this, &MainWindow::gotoLoadingScreen);
+  connect(ManageGame::getinstance(), &ManageGame::goto3DScene, this, &MainWindow::goto3DScene);
+  connect(ManageGame::getinstance(), &ManageGame::goToScene2D,this,&MainWindow::goToScene2D);
+  connect(m_startscreen, &StartScreen::gotoLoadingScreen, this, &MainWindow::gotoLoadingScreen);
+  connect(m_startscreen, &StartScreen::closeWindow , this, &MainWindow::closeWindow);
+  connect(m_startscreen, &StartScreen::goTo2D, this, &MainWindow::goToScene2D);
+  connect(m_startscreen, &StartScreen::goto3DScene, this, &MainWindow::goto3DScene);
+  //connect(m_startscreen, &StartScreen::gotoLoadingScreen, this, &MainWindow::goToLoadingScreen);
 }
 } // namespace asteroids

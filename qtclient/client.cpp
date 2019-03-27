@@ -1,11 +1,13 @@
 #include "client.h"
 
 namespace asteroids {
-Client::Client() {}
+Client::Client() {
+    enemy_disconnected = false;
+}
 
 void Client::connect(QString addr, quint16 port) {
-    // socket.connectToHost(QHostAddress::LocalHost, port);
-    socket.connectToHost(addr, port);
+    socket.connectToHost(QHostAddress::LocalHost, 38292);
+    //socket.connectToHost(addr, port);
     std::cerr << socket.waitForConnected() << ": socket.waitForConnected\n";
 }
 
@@ -171,9 +173,7 @@ void Client::sendReadyT(char* player_id, int length)
 
 void Client::conLost()
 {
-    QByteArray data;
-    data.append(PacketType::con_lost);
-    writeData(data);
+    enemy_disconnected = true;
 }
 
 void Client::game_start(char* data)
@@ -186,7 +186,8 @@ void Client::game_start(char* data)
     }
     id[length] = '\0';
     id_other = std::string(id);
-    player_No = getChar(&data);
+    player_No = (player_no) getChar(&data);
+    std::cerr << __LINE__ << ", " << player_No << " player_No";
 
     //MapKonfig erste mal laden.
 }
@@ -211,6 +212,9 @@ void Client::interpreteAnswer() {
             winner_no = getChar(&data);
         } else if (pt == PacketType::start_2D) {
             // TODO BLOCK WAITING:::
+        } else if(pt == PacketType::game_start)
+        {
+            game_start(data);
         }
     }
 }

@@ -3,8 +3,11 @@
 #include <QFile>
 #include <QPalette>
 #include <QPixmap>
-#include "../qtclient/client.h"
 #include <QScreen>
+#include <thread>
+#include <future>
+#include "global_socket.h"
+#include <QtConcurrent>
 
 namespace asteroids {
 
@@ -43,25 +46,48 @@ StartScreen::~StartScreen()
 }
 
 
-void asteroids::StartScreen::on_playBut_clicked()
+void StartScreen::on_playBut_clicked()
 {
     //sends Signals when "Spielen" was clicked
-    emit goToLoading();
-    emit startClient();
+    emit gotoLoadingScreen();
+    // emit startClient();
+    //testing
+    ManageGame::getinstance()->initialize_player(PlanetChanges::PLAYER2, 16);
+
+    client_global.sendReadyT("eins",4);
+    QtConcurrent::run(QThreadPool::globalInstance(), [&](){
+       MapFactory& b = MapFactory::getinstance();
+       Map::Ptr a = b.getMap("models/01.map");
+
+       auto game_inst = ManageGame::getinstance();
+
+       client_global.wait_for_readData(-1);
+//TODO USE ONLY IF SERVER IS RUNNUNG
+//       if(client_global.player_No == 0)
+//       {
+//           game_inst->initialize_player(PlanetChanges::PLAYER1,0);
+//       }
+//       else if(client_global.player_No == 1)
+//       {
+//           game_inst->initialize_player(PlanetChanges::PLAYER2,a->getNumberOfPlanets() - 1);
+//       }
+        std::cerr << "player_No: " << client_global.player_No << ", id_other: " << client_global.id_other << "\n";
+        emit goTo2D();
+    });
 }
 
 
 
-void asteroids::StartScreen::on_quitBut_clicked()
+void StartScreen::on_quitBut_clicked()
 {
     //sends Signal when "Beenden" was clicked
-    emit closeProgramm();
+    emit closeWindow();
 }
 
-void asteroids::StartScreen::on_settingBut_clicked()
+void StartScreen::on_settingBut_clicked()
 {
     //sends Signal when "Einstellungen" was clicked
-    emit goToSetting();
+    emit goto3DScene();
 }
 
 void StartScreen::setupConnections()

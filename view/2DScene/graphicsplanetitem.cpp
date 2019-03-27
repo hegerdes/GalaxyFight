@@ -20,10 +20,10 @@ void GraphicsPlanetItem::paint(QPainter* painter, const QStyleOptionGraphicsItem
     QPixmap icon;
     //draw ship
     switch (m_player) {
-    case PLAYER1:
+    case PlayerType::PLAYER1:
         icon = QIcon("./models/planetGreen.svg").pixmap(50, 50);
         break;
-    case PLAYER2:
+    case PlayerType::PLAYER2:
         icon = QIcon("./models/planetRed.svg").pixmap(50, 50);
         break;
     default:

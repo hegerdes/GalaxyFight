@@ -93,8 +93,9 @@ void PhysicsEngine::process()
 
                 // Add explosion
                 m_particles.addEffect(ParticleEffect::createExplosionSphere(b->getPosition()));
+            } else {
+                p_it++;
             }
-            p_it++;
         }
 
         // Check if bullet is dead. If it is, remove from

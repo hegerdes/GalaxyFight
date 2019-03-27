@@ -20,6 +20,7 @@
 
 #include "PlanetChanges.hpp"
 #include "../../math/Vector.hpp"
+#include "util/GameValues.hpp"
 
 namespace asteroids
 {
@@ -28,7 +29,6 @@ class Planet
 {
   public:
     using Ptr = std::shared_ptr<Planet>;
-    enum Owner{UNASSIGN, PLAYER1, PLAYER2};
 
     /**
      * @brief Construct a new Planet object
@@ -36,14 +36,7 @@ class Planet
      * @param name The name of the planet
      * @param pos Vector with position
      */
-    Planet(std::string name, Vector3f pos);
-
-    /**
-     * @brief initialize all values except id, name and position
-     * 
-     * @return int 1 if succsess
-     */
-    int init();
+    Planet(int id, std::string name, Vector3f pos);
 
     /**
      * @brief Updates the planet with all changes that the user made
@@ -51,11 +44,17 @@ class Planet
      * @param updates Update-file with the information to update
      * @return int 1 if succsess
      */
-    int updatePlanet(PlanetChanges updates);
+    int updatePlanet(PlanetChanges::Ptr updates);
+
+    /**
+     * @brief 
+     * 
+     */
+    void printPlanet();
 
     inline std::string getname(){return m_planet_name;}
 
-    inline int getID(){return id;}
+    inline int getID(){return m_id;}
 
     inline int getOre(){return m_num_of_ore;}
     
@@ -67,21 +66,33 @@ class Planet
 
     inline int getMine(){return m_num_mine;}
 
-    inline Owner getOwner(){return m_owned;}
+    inline int getStoredOre(){return m_stored_ore;}
+
+    inline PlanetChanges::Owner getOwner(){return m_owned;}
 
     inline Vector3f& getPos(){return m_planet_pos;}
         
 
   private:
 
+    /**
+     * @brief initialize all values except m_id, name and position
+     * 
+     * @return int 1 if succsess
+     */
+    int init();
+
     //ID of the planet
-    int id;
+    int m_id;
 
     //Name of the planet
     std::string m_planet_name;
 
     //Number of ore on planet
     int m_num_of_ore;
+
+    //Number of stored ore
+    int m_stored_ore;
 
     //Position in 3D space
     Vector3f m_planet_pos;
@@ -99,7 +110,7 @@ class Planet
     int m_num_transporter;
 
     //Who owns the planet
-    Owner m_owned;
+    PlanetChanges::Owner m_owned;
     
     
 };
