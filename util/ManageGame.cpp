@@ -27,7 +27,7 @@ ManageGame::ManageGame(QObject *parent) : QObject(parent), m_initialised(false)
 
     //Init of members
     MapFactory& b = MapFactory::getinstance();
-    m_planetmap = b.getMap("models/01.map");
+    m_planetmap = b.getMap(setting.value("Dateipfade/Map").toString().toStdString());
     m_planets = m_planetmap->getPlanets();
     m_round_changes_map = std::map<int,PlanetChanges::Ptr>();
     m_round_changes_list = std::list<PlanetChanges::Ptr>();
@@ -158,6 +158,7 @@ void ManageGame::build_fighter(int planet_id)
 
                 m_round_changes_map[planet_id] = std::make_shared<PlanetChanges>(PlanetChanges(planet_id));
                 m_round_changes_map[planet_id]->setFighter(1);
+                updateBase(-COST_PER_ATTACKSPACECRAFT);
 
             }
             else
@@ -175,6 +176,7 @@ void ManageGame::build_fighter(int planet_id)
                     m_attackSpaceCraftslist.push_back(attackSpaceCraft);
 
                     m_round_changes_map[planet_id]->setFighter(1);
+                    updateBase(-COST_PER_ATTACKSPACECRAFT);
 
                 }
                 else
@@ -226,6 +228,7 @@ void ManageGame::build_transporter(int planet_id)
                 m_round_changes_map[planet_id] = std::make_shared<PlanetChanges>(PlanetChanges(planet_id));
             }
             m_round_changes_map[planet_id]->setTransports(1);
+            updateBase(-COST_PER_TRANSPORTSPACECRAFT);
 
             //update signal für die info bar
             emit updateInfobar();

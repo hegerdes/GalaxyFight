@@ -18,7 +18,7 @@ Scene2dHandler::Scene2dHandler(QObject* parent)
     setBackgroundBrush(QBrush(background));
 
    //draw map
-    auto map = MapFactory::getinstance().getMap("./models/01.map");
+    auto map = MapFactory::getinstance().getMap(setting.value("Dateipfade/Map").toString().toStdString());
     auto planets = map->getPlanets();
     auto edges = map->getEdges();
 
@@ -178,7 +178,7 @@ void Scene2dHandler::unselectAll()
 void Scene2dHandler::placeFighter()
 {
     auto fighters = ManageGame::getinstance()->get_attackSpaceCraftList();
-    auto planets = MapFactory::getinstance().getMap("./models/01.map")->getPlanets();
+    auto planets = MapFactory::getinstance().getMap(setting.value("Dateipfade/Map").toString().toStdString())->getPlanets();
     auto itemList = items();
 
     //start animation and placement
@@ -211,7 +211,7 @@ void Scene2dHandler::placeFighter()
 void Scene2dHandler::placeTransporter()
 {
     auto transporters = ManageGame::getinstance()->get_transportSpaceCraftList();
-    auto planets = MapFactory::getinstance().getMap("./models/01.map")->getPlanets();
+    auto planets = MapFactory::getinstance().getMap(setting.value("Dateipfade/Map").toString().toStdString())->getPlanets();
     auto itemList = items();
 
     //start animation and placement
@@ -243,7 +243,7 @@ void Scene2dHandler::placeTransporter()
 void Scene2dHandler::updateMap()
 {
     MapFactory& f = MapFactory::getinstance();
-    auto map = f.getMap("models/01.map");
+    auto map = f.getMap(setting.value("Dateipfade/Map").toString().toStdString());
     auto planets = map->getPlanets();
     auto itemList = items();
 

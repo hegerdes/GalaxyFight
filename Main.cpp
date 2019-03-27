@@ -20,7 +20,7 @@ int main(int argc, char** argv)
 {
    //Testing Map
 //    asteroids::MapFactory& b = asteroids::MapFactory::getinstance();
-//    asteroids::Map::Ptr map = b.getMap("models/01.map");
+//    asteroids::Map::Ptr map = b.getMap(setting.value("Dateipfade/Map").toString().toStdString());
 
 //    //map->print();
 //    //map->printEdges();
