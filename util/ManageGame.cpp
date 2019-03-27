@@ -383,8 +383,8 @@ void ManageGame::next_round()
         changes.push_back(x.first);
     }
     */
-	PlanetChanges planetchanges(PlanetChanges::Owner::UNASSIGN ,3,1,1,1,1,1,0,1);
-	changes.push_back(planetchanges);
+    PlanetChanges planetchanges(PlanetChanges::Owner::UNASSIGN ,3,1,1,1,1,1,0,1);
+    changes.push_back(planetchanges);
     //PlanetChanges planetchangess(PlanetChanges::Owner::UNASSIGN ,1,1,1,1,1,1,0,1);
     //changes.push_back(planetchangess);
 
@@ -602,52 +602,39 @@ void ManageGame::initialize_player(PlanetChanges::Owner player_id, int planet_id
     {
         m_player_id = player_id;
         m_base = planet_id;
-        //m_player_id = asteroids::PlanetChanges::Owner::PLAYER1 ;
-        //m_base = 0;
-std::cerr << "\t" << __LINE__ << ", m_player_id: " << m_player_id << ", m_base: " << m_base << "\n";
+		std::cerr << "\t" << __LINE__ << ", m_player_id: " << m_player_id << ", m_base: " << m_base << "\n";
         //TODO For DEBUG @ahaker
         //m_player_id = PlanetChanges::UNASSIGN;
 
         //set Satrt planet Owner
         //This is HQ
-std::cerr << "\t" << __LINE__ << "\n";
          PlanetChanges::Ptr change = std::make_shared<PlanetChanges>(PlanetChanges(planet_id));
-std::cerr << "\t" << __LINE__ << "\n";
          change->setOwner(m_player_id);
-std::cerr << "\t" << __LINE__ << "\n";
          m_planets.at((unsigned long)planet_id)->updatePlanet(change);
-std::cerr << "\t" << __LINE__ << "\n";
 
+    std::cerr << __LINE__ << "\n";
         //Die am Start verfügbaren Schiffe werden den Listen hinzugefügt
-std::cerr << "\t" << __LINE__ << "\n";
         for (int i = 0; i < m_attackSpaceCraft_number;i++)
         {
-std::cerr << "\t" << __LINE__ << "\n";
             Fighter attackSpaceCraft = std::make_shared<attackspacecraft>(attackspacecraft(i, planet_id));
             attackSpaceCraft->m_next_position = planet_id;
             attackSpaceCraft->m_change_position = true;
             attackSpaceCraft->m_owner = m_player_id;
             m_attackSpaceCraftslist.push_back(attackSpaceCraft);
         }
-std::cerr << "\t" << __LINE__ << "\n";
         for (int i = 0; i < m_transportSpaceCraft_number;i++)
         {
-std::cerr << "\t" << __LINE__ << "\n";
             Transporter transportSpaceCraft = std::make_shared<transportspacecraft>(transportspacecraft(i, planet_id));
             transportSpaceCraft->m_owner = m_player_id;
             m_transportSpaceCraftslist.push_back(transportSpaceCraft);
         }
-std::cerr << "\t" << __LINE__ << "\n";
         m_initialised = true;
         emit updateScene();
-std::cerr << "\t" << __LINE__ << "\n";
     }
     else
     {
-std::cerr << "\t" << __LINE__ << "\n";
         //throw std::logic_error("Alrady initialized");
     }
-std::cerr << "\t" << __LINE__ << "\n";
 }
 
 void ManageGame::throwError()

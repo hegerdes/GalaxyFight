@@ -63,11 +63,8 @@ void StartScreen::on_playBut_clicked()
 		{
 			client_global.sendReadyT("name",4);
 			sleep(1);
-			std::cerr << __LINE__ << "\n";
 		}
-		std::cerr << __LINE__ << ", player_No: " << client_global.player_No << ", id_other: " << client_global.id_other << "\n";
 //TODO USE ONLY IF SERVER IS RUNNUNG
-       std::cerr << __LINE__ << "\n";
        if(client_global.player_No == 0)
        {
            game_inst->initialize_player(PlanetChanges::PLAYER1,0);
@@ -75,13 +72,12 @@ void StartScreen::on_playBut_clicked()
        }
        else if(client_global.player_No == 1)
        {
-           game_inst->initialize_player(PlanetChanges::PLAYER2,a->getNumberOfPlanets());
+           game_inst->initialize_player(PlanetChanges::PLAYER2,0);
+           //game_inst->initialize_player(PlanetChanges::PLAYER2,a->getNumberOfPlanets()-1); @ahaker
        std::cerr << __LINE__ << "\n";
        }
-       std::cerr << __LINE__ << "\n";
         emit goTo2D();
     });
-       std::cerr << __LINE__ << "\n";
 }
 
 
