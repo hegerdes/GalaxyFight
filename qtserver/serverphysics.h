@@ -24,11 +24,11 @@ namespace asteroids {
     class ServerPhysics : public QObject
     {
         Q_OBJECT
-    private:
+    public:
         std::list<ServerBullet::Ptr> m_first_bullets;
         std::list<ServerBullet::Ptr> m_second_bullets;
         std::list<ServerAsteroid::Ptr> m_asteroids;
-
+    private:
         ServerSpacecraft::Ptr m_first;
         ServerSpacecraft::Ptr m_second;
 
