@@ -620,19 +620,19 @@ void ManageGame::initialize_player(PlanetChanges::Owner player_id, int planet_id
         {
             PlanetChanges::Ptr change1 = std::make_shared<PlanetChanges>(PlanetChanges(planet_id));
             change1->setOwner(PlanetChanges::PLAYER1);
-            PlanetChanges::Ptr change2 = std::make_shared<PlanetChanges>(PlanetChanges(m_planetmap->getNumberOfPlanets()));
+            PlanetChanges::Ptr change2 = std::make_shared<PlanetChanges>(PlanetChanges(m_planetmap->getNumberOfPlanets() -1));
             change2->setOwner(PlanetChanges::PLAYER2);
             m_planets.at((unsigned long)planet_id)->updatePlanet(change1);
-            m_planets.at((unsigned long)m_planetmap->getNumberOfPlanets())->updatePlanet(change2);
+            m_planets.at((unsigned long)m_planetmap->getNumberOfPlanets() -1)->updatePlanet(change2);
         }
         if(player_id == PlanetChanges::PLAYER2)
         {
             PlanetChanges::Ptr change1 = std::make_shared<PlanetChanges>(PlanetChanges(planet_id));
             change1->setOwner(PlanetChanges::PLAYER1);
-            PlanetChanges::Ptr change2 = std::make_shared<PlanetChanges>(PlanetChanges(m_planetmap->getNumberOfPlanets()));
+            PlanetChanges::Ptr change2 = std::make_shared<PlanetChanges>(PlanetChanges(m_planetmap->getNumberOfPlanets() -1));
             change2->setOwner(PlanetChanges::PLAYER2);
             m_planets.at((unsigned long)planet_id)->updatePlanet(change1);
-            m_planets.at((unsigned long)m_planetmap->getNumberOfPlanets())->updatePlanet(change2);
+            m_planets.at((unsigned long)m_planetmap->getNumberOfPlanets() -1)->updatePlanet(change2);
         }
 
         //Die am Start verfügbaren Schiffe werden den Listen hinzugefügt
