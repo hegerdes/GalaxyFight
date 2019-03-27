@@ -30,6 +30,7 @@ ManageGame::ManageGame(QObject *parent) : QObject(parent), m_initialised(false)
     m_planetmap = b.getMap("models/01.map");
     m_planets = m_planetmap->getPlanets();
 
+
     updateStats();
 }
 
@@ -318,14 +319,23 @@ void ManageGame::next_round()
     emit updateInfobar();
     // @ahaker send initpacket
     std::list<PlanetChanges> changes;
-    PlanetChanges planetchanges(PlanetChanges::Owner::UNASSIGN ,2,1,1,1,1,1,0,1);
-    //PlanetChanges planetchangess(PlanetChanges::Owner::UNASSIGN ,2,1,1,1,1,1,0,1);
+
+            PlanetChanges planetchanges(PlanetChanges::Owner::UNASSIGN ,3,1,1,1,1,1,0,1);
+            changes.push_back(planetchanges);
+
+
+
+    //PlanetChanges planetchangess(PlanetChanges::Owner::UNASSIGN ,1,1,1,1,1,1,0,1);
     //changes.push_back(planetchangess);
-    changes.push_back(planetchanges);
+
     client_global.m_planet_changes_received = false;
     std::cerr << __LINE__ << ", " << __PRETTY_FUNCTION__ << ", changes.size()" << changes.size() << "\n";
     client_global.SendPlanetChanges(changes.size(), changes);
-    client_global.wait_for_readData(-1);
+    if(!changes.empty())
+    {
+        changes.erase(changes.begin());
+    }
+    client_global.readData();
     if(client_global.init_received){
         std::cerr << __LINE__ << "----------------------------------------\n";
         emit goto3DScene();
@@ -345,7 +355,7 @@ void ManageGame::next_round()
         sleep(1);
         std::cerr << __LINE__ << "\n";
     }
-    client_global.send_reset_planet_changes();
+
     //client_global.wait_for_readData(100);
     std::cerr << __LINE__ << "\n";
 }
