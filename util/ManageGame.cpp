@@ -360,11 +360,6 @@ void ManageGame::next_round()
         //Go through all receved changes
 
         // emit resetTimer();
-        for (auto it_c = m_round_changes_list.begin(); it_c != m_round_changes_list.end(); it_c++)
-        {
-            //Applay changes
-            m_planets.at((unsigned long)it_c->get()->getID())->updatePlanet(*(it_c));
-        }
 
         //TODO Next 2d-round
         updateStats();
@@ -421,6 +416,13 @@ void ManageGame::next_round()
     //client_global.m_planet_changes_received = false; @ahaker beim merge wegefallen
     //client_global.wait_for_readData(100);
     std::cerr << "\t" << __LINE__ << __FUNCTION__<< "\n";
+    // @ahaker apply all changes
+    for (auto it_c = client_global.p_changes_current.begin(); it_c != client_global.p_changes_current.end(); it_c++)
+    {
+        std::cerr << "\t" << __LINE__ << __FUNCTION__<< " apply planet changes\n";
+        //Applay changes
+        m_planets.at((unsigned long)it_c->getID())->updatePlanet(std::make_shared<PlanetChanges>(*(it_c)));
+    }
 }
 
 void ManageGame::end_game()

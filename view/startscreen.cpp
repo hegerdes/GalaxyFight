@@ -72,7 +72,7 @@ void StartScreen::on_playBut_clicked()
        }
        else if(client_global.player_No == 1)
        {
-           game_inst->initialize_player(PlanetChanges::PLAYER2,0);
+           game_inst->initialize_player(PlanetChanges::PLAYER2,1);
            //game_inst->initialize_player(PlanetChanges::PLAYER2,a->getNumberOfPlanets()-1); @ahaker
        std::cerr << "\t" << __LINE__ << __FUNCTION__ << "\n";
        }
