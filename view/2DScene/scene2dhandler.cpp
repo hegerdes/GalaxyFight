@@ -40,6 +40,9 @@ Scene2dHandler::Scene2dHandler(QObject* parent)
         pitem->setOwner(planet->getOwner());
         pitem->setPos(QPointF(planet->getPos()[0], planet->getPos()[1]));
 
+        if(planet->getID() == 0 || planet->getID() == planets.size()-1)
+            pitem->setIsHQ(true);
+
         addItem(pitem);
     }
 
@@ -198,7 +201,7 @@ void Scene2dHandler::placeFighter()
 
         //if no fighter found, create a new one
         if(!foundFlag) {
-            auto newFighter = new GraphicsFighterItem(PlayerType::PLAYER2, fighter->m_id);
+            auto newFighter = new GraphicsFighterItem(fighter->m_owner, fighter->m_id);
             auto pos = planets[fighter->m_position]->getPos();
             newFighter->setPos(pos[0] - 20, pos[1] - 20);
             addItem(newFighter);
@@ -261,13 +264,13 @@ void Scene2dHandler::updateMap()
         if (itemAt(planet->getPos()[0], planet->getPos()[1], QTransform())->type() != ItemTypes::Mine
                 && planet->getMine()) {
             auto mineItem = new GraphicsMineItem();
-            mineItem->setPos(planet->getPos()[0] + 5, planet->getPos()[1]);
+            mineItem->setPos(planet->getPos()[0] + 5, planet->getPos()[1] + 10);
             addItem(mineItem);
         }
         if (itemAt(planet->getPos()[0], planet->getPos()[1], QTransform())->type() != ItemTypes::Factory
                 && planet->getFactorys()) {
             auto mineItem = new GraphicsFactoryItem();
-            mineItem->setPos(planet->getPos()[0] + 10, planet->getPos()[1] + 20);
+            mineItem->setPos(planet->getPos()[0] + 25, planet->getPos()[1] + 10);
             addItem(mineItem);
         }
     }
