@@ -1,4 +1,5 @@
 #include "graphicsfactoryitem.h"
+#include "init_file.h"
 
 namespace asteroids {
 
@@ -14,7 +15,7 @@ QRectF GraphicsFactoryItem::boundingRect() const
 
 void GraphicsFactoryItem::paint(QPainter* painter, const QStyleOptionGraphicsItem*, QWidget*)
 {
-    QPixmap icon = QIcon("./models/factory.svg").pixmap(20, 20);
+    QPixmap icon = QIcon(setting.value("Dateipfade/Factory").toString()).pixmap(20, 20);
 
     painter->drawPixmap(0, 0, icon);
 }

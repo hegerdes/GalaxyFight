@@ -20,9 +20,9 @@
 #include <stdexcept>
 #include <map>
 
-#include "GameValues.hpp"
 #include "../rendering/2D/MapFactory.hpp"
 #include "../rendering/2D/Map.hpp"
+#include "init_file.h"
 
 namespace asteroids
 {
@@ -95,11 +95,6 @@ class ManageGame : public QObject
     static ManageGame* getinstance();
 
     /**
-     * @brief updateSpaceCrafts Alle positionen werden aktualisiert
-     */
-    void updateSpaceCrafts();
-
-    /**
      * @brief List of all PlanetChanges. This should be send to server
      * @return List of Planetchanges
      */
@@ -118,10 +113,6 @@ class ManageGame : public QObject
 
     inline std::list<Transporter>& get_transportSpaceCraftList(){return m_transportSpaceCraftslist;}
 
-    int transporter_stored_ore(int transporter_position);
-
-    void updateBase(int ore);
-
   signals:
     void gameover();
     void no_resources(int);
@@ -131,6 +122,8 @@ class ManageGame : public QObject
     void already_exist();
     void goToScene2D();
     void goto3DScene();
+    void goToWin();
+    void gotoLoose();
     void changeRouteError();
     void updateScene();
     void noFactory();
@@ -147,7 +140,7 @@ class ManageGame : public QObject
     void build_transporter(int planet_id);
     void destroy_fighter(int fighter_id);
     void next_round();
-    void end_game();
+    void end_game(bool);
 
 
 
@@ -165,6 +158,26 @@ class ManageGame : public QObject
      *
      */
     void updateStats();
+
+    /**
+     * @brief Update the ore in base
+     * 
+     * @param ore Ore to add
+     */
+    void updateBase(int ore);
+
+    /**
+     * @brief Updats one ore on the transprter
+     * 
+     * @param transporter_position The Pos of transporter
+     * @return int 
+     */
+    int transporter_stored_ore(int transporter_position);
+
+    /**
+     * @brief updateSpaceCrafts Alle positionen werden aktualisiert
+     */
+    void updateSpaceCrafts();
 
     /**
      * @brief Throws a error if not inizlized

@@ -60,7 +60,7 @@ void StartScreen::on_playBut_clicked()
     client_global.sendReadyT("eins",4);
     QtConcurrent::run(QThreadPool::globalInstance(), [&](){
        MapFactory& b = MapFactory::getinstance();
-       Map::Ptr a = b.getMap("models/01.map");
+       Map::Ptr a = b.getMap(setting.value("Dateipfade/Map").toString().toStdString());
 
        auto game_inst = ManageGame::getinstance();
 

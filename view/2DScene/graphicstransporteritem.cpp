@@ -3,6 +3,7 @@
 #include <QIcon>
 #include <QPixmap>
 #include <QPainter>
+#include "init_file.h"
 
 namespace asteroids {
 
@@ -23,10 +24,10 @@ void GraphicsTransporterItem::paint(QPainter* painter, const QStyleOptionGraphic
     //draw ship
     switch (m_player) {
     case PlayerType::PLAYER1:
-        icon = QIcon("./models/transporter_player1.svg").pixmap(20, 20);
+        icon = QIcon(setting.value("Dateipfade/Player1Transport").toString()).pixmap(20, 20);
         break;
     case PlayerType::PLAYER2:
-        icon = QIcon("./models/transporter_player2.svg").pixmap(20, 20);
+        icon = QIcon(setting.value("Dateipfade/Player2Transport").toString()).pixmap(20, 20);
         break;
     default:
         //show nothing
