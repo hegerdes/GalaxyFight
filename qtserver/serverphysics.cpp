@@ -30,7 +30,7 @@ namespace asteroids {
 
     void ServerPhysics::run()
     {
-        m_timer->start(1000 / 15.0);
+        m_timer->start(1000 / 30.0);
     }
 
     void ServerPhysics::updateData()
