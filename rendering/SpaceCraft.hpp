@@ -107,6 +107,7 @@ public:
      */
     bool collideShip(Vector<float> vec, float r);
 
+    void setHealth(int health);
 private:
     TriangleMesh::Ptr m_mesh;
     

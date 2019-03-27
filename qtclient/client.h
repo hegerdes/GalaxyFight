@@ -47,6 +47,9 @@ class Client {
     std::vector<int> bullet_deleted;
     Hit own_hit;
 
+    int own_health = 10;
+    int enemy_health = 10;
+
     // end_3D
     char winner_no;
 

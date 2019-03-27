@@ -199,6 +199,16 @@ void SpaceCraft::gotHit()
     }
 }
 
+void SpaceCraft::setHealth(int health){
+    m_hp = health;
+
+    if(m_hp == 0)
+    {
+         m_alive = false;
+         destroySpaceCraft();
+    }
+}
+
 SpaceCraft::~SpaceCraft()
 {
  

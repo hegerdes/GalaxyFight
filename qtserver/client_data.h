@@ -18,8 +18,8 @@ struct client_data {
     //physics stuff
     std::vector<int> deleted_bullets_id;
     std::vector<int> deleted_asteroids_id;
-    int m_hp;
-    int m_enem_hp;
+    int m_hp = 10;
+    int m_enem_hp = 10;
 
     //2D Teil
     std::string name = "Name undefined";

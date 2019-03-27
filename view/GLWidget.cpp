@@ -334,6 +334,9 @@ void GLWidget::step(map<Qt::Key, bool>& keyStates)
     m_enemyPlayer->m_yAxis = client_global.enemyyAxis;
     m_enemyPlayer->m_zAxis = client_global.enemyzAxis;
 
+    m_enemyPlayer->setHealth(client_global.own_health);
+    m_actor->setHealth(client_global.enemy_health);
+
     if(client_global.enemy_shot == Bullet_shot::shot)
     {
         Vector3f shipPosition = m_enemyPlayer->getPosition() + m_enemyPlayer->getZAxis() * -45 + m_enemyPlayer->getXAxis() * -175;

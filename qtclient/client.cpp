@@ -150,6 +150,12 @@ void Client::update_3D_S(char* data) {
         bullet_deleted.push_back(in);
         std::cerr << "Bullet zum Löschen angekommen. ID: " << in << "\n";
     }
+
+    //get health
+
+    own_health = getInt(&data);
+    enemy_health = getInt(&data);
+
 }
 
 void Client::readData() {

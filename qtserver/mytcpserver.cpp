@@ -151,25 +151,45 @@ void Server::sendUpdate_3D_S(QByteArray& response, QTcpSocket* socket) {
     response.append((char*) &client_data_temp.yAxis, 3 * 4);
     response.append((char*) &client_data_temp.zAxis, 3 * 4);
 
-    short length = client_data_temp.deleted_asteroids_id.size();
+    std::vector<int> ids_astr;
+
+    if(socket == socket_1){
+        ids_astr = physics.getDelAstr1();
+    }else{
+        ids_astr = physics.getDelAstr2();
+    }
+
+    short length = ids_astr.size();
     response.append((char*)&length, 2); // anzahl zerstörter asteroidend short eine shor null
-    for(auto it : client_data_temp.deleted_asteroids_id){
+    for(auto it : ids_astr){
         response.append((char*)&it, 4);
     }
-    client_data_temp.deleted_asteroids_id.clear();
+    // client_data_temp.deleted_asteroids_id.clear();
     // Asteroiden ids wenn nötig > 0
 
     response.append(client_data_temp.shot);
     response.append((char*) &client_data_temp.bullet_id, 4);
+
+    //RIGHT?????????????????????????????????????????
     response.append(Hit::hit);
 
-    int b_length = client_data_temp.deleted_bullets_id.size();
+    //BULLETS
+    std::vector<int> ids;
+
+    if(socket == socket_1){
+        ids = physics.getDelBullets1();
+    }else{
+        ids = physics.getDelBullets2();
+    }
+
+    int b_length = ids.size();
     response.append((char*)&b_length, 4); // anzahl zerstörter asteroidend short eine shor null
-    for(auto it : client_data_temp.deleted_bullets_id){
+
+    for(auto it : ids){
         response.append((char*)&it, 4);
         log(LoggingType::DEBUG, "Bullet removed SEND TO CLIENT: " + std::to_string(it));
     }
-    client_data_temp.deleted_bullets_id.clear();
+    //client_data_temp.deleted_bullets_id.clear();
     // Bullet ids wenn nötig > 0
 
     response.append((char*)&client_data_temp.m_hp, 4);

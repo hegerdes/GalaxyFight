@@ -47,42 +47,61 @@ int PhysicsEngine::removeAster()
     auto it = client_global.asteroids_deleted.begin();
     while(client_global.asteroids_deleted.end() != it)
     {
-        list<Asteroid::Ptr>::iterator a_it;
-        while(a_it != m_objects.end())
-        {
-            Asteroid::Ptr a = *a_it;
-            if(a->getid() == *it)
-            {
-                a_it = m_objects.erase(a_it);
+        std::cerr << "Aster No: " << *it << " wird gelöscht.\n";
+        auto it_2 = m_objects.begin();
+        while(m_objects.end() != it_2){
+            if((*it_2)->getid() == *it){
+                it_2 = m_objects.erase(it_2);
+                std::cerr << "Aster No: " << *it << " wurde definitiv gelöscht.\n";
                 n++;
-                it = client_global.bullet_deleted.erase(it);
-            } else
-            {
-                a_it++;
+                break;
+            } else {
+                it_2++;
             }
         }
+        it++;
     }
+    client_global.bullet_deleted.clear();
 
     return n;
-
 }
 
 
 int PhysicsEngine::removeBullets()
 {
     int n = 0;
-    bool deleted = false;
-    //std::cerr << __LINE__ << "\n";
-    /*auto it = client_global.bullet_deleted.begin();
-    std::cerr << __LINE__ << "\n";
-    */
-    for(auto i : client_global.bullet_deleted)
+    auto it = client_global.bullet_deleted.begin();
+    while(client_global.bullet_deleted.end() != it)
     {
-        std::cerr << "Bullet No: " << i << " wird gelöscht.\n";
-        n++;
-    }
+        std::cerr << "Bullet No: " << *it << " wird gelöscht.\n";
+        auto it_2 = m_bullets.begin();
+        while(m_bullets.end() != it_2){
+            if((*it_2)->getid() == *it){
+                it_2 = m_bullets.erase(it_2);
+                std::cerr << "Bullet No: " << *it << " wurde definitiv gelöscht.\n";
+                n++;
+                break;
+            } else {
+                it_2++;
+            }
+        }
 
+        it_2 = m_bullets_enemy.begin();
+        while(m_bullets_enemy.end() != it_2){
+            if((*it_2)->getid() == *it){
+                it_2 = m_bullets_enemy.erase(it_2);
+                std::cerr << "Bullet No: " << *it << " wurde definitiv gelöscht.\n";
+                n++;
+                break;
+            } else {
+                it_2++;
+            }
+        }
+
+        it++;
+    }
     client_global.bullet_deleted.clear();
+
     return n;
 
     /*
@@ -150,7 +169,7 @@ int PhysicsEngine::removeBullets()
         }
     }*/
     //std::cerr << __LINE__ << "\n";
-    return n;
+    //return n;
 }
 
 void PhysicsEngine::process()

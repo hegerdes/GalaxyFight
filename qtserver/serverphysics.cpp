@@ -37,20 +37,44 @@ namespace asteroids {
     {
         Removes removed = process();
         //append removed asteroids to changes list from struct
+
         for(int i : removed.aster_changed)
         {
-            int temp = i;
-            m_data_socket_1.deleted_asteroids_id.push_back(i);
-            m_data_socket_2.deleted_asteroids_id.push_back(temp);
+            deleted_asteroids_ids_1.push_back(i);
+            deleted_asteroids_ids_2.push_back(i);
         }
 
         //Append deleted bullets to each list.
         for(int i : removed.bullet_changed)
         {
-            int temp = i;
-            m_data_socket_1.deleted_bullets_id.push_back(i);
-            m_data_socket_2.deleted_bullets_id.push_back(temp);
+            deleted_bullets_ids_1.push_back(i);
+            deleted_bullets_ids_2.push_back(i);
         }
+    }
+
+    //TODO COPY AND CLEAR ORIGINAL
+    std::vector<int> ServerPhysics::getDelAstr1(){
+        std::vector<int> nid(deleted_asteroids_ids_1);
+        deleted_asteroids_ids_1.clear();
+        return nid;
+    }
+
+    std::vector<int> ServerPhysics::getDelBullets1(){
+        std::vector<int> nid(deleted_bullets_ids_1);
+        deleted_bullets_ids_1.clear();
+        return nid;
+    }
+
+    std::vector<int> ServerPhysics::getDelAstr2(){
+        std::vector<int> nid(deleted_asteroids_ids_2);
+        deleted_asteroids_ids_2.clear();
+        return nid;
+    }
+
+    std::vector<int> ServerPhysics::getDelBullets2(){
+        std::vector<int> nid(deleted_bullets_ids_2);
+        deleted_bullets_ids_2.clear();
+        return nid;
     }
 
     Removes ServerPhysics::process(){
@@ -70,7 +94,7 @@ namespace asteroids {
         m_second->m_zAxis = m_data_socket_2.zAxis;
         m_second->m_pos = m_data_socket_2.position;
 
-        std::cerr << "Position of 1: " << m_first->m_pos << "\nPosition of 2: " << m_second->m_pos << "\n";
+        //std::cerr << "Position of 1: " << m_first->m_pos << "\nPosition of 2: " << m_second->m_pos << "\n";
 
         Removes removed;
 
