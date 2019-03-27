@@ -312,7 +312,7 @@ void GLWidget::step(map<Qt::Key, bool>& keyStates)
             m_enemyPlayer->destroySpaceCraft();
         }
         // Trigger update, i.e., redraw via paintGL()
-        std::cerr << __LINE__ <<"\n";
+        std::cerr << "\t" << __FUNCTION__ << __LINE__ <<"\n";
         if(client_global.init_received)
         {
             m_actor->m_hp = 10;
@@ -328,17 +328,17 @@ void GLWidget::step(map<Qt::Key, bool>& keyStates)
             int i = 0;
             std::list<Asteroid::Ptr> asteroids;
             m_asteroidField->getAsteroids(asteroids);
-            std::cerr << client_global.count_astr << " ----------------------------------\n";
+            std::cerr << "\t" << __FUNCTION__<< client_global.count_astr << " ----------------------------------\n";
             for (auto it = asteroids.begin(); it != asteroids.end(); it++)
             {
                 if(i < client_global.count_astr)
                 {
                     (*it)->m_position = client_global.pos_astr[i];
-                    //std::cerr << "m_position " << (*it)->m_position << "\n";
+                    //std::cerr << "\t" << << "m_position " << (*it)->m_position << "\n";
                     (*it)->m_radius = client_global.size_astr[i];
-                    //std::cerr << "m_radius " << (*it)->m_radius << "\n";
+                    //std::cerr << "\t" << << "m_radius " << (*it)->m_radius << "\n";
                     (*it)->m_direction = client_global.dir_astr[i];
-                    //std::cerr << "m_direction " << (*it)->m_direction << "\n";
+                    //std::cerr << "\t" << << "m_direction " << (*it)->m_direction << "\n";
                     //TODO SET ID
                 }
                 i++;
@@ -348,17 +348,17 @@ void GLWidget::step(map<Qt::Key, bool>& keyStates)
             }
 
             client_global.init_received = false;
-            //std::cerr << "erhalten----------------------------------------------\n";
-        std::cerr << __LINE__ <<"\n";
+            //std::cerr << "\t" << << "erhalten----------------------------------------------\n";
+        std::cerr << "\t" << __FUNCTION__ << __LINE__ <<"\n";
         } else {
-        std::cerr << __LINE__ <<"\n";
+        std::cerr << "\t" << __FUNCTION__<< __LINE__ <<"\n";
             client_global.sendUpdate_3D_C(m_actor->m_position, m_actor->m_xAxis,
                                          m_actor->m_yAxis, m_actor->m_zAxis,
                                          bullet_shot, Living::alive, 0);
             client_global.wait_for_readData(20);
         }
 
-        std::cerr << __LINE__ <<"\n";
+        std::cerr << "\t" << __FUNCTION__<< __LINE__ <<"\n";
         if(m_actor->getHP() < 1 || m_enemyPlayer->getHP() < 1)
         {
             player_no player_3d_winner;
@@ -378,7 +378,7 @@ void GLWidget::step(map<Qt::Key, bool>& keyStates)
         m_enemyPlayer->m_yAxis = client_global.enemyyAxis;
         m_enemyPlayer->m_zAxis = client_global.enemyzAxis;
 
-        std::cerr << __LINE__ <<"\n";
+        std::cerr << "\t" << __FUNCTION__<< __LINE__ <<"\n";
         if(client_global.enemy_shot == Bullet_shot::shot)
         {
             Vector3f shipPosition = m_enemyPlayer->getPosition() + m_enemyPlayer->getZAxis() * -45 + m_enemyPlayer->getXAxis() * -175;
@@ -393,7 +393,7 @@ void GLWidget::step(map<Qt::Key, bool>& keyStates)
                 hp_actor = m_actor->getHP();
         }
 
-        std::cerr << __LINE__ <<"\n";
+        std::cerr << "\t" << __FUNCTION__<< __LINE__ <<"\n";
         if(hp_enemy != m_enemyPlayer->getHP()){
             std::cout << "Enemy Health: " << m_enemyPlayer->getHP() << std::endl;
             hp_enemy = m_enemyPlayer->getHP();
@@ -402,10 +402,10 @@ void GLWidget::step(map<Qt::Key, bool>& keyStates)
 
         m_enemyHPBar->setHP(m_enemyPlayer->getHP());
         m_playerHPBar->setHP(m_actor->getHP());
-        std::cerr << __LINE__ <<"\n";
+        std::cerr << "\t" << __FUNCTION__<< __LINE__ <<"\n";
         this->update();
         m_hud.update();
-        std::cerr << __LINE__ <<"\n";
+        std::cerr << "\t" << __FUNCTION__<< __LINE__ <<"\n";
         if(client_global.m_planet_changes_received){
             active = false;
             client_global.m_planet_changes_received = false;
