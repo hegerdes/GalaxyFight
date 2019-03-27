@@ -51,6 +51,7 @@ int PhysicsEngine::removeAster()
         auto it_2 = m_objects.begin();
         while(m_objects.end() != it_2){
             if((*it_2)->getid() == *it){
+                m_particles.addEffect(ParticleEffect::createExplosionSphere((*it_2)->getPosition()));
                 it_2 = m_objects.erase(it_2);
                 std::cerr << "Aster No: " << *it << " wurde definitiv gelöscht.\n";
                 n++;
@@ -77,7 +78,6 @@ int PhysicsEngine::removeBullets()
         auto it_2 = m_bullets.begin();
         while(m_bullets.end() != it_2){
             if((*it_2)->getid() == *it){
-                std::cerr << "Bullet No: " << *it << " wurde definitiv gelöscht.\n" << " Dies ist an Position " << (*it_2)->getPosition() << " passiert\n";
                 it_2 = m_bullets.erase(it_2);
                 n++;
                 break;
@@ -195,8 +195,7 @@ void PhysicsEngine::process()
 
     //Move bullets and test for hits
     b_it = m_bullets.begin();
-    while (b_it != m_bullets.end())
-    {
+    while (b_it != m_bullets.end())    {
         Bullet::Ptr b = *b_it;
         b->run();
         //std::cerr << "Own Bullets" << b->getid() << "\n";
