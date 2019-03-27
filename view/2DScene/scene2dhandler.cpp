@@ -239,7 +239,9 @@ void Scene2dHandler::placeTransporter()
 
 void Scene2dHandler::updateMap()
 {
-    auto planets = MapFactory::getinstance().getMap("./models/01.map")->getPlanets();
+    MapFactory& f = MapFactory::getinstance();
+    auto map = f.getMap("models/01.map");
+    auto planets = map->getPlanets();
     auto itemList = items();
 
     for(auto& item : itemList) {
