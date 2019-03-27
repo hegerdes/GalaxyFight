@@ -38,12 +38,8 @@ void PhysicsEngine::updateAsteroidPos()
                 if(it == b->getid())
                 {
                     b->setPosition(client_global.asteroid_pos[arr_pos]);
-                    std::cerr << "Position of asteroi: " << it << ": " << b->getPosition() << "\n";
+                    break;
                 }
-                /*if(it == 8)
-                {*/
-
-                //}
             }
             arr_pos++;
         }
@@ -53,7 +49,54 @@ void PhysicsEngine::updateAsteroidPos()
 
 void PhysicsEngine::updateBullets()
 {
+    if(client_global.updated_pos)
+    {
+        std::list<Bullet::Ptr> new_bullets;
+        if(client_global.bullet_ids.size() != client_global.bullet_pos.size() || client_global.bullet_dirs.size() != client_global.bullet_ids.size())
+        {
+            throw std::exception();
+        }
+        int arr_pos = 0;
+        bool existed;
+        for(auto it : client_global.bullet_ids)
+        {
+            existed = false;
+            for(auto b : m_bullets)
+            {
+                if(it == b->getid())
+                {
+                    b->setPosition(client_global.bullet_pos[arr_pos]);
+                    b->setDirection(client_global.bullet_dirs[arr_pos]);
+                    existed = true;
+                    break;
+                }
 
+            }
+            /*for(auto b : m_bullets_enemy)
+            {
+                if(it == b->getid())
+                {
+                    b->setPosition(client_global.bullet_pos[arr_pos]);
+                    b->setDirection(client_global.bullet_dirs[arr_pos]);
+                    existed = true;
+                    break;
+                }
+            }*/
+            //Missing bullets constructing
+            if(!existed)
+            {
+                Bullet::Ptr bp = Bullet::Ptr(new Bullet(client_global.bullet_pos[arr_pos], client_global.bullet_dirs[arr_pos]));
+                bp->setid(it);
+                new_bullets.push_back(bp);
+            }
+            arr_pos++;
+        }
+
+        //Adding missing bullets to bullets lists
+
+        m_bullets.insert(m_bullets.end(), new_bullets.begin(), new_bullets.end());
+        client_global.updated_pos = false;
+    }
 }
 
 void PhysicsEngine::addDestroyable(Asteroid::Ptr& obj)
@@ -71,6 +114,8 @@ void PhysicsEngine::addBullet(Bullet::Ptr& bullet)
 
 void PhysicsEngine::addEnemyBullet(Bullet::Ptr& bullet)
 {
+
+    std::cerr << "Use of deprecated function.\n";
     m_particles.addEffect(ParticleEffect::createBulletTail(bullet->getPosition(), bullet->direction(), bullet->lifetime()));
     m_bullets_enemy.push_back(bullet);
 }
@@ -123,6 +168,7 @@ int PhysicsEngine::removeBullets()
 
         it_2 = m_bullets_enemy.begin();
         while(m_bullets_enemy.end() != it_2){
+            std::cerr << "use of deprecated function\n";
             if((*it_2)->getid() == *it){
                 std::cerr << "Bullet No: " << *it << " wurde definitiv gelöscht.\n" << " Dies ist an Position " << (*it_2)->getPosition() << " passiert\n";
                 it_2 = m_bullets_enemy.erase(it_2);
@@ -213,6 +259,8 @@ void PhysicsEngine::process()
     list<Asteroid::Ptr>::iterator p_it;
     list<Bullet::Ptr>::iterator b_it;
 
+    updateAsteroidPos();
+
     if(client_global.bullet_deleted.size() != removeBullets())
     {
         std::cerr << "Nicht alle Bullets removed;" << __LINE__;
@@ -221,9 +269,6 @@ void PhysicsEngine::process()
     {
         std::cerr << "Nicht alle asteroiden gelöscht" << __LINE__;
     }
-
-    updateAsteroidPos();
-
 
     // Move all objects
     for (p_it = m_objects.begin(); p_it != m_objects.end(); p_it++)
@@ -237,41 +282,6 @@ void PhysicsEngine::process()
     while (b_it != m_bullets.end())    {
         Bullet::Ptr b = *b_it;
         b->run();
-        //std::cerr << "Own Bullets" << b->getid() << "\n";
-
-        //TODO: Einkommentieren, wenn merge; m_enemy_spacecraft noch uninitialisiert
-        /*
-         *check of enemy Ship with Bullets*/
-        /*
-        if(m_enemyPlayer->collideShip(b->getPosition(), b->radius()))
-        {
-            b->destroy();
-
-            m_enemyPlayer->gotHit();
-
-            m_particles.addEffect(ParticleEffect::createExplosionSphere(b->getPosition()));
-        }
-
-
-
-        // Check for collisions with present objects
-        p_it = m_objects.begin();
-        while (p_it != m_objects.end())
-        {
-            if ((*p_it)->collision(b->getPosition(), b->radius()))
-            {
-                // Mark bulled as killed
-                b->destroy();
-
-                // Delete destroyed object
-                p_it = m_objects.erase(p_it);
-
-                // Add explosion
-                m_particles.addEffect(ParticleEffect::createExplosionSphere(b->getPosition()));
-            } else{
-                p_it++;
-            }
-        }*/
 
         // Check if bullet is dead. If it is, remove from
         // bullet list. Otherwise continue with next bullet.
@@ -299,46 +309,13 @@ void PhysicsEngine::process()
 
     }
 
-    //Move bullets and test for hits
+    //Move enemy bullets and test for hits
     b_it = m_bullets_enemy.begin();
     while (b_it != m_bullets_enemy.end())
     {
         Bullet::Ptr b = *b_it;
         b->run();
-        //std::cerr << "Enemy Bullets" << b->getid() << "\n";
-
-
-        /*check of Ship with enemy Bullets*/
-        /*
-        if(m_spacecraft->collideShip(b->getPosition(), b->radius()))
-        {
-            b->destroy();
-
-            m_spacecraft->gotHit();
-
-            m_particles.addEffect(ParticleEffect::createExplosionSphere(b->getPosition()));
-        }
-
-        // Check for collisions with present objects
-        p_it = m_objects.begin();
-        while (p_it != m_objects.end())
-        {
-            if ((*p_it)->collision(b->getPosition(), b->radius()))
-            {
-                // Mark bulled as killed
-                b->destroy();
-
-                // Delete destroyed object
-                p_it = m_objects.erase(p_it);
-
-                // Add explosion
-                m_particles.addEffect(ParticleEffect::createExplosionSphere(b->getPosition()));
-            }
-            p_it++;
-        }
-        */
-        // Check if bullet is dead. If it is, remove from
-        // bullet list. Otherwise continue with next bullet.
+        std::cerr << "use of deprecated function\n";
         if (!b->alive())
         {
             b_it = m_bullets_enemy.erase(b_it);
@@ -348,39 +325,6 @@ void PhysicsEngine::process()
             b_it++;
         }
     }
-
-
-    /*
-     * Kollisionstest zwischen Asteroiden und Schiffen
-     * es werden die jeweiligen gotHit() operationen der Schiffe aufgerufen
-     */
-    /*
-    p_it = m_objects.begin();
-    while(p_it != m_objects.end())
-    {
-        if(m_spacecraft->collideShip((*p_it)->getPosition(), (*p_it)->getradius()))
-        {
-            m_particles.addEffect(ParticleEffect::createExplosionSphere((*p_it)->getPosition()));
-            m_spacecraft->gotHit();
-
-            p_it = m_objects.erase(p_it);
-        }*/
-        /*
-         * TODO:: Einkommentieren, wenn merge, dann m_enemy_ship initialisiert
-        */
-    /*
-        else if(m_enemyPlayer->collideShip((*p_it)->getPosition(), (*p_it)->getradius()))
-        {
-            m_particles.addEffect(ParticleEffect::createExplosionSphere((*p_it)->getPosition()));
-            m_enemyPlayer->gotHit();
-
-            p_it = m_objects.erase(p_it);
-        }else
-        {
-            p_it++;
-        }
-    }*/
-
 
     m_particles.update();
 
