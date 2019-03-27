@@ -8,6 +8,8 @@
 #include <future>
 #include "global_socket.h"
 #include <QtConcurrent>
+#include <QSettings>
+#include <QString>
 
 namespace asteroids {
 
@@ -15,9 +17,10 @@ StartScreen::StartScreen(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::StartScreen)
 {
+
     // background-picture
     ui->setupUi(this);
-    QPixmap pic("models/start.jpg");
+    QPixmap pic(setting.value("Dateipfade/Hintergrund", ".").toString());
     ui->piclabel->setPixmap(pic);
 
     QScreen *screen = QGuiApplication::primaryScreen();
