@@ -35,11 +35,11 @@ Server::Server(QObject* parent) : QObject(parent), physics(user_data_1, user_dat
     int amount = 10;
     for (int i{0}; i < amount; i++) {
         pos_astr[i] = asteroids::Randomizer::instance()->getRandomVertex(1000);
-        float rand = asteroids::Randomizer::instance()->getRandomNumber(0, 8);
+        float rand = asteroids::Randomizer::instance()->getRandomNumber(0, 0.1);
         dir_astr[i] = asteroids::Randomizer::instance()->getRandomVertex(1.0) * rand;
         size_astr[i] = asteroids::Randomizer::instance()->getRandomNumber(0, 100);
 
-        physics.addAsteroid(asteroids::ServerAsteroid::Ptr(new asteroids::ServerAsteroid(pos_astr[i], dir_astr[i], rand, size_astr[i], i)));
+        physics.addAsteroid(asteroids::ServerAsteroid::Ptr(new asteroids::ServerAsteroid(pos_astr[i], dir_astr[i], 1, size_astr[i], i)));
     }
 }
 

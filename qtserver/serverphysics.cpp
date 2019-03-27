@@ -104,6 +104,12 @@ namespace asteroids {
 
         for(auto it : m_asteroids){
             it->move();
+            /*
+            if(it->getId() == 1){
+                std::cerr << "Asteroid 1 moved: |||" << it->m_pos << "|||";
+                std::cerr << "speed: Direction: " << it->m_speed << "|||" << it->m_dir;
+            }
+            */
         }
 
         /*
