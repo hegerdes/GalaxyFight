@@ -7,16 +7,15 @@
 namespace asteroids {
     class ServerPhysicalObject
     {
-        private:
-            asteroids::Vector3f m_dir;
-            float m_speed;
-            int m_id;
-
         public:
             using Ptr = std::shared_ptr<ServerPhysicalObject>;
             bool m_alive = true;
             asteroids::Vector3f m_pos;
+
+            asteroids::Vector3f m_dir;
+            float m_speed;
             float m_radius;
+            int m_id;
 
             ServerPhysicalObject(asteroids::Vector3f pos, asteroids::Vector3f dir, float speed, float radius, int id);
             bool collide(Ptr other);

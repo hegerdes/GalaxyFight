@@ -50,6 +50,8 @@ namespace asteroids {
             deleted_bullets_ids_1.push_back(i);
             deleted_bullets_ids_2.push_back(i);
         }
+
+
     }
 
     //TODO COPY AND CLEAR ORIGINAL
@@ -108,8 +110,6 @@ namespace asteroids {
          * COLLISION
          */
 
-
-        auto b_it
 
         /*
          * Kollisionstest zwischen Asteroiden und Schiffen
@@ -270,6 +270,8 @@ namespace asteroids {
                 b_it++;
             }
         }
+        removed.health_socket_1 = m_first->m_hp;
+        removed.health_socket_2 = m_second->m_hp;
     return removed;
     }
 }

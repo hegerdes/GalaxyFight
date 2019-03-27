@@ -192,8 +192,17 @@ void Server::sendUpdate_3D_S(QByteArray& response, QTcpSocket* socket) {
     //client_data_temp.deleted_bullets_id.clear();
     // Bullet ids wenn nötig > 0
 
-    response.append((char*)&client_data_temp.m_hp, 4);
-    response.append((char*)&client_data_temp.m_enem_hp, 4);
+    if(socket_1 == socket){
+        int own = physics.getFirstHealth();
+        response.append((char*)&own, 4);
+        int enemy = physics.getSecondHealth();
+        response.append((char*)&enemy, 4);
+    }else{
+        int own = physics.getSecondHealth();
+        response.append((char*)&own, 4);
+        int enemy = physics.getFirstHealth();
+        response.append((char*)&enemy, 4);
+    }
 }
 
 void Server::recvUpdate_3D_C(char* data, QTcpSocket* socket) {
