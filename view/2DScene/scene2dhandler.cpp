@@ -190,7 +190,7 @@ void Scene2dHandler::placeFighter()
                 foundFlag = true;
 
                 //testing
-                std::cout << "planet: " << fighter->m_next_position << std::endl;
+                //std::cout << "planet: " << fighter->m_next_position << std::endl;
             }
         }
 

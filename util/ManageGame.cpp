@@ -436,7 +436,7 @@ void ManageGame::updateSpaceCrafts()
                 (*i)->m_next_position = *((*i)->m_route_iterator++);
 
                 //transporter lädt erz
-                (*i)->m_ore = transporterOreSystem((*i)->m_position);
+                (*i)->m_ore = transporter_stored_ore((*i)->m_position);
 
             }else
             {
@@ -478,7 +478,7 @@ void ManageGame::updateSpaceCrafts()
                 (*i)->m_next_position = *((*i)->m_route_iterator++);
 
                 //transporter lädt erz
-                (*i)->m_ore = transporterOreSystem((*i)->m_next_position);
+                (*i)->m_ore = transporter_stored_ore((*i)->m_next_position);
 
             }else {
                 (*i)->m_position = (*i)->m_next_position;
@@ -489,8 +489,9 @@ void ManageGame::updateSpaceCrafts()
     }
 }
 
-int ManageGame::transporterOreSystem(int transporter_position)
+int ManageGame::transporter_stored_ore(int transporter_position)
 {
+    int tmp;
     //Check for alrady existing change for this planet
     auto search = m_round_changes_map.find(transporter_position);
     if (search != m_round_changes_map.end())
@@ -498,12 +499,12 @@ int ManageGame::transporterOreSystem(int transporter_position)
         if(m_planets[transporter_position]->getStoredOre() >= 200)
         {
             search->second->setStoredOre(-200);
-            return 200;
+            tmp = 200;
 
         }else if(m_planets[transporter_position]->getStoredOre() != 0)
         {
             search->second->setStoredOre(-(m_planets[transporter_position]->getStoredOre()));
-            return m_planets[transporter_position]->getStoredOre();
+            tmp = m_planets[transporter_position]->getStoredOre();
         }
     }
     else
@@ -513,18 +514,18 @@ int ManageGame::transporterOreSystem(int transporter_position)
         if(m_planets[transporter_position]->getStoredOre() >= 200)
         {
             change->setStoredOre(-200);
-            return 200;
+            tmp = 200;
 
 
         }else if(m_planets[transporter_position]->getStoredOre() != 0)
         {
             change->setStoredOre(-(m_planets[transporter_position]->getStoredOre()));
-            return m_planets[transporter_position]->getStoredOre();
+            tmp = m_planets[transporter_position]->getStoredOre();
         }
 
         m_round_changes_map[transporter_position] = change;
     }
-    return 0;
+    return tmp;
 }
 
 ManageGame *ManageGame::getinstance()

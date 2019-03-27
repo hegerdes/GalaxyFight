@@ -48,8 +48,8 @@ int Planet::init()
     }
 
     //update ore
-    // m_num_of_ore -= m_num_mine * RESOURCE_PER_MINE;
-    // m_stored_ore += m_num_mine * RESOURCE_PER_MINE;
+    //m_num_of_ore -= m_num_mine * RESOURCE_PER_MINE;
+    //m_stored_ore += m_num_mine * RESOURCE_PER_MINE;
 
     return 0;
  }
