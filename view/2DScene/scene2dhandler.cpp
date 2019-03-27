@@ -1,12 +1,13 @@
 #include "scene2dhandler.h"
 #include <QGraphicsRectItem>
 #include <QGraphicsSceneMouseEvent>
-#include "../../util/ManageGame.hpp"
-#include "../../rendering/2D/MapFactory.hpp"
-#include "itemtypes.h"
 #include <memory>
 #include <QDebug>
 #include <QPropertyAnimation>
+#include "../../util/ManageGame.hpp"
+#include "../../rendering/2D/MapFactory.hpp"
+#include "itemtypes.h"
+#include "init_file.h"
 
 
 namespace asteroids {
@@ -15,7 +16,7 @@ Scene2dHandler::Scene2dHandler(QObject* parent)
     : QGraphicsScene (parent)
 {
     //config appearance
-    QPixmap background("./models/box3.jpg");
+    QPixmap background(setting.value("Dateipfade/Hintergrund2D").toString());
     setBackgroundBrush(QBrush(background));
 
    //draw map
