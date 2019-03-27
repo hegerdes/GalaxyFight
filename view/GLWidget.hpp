@@ -86,7 +86,7 @@ private:
 
     HealthBar::Ptr              m_playerHPBar;
 
-    /// Health Bar for player 2
+    /// Health Bar for player 2HUDWidget
     
     HealthBar::Ptr              m_enemyHPBar;
 
@@ -103,7 +103,7 @@ private:
     /// A skybox for the scene
     Skybox::Ptr			        m_skybox;
 
-    /// Pointer to the asteroid field
+    /// Pointer to the asteroid fieldHUDWidget
     AsteroidField::Ptr          m_asteroidField;
     
     /// Physics 
@@ -133,11 +133,15 @@ private:
     bool                        m_firstPerson;
     bool                        m_firstPersonAble;
 
+    bool                        m_rapidFire;
+
     /// Widget for displaying the HUD
     HUDWidget                   m_hud;
 
     /// Layout for displaying the HUD
     QStackedLayout              m_layout;
+
+    int                         counter;
 };
 
 #endif

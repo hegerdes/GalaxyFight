@@ -43,6 +43,14 @@ class HUDWidget : public QWidget
          * @param s shared_ptr to the Spacecraft
          */
         void setEnemy(SpaceCraft::Ptr s){m_enemyShip = s;}
+
+        /**
+         * @brief Sets when the last bullet was shot
+         * 
+         * @param lastBulletShot long that m_lastBulletShot is set to
+         */ 
+        void setBulletReady(long lastBulletShot);
+
     protected:
 
         /**
@@ -70,6 +78,9 @@ class HUDWidget : public QWidget
 
         /// Pointer to enemy ship
         SpaceCraft::Ptr m_enemyShip;
+
+        ///time when the last Bullet was shot
+        long m_lastBulletShot;
 };
 }
 
