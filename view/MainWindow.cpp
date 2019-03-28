@@ -46,7 +46,7 @@ MainWindow::MainWindow(QWidget* parent) :
 
     m_screenStack->setCurrentWidget(m_startscreen);
 
-    m_3DScene->setMinimumSize(setting.value("Bildschirm/Breite").toInt(), setting.value("Hoehe").toInt());
+    m_3DScene->setMinimumSize(setting.value("Bildschirm/Breite").toInt(), setting.value("Bildschirm/Hoehe").toInt());
 
     // Create a timer object to trigger the main loop
     connect(m_timer.get(), SIGNAL(timeout()), this, SLOT(handleInput()));
