@@ -53,3 +53,7 @@ ManageGame.cpp:                     AuflistungMethodenweise
 ** 3D-Game **
 
 ** Netzwerk**
+
+Client-basierte Physik:             Janis Falkenhagen  
+Serverseitige Physik:               Janis Falkenhagen / Lennart Kaiser ||LEIDER NICHT INTEGRIERT BEKOMMEN. Zur Demo der Funktionalität in den Branch new_new_net_3d_eng    
+Entwurf Netzwerkprotokoll:          Janis Falkenhagen  
