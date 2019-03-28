@@ -254,19 +254,24 @@ void GLWidget::step(map<Qt::Key, bool>& keyStates)
                 //Debug/Tesline für Explosion eigenes Raumschiff
                 m_enemyPlayer->destroySpaceCraft();
             }
-        // Trigger update, i.e., redraw via paintGL()
+        // Trigger update, send own Data so that the server can transmit the data to the enemy player
         client_global.sendUpdate_3D_C(m_actor->m_position, m_actor->m_xAxis,
                                      m_actor->m_yAxis, m_actor->m_zAxis,
                                      bullet_shot, Living::alive, 0);
+
+        // Trigger update by reading update3D_S server
         client_global.readData();
+
+        // if 3D init packet recived reset own position accordingly to data sent by server
         if(client_global.init_received)
         {
+            //set own position
             m_actor->m_position = client_global.ownPos;
             m_actor->m_xAxis = client_global.ownxAxis;
             m_actor->m_yAxis = client_global.ownyAxis;
             m_actor->m_zAxis = client_global.ownzAxis;
-            // asteroids hinzufügen
 
+            // manipulate asteroids depending on the data that the server has sent
             int i = 0;
             std::list<Asteroid::Ptr> asteroids;
             m_asteroidField->getAsteroids(asteroids);
@@ -275,6 +280,7 @@ void GLWidget::step(map<Qt::Key, bool>& keyStates)
             {
                 if(i < client_global.count_astr)
                 {
+                    //manipulate position,size and direction of asteroids
                     (*it)->m_position = client_global.pos_astr[i];
                     std::cerr << "m_position " << (*it)->m_position << "\n";
                     (*it)->m_radius = client_global.size_astr[i];
@@ -292,7 +298,7 @@ void GLWidget::step(map<Qt::Key, bool>& keyStates)
             client_global.init_received = false;
             std::cerr << "erhaletn----------------------------------------------\n";
         }
-
+        // update enemy player SpaceCraft  depending on the package that the client has recived
         m_enemyPlayer->m_position = client_global.enemyPos;
         m_enemyPlayer->m_xAxis = client_global.enemyxAxis;
         m_enemyPlayer->m_yAxis = client_global.enemyyAxis;
@@ -300,6 +306,7 @@ void GLWidget::step(map<Qt::Key, bool>& keyStates)
 
         if(client_global.enemy_shot == Bullet_shot::shot)
         {
+            // Bullets will be shot from the front of the SpaceCraft
             Vector3f shipPosition = m_enemyPlayer->getPosition() + m_enemyPlayer->getZAxis() * -45 + m_enemyPlayer->getXAxis() * -175;
             Bullet::Ptr bullet = make_shared<Bullet>(Bullet(shipPosition, m_enemyPlayer->m_xAxis*-1));
             m_physicsEngine->addEnemyBullet(bullet);
