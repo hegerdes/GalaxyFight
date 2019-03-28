@@ -8,6 +8,7 @@
 #Build Folder
 **/Build/**
 **/build/**
+*.vscode/**
 
 
 #Test-Files
@@ -15,10 +16,19 @@
 *test*.cpp
 
 #Individual Files
-*.user
-*.sh
-*.pro.*
-*.save
 CMakeLists.txt.user
 run_build.sh
-
+compile_commands.json
+./idea/
+cmake-build-debug/
+run_build.sh
+CMakeLists.txt.user
+qtserver/.qmake.stash
+log.txt
+qtserver/Makefile
+qtserver/moc_mytcpserver.cpp
+qtserver/qtserver
+*.save
+*.pro.*
+*.sh
+*.user

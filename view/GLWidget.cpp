@@ -13,13 +13,16 @@ GLWidget::GLWidget(QWidget* parent)
       m_moveSpeed(5.0),
       m_lastBullet(0),
       m_BulletId(0),
-      m_schussFrequenz(500),
       m_firstPerson(false),
       m_firstPersonAble(true),
-      m_hud(this)
+      m_hud(this),
+      active(false),
+      m_schussFrequenz(500),
+      m_rapidFire(false)
 {
     m_layout.addWidget(&m_hud);
     setLayout(&m_layout);
+    setFocusPolicy(Qt::StrongFocus);
 }
 
 void GLWidget::setLevelFile(const std::string& file)
@@ -117,9 +120,14 @@ void GLWidget::initializeGL()
     // This makes our buffer swap syncronized with the monitor's vertical refresh
     SDL_GL_SetSwapInterval(1);
 
-    // Load level
-    LevelParser lp(m_levelFile, m_actor, m_enemyPlayer, m_skybox, m_asteroidField);
+    loadLevel();
+}
 
+void GLWidget::loadLevel()
+{
+    // Load level
+    //LevelParser lp(m_levelFile, m_actor, m_enemyPlayer, m_skybox, m_asteroidField);
+    LevelParser lp("./models/level.xml", m_actor, m_enemyPlayer, m_skybox, m_asteroidField);
 
 
     // Setup physics//
@@ -140,6 +148,7 @@ void GLWidget::initializeGL()
     {
         PhysicalObject::Ptr p = std::static_pointer_cast<PhysicalObject>(*it);
         m_physicsEngine->addDestroyable(p);
+    } 
     }
     */
 
@@ -151,20 +160,23 @@ void GLWidget::initializeGL()
     //setzen dummy variablen
     hp_actor = 10;
     hp_enemy = 10;
+    //active = true;
 }
 
 void GLWidget::paintGL()
 {
+    if(active)
+    {
     // Clear bg color and enable depth test (z-Buffer)
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     m_camera.follow(m_actor);
     m_camera.apply();
 
-    // Render stuff
-    m_skybox->render(m_camera);
+        // Render stuff
+        m_skybox->render(m_camera);
 
-    // Render all physical objects
-    m_physicsEngine->render();
+        // Render all physical objects
+        m_physicsEngine->render();
 
     if(!m_firstPerson)
     {
@@ -173,40 +185,42 @@ void GLWidget::paintGL()
     m_enemyPlayer->render();
 
     //Debug/Testline
-    //m_enemyPlayer->setPosition(Vector<float>(10,100,10));
+    //m_enemyPlayer->setPosition(Vector<float>(100,100,100));
 //    m_playerHPBar->render();
 
   //  m_enemyHPBar->render();
 
 //    m_crossHair->render();
+    }
 }
 
 void GLWidget::step(map<Qt::Key, bool>& keyStates)
 {
-    // Get keyboard states and handle model movement
-    m_physicsEngine->process();
-
+    if(active){
+        std::cerr << "\t" << __LINE__ << __PRETTY_FUNCTION__ << "\n";
+        // Get keyboard states and handle model movement
+        m_physicsEngine->process();
 
     Bullet_shot bullet_shot = Bullet_shot::not_shot;
     if(m_actor->spaceCraftStatus() == 0){
 
+            m_actor->move(Transformable::FORWARD, m_actor->getCurrentSpeed());
+            //Toggle first person
+            if(keyStates[Qt::Key_V])
+            {
+                if(m_firstPersonAble)
+                {
+                    m_firstPerson = !m_firstPerson;
+                    m_hud.setFirstPerson(m_firstPerson);
+                    m_camera.setFirstPerson(m_firstPerson);
+                    m_firstPersonAble = false;
+                }
+            }else
+            {
+                m_firstPersonAble = true;
+            }
+            
 
-        m_actor->move(Transformable::FORWARD, m_actor->getCurrentSpeed());
-
-        if(keyStates[Qt::Key_V])
-        {
-            if(m_firstPersonAble)
-             {
-                 m_firstPerson = !m_firstPerson;
-                 m_hud.setFirstPerson(m_firstPerson);
-                 m_camera.setFirstPerson(m_firstPerson);
-                 m_firstPersonAble = false;
-             }
-        }else
-        {
-            m_firstPersonAble = true;
-        }
-        
         if (keyStates[Qt::Key_Up])
         {
             m_actor->rotate(Transformable::PITCH_RIGHT, m_rotationSpeed);
@@ -243,9 +257,16 @@ void GLWidget::step(map<Qt::Key, bool>& keyStates)
 
 
             if(keyStates[Qt::Key_X]){
-                //Debug/Tesline für Explosion eigenes Raumschiff
+                //Debug/Testline für Explosion eigenes Raumschiff
                 m_actor->destroySpaceCraft();
             }
+
+	/* @ahaker
+			// Add a bullet to physics engine
+			if(keyStates[Qt::Key_N])
+			{
+			*/
+
 
             // Add a bullet to physics engine
             if(keyStates[Qt::Key_Space])
@@ -257,21 +278,44 @@ void GLWidget::step(map<Qt::Key, bool>& keyStates)
                 long bulletShot = value.count();
                 ///Ermittelt, wann die letzte Kugel abgeschoßen wurde und erlaubt erst nach
                 if(bulletShot - m_lastBullet > m_schussFrequenz){
-                    m_BulletId++;
+                    m_BulletId++;           
                     Vector3f shipPosition = m_actor->getPosition() + m_actor->getZAxis() * -45 + m_actor->getXAxis() * -175;
                     Bullet::Ptr bullet = make_shared<Bullet>(Bullet(shipPosition, m_actor->getDirection()));
                     bullet->setid(m_BulletId);
                     m_physicsEngine->addBullet(bullet);
                     m_lastBullet = bulletShot;
                     bullet_shot = Bullet_shot::shot;
-                }
 
+                    ///Gibt der Anzeige in m_hud die Zeit an der die letzte Bullet abgeschoßen wurde
+                    m_hud.setBulletReady(value.count());                    
+
+                    ///Der Folgende Codeblock liefert dem shotReadyRect in HUDWidget die notwendigen Informationen, damit es
+                    ///korrekt anzeigen kann, ob das Schiff bereit zum schießen ist
+                    //Start Rapidfire Anzeigeinformationen
+                    if(m_rapidFire)
+                    {                        
+                        m_hud.setBulletReady(-1); 
+                    }                                                     
+
+                                     
+                }else
+                {
+                    m_rapidFire= true;
+                }                
+
+            }else
+            {
+                m_rapidFire = false;
+                m_hud.setBulletReady(0); 
             }
-    }
-    if(keyStates[Qt::Key_Y]){
-            //Debug/Tesline für Explosion eigenes Raumschiff
+            //Ende Rapidfire Anzeigeinformationen
+        }
+        //TestKnopf zum zerstören vom Gegnerschiff
+        if(keyStates[Qt::Key_Y])
+        {               
             m_enemyPlayer->destroySpaceCraft();
         }
+
     // Trigger update, i.e., redraw via paintGL()
     client_global.sendUpdate_3D_C(m_actor->m_position, m_actor->m_xAxis,
                                  m_actor->m_yAxis, m_actor->m_zAxis,
@@ -283,6 +327,12 @@ void GLWidget::step(map<Qt::Key, bool>& keyStates)
         m_actor->m_xAxis = client_global.ownxAxis;
         m_actor->m_yAxis = client_global.ownyAxis;
         m_actor->m_zAxis = client_global.ownzAxis;
+
+        m_actor->m_hp = 10;
+        m_enemyPlayer->m_hp = 10;
+        m_enemyPlayer->m_status = 0;
+        m_actor->m_status = 0;
+
         // asteroids hinzufügen
 
         int i = 0;
@@ -290,9 +340,8 @@ void GLWidget::step(map<Qt::Key, bool>& keyStates)
         m_asteroidField->getAsteroids(asteroids);
         std::cerr << client_global.count_astr << " ----------------------------------\n";
         for (auto it = asteroids.begin(); it != asteroids.end(); it++)
-        {
-            if(i < client_global.count_astr)
             {
+            if(i < client_global.count_astr){
                 (*it)->m_position = client_global.pos_astr[i];
                 std::cerr << "m_position " << (*it)->m_position << "\n";
                 (*it)->m_radius = client_global.size_astr[i];
@@ -327,12 +376,32 @@ void GLWidget::step(map<Qt::Key, bool>& keyStates)
             m_BulletId = 0;
         }
 
-    }
+        std::cerr << "\t" << __FUNCTION__ << __LINE__ <<"\n";
+        } else if(m_actor->getHP() < 1 || m_enemyPlayer->getHP() < 1)
+        {
+            std::cerr << "\t" << __FUNCTION__<< __LINE__ <<"\n";
+            player_no player_3d_winner;
+            if(m_actor->getHP()<1) {
+                player_3d_winner = player_no::loser;
+            } else {
+                player_3d_winner = player_no::winner;
+            }
+            client_global.send_end_3d(player_3d_winner);
 
-    m_enemyPlayer->m_position = client_global.enemyPos;
-    m_enemyPlayer->m_xAxis = client_global.enemyxAxis;
-    m_enemyPlayer->m_yAxis = client_global.enemyyAxis;
-    m_enemyPlayer->m_zAxis = client_global.enemyzAxis;
+            client_global.wait_for_readData(20);
+            //client_global.readData();
+        } else {
+        std::cerr << "\t" << __FUNCTION__<< __LINE__ <<"\n";
+            client_global.sendUpdate_3D_C(m_actor->m_position, m_actor->m_xAxis,
+                                         m_actor->m_yAxis, m_actor->m_zAxis,
+                                         bullet_shot, Living::alive, 0);
+            client_global.wait_for_readData(20);
+        }
+
+        m_enemyPlayer->m_position = client_global.enemyPos;
+        m_enemyPlayer->m_xAxis = client_global.enemyxAxis;
+        m_enemyPlayer->m_yAxis = client_global.enemyyAxis;
+        m_enemyPlayer->m_zAxis = client_global.enemyzAxis;
 
     m_enemyPlayer->setHealth(client_global.enemy_health);
     m_actor->setHealth(client_global.own_health);
@@ -361,6 +430,19 @@ void GLWidget::step(map<Qt::Key, bool>& keyStates)
     m_playerHPBar->setHP(m_actor->getHP());
     this->update();
     m_hud.update();
+
+
+    std::cerr << "\t" << __FUNCTION__<< __LINE__ <<"\n";
+    if(client_global.m_planet_changes_received){
+        active = false;
+        client_global.m_planet_changes_received = false;
+        std::cerr << "\t" << __FUNCTION__<< __LINE__ <<" m_planet_changes_received\n";
+        emit planet_apply_updates();
+        std::cerr << "\t" << __FUNCTION__<< __LINE__ <<" m_planet_changes_received\n";
+        emit goToScene2D();
+        std::cerr << "\t" << __FUNCTION__<< __LINE__ <<" m_planet_changes_received\n";
+    }
+}
 }
 
 void GLWidget::mouseMoveEvent(QMouseEvent* event)

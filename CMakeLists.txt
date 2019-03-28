@@ -27,7 +27,7 @@ project(CPP18_ASTEROIDS)
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/")
 
 ###############################################################################
-# With cmake we can define additional compiler flags for different 
+# With cmake we can define additional compiler flags for different
 # configurations. CMAKE_CXX_FLAGS are for the default case. The debug config
 # can be used to generate debug symbols for gdb. The release option uses
 # special optimization flags
@@ -38,8 +38,8 @@ set( CMAKE_CXX_FLAGS_RELEASE "-std=c++17 -O3 -msse3 -Wno-deprecated-declarations
 set( CMAKE_CXX_FLAGS_DEBUG   "-g -Wall -std=c++17" )
 
 ###############################################################################
-# Find required libraries.Right now we need glut and OpenGL. The required 
-# options forces this packages to be present. For non-mandatory packages you 
+# Find required libraries.Right now we need glut and OpenGL. The required
+# options forces this packages to be present. For non-mandatory packages you
 # can leave this flag out. The can then check if they were found by using
 # IF(OpenGL_found) etc.
 ###############################################################################
@@ -50,7 +50,7 @@ include_directories(${CMAKE_SOURCE_DIR}/ext/load3ds/math3d++)
 
 find_package(OpenGL REQUIRED)
 find_package(GLEW REQUIRED)
-find_package(SDL2 REQUIRED) 
+find_package(SDL2 REQUIRED)
 find_package(JPEG REQUIRED)
 
 # Add SDL2 include directory to search path
@@ -81,7 +81,7 @@ include_directories(${Boost_INCLUDE_DIRS})
 add_definitions(${Boost_LIB_DIAGNOSTIC_DEFINITIONS})
 
 ###############################################################################
-# Find and setup Qt5 
+# Find and setup Qt5
 ###############################################################################
 
 set( QT_USE_QTOPENGL TRUE )
@@ -90,11 +90,13 @@ find_package( Qt5
     Core
     Network
     Widgets
+    Concurrent
     OpenGL
     REQUIRED
 )
 
 include_directories(${Qt5Widgets_INCLUDE_DIRS})
+include_directories(${Qt5Concurrent_INCLUDE_DIRS})
 include_directories(${Qt5Core_INCLUDE_DIRS})
 include_directories(${Qt5Network_INCLUDE_DIRS})
 include_directories(${Qt5OpenGL_INCLUDE_DIRS})
@@ -107,7 +109,7 @@ include_directories(${Qt5OpenGL_INCLUDE_DIRS})
 add_subdirectory(ext/load3ds)
 
 ###############################################################################
-# Variable for the sources of the binary. In larger projects it is often a 
+# Variable for the sources of the binary. In larger projects it is often a
 # good idea to use such variables because it is easy to add more source files
 # and you can reuse it for several targets (maybe you want to build a library
 # some day ;-)
@@ -142,26 +144,54 @@ set(ASTEROID_SOURCES
     rendering/Skybox.cpp
     rendering/SpaceCraft.cpp
     rendering/Asteroid.cpp
+    rendering/2D/Map.cpp
+    rendering/2D/Planet.cpp
+    rendering/2D/MapFactory.cpp
+    util/AsteroidField.cpp
+    util/ColorMap.cpp
     rendering/HealthBar.cpp
     rendering/Crosshair.cpp
-    util/AsteroidField.cpp 
-    util/ColorMap.cpp   
     util/Util.cpp
+    util/ManageGame.cpp
     view/GLWidget.cpp
     view/HUDWidget.cpp
     view/MainWindow.cpp 
     view/Camera.cpp
+    view/startscreen.cpp
+    view/settingwindow.cpp
+    view/scene2d.cpp
+    view/loadingscreen.cpp
+    view/infobar.cpp
+    view/2DScene/scene2dhandler.cpp
+    view/2DScene/graphicsplanetitem.cpp
+    view/2DScene/graphicsmineitem.cpp
+    view/2DScene/graphicsfactoryitem.cpp
+    view/2DScene/graphicsfighteritem.cpp
+    view/2DScene/graphicstransporteritem.cpp
+    view/2DScene/graphicshqitem.cpp
     qtclient/client.cpp
 )
 set(ASTEROID_MOCS
     view/MainWindow.hpp
+    view/startscreen.h
+    view/scene2d.h
+    view/loadingscreen.h
+    view/infobar.h
+    view/settingwindow.h
+    view/2DScene/itemtypes.h
 )
 
 set(ASTEROID_UIS
-    view/MainWindow.ui
+    view/startscreen.ui
+    view/scene2d.ui
+    view/loadingscreen.ui
+    view/infobar.ui
+    view/settingwindow.ui
 )
 
+set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTOMOC ON)
+set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
 qt5_wrap_ui(ASTEROID_UI_HDRS ${ASTEROID_UIS})
 message(STATUS ${ASTEROID_UI_HDRS})
@@ -169,14 +199,14 @@ message(STATUS ${ASTEROID_UI_HDRS})
 add_definitions(${QT_DEFINITIONS})
 
 
-set(ASTEROID_DEPENDS     
+set(ASTEROID_DEPENDS
     ${Boost_PROGRAM_OPTIONS_LIBRARY}
     ${Boost_SYSTEM_LIBRARY}
     ${Boost_THREAD_LIBRARY}
     ${Boost_FILESYSTEM_LIBRARY}
-    ${GLEW_LIBRARIES} 
-    ${GLUT_LIBRARY} 
-    ${OPENGL_LIBRARY} 
+    ${GLEW_LIBRARIES}
+    ${GLUT_LIBRARY}
+    ${OPENGL_LIBRARY}
     ${SDL2_LIBRARY}
     ${JPEG_LIBRARIES}
     ${Qt5Widgets_LIBRARIES}

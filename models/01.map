@@ -1,0 +1,40 @@
+17
+0MacLean 0 300 0   
+1Kopiak 100 450 0    
+2TCSC1701 100 150 0 
+3Everett 300 650 0
+4NewHope 300 75 0 
+5Venture 300 325 0
+6Torres 400 600 0  
+7Alderson 600 750 0 
+8Hidebeidel 400 250 0 
+9Benford  600 0  
+10Portilla 700 200 0 
+11Centauri 800 75 0 
+12Olivia 800 325 0 
+13TCSC1619 800 650 0 
+14Hentrich 1000 450 0 
+15Schmidt 1000 150 0 
+16Pandey 1100 300 0 
+0 1
+0 2
+2 4
+1 3
+4 5
+3 6
+5 6
+4 9
+5 8
+8 6
+6 7
+7 12
+8 10
+8 9
+10 12
+10 11
+9 11
+11 15
+15 16
+16 14
+14 13
+12 13

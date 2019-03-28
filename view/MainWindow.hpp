@@ -12,16 +12,23 @@
 #ifndef __MAINWINDOW_HPP__
 #define __MAINWINDOW_HPP__
 
+#pragma once
+
 #include <string>
 
 #include <QMainWindow>
+#include <QStackedLayout>
 
 #define GL3_PROTOTYPES 1
 #include <GL/glew.h>
 
 #include "GLWidget.hpp"
+#include "startscreen.h"
+#include "loadingscreen.h"
+#include "scene2d.h"
+#include "../util/ManageGame.hpp"
+#include "settingwindow.h"
 
-#include "../view/build/ui_MainWindow.h"
 
 namespace asteroids
 {
@@ -39,26 +46,45 @@ public:
 
     /**
      * @brief Construct a new Main Window object
-     *
-     * @param plyname  A .ply file to render
      */
-    MainWindow(const std::string& plyname, QWidget* parent = NULL);
+    MainWindow(QWidget* parent = nullptr);
 
-    /**
-     * @brief Destroys the Main Window object
-     *
-     */
-    ~MainWindow();
-
-    /// Returns the width of the window
-    int width();
-
-    /// Returns the height of the windows
-    int height();
-
-public Q_SLOTS:
+public slots:
     /// Handle input
     void handleInput();
+
+    ///Screen Navigation
+
+    /**
+     * @brief gotoStartScreen sets StartScreen as top screen
+     */
+    void gotoStartScreen();
+
+    /**
+     * @brief goto3DScene sets 3Dscene as top screen and starts loading process
+     * TODO: add parameter for Scene init which are required to start a 3D fight
+     */
+    void goto3DScene();
+
+    /**
+     * @brief goToScene2D sets Scene2D as top screen
+     */
+    void goToScene2D();
+
+    /**
+     * @brief gotoLoadingScreen sets LoadingScreen as top screen
+     */
+    void gotoLoadingScreen();
+
+    /**
+     * @brief gotoSettingsScreen sets the SettingsScreen as top screen
+     */
+    void gotoSettingsScreen();
+
+    /**
+     * @brief closeWindow closes the MainWindow
+     */
+    void closeWindow();
 
 protected:
 
@@ -70,17 +96,36 @@ protected:
 
 private:
 
-    /// QT UI of the window
-    Ui::MainWindow* ui;
+    /**
+     * @brief setupConnections setups all connections and it is called at the end of the constructor,
+     * thus all member objects have to be init
+     */
+    void setupConnections();
 
     /// gl widget
-    GLWidget*       m_widget;
+    GLWidget*       m_3DScene;
+
+    /// Layout stack used to navigate through the different Screens
+    QStackedLayout* m_screenStack;
+
+    /// StartScreen widget
+    StartScreen* m_startscreen;
+
+    /// LoadingScreen widget
+    LoadingScreen* m_loadingscreen;
+
+    /// Scene2D widget
+    Scene2D* m_scene2d;
+
+    /// Settings Screen widget
+    settingwindow* m_settingsScreen;
 
     /// map with the keys and their states
     map<Qt::Key, bool>          m_keyStates;
 
     /// 60 fps timer
-    shared_ptr<QTimer>          m_timer;
+    std::shared_ptr<QTimer>          m_timer;
+
 };
 
 }

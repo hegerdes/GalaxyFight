@@ -21,6 +21,7 @@ struct client_data {
 
     //2D Teil
     std::string name = "Name undefined";
+    bool m_first_connect = false;
 };
 
 #endif // CLIENT_DATA_H

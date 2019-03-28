@@ -61,6 +61,7 @@ void SpaceCraft::destroySpaceCraft()
 {
     if(m_status != 2){
         m_status = 1;
+        m_hp = 0;
     }
 }
 

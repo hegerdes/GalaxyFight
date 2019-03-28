@@ -8,6 +8,7 @@
 #include <qtserver/flags.h>
 #include <qtserver/packettypes.h>
 #include <vector>
+#include "../rendering/2D/PlanetChanges.hpp"
 
 namespace asteroids {
 class Client {
@@ -26,7 +27,8 @@ class Client {
 
     //game_start
     std::string id_other;
-    player_no player_No;
+
+    player_no player_No = player_no::unassigned;
     //Map Konfig am start fehlt
 
     Vector3f pos_astr[10];
@@ -72,7 +74,9 @@ class Client {
     void sendUpdate_3D_C(Vector<float> pos, Vector<float> xAxis, Vector<float> yAxis, Vector<float> zAxis,
                          Bullet_shot shot, Living living, int bullet_id);
     void readData();
-    void wait_for_readData(int timeout);
+    bool wait_for_readData(int timeout);
+    void SendPlanetChanges(int size,std::list<PlanetChanges> changes );
+    void recivePlanetChanges(char * data);
 
 
     //start_2D
@@ -101,6 +105,12 @@ class Client {
 
     void connect(QString addr, quint16 port);
     bool init_received;
+    void send_end_3d(player_no);
+    bool m_planet_changes_received = false;
+    int m_own_received_hp = 0;
+    void send_reset_planet_changes();
+    void rerequest_planet_changes();
+    std::list<PlanetChanges> p_changes_current;
 
   private:
     void writeData(QByteArray const& data);

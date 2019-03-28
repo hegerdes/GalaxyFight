@@ -50,16 +50,26 @@ class GLWidget : public QOpenGLWidget
 public:
     GLWidget(QWidget* parent = NULL);
 
+    /// Determines whether game should be loaded
+    bool                        active;
+
     /// Parses a level file and loads all supported objects
     void setLevelFile(const std::string& file);
 
     /// Handles keyboard input and updates the physics engine
     void step(map<Qt::Key, bool>& keyStates);
 
+    /// Initialize Level
+    void loadLevel();
+    signals:
+    void goToScene2D();
+    void planet_apply_updates();
+
 protected:
 
     /// Init OpenGL
     virtual void initializeGL() override;
+
 
     /// Render scene
     virtual void paintGL() override;
@@ -86,7 +96,7 @@ private:
 
     HealthBar::Ptr              m_playerHPBar;
 
-    /// Health Bar for player 2
+    /// Health Bar for player 2HUDWidget
     
     HealthBar::Ptr              m_enemyHPBar;
 
@@ -103,7 +113,7 @@ private:
     /// A skybox for the scene
     Skybox::Ptr			        m_skybox;
 
-    /// Pointer to the asteroid field
+    /// Pointer to the asteroid fieldHUDWidget
     AsteroidField::Ptr          m_asteroidField;
     
     /// Physics 
@@ -122,20 +132,29 @@ private:
     int                         m_BulletId;
 
     /// Letzter Zeitpunkt zu dem eine Kugel abgefeurert wurde
-    long                m_lastBullet;
+    long                        m_lastBullet;
 
     /// Gibt an nach wie vielen ms wieder geschoßen werden kann
-    long                m_schussFrequenz;
+    long                        m_schussFrequenz;
 
     ///Hilfsvariablen
-    int                 hp_actor;
+    int                         hp_actor;
 
-    int                 hp_enemy;
+    int                         hp_enemy;
+    
+    /// First Person-Modus und First Person Toggleable(verhindert rumspringen bei gedrückter V-Taste)
+    bool                        m_firstPerson;
+    bool                        m_firstPersonAble;
 
-    bool m_firstPerson;
-    bool m_firstPersonAble;
-    HUDWidget           m_hud;
-    QStackedLayout             m_layout;
+    bool                        m_rapidFire;
+
+    /// Widget for displaying the HUD
+    HUDWidget                   m_hud;
+
+    /// Layout for displaying the HUD
+    QStackedLayout              m_layout;
+
+    int                         counter;
 };
 
 #endif
