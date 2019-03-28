@@ -119,6 +119,8 @@ class Client {
     std::vector<Vector3f> asteroid_pos;
     bool updated_pos = false;
 
+    bool already_in_3d = false;
+
     // end_3D
     /**
      * @brief winner_no winner of 3D fight for end3d package

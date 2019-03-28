@@ -71,6 +71,7 @@ void Client::recivePlanetChanges(char * data)
 
 void Client::SendPlanetChanges(int size,std::list<PlanetChanges> changes )
 {
+
     QByteArray data;
     // packettype
     data.append(PacketType::planet_changes2d);
@@ -125,8 +126,8 @@ void Client::SendPlanetChanges(int size,std::list<PlanetChanges> changes )
 void Client::sendUpdate_3D_C(Vector<float> pos, Vector<float> xAxis, Vector<float> yAxis, Vector<float> zAxis,
                              Bullet_shot shot, Living living, int bullet_id) {
 
-    std::cerr << "\nSEND BULLET ID CLIENT: " << bullet_id  << "\n";
-    std::cerr << "and shot type: " << shot << "\n";
+    //std::cerr << "\nSEND BULLET ID CLIENT: " << bullet_id  << "\n";
+    //std::cerr << "and shot type: " << shot << "\n";
 
     QByteArray data;
     data.append(PacketType::update_3D_C);
@@ -161,6 +162,13 @@ void Client::writeData(QByteArray const& data) {
  * @param data data array that will be manipulated and sent
  */
 void Client::init_3d(char* data) {
+
+    if(already_in_3d){
+        return;
+    }
+    already_in_3d = true;
+
+    std::cerr << "INIT PACKET RECEIVED\n";
 
     // own Position
     ownPos[0] = getFloat(&data);
@@ -422,11 +430,14 @@ void Client::interpreteAnswer() {
             update_3D_S(data);
         } else if(pt == PacketType::planet_changes2d) {
                 //std::cerr << "\t" << __LINE__ << __FUNCTION__ << ", planet changes got recived\n";
+                already_in_3d = false;
+                std::cerr << "RESET:::::: OF INIT PACKET RECEIVED\n";
                 recivePlanetChanges(data);
                 m_planet_changes_received = true;
         } else if (pt == PacketType::end_3D) {
             //std::cerr << "\t" << __LINE__ << __FUNCTION__ << "\n";
             winner_no = getChar(&data);
+
         } else if (pt == PacketType::start_2D) {
             //std::cerr << "\t" << __LINE__ << __FUNCTION__ << "\n";
             // TODO BLOCK WAITING:::
