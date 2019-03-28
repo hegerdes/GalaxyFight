@@ -308,10 +308,25 @@ void ManageGame::change_transport_route(int planet_id, int transportSpaceCraft_i
                     (*i)->m_current_route.clear();
                     (*i)->m_tmp_route = m_planetmap->getPath((*i)->m_position, planet_id);
                     (*i)->m_current_route = m_planetmap->getPath(planet_id, m_base);
-                    (*i)->m_route_iterator = (*i)->m_tmp_route.begin();
-                    (*i)->m_to_new_route = true;
-                    (*i)->m_to_base = false;
-                    (*i)->m_to_mine = false;
+
+                    if((*i)->m_tmp_route.size() >= 2)
+                    {
+                        (*i)->m_route_iterator = (*i)->m_tmp_route.begin();
+                        (*i)->m_next_position = *(++(*i)->m_route_iterator);
+                        (*i)->m_to_new_route = true;
+                        (*i)->m_to_base = false;
+                        (*i)->m_to_mine = false;
+                        std::cout << "position " + std::to_string((*i)->m_position) << std::endl;
+                        std::cout << "next position " + std::to_string((*i)->m_next_position) << std::endl;
+                    }
+                    else
+                    {
+                        (*i)->m_route_iterator = (*i)->m_current_route.begin();
+                        (*i)->m_to_new_route = false;
+                        (*i)->m_to_base = true;
+                        (*i)->m_to_mine = false;
+                        std::cout << "hallo 2" << std::endl;
+                    }
                 }
             }
         }
@@ -476,10 +491,12 @@ void ManageGame::updateSpaceCrafts()
     }
 
     //transportrouten aktualisieren
-    for(auto i = m_transportSpaceCraftslist.begin(); i != m_transportSpaceCraftslist.end(); i ++){
-        if((*i)->m_to_new_route){
-
-            if((*i)->m_route_iterator == (*i)->m_tmp_route.end()){
+    for(auto i = m_transportSpaceCraftslist.begin(); i != m_transportSpaceCraftslist.end(); i ++)
+    {
+        if((*i)->m_to_new_route)
+        {
+            if((*i)->m_route_iterator == (*i)->m_tmp_route.end())
+            {
                 (*i)->m_route_iterator = (*i)->m_current_route.begin();
                 (*i)->m_to_base = true;
                 (*i)->m_to_mine = false;
@@ -490,15 +507,18 @@ void ManageGame::updateSpaceCrafts()
                 //transporter lädt erz
                 (*i)->m_ore = transporter_stored_ore((*i)->m_position);
 
-            }else
+            }
+            else
             {
                 (*i)->m_position = (*i)->m_next_position;
                 (*i)->m_next_position = *((*i)->m_route_iterator++);
             }
         }
 
-        if((*i)->m_to_base){
-            if((*i)->m_route_iterator == (*i)->m_current_route.end()){
+        if((*i)->m_to_base)
+        {
+            if((*i)->m_route_iterator == (*i)->m_current_route.end())
+            {
                 (*i)->m_to_base = false;
                 (*i)->m_to_mine = true;
                 (*i)->m_to_new_route = false;
@@ -513,16 +533,18 @@ void ManageGame::updateSpaceCrafts()
 
                 emit updateInfobar();
 
-            }else {
+            }
+            else
+            {
                 (*i)->m_position = (*i)->m_next_position;
                 (*i)->m_next_position = *((*i)->m_route_iterator++);
-
-
             }
         }
 
-        if((*i)->m_to_mine){
-            if((*i)->m_route_iterator == (*i)->m_current_route.begin()){
+        if((*i)->m_to_mine)
+        {
+            if((*i)->m_route_iterator == (*i)->m_current_route.begin())
+            {
                 (*i)->m_to_base = true;
                 (*i)->m_to_mine = false;
                 (*i)->m_to_new_route= false;
@@ -533,11 +555,18 @@ void ManageGame::updateSpaceCrafts()
                 //transporter lädt erz
                 (*i)->m_ore = transporter_stored_ore((*i)->m_next_position);
 
-            }else {
+            }
+            else
+            {
                 (*i)->m_position = (*i)->m_next_position;
                 (*i)->m_next_position = *((*i)->m_route_iterator--);
-
             }
+        }
+
+        if(m_planets[*(*i)->m_current_route.begin()]->getOwner() != m_player_id)
+        {
+            (*i)->m_tmp_route = m_planetmap->getPath((*i)->m_position, m_base);
+            (*i)->m_current_route.clear();
         }
     }
 }

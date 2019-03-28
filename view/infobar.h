@@ -6,10 +6,15 @@
 #include <QMessageBox>
 #include <QTimer>
 #include "../util/ManageGame.hpp"
+#include "init_file.h"
 
 namespace Ui {
 class Infobar;
 }
+/**
+ * @brief The Infobar class This widget is the screen which displays the roundtime, planet details and resources
+ * @author meversmeyer & hgerdes
+ */
 class Infobar : public QWidget
 {
     Q_OBJECT
@@ -39,7 +44,6 @@ public slots:
     void set_time(double time);
     void reset_timer();
     void stop_timer();
-    void continue_timer();
 
     //Slots for popups
     void no_resources(int num);
@@ -93,12 +97,19 @@ private:
     //Current selected planet
     int m_selected_planet;
 
+    //Popup for messages
     QMessageBox m_popup;
 
+    //Timer for roundtime
     QTimer m_timer;
 
+    //Roundtime
+    int m_time;
+
+    //Timer for frequency to display remaining round time
     QTimer m_takt;
 
+    //Ui for the infobar
     Ui::Infobar *ui;
 };
 
