@@ -28,6 +28,9 @@
 #include "scene2d.h"
 #include "../util/ManageGame.hpp"
 #include "settingwindow.h"
+#include "winningscreen.h"
+#include "loosingscreen.h"
+#include "io/SoundFactory.hpp"
 
 
 namespace asteroids
@@ -36,7 +39,7 @@ namespace asteroids
  * @brief   Represents the main window of the game. This
  *          class contains the main loop, handles all
  *          user input and renders all objects
- *
+ * @Maintainer lkreienbrink
  */
 class MainWindow : public QMainWindow
 {
@@ -69,7 +72,7 @@ public slots:
     /**
      * @brief goToScene2D sets Scene2D as top screen
      */
-    void goToScene2D();
+    void gotoScene2D();
 
     /**
      * @brief gotoLoadingScreen sets LoadingScreen as top screen
@@ -80,6 +83,15 @@ public slots:
      * @brief gotoSettingsScreen sets the SettingsScreen as top screen
      */
     void gotoSettingsScreen();
+
+    /**
+     * @brief gotoWin sets the WinningScreen as the top screen
+     */
+    void gotoWin();
+    /**
+     * @brief gotoLoose sets the LoosingScreen as the top screen
+     */
+    void gotoLoose();
 
     /**
      * @brief closeWindow closes the MainWindow
@@ -113,6 +125,12 @@ private:
 
     /// LoadingScreen widget
     LoadingScreen* m_loadingscreen;
+
+    /// WinningScreen widget
+    winningscreen* m_winningscreen;
+
+    /// LoosingScreen widget
+    loosingscreen* m_loosingscreen;
 
     /// Scene2D widget
     Scene2D* m_scene2d;

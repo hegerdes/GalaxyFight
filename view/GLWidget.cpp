@@ -3,15 +3,27 @@
 #include "global_socket.h"
 #include "io/TextureFactory.hpp"
 #include <QMouseEvent>
+#include "global_socket.h"
 
 #include <SDL2/SDL.h>
 
 GLWidget::GLWidget(QWidget* parent)
-    : QOpenGLWidget(parent), m_camera(Vector3f(0.0f, 0.0f, -700.0f), 0.05f, 5.0f), m_rotationSpeed(0.025),
-      m_moveSpeed(5.0), m_lastBullet(0), m_BulletId(0), m_firstPerson(false), m_firstPersonAble(true), m_hud(this),
-      active(false), m_schussFrequenz(500), m_rapidFire(false) {
+//m_camera(Vector3f(0.0f, 0.0f, -700.0f), 0.05f, 5.0f)
+    : QOpenGLWidget(parent),
+      m_camera(),
+      m_rotationSpeed(0.025),
+      m_moveSpeed(5.0),
+      m_lastBullet(0),
+      active(false),
+      m_schussFrequenz(500), 
+      m_firstPerson(false), 
+      m_firstPersonAble(true), 
+      m_hud(this), 
+      m_rapidFire(false)
+{
     m_layout.addWidget(&m_hud);
     setLayout(&m_layout);
+    //Notwendig, damit Qt nicht Leertaste und Pfeiltasteneingaben frisst
     setFocusPolicy(Qt::StrongFocus);
 }
 
@@ -136,6 +148,7 @@ void GLWidget::loadLevel() {
     */
 
     // Fügt das Raumschiff der Engine hinzu, damit es richtig explodieren kann
+
     m_physicsEngine->addSpaceCraft(m_actor);
     m_physicsEngine->addEnemyPlayer(m_enemyPlayer);
     m_hud.setSpacecraft(m_actor);
@@ -211,9 +224,18 @@ void GLWidget::step(map<Qt::Key, bool>& keyStates) {
 
             if (keyStates[Qt::Key_W]) {
                 m_actor->accelerate();
+                if(!SoundFactory::instance().getSound("schneller")->isPlaying())
+                {
+                    SoundFactory::instance().getSound("schneller")->play();
+                }
+                 
             }
             if (keyStates[Qt::Key_S]) {
                 m_actor->deccelerate();
+                if(!SoundFactory::instance().getSound("langsamer")->isPlaying())
+                {
+                    SoundFactory::instance().getSound("langsamer")->play();
+                }
             }
             if (keyStates[Qt::Key_A]) {
                 m_actor->rotate(Transformable::YAW_LEFT, m_rotationSpeed);
@@ -222,16 +244,12 @@ void GLWidget::step(map<Qt::Key, bool>& keyStates) {
                 m_actor->rotate(Transformable::YAW_RIGHT, m_rotationSpeed);
             }
 
-            if (keyStates[Qt::Key_X]) {
-                // Debug/Testline für Explosion eigenes Raumschiff
+            if(keyStates[Qt::Key_X])
+            {
+                //Debug/Testline für Explosion eigenes Raumschiff
                 m_actor->destroySpaceCraft();
             }
 
-            /* @ahaker
-                    // Add a bullet to physics engine
-                    if(keyStates[Qt::Key_N])
-                    {
-                    */
 
             // Add a bullet to physics engine
             if (keyStates[Qt::Key_Space]) {
@@ -251,25 +269,32 @@ void GLWidget::step(map<Qt::Key, bool>& keyStates) {
                     m_physicsEngine->addBullet(bullet);
                     m_lastBullet = bulletShot;
                     bullet_shot = Bullet_shot::shot;
-
                     std::cerr << "bullet shot ID::::: " << m_BulletId;
 
-                    /// Gibt der Anzeige in m_hud die Zeit an der die letzte Bullet abgeschoßen wurde
-                    m_hud.setBulletReady(value.count());
+                    ///Gibt der Anzeige in m_hud die Zeit an der die letzte Bullet abgeschoßen wurde
+                    ///
+                    m_hud.setBulletReady(value.count());   
 
-                    /// Der Folgende Codeblock liefert dem shotReadyRect in HUDWidget die notwendigen Informationen,
-                    /// damit es korrekt anzeigen kann, ob das Schiff bereit zum schießen ist
-                    // Start Rapidfire Anzeigeinformationen
-                    if (m_rapidFire) {
-                        m_hud.setBulletReady(-1);
-                    }
 
-                    // std::cerr<< "bullet shot 2";
-                } else {
-                    m_rapidFire = true;
-                }
+                    ///Spielt den Schusssound ab
+                    SoundFactory::instance().getSound("pew")->play();                
 
-            } else {
+                    ///Der Folgende Codeblock liefert dem shotReadyRect in HUDWidget die notwendigen Informationen, damit es
+                    ///korrekt anzeigen kann, ob das Schiff bereit zum schießen ist
+                    //Start Rapidfire Anzeigeinformationen
+                    if(m_rapidFire)
+                    {                        
+                        m_hud.setBulletReady(-1); 
+                    }                                                     
+
+                                     
+                }else
+                {
+                    m_rapidFire= true;
+                }                
+
+            }else
+            {
                 m_rapidFire = false;
                 m_hud.setBulletReady(0);
             }
@@ -298,12 +323,16 @@ void GLWidget::step(map<Qt::Key, bool>& keyStates) {
 
             // asteroids hinzufügen
 
+            // manipulate asteroids depending on the data that the server has sent
             int i = 0;
             std::list<Asteroid::Ptr> asteroids;
             m_asteroidField->getAsteroids(asteroids);
-            // std::cerr << client_global.count_astr << " ----------------------------------\n";
-            for (auto it = asteroids.begin(); it != asteroids.end(); it++) {
-                if (i < client_global.count_astr) {
+            std::cerr << "\t" << __FUNCTION__<< client_global.count_astr << " ----------------------------------\n";
+            for (auto it = asteroids.begin(); it != asteroids.end(); it++)
+            {
+                if(i < client_global.count_astr)
+                {
+                    //manipulate position,size and direction of asteroids
                     (*it)->m_position = client_global.pos_astr[i];
                     // std::cerr << "m_position " << (*it)->m_position << "\n";
                     (*it)->m_radius = client_global.size_astr[i];
@@ -358,6 +387,7 @@ void GLWidget::step(map<Qt::Key, bool>& keyStates) {
             client_global.wait_for_readData(20);
         }
 
+
         m_enemyPlayer->m_position = client_global.enemyPos;
         m_enemyPlayer->m_xAxis = client_global.enemyxAxis;
         m_enemyPlayer->m_yAxis = client_global.enemyyAxis;
@@ -367,8 +397,7 @@ void GLWidget::step(map<Qt::Key, bool>& keyStates) {
         m_actor->setHealth(client_global.own_health);
 
         if (client_global.enemy_shot == Bullet_shot::shot) {
-            Vector3f shipPosition =
-                m_enemyPlayer->getPosition() + m_enemyPlayer->getZAxis() * -45 + m_enemyPlayer->getXAxis() * -175;
+            Vector3f shipPosition = m_enemyPlayer->getPosition() + m_enemyPlayer->getZAxis() * -45 + m_enemyPlayer->getXAxis() * -175;
             Bullet::Ptr bullet = make_shared<Bullet>(Bullet(shipPosition, m_enemyPlayer->m_xAxis * -1));
             bullet->setid(client_global.enemy_shot_id);
             m_physicsEngine->addBullet(bullet);

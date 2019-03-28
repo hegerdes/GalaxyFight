@@ -2,6 +2,8 @@
 #define SETTINGWINDOW_H
 
 #include <QWidget>
+#include <QSettings>
+#include "init_file.h"
 
 namespace Ui {
 class settingwindow;
@@ -14,6 +16,12 @@ class settingwindow : public QWidget
 public:
     explicit settingwindow(QWidget *parent = nullptr);
     ~settingwindow();
+
+signals:
+    void goToStart();
+
+private slots:
+    void on_BackButton_clicked();
 
 private:
     Ui::settingwindow *ui;

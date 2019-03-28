@@ -32,6 +32,7 @@
 #include "physics/PhysicsEngine.hpp"
 #include "../physics/PhysicsEngine.hpp"
 #include "HUDWidget.hpp"
+#include "io/SoundFactory.hpp"
 
 using namespace asteroids;
 using namespace std::chrono;
@@ -70,15 +71,12 @@ protected:
     /// Init OpenGL
     virtual void initializeGL() override;
 
-
     /// Render scene
     virtual void paintGL() override;
 
     /// Handle new window dimenions
     virtual void resizeGL(int w, int h) override;
 
-    /// Handle mouse movement
-    virtual void mouseMoveEvent(QMouseEvent* event) override;
 
     // TODO:: Setzen der BulletID passend zur PlayerID. Noch nicht passende Stelle gefunden
     /// Set BulletId according to the playerID
@@ -93,15 +91,12 @@ private:
     Camera						m_camera;
 
     /// Health Bar for player 1
-
     HealthBar::Ptr              m_playerHPBar;
 
-    /// Health Bar for player 2HUDWidget
-    
+    /// Health Bar for player 2HUDWidget    
     HealthBar::Ptr              m_enemyHPBar;
 
     ///Crosshair for aiming
-
     Crosshair::Ptr              m_crossHair;
 
     /// A pointer to the Actor
@@ -144,6 +139,7 @@ private:
     
     /// First Person-Modus und First Person Toggleable(verhindert rumspringen bei gedrückter V-Taste)
     bool                        m_firstPerson;
+
     bool                        m_firstPersonAble;
 
     bool                        m_rapidFire;
@@ -154,7 +150,6 @@ private:
     /// Layout for displaying the HUD
     QStackedLayout              m_layout;
 
-    int                         counter;
 };
 
 #endif

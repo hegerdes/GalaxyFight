@@ -92,8 +92,10 @@ find_package( Qt5
     Widgets
     Concurrent
     OpenGL
+    Multimedia
     REQUIRED
 )
+find_package(Qt5Multimedia REQUIRED)
 
 include_directories(${Qt5Widgets_INCLUDE_DIRS})
 include_directories(${Qt5Concurrent_INCLUDE_DIRS})
@@ -128,6 +130,7 @@ set(ASTEROID_SOURCES
     io/TextureFactory.cpp
     io/TriangleMeshFactory.cpp
     io/LevelParser.cpp
+    io/SoundFactory.cpp
     math/Matrix.cpp
     math/Quaternion.cpp
     math/Randomizer.cpp
@@ -155,7 +158,7 @@ set(ASTEROID_SOURCES
     util/ManageGame.cpp
     view/GLWidget.cpp
     view/HUDWidget.cpp
-    view/MainWindow.cpp 
+    view/MainWindow.cpp
     view/Camera.cpp
     view/startscreen.cpp
     view/settingwindow.cpp
@@ -170,6 +173,8 @@ set(ASTEROID_SOURCES
     view/2DScene/graphicstransporteritem.cpp
     view/2DScene/graphicshqitem.cpp
     qtclient/client.cpp
+    view/loosingscreen.cpp
+    view/winningscreen.cpp
 )
 set(ASTEROID_MOCS
     view/MainWindow.hpp
@@ -179,6 +184,8 @@ set(ASTEROID_MOCS
     view/infobar.h
     view/settingwindow.h
     view/2DScene/itemtypes.h
+    view/loosingscreen.h
+    view/winningscreen.h
 )
 
 set(ASTEROID_UIS
@@ -187,6 +194,8 @@ set(ASTEROID_UIS
     view/loadingscreen.ui
     view/infobar.ui
     view/settingwindow.ui
+    view/loosingscreen.ui
+    view/winningscreen.ui
 )
 
 set(CMAKE_AUTOUIC ON)
@@ -224,6 +233,9 @@ add_executable(asteroids
     ${ASTEROID_MOCS}
     ${ASTEROID_UI_HDRS}
 )
+
+qt5_use_modules(asteroids Multimedia)
+
 ###############################################################################
 # External library dependencys
 ###############################################################################
