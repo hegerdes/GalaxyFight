@@ -105,7 +105,7 @@ void StartScreen::on_quitBut_clicked()
 void StartScreen::on_settingBut_clicked()
 {
     //sends Signal when "Einstellungen" was clicked
-    emit goto3DScene();
+    emit goToSetting();
 }
 
 void StartScreen::setupConnections()

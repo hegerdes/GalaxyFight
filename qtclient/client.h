@@ -15,40 +15,102 @@ class Client {
   public:
     Client();
 
-    // init_3D
+    /**
+     * @brief ownPos Position of the SpaceCraft that will be transmitted to the Server
+     */
     Vector<float> ownPos;
+    /**
+     * @brief ownxAxis Axis of the SpaceCraft
+     */
     Vector<float> ownxAxis;
+    /**
+     * @brief ownyAxis Axis of the SpaceCraft
+     */
     Vector<float> ownyAxis;
+    /**
+     * @brief ownzAxis Axis of the SpaceCraft
+     */
     Vector<float> ownzAxis;
 
+    /**
+     * @brief enemyPos position of the enemy SpaceCraft
+     */
+    Vector<float> enemyPos;
+    /**
+     * @brief enemyxAxis of the SpaceCraft
+     */
+    Vector<float> enemyxAxis;
+    /**
+     * @brief enemyyAxis of the enemy SpaceCraft
+     */
+    Vector<float> enemyyAxis;
+    /**
+     * @brief enemyzAxis of the enemy SpaceCraft
+     */
+    Vector<float> enemyzAxis;
+    /**
+     * @brief enemy_shot enum on shot if enemy got shot
+     */
+    Bullet_shot enemy_shot;
+    /**
+     * @brief enemy_shot_id id of the bullet that hit the enemy
+     */
+    int enemy_shot_id;
 
-    //con_lost
+
+    /**
+     * @brief enemy_disconnected is set if the enemy disconnects via the con_los packet
+     */
     bool enemy_disconnected;
 
-    //game_start
+    /**
+     * @brief id_other id of the other player
+     */
     std::string id_other;
+    /**
+     * @brief player_No player No sent by the server
+     */
     player_no player_No = player_no::unassigned;
     //Map Konfig am start fehlt
 
+    /**
+     * @brief pos_astr will be recived by Init3D package
+     */
     Vector3f pos_astr[10];
+    /**
+     * @brief dir_astr recived by Init3D package
+     */
     Vector3f dir_astr[10];
+    /**
+     * @brief size_astr recived by Init3D package from server
+     */
     float size_astr[10];
+    /**
+     * @brief count_astr amount of astroids
+     */
     int count_astr;
+    /**
+     * @brief id_astr id of every asteroids
+     */
     int id_astr[10];
 
-    // update_3D_S / init_3D
-    Vector<float> enemyPos;
-    Vector<float> enemyxAxis;
-    Vector<float> enemyyAxis;
-    Vector<float> enemyzAxis;
-    Bullet_shot enemy_shot;
-    int enemy_shot_id;
-
+    /**
+     * @brief asteroids_deleted asteroids that have to be deleted
+     */
     std::vector<int> asteroids_deleted;
+    /**
+     * @brief bullet_deleted bullets to be deleted
+     */
     std::vector<int> bullet_deleted;
+
+    /**
+     * @brief own_hit if got hit
+     */
     Hit own_hit;
 
-    // end_3D
+    /**
+     * @brief winner_no winner of 3D fight for end3d package
+     */
     char winner_no;
 
     /**
@@ -63,7 +125,15 @@ class Client {
      */
     void sendUpdate_3D_C(Vector<float> pos, Vector<float> xAxis, Vector<float> yAxis, Vector<float> zAxis,
                          Bullet_shot shot, Living living, int bullet_id);
+
+    /**
+     * @brief readData reads incoming data and interprets the package that got recived
+     */
     void readData();
+    /**
+     * @brief wait_for_readData blocks until data got recived
+     * @param timeout time in ms to wait for data that got read
+     */
     bool wait_for_readData(int timeout);
     void SendPlanetChanges(int size,std::list<PlanetChanges> changes );
     void recivePlanetChanges(char * data);
@@ -92,8 +162,16 @@ class Client {
     {
         return !enemy_disconnected;
     }
-
+    /**
+     * @brief connect connects the client to a server with add and port
+     * @param addr adress you want to connecto to as string
+     * @param port to be connected as int value
+     */
     void connect(QString addr, quint16 port);
+
+    /**
+     * @brief init_received set to true if init packet got recived
+     */
     bool init_received;
     void send_end_3d(player_no);
     bool m_planet_changes_received = false;
@@ -103,11 +181,31 @@ class Client {
     std::list<PlanetChanges> p_changes_current;
 
   private:
+    /**
+     * @brief socket to transmit the data to the server
+     */
+    QTcpSocket socket;
+    /**
+     * @brief writeData writes the data to the server via socket
+     * @param data data to be sent
+     */
     void writeData(QByteArray const& data);
+    /**
+     * @brief init_3d recives the init3D package and uses the information to initalize asteroids and SpaceCrafts
+     */
     void init_3d(char*);
+
+
+    /**
+     * @brief update_3D_S recives the current position of the enemy SpaceCraft
+     */
     void update_3D_S(char*);
 
-    QTcpSocket socket;
+    /**
+     * @brief functions to manipulate a pointer depending on the value you want
+     * @param ptr pointer to be manipulated
+     * @return the value you want to have
+     */
     float getFloat(char** ptr);
     int getInt(char** ptr);
     char getChar(char** ptr);
