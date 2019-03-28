@@ -17,6 +17,12 @@ public:
     explicit settingwindow(QWidget *parent = nullptr);
     ~settingwindow();
 
+signals:
+    void goToStart();
+
+private slots:
+    void on_BackButton_clicked();
+
 private:
     Ui::settingwindow *ui;
 };

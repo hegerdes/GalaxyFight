@@ -32,11 +32,15 @@
   <widget class="QLabel" name="Breite">
    <property name="geometry">
     <rect>
-     <x>590</x>
-     <y>180</y>
-     <width>67</width>
-     <height>17</height>
+     <x>506</x>
+     <y>159</y>
+     <width>151</width>
+     <height>41</height>
     </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">font: 57 50pt &quot;Ubuntu&quot;;
+color: white;</string>
    </property>
    <property name="text">
     <string>Breite</string>
@@ -45,11 +49,15 @@
   <widget class="QLabel" name="Hoehe">
    <property name="geometry">
     <rect>
-     <x>590</x>
+     <x>506</x>
      <y>210</y>
-     <width>67</width>
-     <height>17</height>
+     <width>151</width>
+     <height>41</height>
     </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">font: 57 50pt &quot;Ubuntu&quot;;
+color: white;</string>
    </property>
    <property name="text">
     <string>Hoehe</string>
@@ -58,11 +66,15 @@
   <widget class="QLabel" name="Port">
    <property name="geometry">
     <rect>
-     <x>590</x>
+     <x>506</x>
      <y>280</y>
-     <width>67</width>
-     <height>17</height>
+     <width>151</width>
+     <height>31</height>
     </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">font: 57 50pt &quot;Ubuntu&quot;;
+color: white;</string>
    </property>
    <property name="text">
     <string>Port</string>
@@ -71,87 +83,84 @@
   <widget class="QLabel" name="IP">
    <property name="geometry">
     <rect>
-     <x>590</x>
-     <y>310</y>
+     <x>520</x>
+     <y>340</y>
      <width>67</width>
-     <height>17</height>
+     <height>31</height>
     </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">font: 57 50pt &quot;Ubuntu&quot;;
+color: white;</string>
    </property>
    <property name="text">
     <string>IP</string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="MapAuswahl">
-   <property name="geometry">
-    <rect>
-     <x>580</x>
-     <y>400</y>
-     <width>67</width>
-     <height>17</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>MapAuswahl</string>
    </property>
   </widget>
   <widget class="QLineEdit" name="lBreite">
    <property name="geometry">
     <rect>
      <x>720</x>
-     <y>180</y>
-     <width>113</width>
-     <height>25</height>
+     <y>164</y>
+     <width>141</width>
+     <height>41</height>
     </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">font: 57 italic 30pt &quot;Ubuntu&quot;;</string>
    </property>
   </widget>
   <widget class="QLineEdit" name="lHoehe">
    <property name="geometry">
     <rect>
      <x>720</x>
-     <y>210</y>
-     <width>113</width>
-     <height>25</height>
+     <y>220</y>
+     <width>141</width>
+     <height>41</height>
     </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">font: 57 italic 30pt &quot;Ubuntu&quot;;</string>
    </property>
   </widget>
   <widget class="QLineEdit" name="lPort">
    <property name="geometry">
     <rect>
      <x>720</x>
-     <y>270</y>
-     <width>113</width>
-     <height>25</height>
+     <y>280</y>
+     <width>141</width>
+     <height>41</height>
     </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">font: 57 italic 30pt &quot;Ubuntu&quot;;</string>
    </property>
   </widget>
   <widget class="QLineEdit" name="lIP">
    <property name="geometry">
     <rect>
      <x>720</x>
-     <y>300</y>
-     <width>113</width>
-     <height>25</height>
+     <y>330</y>
+     <width>141</width>
+     <height>41</height>
     </rect>
    </property>
-  </widget>
-  <widget class="QLineEdit" name="lMap">
-   <property name="geometry">
-    <rect>
-     <x>720</x>
-     <y>390</y>
-     <width>113</width>
-     <height>25</height>
-    </rect>
+   <property name="styleSheet">
+    <string notr="true">font: 57 italic 30pt &quot;Ubuntu&quot;;</string>
    </property>
   </widget>
   <widget class="QPushButton" name="BackButton">
    <property name="geometry">
     <rect>
-     <x>640</x>
-     <y>500</y>
-     <width>89</width>
-     <height>25</height>
+     <x>600</x>
+     <y>484</y>
+     <width>181</width>
+     <height>41</height>
     </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">font: 57 50pt &quot;Ubuntu&quot;;
+background-color: rgb(114, 159, 207);</string>
    </property>
    <property name="text">
     <string>Zum Start</string>

@@ -185,6 +185,7 @@ void Scene2dHandler::placeFighter()
     auto fighters = ManageGame::getinstance()->get_attackSpaceCraftList();
     auto planets = MapFactory::getinstance().getMap(setting.value("Dateipfade/Map").toString().toStdString())->getPlanets();
     auto itemList = items();
+    auto updatedFighter = QList<QGraphicsItem*>();
 
     //start animation and placement
     for (const auto& fighter : fighters) {
@@ -194,6 +195,9 @@ void Scene2dHandler::placeFighter()
             if(item->type() == ItemTypes::Fighter && ((GraphicsFighterItem*)item)->getID() == fighter->m_id) {
                 auto pos = planets[fighter->m_next_position]->getPos();
                 foundFlag = true;
+
+                //add updated fighter to list
+                updatedFighter.append(item);
 
                 //create and start animation
                 auto animationPos = new QPropertyAnimation(static_cast<GraphicsFighterItem*>(item), "pos");
@@ -224,6 +228,16 @@ void Scene2dHandler::placeFighter()
             auto pos = planets[fighter->m_position]->getPos();
             newFighter->setPos(pos[0] - 20, pos[1] - 20);
             addItem(newFighter);
+
+            //add updated fighter to list
+            updatedFighter.append(newFighter);
+        }
+    }
+
+    //remove all unused fighter
+    for(auto& item : itemList) {
+        if(!updatedFighter.contains(item) && item->type() == ItemTypes::Fighter) {
+            removeItem(item);
         }
     }
 
@@ -245,6 +259,7 @@ void Scene2dHandler::placeTransporter()
             //move fighter if planet changed
             if(item->type() == ItemTypes::Transporter && static_cast<GraphicsTransporterItem*>(item)->getID() == transporter->m_id) {
                 auto pos = planets[transporter->m_next_position]->getPos();
+                static_cast<GraphicsTransporterItem*>(item)->setOwner(transporter->m_owner);
                 foundFlag = true;
 
                 //create and start animation
