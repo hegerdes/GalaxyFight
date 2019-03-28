@@ -5,6 +5,9 @@ Infobar::Infobar(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::Infobar)
 {
+
+    m_time = setting.value("Resourcen/Rundenzeit").toInt();
+
     ui->setupUi(this);
 
     //Set singelton instances
@@ -39,11 +42,7 @@ Infobar::Infobar(QWidget *parent) :
     connect( &m_timer, &QTimer::timeout, m_manage_game, &asteroids::ManageGame::next_round);
 
     connect( m_manage_game, &asteroids::ManageGame::stopTimer, this, &Infobar::stop_timer);
-    connect( m_manage_game, &asteroids::ManageGame::resetTimer, this, &Infobar::continue_timer);
-    connect( m_manage_game, &asteroids::ManageGame::resetTimer, this, &Infobar::reset_timer); //TODO Fix and use this line instead of the next 3 lines
-//    connect( &m_timer, &QTimer::timeout, this, &Infobar::reset_timer);
-//    m_takt.start(10);
-//    m_timer.start(6000);
+    connect( m_manage_game, &asteroids::ManageGame::resetTimer, this, &Infobar::reset_timer);
 
     //Initialize popup
     m_popup.setParent(this);
@@ -88,23 +87,18 @@ void Infobar::set_selected_planet(int planet_id)
 void Infobar::set_time(double time)
 {
     ui->timer->display(time);
-    m_takt.start(10);
+    m_takt.start(100);
 }
 
 void Infobar::reset_timer()
 {
-    m_takt.start(10);
-    m_timer.start(60000);
+    m_takt.start(100);
+    m_timer.start(m_time);
 }
 
 void Infobar::stop_timer()
 {
     m_timer.stop();
-}
-
-void Infobar::continue_timer()
-{
-    m_timer.start();
 }
 
 //For popup
