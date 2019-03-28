@@ -486,11 +486,11 @@ void ManageGame::next_round()
     }
 
     for (auto i = m_attackSpaceCraftslist.begin(); i != m_attackSpaceCraftslist.end(); ) {
-        if( m_planets.at((*i)->m_position)->getOwner() != (*i)->m_owner){
+        if( (m_planets.at((*i)->m_position)->getOwner() == (*i)->m_owner) || (PlanetChanges::UNASSIGN == m_planets.at((*i)->m_position)->getOwner()) ){
+            i++;
+        }else {
             m_attackSpaceCraft_number -= 1;
             i = m_attackSpaceCraftslist.erase(i);
-        }else {
-            i++;
         }
         //if ((*i)->m_id == fighter_id){ break; }
     }
@@ -511,14 +511,18 @@ void ManageGame::planet_apply_updates()
     }
 
     for (auto i = m_attackSpaceCraftslist.begin(); i != m_attackSpaceCraftslist.end(); ) {
-        if( m_planets.at((*i)->m_position)->getOwner() != (*i)->m_owner){
+        if( (m_planets.at((*i)->m_position)->getOwner() == (*i)->m_owner) || (PlanetChanges::UNASSIGN == m_planets.at((*i)->m_position)->getOwner()) ){
+            i++;
+        }else {
             m_attackSpaceCraft_number -= 1;
             i = m_attackSpaceCraftslist.erase(i);
-        }else {
-            i++;
         }
         //if ((*i)->m_id == fighter_id){ break; }
     }
+    updateStats();
+    emit updateScene();
+    std::cerr << "\t " << __LINE__ << __FUNCTION__ << " updateScene called " << __LINE__ << std::endl;
+    emit updateInfobar();
 }
 
 void ManageGame::end_game(bool winning)
