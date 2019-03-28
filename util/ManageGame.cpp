@@ -404,6 +404,8 @@ void ManageGame::next_round()
 {
     if(m_initialised)
     {
+        //Stop Timer
+        emit stopTimer();
         //Update all Ore and Stored ore on PlayerChanges
         for (auto it_p = m_planets.begin(); it_p != m_planets.end(); it_p++)
         {
@@ -472,11 +474,25 @@ void ManageGame::next_round()
             m_planets.at((unsigned long)it_c->get()->getID())->updatePlanet(*(it_c));
         }
 
+
+        //Check if one player now owns the both base's
+        if(m_player_id == m_planets.at(0)->getOwner()
+                && m_planets.at((unsigned long) m_planetmap->getNumberOfPlanets()-1)->getOwner() == m_player_id)
+        {
+            emit end_game(true);
+        }
+        if(m_player_id != m_planets.at(0)->getOwner()
+                && m_planets.at((unsigned long) m_planetmap->getNumberOfPlanets() -1)->getOwner() != m_player_id)
+        {
+            emit end_game(false);
+        }
+
         //TODO Next 2d-round
         updateStats();
 
         emit updateScene();
         emit updateInfobar();
+        emit resetTimer();
     }
 
 }
@@ -723,6 +739,7 @@ void ManageGame::initialize_player(PlanetChanges::Owner player_id, int planet_id
             m_transportSpaceCraftslist.push_back(transportSpaceCraft);
         }
         m_initialised = true;
+        emit resetTimer();
         emit updateScene();
     }
     else
