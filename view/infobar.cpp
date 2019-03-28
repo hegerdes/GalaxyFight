@@ -38,12 +38,12 @@ Infobar::Infobar(QWidget *parent) :
     connect( &m_takt, &QTimer::timeout, [this](){set_time(m_timer.remainingTime()/1000);});
     connect( &m_timer, &QTimer::timeout, m_manage_game, &asteroids::ManageGame::next_round);
 
-    //connect( startscreen, &asteroids::startscreen::start_timer, this, &Infobar::reset_time); //TODO Fix and use this line instead of the next 3 lines
-    //connect( m_manage_game, &asteroids::ManageGame::stop_timer, this, &Infobar::stop_timer);
-    //connect( m_manage_game, &asteroids::ManageGame::reset_timer, this, &Infobar::continue_timer);
-    connect( &m_timer, &QTimer::timeout, this, &Infobar::reset_timer);
-    m_takt.start(10);
-    m_timer.start(6000);
+    connect( m_manage_game, &asteroids::ManageGame::stopTimer, this, &Infobar::stop_timer);
+    connect( m_manage_game, &asteroids::ManageGame::resetTimer, this, &Infobar::continue_timer);
+    connect( m_manage_game, &asteroids::ManageGame::resetTimer, this, &Infobar::reset_timer); //TODO Fix and use this line instead of the next 3 lines
+//    connect( &m_timer, &QTimer::timeout, this, &Infobar::reset_timer);
+//    m_takt.start(10);
+//    m_timer.start(6000);
 
     //Initialize popup
     m_popup.setParent(this);

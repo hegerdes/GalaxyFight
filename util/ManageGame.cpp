@@ -385,6 +385,8 @@ void ManageGame::next_round()
 {
     if(m_initialised)
     {
+        //Stop Timer
+        emit stopTimer();
         //Update all Ore and Stored ore on PlayerChanges
         for (auto it_p = m_planets.begin(); it_p != m_planets.end(); it_p++)
         {
@@ -458,6 +460,7 @@ void ManageGame::next_round()
 
         emit updateScene();
         emit updateInfobar();
+        emit resetTimer();
     }
 
 }
@@ -704,6 +707,7 @@ void ManageGame::initialize_player(PlanetChanges::Owner player_id, int planet_id
             m_transportSpaceCraftslist.push_back(transportSpaceCraft);
         }
         m_initialised = true;
+        emit resetTimer();
         emit updateScene();
     }
     else
