@@ -93,7 +93,8 @@ class PlanetChanges
         std::cout << "PlanetNr: " << m_id << " ChangeOwner: " << m_owned << " OreChange: "
         <<  m_num_of_ore << " FighterCange: " << m_num_fighters << " TransportChange: " 
         <<  m_num_transporter << " MineCange: " << m_num_mine << " FactoryChange: " 
-        << m_num_factory << " Attack: " << m_attack_planet << std::endl;
+        << m_num_factory << " StoredOreChange: " <<m_store_ore << " Attack: " 
+        << m_attack_planet << std::endl;
     }
 
   private:
