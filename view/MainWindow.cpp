@@ -131,7 +131,7 @@ void MainWindow::setupConnections()
   connect(m_startscreen, &StartScreen::goto3DScene, this, &MainWindow::goto3DScene);
   connect(m_startscreen, &StartScreen::goToSetting, this, &MainWindow::gotoSettingsScreen);
   connect(m_settingsScreen, &settingwindow::goToStart, this, &MainWindow::closeWindow);
-  connect(ManageGame::getinstance(), &ManageGame::goToWin, this, &MainWindow::gotoLoose);
+  connect(ManageGame::getinstance(), &ManageGame::goToWin, this, &MainWindow::gotoWin);
   connect(ManageGame::getinstance(), &ManageGame::gotoLoose, this, &MainWindow::gotoLoose);
 
   //connect(m_startscreen, &StartScreen::gotoLoadingScreen, this, &MainWindow::goToLoadingScreen);
