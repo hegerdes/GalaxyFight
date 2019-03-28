@@ -89,6 +89,7 @@ namespace asteroids
             m_p.fillRect(distanceBarLeft, QColor(0, 100, 200));
             m_p.fillRect(distanceBarRight, QColor(0, 100, 200));
             m_p.setPen(Qt::white);    
+            m_p.setFont(QFont("liberation",15,99));
             m_p.drawText(textDistanceBar, Qt::AlignCenter, QString::number((int)distance));  
             m_p.end();   
         }
