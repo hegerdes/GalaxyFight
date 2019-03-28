@@ -17,10 +17,12 @@ public:
     ~StartScreen();
 
 signals:
-    void closeProgramm();
-    void goToLoading();
+    void closeWindow();
+    void gotoLoadingScreen();
     void startClient();
     void goToSetting();
+    void goTo2D();
+    void goto3DScene();
 
 private slots:
     void on_playBut_clicked();

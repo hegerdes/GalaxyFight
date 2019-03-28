@@ -14,7 +14,7 @@
 #include "rendering/2D/MapFactory.hpp"
 #include "global_socket.h"
 
-Client client_global;
+asteroids::Client client_global;
 
 int main(int argc, char** argv)
 {

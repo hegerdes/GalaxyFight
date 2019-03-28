@@ -6,8 +6,8 @@ Client::Client() {
 }
 
 void Client::connect(QString addr, quint16 port) {
-    // socket.connectToHost(QHostAddress::LocalHost, port);
-    socket.connectToHost(addr, port);
+    socket.connectToHost(QHostAddress::LocalHost, 38292);
+    //socket.connectToHost(addr, port);
     std::cerr << socket.waitForConnected() << ": socket.waitForConnected\n";
 }
 
@@ -186,7 +186,8 @@ void Client::game_start(char* data)
     }
     id[length] = '\0';
     id_other = std::string(id);
-    player_No = getChar(&data);
+    player_No = (player_no) getChar(&data);
+    std::cerr << __LINE__ << ", " << player_No << " player_No";
 
     //MapKonfig erste mal laden.
 }

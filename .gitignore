@@ -23,8 +23,12 @@ compile_commands.json
 cmake-build-debug/
 run_build.sh
 CMakeLists.txt.user
+qtserver/.qmake.stash
+log.txt
+qtserver/Makefile
+qtserver/moc_mytcpserver.cpp
+qtserver/qtserver
 *.save
 *.pro.*
 *.sh
 *.user
-#Individual Files

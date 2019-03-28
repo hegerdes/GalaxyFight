@@ -79,6 +79,12 @@ private:
      */
     void placeTransporter();
 
+    /**
+     * @brief updateMap
+     */
+    void updateMap();
+
+
     QGraphicsItem* m_currentlySelected;
 };
 

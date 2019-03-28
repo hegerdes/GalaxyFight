@@ -21,11 +21,11 @@ void GraphicsFighterItem::paint(QPainter* painter, const QStyleOptionGraphicsIte
 
     //draw ship
     switch (m_player) {
-    case PLAYER1:
+    case PlayerType::PLAYER1:
         icon = QIcon("./models/fighter_player1.svg").pixmap(25, 25);
         break;
-    case PLAYER2:
-        icon = QIcon("./models/fighter_player1.svg").pixmap(25, 25);
+    case PlayerType::PLAYER2:
+        icon = QIcon("./models/fighter_player2.svg").pixmap(25, 25);
         break;
     default:
         //show nothing
