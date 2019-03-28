@@ -56,7 +56,7 @@ namespace asteroids
             textLeftHP = QRect(0, 0, width()/2 * 1, height()/50);
             textRightHP =  QRect(width()/2 + (width()/2 - width()/2 * 1), 0, width()/2 * 1, height()/50);
 
-            trans =QTransform (1, 0, 0, 1, width()/1.1, height()/6);
+            trans = QTransform (1, 0, 0, 1, width()/1.1, height()/6);
         }
         else
         {
