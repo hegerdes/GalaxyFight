@@ -4,8 +4,9 @@
 
 namespace asteroids
 {
-    HUDWidget::HUDWidget(QWidget* parent):QWidget(parent), m_cockpit("models/spaceship-cockpit-png-3.png"), m_firstPerson(false), m_lastAlert(0), m_lastBulletShot(0)
+    HUDWidget::HUDWidget(QWidget* parent):QWidget(parent), m_cockpit("models/spaceship-cockpit-png-3.png"), m_firstPerson(false), m_lastAlert(0), m_lastBulletShot(0),m_enemyDirection("models/red_arrow.png")
     {
+
     }
 
     void HUDWidget::paintEvent(QPaintEvent* event)
@@ -37,6 +38,8 @@ namespace asteroids
 
         ///Rechteck indem ein Kreis sitzt der anzeigt ob ein Schuß bereit ist
         QRect shotReadyRect;
+
+        QTransform trans;
         
         ///Berechnet Distanz; diese wird später in der textDistanceBar ausgegeben
         Vector3f posMyShip = m_myShip->getPosition();
@@ -52,6 +55,8 @@ namespace asteroids
             rightHP = QRect(width()/2 + (width()/2 - width()/2 * m_enemyShip->getHP()/10), 0, width()/2 * m_enemyShip->getHP()/10, height()/50);
             textLeftHP = QRect(0, 0, width()/2 * 1, height()/50);
             textRightHP =  QRect(width()/2 + (width()/2 - width()/2 * 1), 0, width()/2 * 1, height()/50);
+
+            trans =QTransform (1, 0, 0, 1, width()/1.1, height()/6);
         }
         else
         {
@@ -70,9 +75,12 @@ namespace asteroids
             
             textDistanceBar = QRect(3.75*width()/9, height()*70/100, width()/6 , height()/15);
 
-            shotReadyRect = QRect(3.1*width()/9, height()*67/100, width()/18, height()/12);
+            shotReadyRect =   QRect(3.1 * width()/9, height()*67/100, width()/18, height()/12);
+
+            trans =QTransform (1, 0, 0, 1, width()/1.59, height()/1.39);
+            trans.scale(0.45,0.45);
  
-            m_p.begin(this);
+            m_p.begin(this);  
             m_p.drawImage(fullScreen, m_cockpit);
             m_p.end();
         }       
@@ -82,6 +90,8 @@ namespace asteroids
         crossHair[2] = QRect(width()/2 - crossHairW/2, height()/2 - crossHairH/2 + crossHairH, crossHairW, crossHairH);
         crossHair[3] = QRect(width()/2 - crossHairW/2, height()/2 - crossHairH/2 - crossHairH, crossHairW, crossHairH);
         
+        Vector3f c = m_myShip->getZAxis();
+
         m_p.begin(this);
         
         ///Färbt die AnzeigeBars ein
@@ -113,6 +123,28 @@ namespace asteroids
         int distance_int = distance;
         m_p.drawText(textDistanceBar, Qt::AlignCenter, QString::number(distance_int));
         
+        Vector3f diff = m_enemyShip->getPosition() - m_myShip->getPosition();
+        Vector3f diffProjected = diff - c * (diff * c * (1/ (c * c)));
+        float angleInDegrees = acos(diffProjected * m_myShip->getDirection() / (sqrt(diffProjected * diffProjected) * sqrt(m_myShip->getDirection() * m_myShip->getDirection()))) * 180 / M_PI + 270;
+        if(diffProjected * m_myShip->getYAxis() < 0)
+        {
+            angleInDegrees = 360-angleInDegrees + 180;
+        }
+        Vector3f b = m_myShip->getXAxis();
+        Vector3f diffProjectedYZ = diff - b * (diff * b * (1/ (b*b)));
+        if(diffProjectedYZ * c > 0)
+        {
+            angleInDegrees = angleInDegrees + 180;
+            angleInDegrees = 180-angleInDegrees;
+        }
+        if(diffProjected * m_myShip->getDirection() < 0)
+        {
+            
+            trans.rotate(angleInDegrees);
+            m_p.setTransform(trans);
+            m_p.drawImage(-m_enemyDirection.width()/2, -m_enemyDirection.height()/2, m_enemyDirection);
+        }
+
         m_p.end();  
 
         auto now = std::chrono::system_clock::now();

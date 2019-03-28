@@ -81,6 +81,9 @@ class HUDWidget : public QWidget
 
         ///time when the last Bullet was shot
         long m_lastBulletShot;
+
+        ///Red Arrow 
+        QImage m_enemyDirection;
 };
 }
 
