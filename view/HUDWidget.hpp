@@ -61,6 +61,46 @@ class HUDWidget : public QWidget
         void paintEvent(QPaintEvent* event);
     private:
 
+        /**
+         * @brief Draws crosshair from 4 rectangles
+         */
+        void drawCrosshair();
+
+        /**
+         * @brief Draws health bars for both players
+         */
+        void drawHPBars();
+
+        /**
+         * @brief Draws the cockpit when in first person mode
+         */
+        void drawCockpit();
+
+        /**
+         * @brief Draws an arror pointing toward the enemy
+         */
+        void drawEnemyIndicator();
+
+        /**
+         * @brief Draws a bar indicating current velocity in relation to maximum velocity
+         */
+        void drawVelocityBar();
+
+        /**
+         * @brief Draws a bar indicating current distance to the enemy
+         */
+        void drawDistanceBar();
+
+        /**
+         * @brief Draws a circle that shows whether a bullet is ready
+         */
+        void drawShotReadyCircle();
+
+        /**
+         * @brief Draws victory/defeat screen and alerts
+         */
+        void drawScreenAlerts();
+
         ///Last Time an Alert was displayed on screen
         long m_lastAlert;
 

@@ -65,8 +65,6 @@ protected:
     /// Handle new window dimenions
     virtual void resizeGL(int w, int h) override;
 
-    /// Handle mouse movement
-    virtual void mouseMoveEvent(QMouseEvent* event) override;
 
 private:
 
@@ -125,7 +123,7 @@ private:
     
     /// First Person-Modus und First Person Toggleable(verhindert rumspringen bei gedrückter V-Taste)
     bool                        m_firstPerson;
-    
+
     bool                        m_firstPersonAble;
 
     bool                        m_rapidFire;

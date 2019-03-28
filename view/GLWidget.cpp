@@ -1,14 +1,13 @@
 #include "GLWidget.hpp"
 #include "../io/LevelParser.hpp"
 #include "io/TextureFactory.hpp"
-#include <QMouseEvent>
 #include "global_socket.h"
 
 #include <SDL2/SDL.h>
 
 GLWidget::GLWidget(QWidget* parent)
     : QOpenGLWidget(parent),
-      m_camera(Vector3f(0.0f, 0.0f, -700.0f), 0.05f, 5.0f),
+      m_camera(),
       m_rotationSpeed(0.025),
       m_moveSpeed(5.0),
       m_lastBullet(0),
@@ -359,54 +358,7 @@ void GLWidget::step(map<Qt::Key, bool>& keyStates)
     }
 }
 
-void GLWidget::mouseMoveEvent(QMouseEvent* event)
-{
-    bool l_pressed = (event->buttons() & Qt::LeftButton) != 0;
-    bool r_pressed = (event->buttons() & Qt::RightButton) != 0;
 
-    QPoint delta = event->pos() - m_mousePos;
-    m_mousePos = event->pos();
-
-    // Handle motion for pressed L button while R is not
-    // pressed
-    // if (l_pressed & !r_pressed)
-    // {
-    //     if (delta.x() > -3)
-    //     {
-    //         m_camera.turn(Camera::RIGHT);
-    //     }
-    //     if (delta.x() < 3)
-    //     {
-    //         m_camera.turn(Camera::LEFT);
-    //     }
-    //     if (delta.y() > 3)
-    //     {
-    //         m_camera.turn(Camera::UP);
-    //     }
-    //     if (delta.y() < -3)
-    //     {
-    //         m_camera.turn(Camera::DOWN);
-    //     }
-    // }
-
-    // Handle motion for pressed R button while L is not
-    // pressed
-    if (r_pressed & !l_pressed)
-    {
-        if (delta.x() > 3)
-        {
-            m_camera.move(Camera::LEFT);
-        }
-        if (delta.x() < -3)
-        {
-            m_camera.move(Camera::RIGHT);
-        }
-        if (delta.y() < -3)
-        {
-            m_camera.move(Camera::BACKWARD);
-        }
-    }
-}
 
 void GLWidget::resizeGL(int w, int h)
 {
