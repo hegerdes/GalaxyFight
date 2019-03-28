@@ -29,7 +29,8 @@ namespace asteroids
 
 struct attackspacecraft{
     //constructor
-    attackspacecraft(int id, int position) : m_id(id), m_position(position), m_next_position(position), m_change_position(false) {}
+    attackspacecraft(int id, int position, PlanetChanges::Owner owner) : m_id(id), m_position(position),
+        m_next_position(position), m_change_position(true), m_owner(owner) {}
     //id für einzelne Schiffe
     int m_id;
     //owner
@@ -44,7 +45,7 @@ struct attackspacecraft{
 
 struct transportspacecraft{
     //constructor
-    transportspacecraft(int id, int position) : m_id(id), m_position(position), m_next_position(position),
+    transportspacecraft(int id, int position, PlanetChanges::Owner owner) : m_id(id), m_owner(owner), m_position(position), m_next_position(position),
         m_to_new_route(false), m_to_base(false), m_to_mine(false), m_current_route(), m_tmp_route(), m_route_iterator() {}
     //id für einzelne Schiffe
     int m_id;
@@ -158,6 +159,13 @@ class ManageGame : public QObject
      *
      */
     void updateStats();
+
+    /**
+     * @brief Checks if a change alrady exists. If not it will be created
+     * 
+     * @param planet_id 
+     */
+    void checkForChange(int planet_id);
 
     /**
      * @brief Update the ore in base
