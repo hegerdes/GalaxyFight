@@ -36,7 +36,7 @@ namespace asteroids
  * @brief   Represents the main window of the game. This
  *          class contains the main loop, handles all
  *          user input and renders all objects
- *
+ * @Maintainer lkreienbrink
  */
 class MainWindow : public QMainWindow
 {
@@ -69,7 +69,7 @@ public slots:
     /**
      * @brief goToScene2D sets Scene2D as top screen
      */
-    void goToScene2D();
+    void gotoScene2D();
 
     /**
      * @brief gotoLoadingScreen sets LoadingScreen as top screen

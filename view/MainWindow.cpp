@@ -16,6 +16,7 @@
 #include <iostream>
 #include <QTimer>
 #include <QKeyEvent>
+#include "init_file.h"
 
 namespace asteroids
 {
@@ -45,9 +46,7 @@ MainWindow::MainWindow(QWidget* parent) :
 
     m_screenStack->setCurrentWidget(m_startscreen);
 
-//    setLayout(m_screenStack);
-    m_3DScene->setMinimumSize(QSettings().value("minWidth",1920).toInt(), QSettings().value("minHeight",1080).toInt());
-   // goto3DScene();
+    m_3DScene->setMinimumSize(setting.value("Breite").toInt(), setting.value("Hoehe").toInt());
 
     // Create a timer object to trigger the main loop
     connect(m_timer.get(), SIGNAL(timeout()), this, SLOT(handleInput()));
@@ -70,10 +69,9 @@ void MainWindow::goto3DScene()
     m_screenStack->setCurrentWidget(m_3DScene);
 
     m_3DScene->setLevelFile(QSettings().value("levelXML", "./models/level.xml").toString().toStdString());
-    //m_3DScene->loadLevel();
 }
 
-void MainWindow::goToScene2D()
+void MainWindow::gotoScene2D()
 {
     m_screenStack->setCurrentWidget(m_scene2d);
 }
@@ -112,10 +110,10 @@ void MainWindow::keyReleaseEvent(QKeyEvent* event)
 void MainWindow::setupConnections()
 {
   connect(ManageGame::getinstance(), &ManageGame::goto3DScene, this, &MainWindow::goto3DScene);
-  connect(ManageGame::getinstance(), &ManageGame::goToScene2D,this,&MainWindow::goToScene2D);
+  connect(ManageGame::getinstance(), &ManageGame::goToScene2D,this,&MainWindow::gotoScene2D);
   connect(m_startscreen, &StartScreen::gotoLoadingScreen, this, &MainWindow::gotoLoadingScreen);
   connect(m_startscreen, &StartScreen::closeWindow , this, &MainWindow::closeWindow);
-  connect(m_startscreen, &StartScreen::goTo2D, this, &MainWindow::goToScene2D);
+  connect(m_startscreen, &StartScreen::goTo2D, this, &MainWindow::gotoScene2D);
   connect(m_startscreen, &StartScreen::goto3DScene, this, &MainWindow::goto3DScene);
   //connect(m_startscreen, &StartScreen::gotoLoadingScreen, this, &MainWindow::goToLoadingScreen);
 }

@@ -36,27 +36,31 @@ protected:
 
 private:
     /**
-     * @brief handlePlanetSelection
+     * @brief handlePlanetSelection notifys the GraphicsPlanetItem to draw a blue selection circle,
+     * send a selection signal and store the pointer of it in the m_currently_selected pointer
+     * @param planet is the selected GraphicsPlanetItem
      */
     void handlePlanetSelection(GraphicsPlanetItem* planet);
 
     /**
-     * @brief handleMineSelection
+     * @brief handleMineSelection does nothing at the moment
      */
     void handleMineSelection();
 
     /**
-     * @brief handleFactorySelection
+     * @brief handleFactorySelection does nothing at the moment
      */
     void handleFactorySelection();
 
     /**
-     * @brief handleFighterSelection
+     * @brief handleFighterSelection notifies the GraphicsFighterItem to draw a blue slection circle
+     * and store the pointer of it in the m_currently_selected pointer
      */
     void handleFighterSelection(GraphicsFighterItem* fighter);
 
     /**
-     * @brief handleTransporterSelection
+     * @brief handleTransporterSelection notifies the GraphicsTransporterItem to draw a blue slection circle
+     * and store the pointer of it in the m_currently_selected pointer
      */
     void handleTransporterSelection(GraphicsTransporterItem* transporter);
 
@@ -80,11 +84,22 @@ private:
     void placeTransporter();
 
     /**
-     * @brief updateMap
+     * @brief updateMap updates the owner of each planet if required and adds the mine and factory icons
      */
     void updateMap();
 
+    /**
+     * @brief getAngle returns an angle between two points
+     * @param target point
+     * @param source point
+     * @return angle in degree
+     */
+    double getAngle(QPointF target, QPointF source);
 
+    /**
+     * @brief m_currentlySelected holds the pointer to the last selected GraphicsItem. Currently
+     * this pointer should only point to GraphicsFighterItem, GraphicsTransporterItem and GraphicsPlanetItem
+     */
     QGraphicsItem* m_currentlySelected;
 };
 

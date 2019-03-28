@@ -34,11 +34,13 @@ void GraphicsPlanetItem::paint(QPainter* painter, const QStyleOptionGraphicsItem
 
     painter->drawPixmap(0, 0, 50, 50, icon);
 
+    //draw HQ icon if required
     if (m_is_hq) {
-        icon = QIcon("./models/hq.svg").pixmap(20, 20);
+        icon = QIcon(setting.value("Dateipfade/HQ").toString()).pixmap(20, 20);
         painter->drawPixmap(15, 25, icon);
     }
 
+    //draw selection circle if required
     if(m_selected)
     {
         QRectF rect(0, 0, 52, 52);

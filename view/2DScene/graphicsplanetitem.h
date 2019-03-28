@@ -7,7 +7,7 @@
 namespace asteroids {
 /**
  * @brief The GraphicsFighterItem class represents a Planet ship as GraphicsItem
- * @author meversmeyer
+ * @author lkreienbrink & meversmeyer
  */
 class GraphicsPlanetItem : public QGraphicsItem
 {
@@ -52,16 +52,24 @@ public:
 
     /**
      * @brief setIsHQ
-     * @param flag
+     * @param flag true: draws with the next update an hq icon on the planet
      */
     void setIsHQ(bool flag);
 
+    /**
+     * @brief getOwner the current planet owner
+     * @return PlayerType
+     */
     PlayerType getOwner();
 
 private:
+    ///Planet owner
     PlayerType m_player;
+    ///Planet id
     int m_id;
+    ///selection flag
     bool m_selected;
+    ///HQ flag
     bool m_is_hq;
 };
 }

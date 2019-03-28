@@ -14,6 +14,7 @@ class GraphicsTransporterItem : public QObject, public QGraphicsItem
 {
     Q_OBJECT
     Q_PROPERTY(QPointF pos READ pos WRITE setPos)
+    Q_PROPERTY(qreal rotation READ rotation WRITE setRotation)
 public:
     GraphicsTransporterItem(int id);
 
@@ -58,8 +59,11 @@ public:
     void setOwner(PlayerType owner);
 
 private:
+    /// ower of this transporter
     PlayerType m_player;
+    ///transporter id
     int m_id;
+    ///selection flag
     bool m_selected;
 };
 }
