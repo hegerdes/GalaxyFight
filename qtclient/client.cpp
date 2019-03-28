@@ -279,14 +279,16 @@ void Client::interpreteAnswer() {
     QByteArray answer = socket.readAll();
     if (answer.length() > 0) {
         // std::cerr << socket.waitForBytesWritten() << "; waitForBytesWritten\n";
+        std::cerr << __LINE__ << ", " << __PRETTY_FUNCTION__ << "\n";
         socket.waitForBytesWritten();
         char* data = (char*) answer.data();
+        std::cerr << __LINE__ << ", " << __PRETTY_FUNCTION__ << "\n";
 
         PacketType pt = (PacketType) getChar(&data);
         // std::cerr << "pid: " << pt << ", length" << answer.length() << "\n";
         if (pt == PacketType::init_3D) {
             // Own
-            std::cerr << "\t" << __LINE__ << __FUNCTION__ << "\n";
+            std::cerr << "\t" << __LINE__ << __FUNCTION__ << "init_3d\n";
             init_3d(data);
             init_received = true;
         } else if (pt == PacketType::update_3D_S) {
@@ -311,6 +313,7 @@ void Client::interpreteAnswer() {
             std::cerr << "\t" << __LINE__ << __FUNCTION__ << "\n";
 
         }
+            std::cerr << "\t" << __LINE__ << __FUNCTION__ << "\n";
     }
     //std::cerr << __LINE__ << ", end_________" << __PRETTY_FUNCTION__ << "\n";
 }

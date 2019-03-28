@@ -103,11 +103,12 @@ bool Server::writeData(QByteArray const& data) {
     /*
     if(PacketType::update_3D_C == toSend){
         std::cerr << "\t" << __LINE__ << "\n";
-    } else */if( !user_data_1.m_first_connect || !user_data_2.m_first_connect)
+    } else if( !user_data_1.m_first_connect || !user_data_2.m_first_connect)
     {
         std::cerr << "\t" << __LINE__ << __FUNCTION__ << "\n";
         return false;
     }
+	*/
 
     std::cerr << "\t" << __LINE__ << __FUNCTION__ << "\n";
     //determine which packet has to be send
@@ -133,10 +134,10 @@ bool Server::writeData(QByteArray const& data) {
         user_data_2.yAxis[1] = 1;
         user_data_2.zAxis[2] = 1;
         user_data_2.shot = Bullet_shot::not_shot;
-        std::cerr << "\t" << __LINE__ << __FUNCTION__ << "\n";
+        std::cerr << "\t" << __LINE__ << __FUNCTION__ << " init_3D \n";
         bool bytes_written_1 = false;
         sendInit_3D(response, socket_1);
-        if (socket_1->state() == QAbstractSocket::ConnectedState) {
+        if ( socket_1->state() == QAbstractSocket::ConnectedState) {
         std::cerr << "\t" << __LINE__ << __FUNCTION__ << "\n";
             socket_1->write(response); // write the data itself
             bytes_written_1 = socket_1->waitForBytesWritten();
@@ -147,7 +148,7 @@ bool Server::writeData(QByteArray const& data) {
         bool bytes_written_2 = false;
         QByteArray response_2;
         sendInit_3D(response_2, socket_2);
-        if (socket_2->state() == QAbstractSocket::ConnectedState) {
+        if ( socket_2->state() == QAbstractSocket::ConnectedState) {
         std::cerr << "\t" << __LINE__ << __FUNCTION__ << "\n";
             socket_2->write(response_2); // write the data itself
             bytes_written_2 = socket_2->waitForBytesWritten();
@@ -159,11 +160,11 @@ bool Server::writeData(QByteArray const& data) {
         std::cerr << "\t" << __LINE__ << __FUNCTION__ << " written both init_3d_packets\n";
         return true;
     } else if(toSend == PacketType::game_start){
-        std::cerr << "\t" << __LINE__ << __FUNCTION__ << "\n";
+        std::cerr << "\t" << __LINE__ << __FUNCTION__ << " game_start\n";
         bool bytes_written_1 = false;
-        sendGame_Start(response, socket_1);
-        if (socket_1->state() == QAbstractSocket::ConnectedState) {
-        std::cerr << "\t" << __LINE__ << __FUNCTION__ << "\n";
+        if ( socket_1 == socket && socket_1->state() == QAbstractSocket::ConnectedState) {
+            sendGame_Start(response, socket_1);
+            std::cerr << "\t" << __LINE__ << __FUNCTION__ << " socket_1\n";
             socket_1->write(response); // write the data itself
             bytes_written_1 = socket_1->waitForBytesWritten();
         } else {
@@ -171,10 +172,10 @@ bool Server::writeData(QByteArray const& data) {
         }
 
         bool bytes_written_2 = false;
-        QByteArray response_2;
-        sendGame_Start(response_2, socket_2);
-        if (socket_2->state() == QAbstractSocket::ConnectedState) {
-        std::cerr << "\t" << __LINE__ << __FUNCTION__ << "\n";
+        if ( socket_2 == socket && socket_2->state() == QAbstractSocket::ConnectedState) {
+            QByteArray response_2;
+            sendGame_Start(response_2, socket_2);
+            std::cerr << "\t" << __LINE__ << __FUNCTION__ << " socket_2\n";
             socket_2->write(response_2); // write the data itself
             bytes_written_2 = socket_2->waitForBytesWritten();
         } else {
@@ -182,12 +183,12 @@ bool Server::writeData(QByteArray const& data) {
         }
 
         //return bytes_written_1 && bytes_written_2;
-        std::cerr << "\t" << __LINE__ << __FUNCTION__ << " written both game_start_packets\n";
+        std::cerr << "\t" << __LINE__ << __FUNCTION__ << " written game_start_packet\n";
         return true;
     }
 
     if (socket->state() == QAbstractSocket::ConnectedState) {
-        std::cerr << "\t" << __LINE__ << __FUNCTION__ << "\n";
+        std::cerr << "\t" << __LINE__ << __FUNCTION__ << " data written\n";
         socket->write(response); // write the data itself
         return socket->waitForBytesWritten();
     } else {
@@ -217,7 +218,7 @@ void Server::sendUpdate_3D_S(QByteArray& response, QTcpSocket* socket) {
     response.append((char*) &client_data_temp.yAxis, 3 * 4);
     response.append((char*) &client_data_temp.zAxis, 3 * 4);
 
-    response.append(2, char{}); // anzahl zerstörter asteroidend short eine shor null
+    response.append(2, char{}); // anzahl zerstörter asteroidend short eine shor null @ahaker @ahaker
     // Asteroiden ids wenn nötig > 0
 
     response.append(client_data_temp.shot);
@@ -255,8 +256,8 @@ void Server::recvUpdate_3D_C(char* data, QTcpSocket* socket) {
     // std::cout << client_data_temp.zAxis << std::endl;
 
     client_data_temp.shot = (Bullet_shot) getChar(&data);
-    client_data_temp.living = (Living) getChar(&data);
     client_data_temp.bullet_id = getInt(&data);
+    client_data_temp.living = (Living) getChar(&data);
 
     if (socket_1 == socket) {
         user_data_1 = client_data_temp;
@@ -548,21 +549,28 @@ void Server::recv_end_3D(char* data, QTcpSocket* socket){
     player_no player_no_temp = (player_no) getChar(&data);
     std::cerr << "\t" << __LINE__ << __FUNCTION__ << ", player_no" << player_no_temp << ", winner_loser: " << winner_loser << "\n";
     //if(!m_player1_end_3d_received && (player_no::winner == winner_loser)){
-    if((player_no::winner == winner_loser)){
+    if((player_no::winner == winner_loser) &&  (player1_outstanding_fights.size() > 0)){
         std::cerr << "\t" << __LINE__ << "\n";
         if(player_no_temp == player_no::first)
         {
+        std::cerr << "\t" << __LINE__ << "\n";
             player1_outstanding_fights.front().m_own = asteroids::PlanetChanges::Owner::PLAYER1;
+        std::cerr << "\t" << __LINE__ << "\n";
             pchanges_committ.push_back(player1_outstanding_fights.front());
+        std::cerr << "\t" << __LINE__ << "\n";
         } else {
+        std::cerr << "\t" << __LINE__ << "\n";
             player2_outstanding_fights.front().m_own = asteroids::PlanetChanges::Owner::PLAYER2;
+        std::cerr << "\t" << __LINE__ << "\n";
             pchanges_committ.push_back(player2_outstanding_fights.front());
+        std::cerr << "\t" << __LINE__ << "\n";
         }
         auto it1 = player1_outstanding_fights.begin();
         player1_outstanding_fights.erase(it1);
         auto it2 = player2_outstanding_fights.begin();
         player2_outstanding_fights.erase(it2);
         m_player1_end_3d_received = true;
+        std::cerr << "\t" << __LINE__ << "\n";
     } else {
         /*
         std::cerr << "\t" << __LINE__ << "\n";

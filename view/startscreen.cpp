@@ -67,7 +67,7 @@ void StartScreen::on_playBut_clicked()
        auto game_inst = ManageGame::getinstance();
        std::cerr << "\t" << __LINE__ << __FUNCTION__ << "\n";
        bool end_loop = false;
-        while(!end_loop)
+       while( client_global.player_No == player_no::unassigned )
         {
             std::cerr << "\t" << __LINE__ << __FUNCTION__ << "\n";
             end_loop = client_global.wait_for_readData(500);

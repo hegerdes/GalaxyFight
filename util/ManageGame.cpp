@@ -493,6 +493,7 @@ void ManageGame::next_round()
         client_global.rerequest_planet_changes();
         client_global.wait_for_readData(100);
         if(client_global.init_received){
+            client_global.wait_for_readData(500);
             emit goto3DScene();
             break;
         }else if (client_global.m_planet_changes_received) {
@@ -504,7 +505,7 @@ void ManageGame::next_round()
     }
     //client_global.send_reset_planet_changes(); @ahaker beim merge wegefallen
     //client_global.m_planet_changes_received = false; @ahaker beim merge wegefallen
-    //client_global.wait_for_readData(100);
+    client_global.wait_for_readData(100);
     std::cerr << "\t" << __LINE__ << __FUNCTION__<< "\n";
     std::cerr << "\t" << __LINE__ << __FUNCTION__<< " p_changes_current.size(): " << client_global.p_changes_current.size() << "\n";
     // @ahaker apply all changes
@@ -514,6 +515,11 @@ void ManageGame::next_round()
         //Applay changes
         m_planets.at((unsigned long)it_c->getID())->updatePlanet(std::make_shared<PlanetChanges>(*(it_c)));
     }
+
+        updateStats();
+        emit updateScene();
+        std::cerr << "\t " << __LINE__ << __FUNCTION__ << " updateScene called " << __LINE__ << std::endl;
+        emit updateInfobar();
 }
 
 void ManageGame::planet_apply_updates()

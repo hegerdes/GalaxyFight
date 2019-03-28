@@ -120,7 +120,6 @@ void GLWidget::initializeGL()
 
 void GLWidget::loadLevel()
 {
-    active = true;
     // Load level
     //LevelParser lp(m_levelFile, m_actor, m_enemyPlayer, m_skybox, m_asteroidField);
     LevelParser lp("./models/level.xml", m_actor, m_enemyPlayer, m_skybox, m_asteroidField);
@@ -156,6 +155,7 @@ void GLWidget::loadLevel()
     //setzen dummy variablen
     hp_actor = 10;
     hp_enemy = 10;
+    //active = true;
 }
 
 void GLWidget::paintGL()
