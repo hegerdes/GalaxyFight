@@ -2,6 +2,7 @@
 #define LOOSINGSCREEN_H
 
 #include <QWidget>
+#include "init_file.h"
 
 namespace Ui {
 class loosingscreen;
