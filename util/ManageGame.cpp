@@ -270,8 +270,6 @@ void ManageGame::change_Fighter_position(int new_position, int attackSpaceCraft_
                 auto tmp = m_planetmap->getPath((*i)->m_position, new_position);
                 if(tmp.size() == 2)
                 {
-                    (*i)->m_next_position = new_position;
-                    (*i)->m_change_position = true;
 
                     if(m_planets[new_position]->getOwner() == PlanetChanges::UNASSIGN)
                     {
@@ -291,6 +289,12 @@ void ManageGame::change_Fighter_position(int new_position, int attackSpaceCraft_
                         }
                         m_round_changes_map[(*i)->m_position]->setFighter(-1);
 
+                        if((*i)->m_change_position)
+                        {
+                            m_round_changes_map[(*i)->m_next_position]->setFighter(-1);
+                            m_round_changes_map[(*i)->m_next_position]->setOwner(PlanetChanges::UNASSIGN);
+                        }
+
                     }else if (m_planets[new_position]->getOwner() != m_player_id)
                     {
                         //Check for alrady existing change for this planet
@@ -308,6 +312,12 @@ void ManageGame::change_Fighter_position(int new_position, int attackSpaceCraft_
                             m_round_changes_map[(*i)->m_position] = std::make_shared<PlanetChanges>(PlanetChanges((*i)->m_position));
                         }
                         m_round_changes_map[(*i)->m_position]->setFighter(-1);
+
+                        if((*i)->m_change_position)
+                        {
+                            m_round_changes_map[(*i)->m_next_position]->setFighter(-1);
+                            m_round_changes_map[(*i)->m_next_position]->setInitFight(false);
+                        }
                     }
                     else
                     {
@@ -327,12 +337,21 @@ void ManageGame::change_Fighter_position(int new_position, int attackSpaceCraft_
                             }
                             m_round_changes_map[(*i)->m_position]->setFighter(-1);
 
+                            if((*i)->m_change_position)
+                            {
+                                m_round_changes_map[(*i)->m_next_position]->setFighter(-1);
+                            }
+
                         }
                         else
                         {
                             emit changeRouteError();
                         }
                     }
+
+                    (*i)->m_next_position = new_position;
+                    (*i)->m_change_position = true;
+
                     break;
                 }
                 else
