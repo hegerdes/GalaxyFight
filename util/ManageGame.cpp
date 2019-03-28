@@ -356,6 +356,7 @@ void ManageGame::next_round()
         //Update all Ore and Stored ore on PlayerChanges
         for (auto it_p = m_planets.begin(); it_p != m_planets.end(); it_p++)
         {
+                         (*it_p)->printPlanet();
             if((*it_p)->getOwner() == m_player_id)
             {
                 if((*it_p)->getOre() >= setting.value("Resourcen/Abbaurate").toInt() * (*it_p)->getMine())
@@ -745,8 +746,6 @@ void ManageGame::initialize_player(PlanetChanges::Owner player_id, int planet_id
         m_player_id = player_id;
         m_base = planet_id;
         std::cerr << "\t" << __LINE__ << __FUNCTION__ << ", m_player_id: " << m_player_id << ", m_base: " << m_base << "\n";
-        //TODO For DEBUG @ahaker
-        //m_player_id = PlanetChanges::UNASSIGN;
 
         //set Satrt planet Owner
         //This is HQ
@@ -759,6 +758,9 @@ void ManageGame::initialize_player(PlanetChanges::Owner player_id, int planet_id
             change2->setOwner(PlanetChanges::PLAYER2);
             m_planets.at((unsigned long)planet_id)->updatePlanet(change1);
             m_planets.at((unsigned long)m_planetmap->getNumberOfPlanets() -1)->updatePlanet(change2);
+            std::cerr << "-------------" << m_player_id << "-----------------\n";
+            std::cerr << "-------------" << m_base << "-----------------\n";
+            std::cerr << "-------------" << planet_id << "-----------------\n";
         }
         if(player_id == PlanetChanges::PLAYER2)
         {
@@ -769,6 +771,9 @@ void ManageGame::initialize_player(PlanetChanges::Owner player_id, int planet_id
             change2->setStoredOre(m_current_resource);
             m_planets.at((unsigned long)planet_id)->updatePlanet(change1);
             m_planets.at((unsigned long)m_planetmap->getNumberOfPlanets() -1)->updatePlanet(change2);
+            std::cerr << "-------------" << m_player_id << "-----------------\n";
+            std::cerr << "-------------" << m_base << "-----------------\n";
+            std::cerr << "-------------" << planet_id << "-----------------\n";
         }
 
     std::cerr << "\t" << __LINE__ << __FUNCTION__ << "\n";

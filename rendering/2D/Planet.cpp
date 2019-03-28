@@ -30,6 +30,9 @@ int Planet::init()
     m_num_of_ore = setting.value("Resourcen/Planetenerz").toInt();
     m_stored_ore = 0;
     m_owned = PlanetChanges::UNASSIGN;
+    if( 0 == m_id){
+        m_owned = PlanetChanges::PLAYER1;
+    }
     return 1;
 }
 
