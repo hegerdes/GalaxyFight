@@ -3,6 +3,7 @@
 
 #include <QWidget>
 #include <QSettings>
+#include "init_file.h"
 
 namespace Ui {
 class LoadingScreen;
