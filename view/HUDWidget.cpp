@@ -10,19 +10,19 @@ namespace asteroids
 
     void HUDWidget::paintEvent(QPaintEvent* event)
     {
-        //HP-Balken
+        ///HP-Balken
         QRect leftHP;
         QRect rightHP;
         
-        //Durchsichtige Rechtecke auf denen der Name der Spieler steht
+        ///Durchsichtige Rechtecke auf denen der Name der Spieler steht
         QRect textLeftHP;
         QRect textRightHP;
         
-        //Rechteck für Geschwindigkeit des Spielers
+        ///Rechteck für Geschwindigkeit des Spielers
         QRect velocityBar;
         QRect textVelocityBar;
         
-        //Rechteck für die Distanz zum Gegner
+        ///Rechteck für die Distanz zum Gegner
         QRect distanceBarLeft;
         QRect distanceBarRight;
         QRect textDistanceBar;
@@ -32,18 +32,18 @@ namespace asteroids
         QRect crossHair[4];
         QRect fullScreen;
 
-        //Rechteck in dem Sieges/Niederlage/Alaramnachricht steht
+        ///Rechteck in dem Sieges/Niederlage/Alaramnachricht steht
         QRect onScreenMessage;
 
-        //Rechteck indem ein Kreis sitzt der anzeigt ob ein Schuß bereit ist
+        ///Rechteck indem ein Kreis sitzt der anzeigt ob ein Schuß bereit ist
         QRect shotReadyRect;
         
-        //Berechnet Distanz; diese wird später in der textDistanceBar ausgegeben
+        ///Berechnet Distanz; diese wird später in der textDistanceBar ausgegeben
         Vector3f posMyShip = m_myShip->getPosition();
         Vector3f posEnemyShip = m_enemyShip->getPosition();
         float distance = sqrt(pow(posEnemyShip[0] - posMyShip[0],2) + pow(posEnemyShip[1] - posMyShip[1],2) + pow(posEnemyShip[2] - posMyShip[2],2));
         
-        //Distanzfunktion die zum Bewegen der Distanzanzeige benutzt wird
+        ///Distanzfunktion die zum Bewegen der Distanzanzeige benutzt wird
         float distanceFunction =1/(log(distance/100 +2));
         
         if(!m_firstPerson)
@@ -59,7 +59,8 @@ namespace asteroids
             leftHP = QRect(2.01*width()/9, height()*90.5/100, width()/6 * m_myShip->getHP()/10, height()/15);
             rightHP = QRect(5.5*width()/9 + (width()/6-width()/6 * m_enemyShip->getHP()/10), height()*90.5/100, width()/6 * m_enemyShip->getHP()/10, height()/15);
             velocityBar = QRect(3.75*width()/9, height()*90.5/100, width()/6 * m_myShip->getCurrentSpeed()/m_myShip->getMaxSpeed() , height()/15);            
-                        
+            
+            ///Textbalken die über den Anzeigebalken liegen müssen, damit die Schrift nicht mit den Anzeigen mitskaliert bei Änderungen
             textLeftHP = QRect(2.01*width()/9, height()*90.5/100, width()/6 * 1, height()/15);
             textRightHP = QRect(5.5*width()/9 + (width()/6-width()/6 * 1), height()*90.5/100, width()/6 * 1, height()/15);
             textVelocityBar = QRect(3.75*width()/9, height()*90.5/100, width()/6 , height()/15);
@@ -74,9 +75,7 @@ namespace asteroids
             m_p.begin(this);
             m_p.drawImage(fullScreen, m_cockpit);
             m_p.end();
-        }
-
-        
+        }       
 
         crossHair[0] = QRect(width()/2 - crossHairH/2 - crossHairH, height()/2 - crossHairW/2, crossHairH, crossHairW);
         crossHair[1] = QRect(width()/2 - crossHairH/2 + crossHairH, height()/2 - crossHairW/2, crossHairH, crossHairW);
@@ -85,35 +84,32 @@ namespace asteroids
         
         m_p.begin(this);
         
-        //Färbt die AnzeigeBars ein
+        ///Färbt die AnzeigeBars ein
         m_p.fillRect(leftHP, QColor(0, 100, 0));
         m_p.fillRect(rightHP, QColor(155, 0, 0));
         m_p.fillRect(velocityBar, QColor(255,165,0));
         
-        //Erstellt die DistanceBars
+        ///Erstellt die DistanceBars
         m_p.fillRect(distanceBarLeft, QColor(0, 100, 200));
-        m_p.fillRect(distanceBarRight, QColor(0, 100, 200));
-
+        m_p.fillRect(distanceBarRight, QColor(0, 100, 200));  
         
-        
-
         for(QRect r : crossHair)
         {
             m_p.fillRect(r, QColor(0, 100, 0));
         }
         
-        //Schreibt Namen der Spieler in HP-Bars
+        ///Schreibt Namen der Spieler in HP-Bars
         m_p.setPen(Qt::white);
         m_p.setFont(QFont("liberation",15,99));
         m_p.drawText(textLeftHP, Qt::AlignCenter,"Player 1");
         m_p.drawText(textRightHP, Qt::AlignCenter,"Player 2");
         
-        //Schreibt die momentane Geschwindigkeit auf die Velocity Bar
+        ///Schreibt die momentane Geschwindigkeit auf die Velocity Bar
         int currentSpeedInt = m_myShip->getCurrentSpeed()/m_myShip->getMaxSpeed() * 100;
         string currentSpeedString = std::to_string(currentSpeedInt) + "%";
         m_p.drawText(textVelocityBar, Qt::AlignCenter, QString::fromStdString(currentSpeedString));
 
-        //Schreibt Distanz zum Gegner in die textDistanceBar
+        ///Schreibt Distanz zum Gegner in die textDistanceBar
         int distance_int = distance;
         m_p.drawText(textDistanceBar, Qt::AlignCenter, QString::number(distance_int));
         
@@ -124,12 +120,10 @@ namespace asteroids
         auto value = now_ms.time_since_epoch();
         long longNow = value.count();  
 
-        //Erstellt den Schußanzeige Button
-        
-        //TODO: 500 ist die Schusfrequenz. Getter dafür bauen !!
+        ///Erstellt den Schußanzeige Button
         m_p.begin(this);
-        //std::cout << m_lastBulletShot << std::endl;
         
+        ///Kriegen wir vom GLWidget eine -1, wird die Leertaste durchgedrückt
         if(m_lastBulletShot == -1 )
         {
             m_p.setBrush(QColor(255,165,0));
@@ -138,6 +132,7 @@ namespace asteroids
             m_p.setFont(QFont("liberation",19,99));
             m_p.drawText(shotReadyRect, Qt::AlignCenter,"RAPID");
         }
+        ///Sind 500ms vergangengen, darf wieder geschoßen werden
         else if(longNow - m_lastBulletShot > 500)
         {               
             m_p.setBrush(QColor(100,200,0));
@@ -146,6 +141,7 @@ namespace asteroids
             m_p.setFont(QFont("liberation",19,99));
             m_p.drawText(shotReadyRect, Qt::AlignCenter,"SHOOT");
         }
+        ///Sind 500ms noch nicht vergangen, kriegt der Spieler die Nachricht "WAIT"
         else if(longNow - m_lastBulletShot < 500)
         {
             m_p.setBrush(QColor(255,0,0));
@@ -157,7 +153,7 @@ namespace asteroids
         
         m_p.end();
 
-        //Gibt eine Siegesnachricht aus, wenn das Gegnerraumschiff zerstört wurde
+        ///Gibt eine Siegesnachricht aus, wenn das Gegnerraumschiff zerstört wurde
         if(m_enemyShip->getHP() == 0 && m_myShip->getHP() != 0)
         {
             m_p.begin(this);
@@ -167,7 +163,7 @@ namespace asteroids
             m_p.drawText(onScreenMessage, Qt::AlignCenter,"VICTORY");
             m_p.end();
         }
-        //Gibt eine Niederlagenachricht aus, wenn das eigene Schiff zerstört wurde
+        ///Gibt eine Niederlagenachricht aus, wenn das eigene Schiff zerstört wurde
         else if(m_myShip->getHP() == 0 && m_enemyShip->getHP() != 0)
         {
             m_p.begin(this);
@@ -177,7 +173,7 @@ namespace asteroids
             m_p.drawText(onScreenMessage, Qt::AlignCenter,"DEFEAT");
             m_p.end();
         } 
-        //Zeigt eine Alarmnachricht wenn die HP unter 3 sind
+        ///Zeigt eine Alarmnachricht wenn die HP unter 3 sind
         else if(m_myShip->getHP() < 3 && m_myShip->getHP() != 0)
         {
                 if((longNow - m_lastAlert > 2000 ) || (m_lastAlert + 1000 >= longNow)){
@@ -190,15 +186,9 @@ namespace asteroids
                 if(!(m_lastAlert + 1000 >= longNow))
                 {
                     m_lastAlert = longNow;
-                }
-                
-
+                }       
             }
         }      
-        
-
-
-
     }
 
     void HUDWidget::setBulletReady(long lastBulletShot)

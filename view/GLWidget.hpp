@@ -59,7 +59,6 @@ protected:
     /// Init OpenGL
     virtual void initializeGL() override;
 
-
     /// Render scene
     virtual void paintGL() override;
 
@@ -78,15 +77,12 @@ private:
     Camera						m_camera;
 
     /// Health Bar for player 1
-
     HealthBar::Ptr              m_playerHPBar;
 
-    /// Health Bar for player 2HUDWidget
-    
+    /// Health Bar for player 2HUDWidget    
     HealthBar::Ptr              m_enemyHPBar;
 
     ///Crosshair for aiming
-
     Crosshair::Ptr              m_crossHair;
 
     /// A pointer to the Actor
@@ -129,6 +125,7 @@ private:
     
     /// First Person-Modus und First Person Toggleable(verhindert rumspringen bei gedrückter V-Taste)
     bool                        m_firstPerson;
+    
     bool                        m_firstPersonAble;
 
     bool                        m_rapidFire;
@@ -139,7 +136,6 @@ private:
     /// Layout for displaying the HUD
     QStackedLayout              m_layout;
 
-    int                         counter;
 };
 
 #endif

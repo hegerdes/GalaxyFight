@@ -13,10 +13,15 @@ GLWidget::GLWidget(QWidget* parent)
       m_moveSpeed(5.0),
       m_lastBullet(0),
       active(false),
-      m_schussFrequenz(500), m_firstPerson(false), m_firstPersonAble(true), m_hud(this), m_rapidFire(false)
+      m_schussFrequenz(500), 
+      m_firstPerson(false), 
+      m_firstPersonAble(true), 
+      m_hud(this), 
+      m_rapidFire(false)
 {
     m_layout.addWidget(&m_hud);
     setLayout(&m_layout);
+    //Notwendig, damit Qt nicht Leertaste und Pfeiltasteneingaben frisst
     setFocusPolicy(Qt::StrongFocus);
 }
 
@@ -121,9 +126,7 @@ void GLWidget::loadLevel()
 {
     active = true;
     // Load level
-    //LevelParser lp(m_levelFile, m_actor, m_enemyPlayer, m_skybox, m_asteroidField);
     LevelParser lp("./models/level.xml", m_actor, m_enemyPlayer, m_skybox, m_asteroidField);
-
 
     // Setup physics//
     m_physicsEngine = make_shared<PhysicsEngine>();
@@ -134,20 +137,7 @@ void GLWidget::loadLevel()
 
     m_crossHair = make_shared<Crosshair>(0.0f, 100.0f/255.0f, 0.0f, width(), height());
 
-    // Add asteroids to physics engine
-
-    /* MANAGED IN init_3d
-    std::list<Asteroid::Ptr> asteroids;
-    m_asteroidField->getAsteroids(asteroids);
-    for (auto it = asteroids.begin(); it != asteroids.end(); it++)
-    {
-        PhysicalObject::Ptr p = std::static_pointer_cast<PhysicalObject>(*it);
-        m_physicsEngine->addDestroyable(p);
-    } 
-    }
-    */
-
-    //Fügt das Raumschiff der Engine hinzu, damit es richtig explodieren kann
+    ///Fügt die Raumschiffe der Engine hinzu, damit sie richtig explodieren können
     m_physicsEngine->addSpaceCraft(m_actor);
     m_physicsEngine->addEnemyPlayer(m_enemyPlayer);
     m_hud.setSpacecraft(m_actor);
@@ -178,13 +168,6 @@ void GLWidget::paintGL()
     }
     m_enemyPlayer->render();
 
-    //Debug/Testline
-    //m_enemyPlayer->setPosition(Vector<float>(100,100,100));
-//    m_playerHPBar->render();
-
-  //  m_enemyHPBar->render();
-
-//    m_crossHair->render();
     }
 }
 

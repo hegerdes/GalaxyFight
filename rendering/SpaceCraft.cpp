@@ -73,6 +73,7 @@ void SpaceCraft::endDestruction()
 {
     m_status = 2;
 }
+
 void SpaceCraft::accelerate()
 {
     m_currentSpeed += m_maxSpeed * 0.025;
@@ -189,6 +190,11 @@ void SpaceCraft::gotHit()
          destroySpaceCraft();
          
     }
+}
+
+int SpaceCraft::getHP()
+{
+    return m_hp;
 }
 
 SpaceCraft::~SpaceCraft()
