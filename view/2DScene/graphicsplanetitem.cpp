@@ -6,7 +6,7 @@
 
 namespace asteroids {
 
-GraphicsPlanetItem::GraphicsPlanetItem(int id): m_id(id), m_selected(false), m_is_hq(false)
+GraphicsPlanetItem::GraphicsPlanetItem(size_t id): m_id(id), m_selected(false), m_is_hq(false)
 {
 
 }
@@ -51,7 +51,7 @@ void GraphicsPlanetItem::paint(QPainter* painter, const QStyleOptionGraphicsItem
     }
 }
 
-int GraphicsPlanetItem::getID()
+size_t GraphicsPlanetItem::getID()
 {
     return m_id;
 }

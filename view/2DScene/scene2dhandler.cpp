@@ -192,8 +192,8 @@ void Scene2dHandler::placeFighter()
         bool foundFlag = false;
         //get current GraphicsItem
         for(auto& item : itemList) {
-            if(item->type() == ItemTypes::Fighter && ((GraphicsFighterItem*)item)->getID() == fighter->m_id) {
-                auto pos = planets[fighter->m_next_position]->getPos();
+            if(item->type() == ItemTypes::Fighter && (static_cast<GraphicsFighterItem*>(item))->getID() == fighter->m_id) {
+                auto pos = planets[static_cast<size_t>(fighter->m_next_position)]->getPos();
                 foundFlag = true;
 
                 //add updated fighter to list
@@ -211,7 +211,7 @@ void Scene2dHandler::placeFighter()
                 animationRot->setDuration(500);
                 animationRot->setStartValue(item->rotation());
                 //It is rotated so that the top is directed to the target
-                animationRot->setEndValue(getAngle(QPointF(pos[0], pos[1]), item->pos()) + 90);
+                animationRot->setEndValue(getAngle(QPointF(pos[0],pos[1]), item->pos()) + 90);
 
                 QParallelAnimationGroup *group = new QParallelAnimationGroup;
                 group->addAnimation(animationPos);
@@ -225,7 +225,7 @@ void Scene2dHandler::placeFighter()
         //if no fighter found, create a new one
         if(!foundFlag) {
             auto newFighter = new GraphicsFighterItem(fighter->m_owner, fighter->m_id);
-            auto pos = planets[fighter->m_position]->getPos();
+            auto pos = planets[static_cast<size_t>(fighter->m_position)]->getPos();
             newFighter->setPos(pos[0] - 20, pos[1] - 20);
             addItem(newFighter);
 
@@ -258,7 +258,7 @@ void Scene2dHandler::placeTransporter()
         for(auto& item : itemList) {
             //move fighter if planet changed
             if(item->type() == ItemTypes::Transporter && static_cast<GraphicsTransporterItem*>(item)->getID() == transporter->m_id) {
-                auto pos = planets[transporter->m_next_position]->getPos();
+                auto pos = planets[static_cast<size_t>(transporter->m_next_position)]->getPos();
                 static_cast<GraphicsTransporterItem*>(item)->setOwner(transporter->m_owner);
                 foundFlag = true;
 
@@ -274,8 +274,9 @@ void Scene2dHandler::placeTransporter()
                 animationRot->setDuration(500);
                 animationRot->setStartValue(item->rotation());
                 //It is rotated so that the top is directed to the target
-                animationRot->setEndValue(getAngle(QPointF(pos[0], pos[1]), item->pos()) + 90);
+                animationRot->setEndValue(getAngle(QPointF(pos[0],pos[1]), item->pos()) + 90);
 
+                //groue and start animations
                 QParallelAnimationGroup *group = new QParallelAnimationGroup;
                 group->addAnimation(animationPos);
                 group->addAnimation(animationRot);
@@ -287,7 +288,7 @@ void Scene2dHandler::placeTransporter()
         //if no transporter found, create a new one
         if(!foundFlag) {
             auto newTransporter = new GraphicsTransporterItem(transporter->m_id);
-            auto pos = planets[transporter->m_position]->getPos();
+            auto pos = planets[static_cast<size_t>(transporter->m_position)]->getPos();
             newTransporter->setPos(pos[0] + 50, pos[1] + 50);
             newTransporter->setOwner(transporter->m_owner);
             addItem(newTransporter);
@@ -304,6 +305,7 @@ void Scene2dHandler::updateMap()
     auto planets = map->getPlanets();
     auto itemList = items();
 
+    //update owner of each planet
     for(auto& item : itemList) {
         if (item->type() == ItemTypes::Planet) {
             static_cast<GraphicsPlanetItem*>(item)->setOwner(planets[static_cast<GraphicsPlanetItem*>(item)->getID()]->getOwner());

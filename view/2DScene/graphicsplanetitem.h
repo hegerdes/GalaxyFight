@@ -13,10 +13,10 @@ class GraphicsPlanetItem : public QGraphicsItem
 {
 //    Q_OBJECT
 public:
-    GraphicsPlanetItem(int id);
+    GraphicsPlanetItem(size_t id);
 
     /**
-     * @brief boundingRect
+     * @brief boundingRect size of this graphicsItem
      * @return
      */
     QRectF boundingRect() const override;
@@ -36,7 +36,7 @@ public:
      * @brief getID
      * @return
      */
-    int getID();
+    size_t getID();
 
     /**
      * @brief selected
@@ -66,7 +66,7 @@ private:
     ///Planet owner
     PlayerType m_player;
     ///Planet id
-    int m_id;
+    size_t m_id;
     ///selection flag
     bool m_selected;
     ///HQ flag
