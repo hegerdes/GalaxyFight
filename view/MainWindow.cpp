@@ -56,6 +56,9 @@ MainWindow::MainWindow(QWidget* parent) :
     connect(m_timer.get(), SIGNAL(timeout()), this, SLOT(handleInput()));
     m_timer->start(1000 / 30.0);
     setupConnections();
+    SoundFactory::instance().getSound("soundtrack")->setLoopCount(QSoundEffect::Infinite);
+    SoundFactory::instance().getSound("soundtrack")->play();   
+    
 }
 
 void MainWindow::handleInput()
@@ -65,7 +68,7 @@ void MainWindow::handleInput()
 
 void MainWindow::gotoStartScreen()
 {
-    m_screenStack->setCurrentWidget(m_startscreen);
+    m_screenStack->setCurrentWidget(m_startscreen);    
 }
 
 void MainWindow::goto3DScene()
@@ -116,6 +119,11 @@ void MainWindow::keyPressEvent(QKeyEvent* event)
     if (event->key() == Qt::Key_Escape)
     {
         close();
+    }
+
+    if(event->key() == Qt::Key_M)
+    {
+        SoundFactory::instance().muteAll();                
     }
 }
 

@@ -30,6 +30,7 @@
 #include "settingwindow.h"
 #include "winningscreen.h"
 #include "loosingscreen.h"
+#include "io/SoundFactory.hpp"
 
 
 namespace asteroids

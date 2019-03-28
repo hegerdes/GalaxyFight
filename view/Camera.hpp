@@ -54,17 +54,8 @@ public:
      *        and lookAt at (0, 0, -1)
      * 
      * @param position      Initial position
-     * @param turnSpeed     Turning speed in radians per call
-     * @param moveSpeed     Move speed in world units per call
      */
-    Camera(const Vector3f& position, const float& turnSpeed, const float& moveSpeed);
-
-    /**
-     * @brief Moves the camera according to given direction
-     * 
-     * @param dir           Moving direction
-     */
-    void move(const CameraMovement& dir);
+    Camera(const Vector3f& position);
 
     /**
      * @brief Moves the camera behind the given spacecraft
@@ -73,35 +64,18 @@ public:
      */ 
      void follow(SpaceCraft::Ptr s);
 
-     /**
-     * @brief turns the camera according to given direction
-     * 
-     * @param dir           Moving direction
-     */
-    void turn(const CameraMovement& dir);
-
     /**
      * @brief Calls gluLookAt with the internal parameters
      * 
      */
     void apply();
-	void applyRotationOnly();
 
     /**
-     * @brief Set the turn speed  of the camera
+     * @brief Set the view state of the camera(first or third person)
      * 
-     * @param speed         The new turn speed
+     * @param firstPerson   The new state(first person = true, third person = false)
      */
-    void setTurnSpeed(const float& speed) { m_turnSpeed = speed;}
-
-    /**
-     * @brief Set the move speed  of the camera
-     * 
-     * @param speed         The new move speed
-     */
-    void setMoveSpeed(const float& speed) { m_moveSpeed = speed;}
-
-    void setFirstPerson(const bool b) {m_firstPerson = b;}
+    void setFirstPerson(const bool firstPerson) {m_firstPerson = firstPerson;}
     
 private:
     /// View up vector
@@ -113,12 +87,7 @@ private:
     /// Position of the camera
     Vector3f  m_position;
 
-    /// Turn speed in radians per call
-    float   m_turnSpeed;
-
-    /// Move speed in world units per call
-    float   m_moveSpeed;
-
+    /// Current viewing state
     bool    m_firstPerson;
 };
 

@@ -92,8 +92,10 @@ find_package( Qt5
     Widgets
     Concurrent
     OpenGL
+    Multimedia
     REQUIRED
 )
+find_package(Qt5Multimedia REQUIRED)
 
 include_directories(${Qt5Widgets_INCLUDE_DIRS})
 include_directories(${Qt5Concurrent_INCLUDE_DIRS})
@@ -128,6 +130,7 @@ set(ASTEROID_SOURCES
     io/TextureFactory.cpp
     io/TriangleMeshFactory.cpp
     io/LevelParser.cpp
+    io/SoundFactory.cpp
     math/Matrix.cpp
     math/Quaternion.cpp
     math/Randomizer.cpp
@@ -230,6 +233,9 @@ add_executable(asteroids
     ${ASTEROID_MOCS}
     ${ASTEROID_UI_HDRS}
 )
+
+qt5_use_modules(asteroids Multimedia)
+
 ###############################################################################
 # External library dependencys
 ###############################################################################

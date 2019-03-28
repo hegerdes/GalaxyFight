@@ -87,23 +87,44 @@ public:
      */ 
     void endDestruction();
     
+    /**
+     * @brief Gibt die Maximalgeschwindigkeit des Raumschiffes zurück
+     * 
+     * @return Maximalgeschwindikeit des Raumschiffes als float 
+     */ 
     float getMaxSpeed();
     
+    /**
+     * @brief Gibt Momentangeschwindigkeit des Raumschiffes zurück
+     * 
+     * @return Momentangeschwinindigkeit des Raumschiffes als float
+     */ 
     float getCurrentSpeed();
 
+    /**
+     * @brief Beschleunigt das Raumschiff um 0,025 * Maximalgeschwindigkeit pro accelerate()-Tick
+     */ 
     void accelerate();
 
+    /**
+     * @brief Entschleunigt das Raumschiff um 0,025 * Maximalgeschwindigkeit pro accelerate()-Tick
+     */ 
     void deccelerate();
 
+    /**
+     * @brief Wird aufgerufen, wenn das Raumschiff getroffen wurde. Raumschiff verliert einen HP
+     */ 
     void gotHit();
    
-
-    int getHP(){
-        return m_hp;
-    }
+    /**
+     * @brief Gibt HP das Raumschiffes wieder
+     * 
+     * @return gibt HP als int wieder
+     */ 
+    int getHP();
 
     /**
-     * @brief collide returns if the spacecraft would collide with round objects of the size r on position vec
+     * @brief collide returns true if the spacecraft would collide with round objects of the size r on position vec
      */
     bool collideShip(Vector<float> vec, float r);
     int m_hp;

@@ -1,22 +1,26 @@
 #include "GLWidget.hpp"
 #include "../io/LevelParser.hpp"
 #include "io/TextureFactory.hpp"
-#include <QMouseEvent>
 #include "global_socket.h"
 
 #include <SDL2/SDL.h>
 
 GLWidget::GLWidget(QWidget* parent)
     : QOpenGLWidget(parent),
-      m_camera(Vector3f(0.0f, 0.0f, -700.0f), 0.05f, 5.0f),
+      m_camera(),
       m_rotationSpeed(0.025),
       m_moveSpeed(5.0),
       m_lastBullet(0),
       active(false),
-      m_schussFrequenz(500), m_firstPerson(false), m_firstPersonAble(true), m_hud(this), m_rapidFire(false)
+      m_schussFrequenz(500), 
+      m_firstPerson(false), 
+      m_firstPersonAble(true), 
+      m_hud(this), 
+      m_rapidFire(false)
 {
     m_layout.addWidget(&m_hud);
     setLayout(&m_layout);
+    //Notwendig, damit Qt nicht Leertaste und Pfeiltasteneingaben frisst
     setFocusPolicy(Qt::StrongFocus);
 }
 
@@ -121,9 +125,7 @@ void GLWidget::initializeGL()
 void GLWidget::loadLevel()
 {
     // Load level
-    //LevelParser lp(m_levelFile, m_actor, m_enemyPlayer, m_skybox, m_asteroidField);
     LevelParser lp("./models/level.xml", m_actor, m_enemyPlayer, m_skybox, m_asteroidField);
-
 
     // Setup physics//
     m_physicsEngine = make_shared<PhysicsEngine>();
@@ -134,20 +136,7 @@ void GLWidget::loadLevel()
 
     m_crossHair = make_shared<Crosshair>(0.0f, 100.0f/255.0f, 0.0f, width(), height());
 
-    // Add asteroids to physics engine
-
-    /* MANAGED IN init_3d
-    std::list<Asteroid::Ptr> asteroids;
-    m_asteroidField->getAsteroids(asteroids);
-    for (auto it = asteroids.begin(); it != asteroids.end(); it++)
-    {
-        PhysicalObject::Ptr p = std::static_pointer_cast<PhysicalObject>(*it);
-        m_physicsEngine->addDestroyable(p);
-    } 
-    }
-    */
-
-    //Fügt das Raumschiff der Engine hinzu, damit es richtig explodieren kann
+    ///Fügt die Raumschiffe der Engine hinzu, damit sie richtig explodieren können
     m_physicsEngine->addSpaceCraft(m_actor);
     m_physicsEngine->addEnemyPlayer(m_enemyPlayer);
     m_hud.setSpacecraft(m_actor);
@@ -179,13 +168,6 @@ void GLWidget::paintGL()
     }
     m_enemyPlayer->render();
 
-    //Debug/Testline
-    //m_enemyPlayer->setPosition(Vector<float>(100,100,100));
-//    m_playerHPBar->render();
-
-  //  m_enemyHPBar->render();
-
-//    m_crossHair->render();
     }
 }
 
@@ -238,10 +220,19 @@ void GLWidget::step(map<Qt::Key, bool>& keyStates)
             if (keyStates[Qt::Key_W])
             {
                 m_actor->accelerate();
+                if(!SoundFactory::instance().getSound("schneller")->isPlaying())
+                {
+                    SoundFactory::instance().getSound("schneller")->play();
+                }
+                 
             }
             if (keyStates[Qt::Key_S])
             {
                 m_actor->deccelerate();
+                if(!SoundFactory::instance().getSound("langsamer")->isPlaying())
+                {
+                    SoundFactory::instance().getSound("langsamer")->play();
+                }
             }
             if (keyStates[Qt::Key_A])
             {
@@ -253,16 +244,13 @@ void GLWidget::step(map<Qt::Key, bool>& keyStates)
             }
 
 
-            if(keyStates[Qt::Key_X]){
+            if(keyStates[Qt::Key_X])
+            {
                 //Debug/Testline für Explosion eigenes Raumschiff
                 m_actor->destroySpaceCraft();
             }
 
-	/* @ahaker
-			// Add a bullet to physics engine
-			if(keyStates[Qt::Key_N])
-			{
-			*/
+                        
 
             // Add a bullet to physics engine
             if(keyStates[Qt::Key_Space])
@@ -284,7 +272,11 @@ void GLWidget::step(map<Qt::Key, bool>& keyStates)
                     bullet_shot = Bullet_shot::shot;
 
                     ///Gibt der Anzeige in m_hud die Zeit an der die letzte Bullet abgeschoßen wurde
-                    m_hud.setBulletReady(value.count());                    
+                    m_hud.setBulletReady(value.count());   
+
+
+                    ///Spielt den Schusssound ab
+                    SoundFactory::instance().getSound("pew")->play();                
 
                     ///Der Folgende Codeblock liefert dem shotReadyRect in HUDWidget die notwendigen Informationen, damit es
                     ///korrekt anzeigen kann, ob das Schiff bereit zum schießen ist
@@ -421,54 +413,7 @@ void GLWidget::step(map<Qt::Key, bool>& keyStates)
     }
 }
 
-void GLWidget::mouseMoveEvent(QMouseEvent* event)
-{
-    bool l_pressed = (event->buttons() & Qt::LeftButton) != 0;
-    bool r_pressed = (event->buttons() & Qt::RightButton) != 0;
 
-    QPoint delta = event->pos() - m_mousePos;
-    m_mousePos = event->pos();
-
-    // Handle motion for pressed L button while R is not
-    // pressed
-    // if (l_pressed & !r_pressed)
-    // {
-    //     if (delta.x() > -3)
-    //     {
-    //         m_camera.turn(Camera::RIGHT);
-    //     }
-    //     if (delta.x() < 3)
-    //     {
-    //         m_camera.turn(Camera::LEFT);
-    //     }
-    //     if (delta.y() > 3)
-    //     {
-    //         m_camera.turn(Camera::UP);
-    //     }
-    //     if (delta.y() < -3)
-    //     {
-    //         m_camera.turn(Camera::DOWN);
-    //     }
-    // }
-
-    // Handle motion for pressed R button while L is not
-    // pressed
-    if (r_pressed & !l_pressed)
-    {
-        if (delta.x() > 3)
-        {
-            m_camera.move(Camera::LEFT);
-        }
-        if (delta.x() < -3)
-        {
-            m_camera.move(Camera::RIGHT);
-        }
-        if (delta.y() < -3)
-        {
-            m_camera.move(Camera::BACKWARD);
-        }
-    }
-}
 
 void GLWidget::resizeGL(int w, int h)
 {
