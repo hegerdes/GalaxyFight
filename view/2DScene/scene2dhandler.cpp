@@ -4,6 +4,8 @@
 #include <memory>
 #include <QDebug>
 #include <QPropertyAnimation>
+#include <QParallelAnimationGroup>
+#include <QtMath>
 #include "../../util/ManageGame.hpp"
 #include "../../rendering/2D/MapFactory.hpp"
 #include "itemtypes.h"
@@ -34,6 +36,7 @@ Scene2dHandler::Scene2dHandler(QObject* parent)
                 p2->getPos()[0] + 25, p2->getPos()[1] + 25, linePen);
     }
 
+    //init pointer with nullptr to prevent crashes
     m_currentlySelected = nullptr;
 
     //draw Planets
@@ -42,6 +45,7 @@ Scene2dHandler::Scene2dHandler(QObject* parent)
         pitem->setOwner(planet->getOwner());
         pitem->setPos(QPointF(planet->getPos()[0], planet->getPos()[1]));
 
+        //draw a HQ icon on the first and the last planet
         if(planet->getID() == 0 || planet->getID() == planets.size()-1)
             pitem->setIsHQ(true);
 
@@ -56,8 +60,6 @@ Scene2dHandler::Scene2dHandler(QObject* parent)
 
 void Scene2dHandler::mouseReleaseEvent(QGraphicsSceneMouseEvent* mouseEvent)
 {
-
-//    updateRound();
     //get item on click with left mouse button
     if (mouseEvent->button() == Qt::LeftButton) {
         //get item
@@ -74,10 +76,10 @@ void Scene2dHandler::mouseReleaseEvent(QGraphicsSceneMouseEvent* mouseEvent)
             handlePlanetSelection(static_cast<GraphicsPlanetItem*>(item));
             break;
         case ItemTypes::Mine:
-
+            handleMineSelection();
             break;
         case ItemTypes::Factory:
-
+            handleFactorySelection();
             break;
         case ItemTypes::Fighter:
                 handleFighterSelection(static_cast<GraphicsFighterItem*>(item));
@@ -100,18 +102,16 @@ void Scene2dHandler::mouseReleaseEvent(QGraphicsSceneMouseEvent* mouseEvent)
         if(item->type() != ItemTypes::Planet)
             return;
 
-
+        //notify ManageGame about the pos change of this fighter
         if(m_currentlySelected->type() == ItemTypes::Fighter) {
             ManageGame::getinstance()->change_Fighter_position(static_cast<GraphicsPlanetItem*>(item)->getID(),
                                                                static_cast<GraphicsFighterItem*>(m_currentlySelected)->getID());
-
-            std::cout << "fighter: " << static_cast<GraphicsPlanetItem*>(item)->getID() << " new planet: " << static_cast<GraphicsFighterItem*>(m_currentlySelected)->getID();
         }
+        //notify ManageGame about the new target planet so that it recalculate its path.
         if(m_currentlySelected->type() == ItemTypes::Transporter) {
             ManageGame::getinstance()->change_transport_route(static_cast<GraphicsPlanetItem*>(item)->getID(),
                                                                static_cast<GraphicsTransporterItem*>(m_currentlySelected)->getID());
         }
-
 
     } else {
         return;
@@ -160,10 +160,10 @@ void Scene2dHandler::unselectAll()
         static_cast<GraphicsPlanetItem*>(m_currentlySelected)->selected(false);
         break;
     case ItemTypes::Mine:
-
+        //do nothing
         break;
     case ItemTypes::Factory:
-
+        //do nothing
         break;
     case ItemTypes::Fighter:
             static_cast<GraphicsFighterItem*>(m_currentlySelected)->selected(false);
@@ -196,14 +196,25 @@ void Scene2dHandler::placeFighter()
                 foundFlag = true;
 
                 //create and start animation
-                auto animation = new QPropertyAnimation(static_cast<GraphicsFighterItem*>(item), "pos");
-                animation->setDuration(2000);
-                animation->setStartValue(item->pos());
-                animation->setEndValue(QPointF(pos[0] - 20, pos[1] - 20));
+                auto animationPos = new QPropertyAnimation(static_cast<GraphicsFighterItem*>(item), "pos");
+                animationPos->setDuration(2000);
+                animationPos->setStartValue(item->pos());
+                animationPos->setEndValue(QPointF(pos[0] - 10, pos[1] - 10));
 
-                animation->setEasingCurve(QEasingCurve::InOutCubic);
+                animationPos->setEasingCurve(QEasingCurve::InOutCubic);
 
-                animation->start();
+                auto animationRot = new QPropertyAnimation(static_cast<GraphicsFighterItem*>(item), "rotation");
+                animationRot->setDuration(500);
+                animationRot->setStartValue(item->rotation());
+                //It is rotated so that the top is directed to the target
+                animationRot->setEndValue(getAngle(QPointF(pos[0], pos[1]), item->pos()) + 90);
+
+                QParallelAnimationGroup *group = new QParallelAnimationGroup;
+                group->addAnimation(animationPos);
+                group->addAnimation(animationRot);
+
+                group->start();
+
             }
         }
 
@@ -234,18 +245,27 @@ void Scene2dHandler::placeTransporter()
             //move fighter if planet changed
             if(item->type() == ItemTypes::Transporter && static_cast<GraphicsTransporterItem*>(item)->getID() == transporter->m_id) {
                 auto pos = planets[transporter->m_next_position]->getPos();
+                foundFlag = true;
 
                 //create and start animation
-                auto animation = new QPropertyAnimation(static_cast<GraphicsTransporterItem*>(item), "pos");
-                animation->setDuration(2000);
-                animation->setStartValue(item->pos());
-                animation->setEndValue(QPointF(pos[0] + 50, pos[1] + 50));
+                auto animationPos = new QPropertyAnimation(static_cast<GraphicsFighterItem*>(item), "pos");
+                animationPos->setDuration(2000);
+                animationPos->setStartValue(item->pos());
+                animationPos->setEndValue(QPointF(pos[0] + 50, pos[1] + 50));
 
-                animation->setEasingCurve(QEasingCurve::InOutCubic);
+                animationPos->setEasingCurve(QEasingCurve::InOutCubic);
 
-                animation->start();
-                //set flag
-                foundFlag = true;
+                auto animationRot = new QPropertyAnimation(static_cast<GraphicsFighterItem*>(item), "rotation");
+                animationRot->setDuration(500);
+                animationRot->setStartValue(item->rotation());
+                //It is rotated so that the top is directed to the target
+                animationRot->setEndValue(getAngle(QPointF(pos[0], pos[1]), item->pos()) + 90);
+
+                QParallelAnimationGroup *group = new QParallelAnimationGroup;
+                group->addAnimation(animationPos);
+                group->addAnimation(animationRot);
+
+                group->start();
             }
         }
 
@@ -275,17 +295,18 @@ void Scene2dHandler::updateMap()
         }
     }
 
-    //TODO: display icons
     //draw mines and factorys
     for(const auto& planet : planets) {
-        //create a new mine if required
-//        std::cout << "Planet: " << planet->getname() << " ID: " << planet->getID() << " Mines: " << planet->getMine() << " Factorys" << planet->getFactorys() << std::endl;
+
+        //draw a mine icon if at least one mine exist on this planet
         if (itemAt(planet->getPos()[0], planet->getPos()[1], QTransform())->type() != ItemTypes::Mine
                 && planet->getMine()) {
             auto mineItem = new GraphicsMineItem();
             mineItem->setPos(planet->getPos()[0] + 5, planet->getPos()[1] + 10);
             addItem(mineItem);
         }
+
+        //draw a factory icon if a factory exist on this planet
         if (itemAt(planet->getPos()[0], planet->getPos()[1], QTransform())->type() != ItemTypes::Factory
                 && planet->getFactorys()) {
             auto mineItem = new GraphicsFactoryItem();
@@ -294,6 +315,15 @@ void Scene2dHandler::updateMap()
         }
     }
 
+}
+
+double Scene2dHandler::getAngle(QPointF target, QPointF source)
+{
+    //calc angle in radian
+    double angle = qAtan2(target.y() - source.y(), target.x() - source.x());
+
+    //change angle to degree
+    return angle * 180 / M_PI;
 }
 
 void Scene2dHandler::updateRound() {

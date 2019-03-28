@@ -13,6 +13,7 @@ class GraphicsFighterItem : public QObject, public QGraphicsItem
 {
     Q_OBJECT
     Q_PROPERTY(QPointF pos READ pos WRITE setPos)
+    Q_PROPERTY(qreal rotation READ rotation WRITE setRotation)
 public:
     GraphicsFighterItem(PlayerType type, int id);
 
@@ -50,8 +51,11 @@ public:
     void selected(bool flag = true);
 
 private:
+    ///the owner
     PlayerType m_player;
+    ///fighter id
     int m_id;
+    ///selection flag
     bool m_selected;
 };
 }
