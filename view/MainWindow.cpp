@@ -117,6 +117,8 @@ void MainWindow::setupConnections()
   connect(m_startscreen, &StartScreen::closeWindow , this, &MainWindow::closeWindow);
   connect(m_startscreen, &StartScreen::goTo2D, this, &MainWindow::goToScene2D);
   connect(m_startscreen, &StartScreen::goto3DScene, this, &MainWindow::goto3DScene);
+  connect(m_startscreen, &StartScreen::goToSetting, this, &MainWindow::gotoSettingsScreen);
+  connect(m_settingsScreen, &settingwindow::goToStart, this, &MainWindow::gotoStartScreen);
   //connect(m_startscreen, &StartScreen::gotoLoadingScreen, this, &MainWindow::goToLoadingScreen);
 }
 } // namespace asteroids
