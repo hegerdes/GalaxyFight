@@ -46,7 +46,7 @@ Scene2dHandler::Scene2dHandler(QObject* parent)
         pitem->setPos(QPointF(planet->getPos()[0], planet->getPos()[1]));
 
         //draw a HQ icon on the first and the last planet
-        if(planet->getID() == 0 || planet->getID() == planets.size()-1)
+        if(planet->getID() == 0 || planet->getID() == (int)planets.size()-1)
             pitem->setIsHQ(true);
 
         addItem(pitem);
