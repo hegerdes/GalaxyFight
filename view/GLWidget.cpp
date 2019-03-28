@@ -218,19 +218,19 @@ void GLWidget::step(map<Qt::Key, bool>& keyStates)
                 m_firstPersonAble = true;
             }
             
-            if (keyStates[Qt::Key_L])
+            if (keyStates[Qt::Key_Down])
             {
                 m_actor->rotate(Transformable::PITCH_RIGHT, m_rotationSpeed);
             }
-            if (keyStates[Qt::Key_H])
+            if (keyStates[Qt::Key_Up])
             {
                 m_actor->rotate(Transformable::PITCH_LEFT, m_rotationSpeed);
             }
-            if (keyStates[Qt::Key_J])
+            if (keyStates[Qt::Key_Left])
             {
                 m_actor->rotate(Transformable::ROLL_LEFT, m_rotationSpeed);
             }
-            if (keyStates[Qt::Key_K])
+            if (keyStates[Qt::Key_Right])
             {
                 m_actor->rotate(Transformable::ROLL_RIGHT, m_rotationSpeed);
             }
