@@ -62,11 +62,7 @@ void ManageGame::build_factory(int planet_id)
                 m_current_resource -= setting.value("Resourcen/Werftkosten").toInt();
 
                 //Check for alrady existing change for this planet
-                auto search = m_round_changes_map.find(planet_id);
-                if (search == m_round_changes_map.end())
-                {
-                    m_round_changes_map[planet_id] = std::make_shared<PlanetChanges>(PlanetChanges(planet_id));
-                }
+                checkForChange(planet_id);
                 m_round_changes_map[planet_id]->setFactorys(1);
                 updateBase(-setting.value("Resourcen/Werftkosten").toInt());
 
@@ -102,11 +98,7 @@ void ManageGame::build_mine(int planet_id)
                 m_resource_per_time += setting.value("Resourcen/Abbaurate").toInt();
 
                 //Check for alrady existing change for this planet
-                auto search = m_round_changes_map.find(planet_id);
-                if (search == m_round_changes_map.end())
-                {
-                    m_round_changes_map[planet_id] = std::make_shared<PlanetChanges>(PlanetChanges(planet_id));
-                }
+                checkForChange(planet_id);
                 m_round_changes_map[planet_id]->setMines(1);
                 updateBase(-setting.value("Resourcen/Mienekosten").toInt());
 
@@ -668,6 +660,16 @@ int ManageGame::transporter_stored_ore(int transporter_position)
         m_round_changes_map[transporter_position] = change;
     }
     return tmp;
+}
+
+
+void ManageGame::checkForChange(int planet_id)
+{
+    auto search = m_round_changes_map.find(planet_id);
+    if (search == m_round_changes_map.end())
+    {
+        m_round_changes_map[planet_id] = std::make_shared<PlanetChanges>(PlanetChanges(planet_id));
+    }
 }
 
 void ManageGame::updateBase(int ore)
