@@ -6,7 +6,7 @@
 
 namespace asteroids {
 /**
- * @brief The GraphicsFighterItem class represents a Planet ship as GraphicsItem
+ * @brief The GraphicsFighterItem class represents a planet as GraphicsItem
  * @author lkreienbrink & meversmeyer
  */
 class GraphicsPlanetItem : public QGraphicsItem
@@ -16,13 +16,13 @@ public:
     GraphicsPlanetItem(size_t id);
 
     /**
-     * @brief boundingRect size of this graphicsItem
+     * @brief boundingRect returns the GraphicsItem size
      * @return
      */
     QRectF boundingRect() const override;
 
     /**
-     * @brief paint
+     * @brief paint paints a planet svg pixmap and a circle if the planet is selected
      * @param painter
      * @param option
      * @param widget
@@ -30,6 +30,10 @@ public:
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
                    QWidget *widget) override;
 
+    /**
+     * @brief type returns the GraphicsItem type
+     * @return the custom GraphicsItem type representing a factory
+     */
     int type() const override { return ItemTypes::Planet;}
 
     /**

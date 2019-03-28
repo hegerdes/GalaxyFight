@@ -28,6 +28,8 @@
 #include "scene2d.h"
 #include "../util/ManageGame.hpp"
 #include "settingwindow.h"
+#include "winningscreen.h"
+#include "loosingscreen.h"
 
 
 namespace asteroids
@@ -82,6 +84,15 @@ public slots:
     void gotoSettingsScreen();
 
     /**
+     * @brief gotoWin sets the WinningScreen as the top screen
+     */
+    void gotoWin();
+    /**
+     * @brief gotoLoose sets the LoosingScreen as the top screen
+     */
+    void gotoLoose();
+
+    /**
      * @brief closeWindow closes the MainWindow
      */
     void closeWindow();
@@ -113,6 +124,12 @@ private:
 
     /// LoadingScreen widget
     LoadingScreen* m_loadingscreen;
+
+    /// WinningScreen widget
+    winningscreen* m_winningscreen;
+
+    /// LoosingScreen widget
+    loosingscreen* m_loosingscreen;
 
     /// Scene2D widget
     Scene2D* m_scene2d;

@@ -31,6 +31,8 @@ MainWindow::MainWindow(QWidget* parent) :
     m_loadingscreen = new LoadingScreen(this);
     m_scene2d = new Scene2D(this);
     m_settingsScreen = new settingwindow(this);
+    m_loosingscreen = new loosingscreen(this);
+    m_winningscreen = new winningscreen(this);
 
     //create and config layout
     m_screenStack = new QStackedLayout;
@@ -40,6 +42,8 @@ MainWindow::MainWindow(QWidget* parent) :
     m_screenStack->addWidget(m_scene2d);
     m_screenStack->addWidget(m_3DScene);
     m_screenStack->addWidget(m_settingsScreen);
+    m_screenStack->addWidget(m_loosingscreen);
+    m_screenStack->addWidget(m_winningscreen);
 
 
     m_3DScene->setMinimumSize(size());
@@ -86,6 +90,16 @@ void MainWindow::gotoSettingsScreen()
     m_screenStack->setCurrentWidget(m_settingsScreen);
 }
 
+void MainWindow::gotoWin()
+{
+    m_screenStack->setCurrentWidget(m_winningscreen);
+}
+
+void MainWindow::gotoLoose()
+{
+    m_screenStack->setCurrentWidget(m_loosingscreen);
+}
+
 void MainWindow::closeWindow()
 {
     this->close();
@@ -116,7 +130,10 @@ void MainWindow::setupConnections()
   connect(m_startscreen, &StartScreen::goTo2D, this, &MainWindow::gotoScene2D);
   connect(m_startscreen, &StartScreen::goto3DScene, this, &MainWindow::goto3DScene);
   connect(m_startscreen, &StartScreen::goToSetting, this, &MainWindow::gotoSettingsScreen);
-  connect(m_settingsScreen, &settingwindow::goToStart, this, &MainWindow::gotoStartScreen);
+  connect(m_settingsScreen, &settingwindow::goToStart, this, &MainWindow::closeWindow);
+  connect(ManageGame::getinstance(), &ManageGame::goToWin, this, &MainWindow::gotoWin);
+  connect(ManageGame::getinstance(), &ManageGame::gotoLoose, this, &MainWindow::gotoLoose);
+
   //connect(m_startscreen, &StartScreen::gotoLoadingScreen, this, &MainWindow::goToLoadingScreen);
 }
 } // namespace asteroids
