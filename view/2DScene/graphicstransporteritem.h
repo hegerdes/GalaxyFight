@@ -13,6 +13,7 @@ namespace asteroids {
 class GraphicsTransporterItem : public QObject, public QGraphicsItem
 {
     Q_OBJECT
+    Q_INTERFACES()
     Q_PROPERTY(QPointF pos READ pos WRITE setPos)
     Q_PROPERTY(qreal rotation READ rotation WRITE setRotation)
 public:
@@ -53,7 +54,7 @@ public:
     void selected(bool flag = true);
 
     /**
-     * @brief setOwner
+     * @brief setOwner changes the owner of the transporter
      * @param owner
      */
     void setOwner(PlayerType owner);

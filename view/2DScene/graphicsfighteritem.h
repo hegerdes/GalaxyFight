@@ -12,6 +12,7 @@ namespace asteroids {
 class GraphicsFighterItem : public QObject, public QGraphicsItem
 {
     Q_OBJECT
+    Q_INTERFACES()
     Q_PROPERTY(QPointF pos READ pos WRITE setPos)
     Q_PROPERTY(qreal rotation READ rotation WRITE setRotation)
 public:
