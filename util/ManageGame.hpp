@@ -51,7 +51,7 @@ struct attackspacecraft{
 struct transportspacecraft{
     //constructor
     transportspacecraft(int id, int position, PlanetChanges::Owner owner) : m_id(id), m_owner(owner), m_position(position), m_next_position(position),
-        m_to_new_route(false), m_to_base(false), m_to_mine(false), m_current_route(), m_tmp_route(), m_route_iterator() {}
+        m_to_new_route(false), m_to_base(false), m_to_mine(false), m_first_turn(true), m_current_route(), m_tmp_route(), m_route_iterator() {}
     //id für einzelne Schiffe
     int m_id;
     //owner
@@ -62,6 +62,8 @@ struct transportspacecraft{
     int m_next_position;
     //geladenes erz
     int m_ore;
+    //
+    bool m_first_turn;
     //flag ob Schiff noch zur route fliegen muss
     bool m_to_new_route;
     //flag ob Schiff zur base fliegt
