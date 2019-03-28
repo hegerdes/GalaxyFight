@@ -1,4 +1,5 @@
 #include "graphicshqitem.h"
+#include "init_file.h"
 
 namespace asteroids {
 
@@ -14,7 +15,7 @@ QRectF GraphicsHqItem::boundingRect() const
 
 void GraphicsHqItem::paint(QPainter* painter, const QStyleOptionGraphicsItem*, QWidget*)
 {
-    QPixmap icon = QIcon("./models/hq.svg").pixmap(20, 20);
+    QPixmap icon = QIcon(setting.value("Dateipfade/HQ").toString()).pixmap(20, 20);
 
     painter->drawPixmap(0, 0, icon);
 }

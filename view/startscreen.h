@@ -5,6 +5,7 @@
 
 #include "ui_startscreen.h"
 #include "qtclient/client.h"
+#include "init_file.h"
 
 namespace asteroids {
 
@@ -14,6 +15,7 @@ class StartScreen : public QWidget
 
 public:
     explicit StartScreen(QWidget *parent = nullptr);
+
     ~StartScreen();
 
 signals:

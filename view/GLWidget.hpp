@@ -18,7 +18,7 @@
 
 #include <GL/glew.h>
 #include <QOpenGLWidget>
-
+#include <QStackedLayout>
 #include "rendering/HealthBar.hpp"
 #include "rendering/Crosshair.hpp"
 #include "view/Camera.hpp"
@@ -26,6 +26,7 @@
 #include "rendering/Skybox.hpp"
 #include "util/AsteroidField.hpp"
 #include "../physics/PhysicsEngine.hpp"
+#include "HUDWidget.hpp"
 
 using namespace asteroids;
 using namespace std::chrono;
@@ -44,6 +45,9 @@ class GLWidget : public QOpenGLWidget
 public:
     GLWidget(QWidget* parent = NULL);
 
+    /// Determines whether game should be loaded
+    bool                        active;
+
     /// Parses a level file and loads all supported objects
     void setLevelFile(const std::string& file);
 
@@ -52,6 +56,9 @@ public:
 
     /// Initialize Level
     void loadLevel();
+    signals:
+    void goToScene2D();
+    void planet_apply_updates();
 
 protected:
 
@@ -80,7 +87,7 @@ private:
 
     HealthBar::Ptr              m_playerHPBar;
 
-    /// Health Bar for player 2
+    /// Health Bar for player 2HUDWidget
     
     HealthBar::Ptr              m_enemyHPBar;
 
@@ -97,7 +104,7 @@ private:
     /// A skybox for the scene
     Skybox::Ptr			        m_skybox;
 
-    /// Pointer to the asteroid field
+    /// Pointer to the asteroid fieldHUDWidget
     AsteroidField::Ptr          m_asteroidField;
     
     /// Physics 
@@ -112,14 +119,30 @@ private:
     /// Last set mouse position
     QPoint                      m_mousePos;
 
-    /// Determines whether game should be loaded
-    bool active;
-
     /// Letzter Zeitpunkt zu dem eine Kugel abgefeurert wurde
-    long                m_lastBullet;
+    long                        m_lastBullet;
 
     /// Gibt an nach wie vielen ms wieder geschoßen werden kann
-    long                m_schussFrequenz;
+    long                        m_schussFrequenz;
+
+    ///Hilfsvariablen
+    int                         hp_actor;
+
+    int                         hp_enemy;
+    
+    /// First Person-Modus und First Person Toggleable(verhindert rumspringen bei gedrückter V-Taste)
+    bool                        m_firstPerson;
+    bool                        m_firstPersonAble;
+
+    bool                        m_rapidFire;
+
+    /// Widget for displaying the HUD
+    HUDWidget                   m_hud;
+
+    /// Layout for displaying the HUD
+    QStackedLayout              m_layout;
+
+    int                         counter;
 };
 
 #endif

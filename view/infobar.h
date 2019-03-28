@@ -6,10 +6,15 @@
 #include <QMessageBox>
 #include <QTimer>
 #include "../util/ManageGame.hpp"
+#include "init_file.h"
 
 namespace Ui {
 class Infobar;
 }
+/**
+ * @brief The Infobar class This widget is the screen which displays the roundtime, planet details and resources
+ * @author meversmeyer & hgerdes
+ */
 class Infobar : public QWidget
 {
     Q_OBJECT
@@ -26,8 +31,6 @@ signals:
     void build_transporter(int planet_id);
     void nothingSelected();
     void next_round();
-    void surrender();
-    void end_game();
 
 public slots:
 
@@ -37,6 +40,16 @@ public slots:
     //Set selected planet
     void set_selected_planet(int);
 
+    //Slots for timer
+    void set_time(double time);
+    void reset_timer();
+    void stop_timer();
+
+    //Slots for popups
+    void no_resources(int num);
+    void not_ur_planet();
+    void not_ur_ship();
+    void already_exist();
     void nothingSelectedReceiver();
 
     //Slots for button klicks
@@ -45,20 +58,9 @@ public slots:
     void on_kampfschiff_bauen_clicked();
     void on_transporter_bauen_clicked();
 
-    void on_aufgeben_clicked();
-    void on_yes_clicked();
-
     void on_weiter_clicked();
+    void on_aufgeben_clicked();
 
-    //Slots for timer
-    void set_time(int time);
-    void resettime();
-
-    //Slots for popups
-    void no_resources(int num);
-    void not_ur_planet();
-    void not_ur_ship();
-    void already_exist();
 
     //Slots for button enable/disable
     void mine_bauen_disable();
@@ -95,12 +97,19 @@ private:
     //Current selected planet
     int m_selected_planet;
 
+    //Popup for messages
     QMessageBox m_popup;
 
+    //Timer for roundtime
     QTimer m_timer;
 
+    //Roundtime
+    int m_time;
+
+    //Timer for frequency to display remaining round time
     QTimer m_takt;
 
+    //Ui for the infobar
     Ui::Infobar *ui;
 };
 

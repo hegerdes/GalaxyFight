@@ -106,12 +106,13 @@ public:
      * @brief collide returns if the spacecraft would collide with round objects of the size r on position vec
      */
     bool collideShip(Vector<float> vec, float r);
+    int m_hp;
+    int m_status;
 
 private:
     TriangleMesh::Ptr m_mesh;
     
     //Gibt an ob das Raumschiff gerendert werden soll
-    int m_status;
 
     ParticleEngine m_explosion;
 
@@ -119,7 +120,6 @@ private:
 
     float m_currentSpeed;
 
-    int m_hp;
 
     bool m_alive;
 

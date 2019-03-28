@@ -154,7 +154,8 @@ set(ASTEROID_SOURCES
     util/Util.cpp
     util/ManageGame.cpp
     view/GLWidget.cpp
-    view/MainWindow.cpp
+    view/HUDWidget.cpp
+    view/MainWindow.cpp 
     view/Camera.cpp
     view/startscreen.cpp
     view/settingwindow.cpp
@@ -169,6 +170,8 @@ set(ASTEROID_SOURCES
     view/2DScene/graphicstransporteritem.cpp
     view/2DScene/graphicshqitem.cpp
     qtclient/client.cpp
+    view/loosingscreen.cpp
+    view/winningscreen.cpp
 )
 set(ASTEROID_MOCS
     view/MainWindow.hpp
@@ -178,6 +181,8 @@ set(ASTEROID_MOCS
     view/infobar.h
     view/settingwindow.h
     view/2DScene/itemtypes.h
+    view/loosingscreen.h
+    view/winningscreen.h
 )
 
 set(ASTEROID_UIS
@@ -186,6 +191,8 @@ set(ASTEROID_UIS
     view/loadingscreen.ui
     view/infobar.ui
     view/settingwindow.ui
+    view/loosingscreen.ui
+    view/winningscreen.ui
 )
 
 set(CMAKE_AUTOUIC ON)

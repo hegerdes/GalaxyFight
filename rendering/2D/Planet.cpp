@@ -27,14 +27,18 @@ int Planet::init()
     m_num_fighters = 0;
     m_num_mine = 0;
     m_num_transporter = 0;
-    m_num_of_ore = 10000;
+    m_num_of_ore = setting.value("Resourcen/Planetenerz").toInt();
     m_stored_ore = 0;
     m_owned = PlanetChanges::UNASSIGN;
+    if( 0 == m_id){
+        m_owned = PlanetChanges::PLAYER1;
+    }
     return 1;
 }
 
  int Planet::updatePlanet(PlanetChanges::Ptr updates)
  {
+    //std::cerr << __LINE__ << ", " << __PRETTY_FUNCTION__ << "\n";
     if(m_id != updates->getID()) return 1;
     m_num_factory += updates->getFactorys();
     m_num_fighters += updates->getFighter();

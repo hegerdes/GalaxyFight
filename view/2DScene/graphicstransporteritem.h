@@ -10,8 +10,12 @@ namespace asteroids {
  * @brief The GraphicsTransporterItem class represents a transporter
  * @author lkreienbrink
  */
-class GraphicsTransporterItem : public QGraphicsItem
+class GraphicsTransporterItem : public QObject, public QGraphicsItem
 {
+    Q_OBJECT
+    Q_INTERFACES()
+    Q_PROPERTY(QPointF pos READ pos WRITE setPos)
+    Q_PROPERTY(qreal rotation READ rotation WRITE setRotation)
 public:
     GraphicsTransporterItem(int id);
 
@@ -50,14 +54,17 @@ public:
     void selected(bool flag = true);
 
     /**
-     * @brief setOwner
+     * @brief setOwner changes the owner of the transporter
      * @param owner
      */
     void setOwner(PlayerType owner);
 
 private:
+    /// ower of this transporter
     PlayerType m_player;
+    ///transporter id
     int m_id;
+    ///selection flag
     bool m_selected;
 };
 }

@@ -23,7 +23,7 @@
 namespace asteroids
 {
 
-Camera::Camera(const Vector3f& pos, const float& turnSpeed, const float& moveSpeed)
+Camera::Camera(const Vector3f& pos, const float& turnSpeed, const float& moveSpeed):m_firstPerson(false)
 {
     /* Init pos */
     for(int i = 0; i < 3; i++)
@@ -79,7 +79,14 @@ void Camera::move(const CameraMovement& dir)
 
 void Camera::follow(asteroids::SpaceCraft::Ptr s)
 {
-    m_position = s->getPosition() + s->getZAxis() * 200 + s->getXAxis() * 300;
+    if(m_firstPerson)
+    {
+        m_position = s->getPosition();
+    }
+    else
+    {
+       m_position = s->getPosition() + s->getZAxis() * 200 + s->getXAxis() * 300;         
+    }  
     m_up = s->getZAxis();
     m_l = s->getPosition() - s->getXAxis() * 300;
 }

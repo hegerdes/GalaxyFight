@@ -1,0 +1,55 @@
+WHO DID WHAT:
+
+Klassenname/methode                         Person
+
+** 2D Game **
+Planet.cpp                          Henrik Gerdes (hegerdes)
+PlanetChanges.hpp                   Henrik Gerdes (hegerdes)
+Map.cpp                             Henrik Gerdes (hegerdes)
+MapFactory.cpp                      Henrik Gerdes (hegerdes)
+InfoBar.cpp                         Manuel Eversmeyer (meversmeyer)
+graphicsfactoryitem.cpp             Manuel Eversmeyer (meversmeyer)
+graphicsmineitem.cpp                Manuel Eversmeyer (meversmeyer)
+graphicsplanetitem.cpp              Luis-Pepe Kreienbrink (lkreienbrink)/Manuel Eversmeyer (meversmeyer)
+graphicsfighteritem.cpp             Luis-Pepe Kreienbrink (lkreienbrink)
+graphicstransporteritem.cpp         Luis-Pepe Kreienbrink (lkreienbrink)
+scene2dhandler.cpp                  Luis-Pepe Kreienbrink (lkreienbrink)
+scene2d.cpp                         Luis-Pepe Kreienbrink (lkreienbrink)
+MainWindow.cpp                      Luis-Pepe Kreienbrink (lkreienbrink)/Eric Neumann (erneumann)
+startscreen.cpp                     Eric Neumann (erneumann)
+loadingscreen.cpp                   Eric Neumann (erneumann)
+settingswindow.cpp                  Eric Neumann (erneumann)
+loosingscreen.cpp                   Eric Neumann (erneumann)
+winscreen.cpp                       Eric Neumann (erneumann)
+ManageGame.cpp:                     AuflistungMethodenweise
+    struct attackspacecraft         Philipp Schlinge (pschlinge)
+    struct transportspacecraft      Philipp Schlinge (pschlinge)
+    updateBase();                   Philipp Schlinge (pschlinge)
+    transporter_stored_ore();       Philipp Schlinge (pschlinge)
+    updateSpaceCrafts();            Philipp Schlinge (pschlinge)
+    get_transportCpaceCraft_number()Philipp Schlinge (pschlinge)
+    get_attackSpaceCraft_number()   Philipp Schlinge (pschlinge)
+    get_attackSpaceCraftList()      Philipp Schlinge (pschlinge)
+    get_transportSpaceCraftList()   Philipp Schlinge (pschlinge)
+    change_Fighter_position();      Philipp Schlinge (pschlinge)
+    change_transport_route();       Philipp Schlinge (pschlinge)
+    destroy_fighter();              Philipp Schlinge (pschlinge)
+    get_PlanetCangeList();          Henrik Gerdes (hegerdes)
+    updateStats();                  Henrik Gerdes (hegerdes)
+    checkForChange();               Henrik Gerdes (hegerdes)
+    getinstance();                  Henrik Gerdes (hegerdes)
+    initialize_player();            Henrik Gerdes (hegerdes)
+    end_game(bool);                 Henrik Gerdes (hegerdes)
+    throwError();                   Henrik Gerdes (hegerdes)
+    get_current_resource()          Philipp Schlinge (pschlinge)/Henrik Gerdes (hegerdes)
+    get_resource_per_time()         Philipp Schlinge (pschlinge)/Henrik Gerdes (hegerdes)
+    build_factory();                Philipp Schlinge (pschlinge)/Henrik Gerdes (hegerdes)
+    build_mine();                   Philipp Schlinge (pschlinge)/Henrik Gerdes (hegerdes)
+    build_fighter();                Philipp Schlinge (pschlinge)/Henrik Gerdes (hegerdes)
+    build_transporter();            Philipp Schlinge (pschlinge)/Henrik Gerdes (hegerdes)
+    next_round();                   Philipp Schlinge (pschlinge)/Henrik Gerdes (hegerdes)/Philipp Schlinge (pschlinge)/Luis-Pepe Kreienbrink (lkreienbrink)
+
+
+** 3D-Game **
+
+** Netzwerk**

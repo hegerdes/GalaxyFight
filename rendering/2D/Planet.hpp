@@ -20,7 +20,7 @@
 
 #include "PlanetChanges.hpp"
 #include "../../math/Vector.hpp"
-#include "util/GameValues.hpp"
+#include "init_file.h"
 
 namespace asteroids
 {
@@ -31,7 +31,7 @@ class Planet
     using Ptr = std::shared_ptr<Planet>;
 
     /**
-     * @brief Construct a new Planet object
+     * @brief Construct a new Planet number
      * 
      * @param name The name of the planet
      * @param pos Vector with position
@@ -47,29 +47,80 @@ class Planet
     int updatePlanet(PlanetChanges::Ptr updates);
 
     /**
-     * @brief 
+     * @brief Print a Planet to std::cout
      * 
      */
     void printPlanet();
 
+    /**
+     * @brief Getter for the planet-name
+     * 
+     * @return std::string Name of the planet
+     */
     inline std::string getname(){return m_planet_name;}
 
+    /**
+     * @brief Getter for ID
+     * 
+     * @return int ID of planet
+     */
     inline int getID(){return m_id;}
 
+    /**
+     * @brief Get the Ore number
+     * 
+     * @return int Number of ore on planet
+     */
     inline int getOre(){return m_num_of_ore;}
     
+    /**
+     * @brief Get the Factorys number
+     * 
+     * @return int Number of factorys on planet
+     */
     inline int getFactorys(){return m_num_factory;}
 
+    /**
+     * @brief Get the Fighter number
+     * 
+     * @return int Number of fighter on planet
+     */
     inline int getFighter(){return m_num_fighters;}
 
+    /**
+     * @brief Get the Transporter number
+     * 
+     * @return int Number of transporter on planet
+     */
     inline int getTransporter(){return m_num_transporter;}
 
+    /**
+     * @brief Get the Mine number
+     * 
+     * @return int Number of mines on planet
+     */
     inline int getMine(){return m_num_mine;}
+
+    /**
+     * @brief Get the Stored Ore number
+     * 
+     * @return int Number of stored ore on planet
+     */
 
     inline int getStoredOre(){return m_stored_ore;}
 
+    /**
+     * @brief Get the Owner number
+     * 
+     * @return PlanetChanges::Owner The owner of the planet 
+     */
     inline PlanetChanges::Owner getOwner(){return m_owned;}
 
+    /**
+     * @brief Get the Pos number
+     * 
+     * @return Vector3f& Position of the planet
+     */
     inline Vector3f& getPos(){return m_planet_pos;}
         
 

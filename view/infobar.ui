@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1122</width>
-    <height>217</height>
+    <height>183</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -68,8 +68,17 @@ border-color: black;</string>
          <layout class="QVBoxLayout" name="verticalLayout">
           <item>
            <widget class="QLCDNumber" name="timer">
+            <property name="smallDecimalPoint">
+             <bool>false</bool>
+            </property>
+            <property name="segmentStyle">
+             <enum>QLCDNumber::Flat</enum>
+            </property>
+            <property name="value" stdset="0">
+             <double>60.000000000000000</double>
+            </property>
             <property name="intValue" stdset="0">
-             <number>100</number>
+             <number>60</number>
             </property>
            </widget>
           </item>
@@ -140,7 +149,7 @@ background: rgb(46, 52, 54);
 border-color: black;</string>
        </property>
        <property name="title">
-        <string>Planet</string>
+        <string/>
        </property>
        <layout class="QGridLayout" name="gridLayout_5">
         <item row="1" column="0">

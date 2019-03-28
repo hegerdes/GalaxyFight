@@ -2,10 +2,11 @@
 #include <QPainter>
 #include <QIcon>
 #include <QDebug>
+#include "init_file.h"
 
 namespace asteroids {
 
-GraphicsPlanetItem::GraphicsPlanetItem(int id): m_id(id), m_selected(false)
+GraphicsPlanetItem::GraphicsPlanetItem(size_t id): m_id(id), m_selected(false), m_is_hq(false)
 {
 
 }
@@ -21,18 +22,25 @@ void GraphicsPlanetItem::paint(QPainter* painter, const QStyleOptionGraphicsItem
     //draw ship
     switch (m_player) {
     case PlayerType::PLAYER1:
-        icon = QIcon("./models/planetGreen.svg").pixmap(50, 50);
+        icon = QIcon(setting.value("Dateipfade/Player1Planet").toString()).pixmap(50, 50);
         break;
     case PlayerType::PLAYER2:
-        icon = QIcon("./models/planetRed.svg").pixmap(50, 50);
+        icon = QIcon(setting.value("Dateipfade/Player2Planet").toString()).pixmap(50, 50);
         break;
     default:
-        icon = QIcon("./models/planetGrey.svg").pixmap(50, 50);
+        icon = QIcon(setting.value("Dateipfade/NeutralPlanet").toString()).pixmap(50, 50);
         break;
     }
 
     painter->drawPixmap(0, 0, 50, 50, icon);
 
+    //draw HQ icon if required
+    if (m_is_hq) {
+        icon = QIcon(setting.value("Dateipfade/HQ").toString()).pixmap(20, 20);
+        painter->drawPixmap(15, 25, icon);
+    }
+
+    //draw selection circle if required
     if(m_selected)
     {
         QRectF rect(0, 0, 52, 52);
@@ -43,7 +51,7 @@ void GraphicsPlanetItem::paint(QPainter* painter, const QStyleOptionGraphicsItem
     }
 }
 
-int GraphicsPlanetItem::getID()
+size_t GraphicsPlanetItem::getID()
 {
     return m_id;
 }
@@ -56,6 +64,11 @@ void GraphicsPlanetItem::selected(bool flag)
 void GraphicsPlanetItem::setOwner(PlayerType newOwner)
 {
     m_player = newOwner;
+}
+
+void GraphicsPlanetItem::setIsHQ(bool flag)
+{
+    m_is_hq = flag;
 }
 
 PlayerType GraphicsPlanetItem::getOwner()

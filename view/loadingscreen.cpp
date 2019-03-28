@@ -21,11 +21,11 @@ LoadingScreen::LoadingScreen(QWidget *parent) :
 
 
     //background-picture
-    QPixmap pic("models/start.jpg");
+    QPixmap pic(setting.value("Dateipfade/Hintergund").toString());
     ui->picLabel->setPixmap(pic);
 
     //loading-animation as a gif
-    QMovie *movie = new QMovie("models/laden.gif");
+    QMovie *movie = new QMovie(setting.value("Dateipfade/Laden").toString());
     ui->gifLabel->setMovie(movie);
     ui->gifLabel->setGeometry(x - screengeometry.width()/8,y -100,screengeometry.width()/4,screengeometry.height()/4 + 100);
     movie->setScaledSize(ui->gifLabel->size());

@@ -6,23 +6,23 @@
 
 namespace asteroids {
 /**
- * @brief The GraphicsFighterItem class represents a Planet ship as GraphicsItem
- * @author meversmeyer
+ * @brief The GraphicsFighterItem class represents a planet as GraphicsItem
+ * @author lkreienbrink & meversmeyer
  */
 class GraphicsPlanetItem : public QGraphicsItem
 {
 //    Q_OBJECT
 public:
-    GraphicsPlanetItem(int id);
+    GraphicsPlanetItem(size_t id);
 
     /**
-     * @brief boundingRect
+     * @brief boundingRect returns the GraphicsItem size
      * @return
      */
     QRectF boundingRect() const override;
 
     /**
-     * @brief paint
+     * @brief paint paints a planet svg pixmap and a circle if the planet is selected
      * @param painter
      * @param option
      * @param widget
@@ -30,20 +30,51 @@ public:
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
                    QWidget *widget) override;
 
+    /**
+     * @brief type returns the GraphicsItem type
+     * @return the custom GraphicsItem type representing a factory
+     */
     int type() const override { return ItemTypes::Planet;}
 
-    int getID();
+    /**
+     * @brief getID
+     * @return
+     */
+    size_t getID();
 
+    /**
+     * @brief selected
+     * @param flag
+     */
     void selected(bool flag = true);
 
+    /**
+     * @brief setOwner
+     * @param newOwner
+     */
     void setOwner(PlayerType newOwner);
 
+    /**
+     * @brief setIsHQ
+     * @param flag true: draws with the next update an hq icon on the planet
+     */
+    void setIsHQ(bool flag);
+
+    /**
+     * @brief getOwner the current planet owner
+     * @return PlayerType
+     */
     PlayerType getOwner();
 
 private:
+    ///Planet owner
     PlayerType m_player;
-    int m_id;
+    ///Planet id
+    size_t m_id;
+    ///selection flag
     bool m_selected;
+    ///HQ flag
+    bool m_is_hq;
 };
 }
 
