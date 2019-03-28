@@ -28,6 +28,7 @@
 #include "scene2d.h"
 #include "../util/ManageGame.hpp"
 #include "settingwindow.h"
+#include "io/SoundFactory.hpp"
 
 
 namespace asteroids

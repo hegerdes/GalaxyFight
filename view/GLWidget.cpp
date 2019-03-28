@@ -219,10 +219,19 @@ void GLWidget::step(map<Qt::Key, bool>& keyStates)
             if (keyStates[Qt::Key_W])
             {
                 m_actor->accelerate();
+                if(!SoundFactory::instance().getSound("schneller")->isPlaying())
+                {
+                    SoundFactory::instance().getSound("schneller")->play();
+                }
+                 
             }
             if (keyStates[Qt::Key_S])
             {
                 m_actor->deccelerate();
+                if(!SoundFactory::instance().getSound("langsamer")->isPlaying())
+                {
+                    SoundFactory::instance().getSound("langsamer")->play();
+                }
             }
             if (keyStates[Qt::Key_A])
             {
@@ -234,11 +243,12 @@ void GLWidget::step(map<Qt::Key, bool>& keyStates)
             }
 
 
-            if(keyStates[Qt::Key_X]){
+            if(keyStates[Qt::Key_X])
+            {
                 //Debug/Testline für Explosion eigenes Raumschiff
                 m_actor->destroySpaceCraft();
             }
-
+                        
 
             // Add a bullet to physics engine
             if(keyStates[Qt::Key_Space])
@@ -260,7 +270,11 @@ void GLWidget::step(map<Qt::Key, bool>& keyStates)
                     bullet_shot = Bullet_shot::shot;
 
                     ///Gibt der Anzeige in m_hud die Zeit an der die letzte Bullet abgeschoßen wurde
-                    m_hud.setBulletReady(value.count());                    
+                    m_hud.setBulletReady(value.count());   
+
+
+                    ///Spielt den Schusssound ab
+                    SoundFactory::instance().getSound("pew")->play();                
 
                     ///Der Folgende Codeblock liefert dem shotReadyRect in HUDWidget die notwendigen Informationen, damit es
                     ///korrekt anzeigen kann, ob das Schiff bereit zum schießen ist

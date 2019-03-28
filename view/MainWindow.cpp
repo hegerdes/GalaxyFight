@@ -45,7 +45,7 @@ MainWindow::MainWindow(QWidget* parent) :
 
     m_screenStack->setCurrentWidget(m_startscreen);
 
-//    setLayout(m_screenStack);
+    //setLayout(m_screenStack);
     m_3DScene->setMinimumSize(QSettings().value("minWidth",1920).toInt(), QSettings().value("minHeight",1080).toInt());
     //goto3DScene();
 
@@ -53,6 +53,9 @@ MainWindow::MainWindow(QWidget* parent) :
     connect(m_timer.get(), SIGNAL(timeout()), this, SLOT(handleInput()));
     m_timer->start(1000 / 30.0);
     setupConnections();
+    SoundFactory::instance().getSound("soundtrack")->setLoopCount(QSoundEffect::Infinite);
+    SoundFactory::instance().getSound("soundtrack")->play();   
+    
 }
 
 void MainWindow::handleInput()
@@ -62,7 +65,7 @@ void MainWindow::handleInput()
 
 void MainWindow::gotoStartScreen()
 {
-    m_screenStack->setCurrentWidget(m_startscreen);
+    m_screenStack->setCurrentWidget(m_startscreen);    
 }
 
 void MainWindow::goto3DScene()
@@ -100,6 +103,11 @@ void MainWindow::keyPressEvent(QKeyEvent* event)
     if (event->key() == Qt::Key_Escape)
     {
         close();
+    }
+
+    if(event->key() == Qt::Key_M)
+    {
+        SoundFactory::instance().muteAll();                
     }
 }
 
