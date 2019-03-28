@@ -62,7 +62,8 @@ public:
 
     /// Initialize Level
     void loadLevel();
-    signals:
+    void mouseMoveEvent(QMouseEvent *event);
+signals:
     void goToScene2D();
     void planet_apply_updates();
 

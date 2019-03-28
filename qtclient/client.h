@@ -95,19 +95,9 @@ class Client {
      */
     int id_astr[10];
 
-<<<<<<< HEAD
-    // update_3D_S / init_3D
-    Vector<float> enemyPos;
-    Vector<float> enemyxAxis;
-    Vector<float> enemyyAxis;
-    Vector<float> enemyzAxis;
-    Bullet_shot enemy_shot;
-    int enemy_shot_id;
-=======
     /**
      * @brief asteroids_deleted asteroids that have to be deleted
      */
->>>>>>> 853665f2b741699d0da7468d2c0a370fdb95c134
     std::vector<int> asteroids_deleted;
     /**
      * @brief bullet_deleted bullets to be deleted
@@ -119,7 +109,6 @@ class Client {
      */
     Hit own_hit;
 
-<<<<<<< HEAD
     int own_health = 10;
     int enemy_health = 10;
 
@@ -131,11 +120,9 @@ class Client {
     bool updated_pos = false;
 
     // end_3D
-=======
     /**
      * @brief winner_no winner of 3D fight for end3d package
      */
->>>>>>> 853665f2b741699d0da7468d2c0a370fdb95c134
     char winner_no;
 
     /**
