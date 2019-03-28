@@ -514,6 +514,17 @@ void ManageGame::next_round()
         //std::cerr << "\t" << __LINE__ << __FUNCTION__<< " apply planet changes\n";
         //Applay changes
         m_planets.at((unsigned long)it_c->getID())->updatePlanet(std::make_shared<PlanetChanges>(*(it_c)));
+
+    }
+
+    for (auto i = m_attackSpaceCraftslist.begin(); i != m_attackSpaceCraftslist.end(); ) {
+        if( m_planets.at((*i)->m_position)->getOwner() != (*i)->m_owner){
+            m_attackSpaceCraft_number -= 1;
+            i = m_attackSpaceCraftslist.erase(i);
+        }else {
+            i++;
+        }
+        //if ((*i)->m_id == fighter_id){ break; }
     }
 
         updateStats();
@@ -529,6 +540,16 @@ void ManageGame::planet_apply_updates()
         std::cerr << "\t" << __LINE__ << __FUNCTION__<< " apply planet changes\n";
         //Applay changes
         m_planets.at((unsigned long)it_c->getID())->updatePlanet(std::make_shared<PlanetChanges>(*(it_c)));
+    }
+
+    for (auto i = m_attackSpaceCraftslist.begin(); i != m_attackSpaceCraftslist.end(); ) {
+        if( m_planets.at((*i)->m_position)->getOwner() != (*i)->m_owner){
+            m_attackSpaceCraft_number -= 1;
+            i = m_attackSpaceCraftslist.erase(i);
+        }else {
+            i++;
+        }
+        //if ((*i)->m_id == fighter_id){ break; }
     }
 }
 
