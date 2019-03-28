@@ -33,7 +33,7 @@ class PlanetChanges
     /**
      * @brief Construct a new Planet Changes object
      * 
-     * @param id 
+     * @param id ID of the change. Is equal to PlanetID
      */
     PlanetChanges(int id)
     {
@@ -42,7 +42,9 @@ class PlanetChanges
     }
 
     /**
-     * @brief Construct a new Planet Changes object
+     * @brief Construct a new Planet Changes-object
+     *        For network to build a new updated change to be applyed to Planet
+     * 
      * 
      * @param own Who owns the planet now
      * @param id The planet-id
@@ -52,6 +54,7 @@ class PlanetChanges
      * @param fighters How many new fighters 
      * @param transporter How many new transporters
      * @param attack If wants to attack a the planet
+     * @param storedOre The change on the stored ore on planet
      */
     PlanetChanges(Owner own, int id, int ore, int factory, int mine, int fighters, int transporter, bool attack, int storedOre)
     {
@@ -66,26 +69,128 @@ class PlanetChanges
         m_store_ore = storedOre;
     }   
     
-    inline int getID(){return m_id;}    
+    /**
+     * @brief Get the ChangeID. Equal to PlanetID
+     * 
+     * @return int The planetID
+     */
+    inline int getID(){return m_id;}  
+
+    /**
+     * @brief Get the Factorys number
+     * 
+     * @return int Number of changed factorys
+     */
     inline int getFactorys(){return m_num_factory;} 
-    inline int getMines(){return m_num_mine;}   
-    inline int getOre(){return m_num_of_ore;}   
-    inline int getFighter(){return m_num_fighters;} 
-    inline int getTransports(){return m_num_transporter;} 
+
+    /**
+     * @brief Get the Mines number
+     * 
+     * @return int Number of changed mines
+     */
+    inline int getMines(){return m_num_mine;}
+
+    /**
+     * @brief Get the Ore number
+     * 
+     * @return int Number of changed ore
+     */
+    inline int getOre(){return m_num_of_ore;}
+
+    /**
+     * @brief Get the Fighter number
+     * 
+     * @return int Number of changed fighters
+     */
+    inline int getFighter(){return m_num_fighters;}
+
+    /**
+     * @brief Get the Transports numbers
+     * 
+     * @return int Number of changed transporters
+     */
+    inline int getTransports(){return m_num_transporter;}
+
+    /**
+     * @brief Get the Stored Ore number
+     * 
+     * @return int Number of changed stored ore
+     */
     inline int getStoredOre(){return m_store_ore;}  
-    inline bool getInitFight(){return m_attack_planet;} 
-    inline Owner getOwner(){return m_owned;} 
-    inline void setFactorys(int factorys){m_num_factory += factorys;}    
-    inline void setMines(int mines){m_num_mine += mines;}    
-    inline void setOre(int ore){m_num_of_ore += ore;}    
-    inline void setFighter(int fighter){m_num_fighters += fighter;}  
+
+    /**
+     * @brief Get the Init Fight flag
+     * 
+     * @return true If server should init a 3D fight
+     * @return false If no 3D fight initialized by Player
+     */
+    inline bool getInitFight(){return m_attack_planet;}
+
+    /**
+     * @brief Get the Owner number
+     * 
+     * @return Owner of the planet
+     */
+    inline Owner getOwner(){return m_owned;}
+
+    /**
+     * @brief Set the Factorys number
+     * 
+     * @param factorys Number of chaged factorys
+     */
+    inline void setFactorys(int factorys){m_num_factory += factorys;}
+
+    /**
+     * @brief Set the Mines number
+     * 
+     * @param mines Number of changed mines
+     */
+    inline void setMines(int mines){m_num_mine += mines;}
+
+    /**
+     * @brief Set the Ore number
+     * 
+     * @param ore Number of changed ore
+     */
+    inline void setOre(int ore){m_num_of_ore += ore;}  
+
+    /**
+     * @brief Set the Fighter number
+     * 
+     * @param fighter Number of changed fighter
+     */
+    inline void setFighter(int fighter){m_num_fighters += fighter;}
+
+    /**
+     * @brief Set the Transports number
+     * 
+     * @param transporter Number of changed transporter
+     */
     inline void setTransports(int transporter){m_num_transporter += transporter;}
-    inline void setStoredOre(int ore){m_store_ore += ore;}    
-    inline void setInitFight(bool startFight){m_attack_planet = startFight;}    
+
+    /**
+     * @brief Set the Stored Ore number
+     * 
+     * @param ore Number of changed stored ore
+     */
+    inline void setStoredOre(int ore){m_store_ore += ore;}
+
+    /**
+     * @brief Set the Init Fight
+     * 
+     * @param startFight If Player wants to fight the planet of other player
+     */
+    inline void setInitFight(bool startFight){m_attack_planet = startFight;}
+
+    /**
+     * @brief Set the Owner object
+     * 
+     * @param o Owner of the planet
+     */
     inline void setOwner(Owner o){m_owned = o;} 
     
     /**
-     * @brief Print to cout
+     * @brief Print PlanetChight to std::cout
      * 
      */
     inline void print()

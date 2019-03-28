@@ -44,7 +44,6 @@ namespace asteroids
 class Map
 {
   public:
-    //Pointer to map
     using Ptr = std::shared_ptr<Map>;
     using VecPtr = std::vector<Planet::Ptr>;
     
@@ -89,19 +88,19 @@ class Map
     int getNumberOfPlanets(){return m_num_of_planets;}
 
     /**
-     * @brief Prints every planet with pos
+     * @brief Prints every planet
      * 
      */
     void printPlanets();
 
     /**
-     * @brief print edges;
+     * @brief print edges to std::cout;
      * 
      */
     void printEdges();
 
     /**
-     * @brief Print nodes
+     * @brief Print nodes to std::cout;
      * 
      */
     void printNodes();

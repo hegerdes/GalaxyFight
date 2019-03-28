@@ -46,7 +46,7 @@ MainWindow::MainWindow(QWidget* parent) :
 
     m_screenStack->setCurrentWidget(m_startscreen);
 
-    m_3DScene->setMinimumSize(setting.value("Breite").toInt(), setting.value("Hoehe").toInt());
+    m_3DScene->setMinimumSize(setting.value("Bildschirm/Breite").toInt(), setting.value("Bildschirm/Hoehe").toInt());
 
     // Create a timer object to trigger the main loop
     connect(m_timer.get(), SIGNAL(timeout()), this, SLOT(handleInput()));
@@ -115,6 +115,8 @@ void MainWindow::setupConnections()
   connect(m_startscreen, &StartScreen::closeWindow , this, &MainWindow::closeWindow);
   connect(m_startscreen, &StartScreen::goTo2D, this, &MainWindow::gotoScene2D);
   connect(m_startscreen, &StartScreen::goto3DScene, this, &MainWindow::goto3DScene);
+  connect(m_startscreen, &StartScreen::goToSetting, this, &MainWindow::gotoSettingsScreen);
+  connect(m_settingsScreen, &settingwindow::goToStart, this, &MainWindow::gotoStartScreen);
   //connect(m_startscreen, &StartScreen::gotoLoadingScreen, this, &MainWindow::goToLoadingScreen);
 }
 } // namespace asteroids
