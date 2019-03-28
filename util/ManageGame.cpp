@@ -313,13 +313,20 @@ void ManageGame::change_transport_route(int planet_id, int transportSpaceCraft_i
 
                     if((*i)->m_tmp_route.size() >= 2)
                     {
-                        (*i)->m_route_iterator = (*i)->m_tmp_route.begin();
-                        (*i)->m_next_position = *(++(*i)->m_route_iterator);
+                        if((*i)->m_first_turn)
+                        {
+                            (*i)->m_route_iterator = ++(*i)->m_tmp_route.begin();
+                            (*i)->m_first_turn = false;
+                        }
+                        else
+                        {
+                            (*i)->m_route_iterator = (*i)->m_tmp_route.begin();
+                        }
+                        (*i)->m_next_position = *((*i)->m_route_iterator);
                         (*i)->m_to_new_route = true;
                         (*i)->m_to_base = false;
                         (*i)->m_to_mine = false;
-                        std::cout << "position " + std::to_string((*i)->m_position) << std::endl;
-                        std::cout << "next position " + std::to_string((*i)->m_next_position) << std::endl;
+
                     }
                     else
                     {
@@ -327,7 +334,6 @@ void ManageGame::change_transport_route(int planet_id, int transportSpaceCraft_i
                         (*i)->m_to_new_route = false;
                         (*i)->m_to_base = true;
                         (*i)->m_to_mine = false;
-                        std::cout << "hallo 2" << std::endl;
                     }
                 }
             }

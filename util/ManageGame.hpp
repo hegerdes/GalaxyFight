@@ -32,6 +32,10 @@
 namespace asteroids
 {
 
+/**
+ * @brief The attackspacecraft struct wird verwendet, um die Attribute der Fighter zu verwalten
+ * und richtig zu initializieren
+ */
 struct attackspacecraft{
     //constructor
     attackspacecraft(int id, int position, PlanetChanges::Owner owner) : m_id(id), m_position(position),
@@ -48,10 +52,14 @@ struct attackspacecraft{
     bool m_change_position;
 };
 
+/**
+ * @brief The transportspacecraft struct wird verwendet, um die Attribute der Transporter zu verwalten
+ * und richtig zu initializieren
+ */
 struct transportspacecraft{
     //constructor
     transportspacecraft(int id, int position, PlanetChanges::Owner owner) : m_id(id), m_owner(owner), m_position(position), m_next_position(position),
-        m_to_new_route(false), m_to_base(false), m_to_mine(false), m_current_route(), m_tmp_route(), m_route_iterator() {}
+        m_to_new_route(false), m_to_base(false), m_to_mine(false), m_first_turn(true), m_current_route(), m_tmp_route(), m_route_iterator() {}
     //id für einzelne Schiffe
     int m_id;
     //owner
@@ -62,6 +70,8 @@ struct transportspacecraft{
     int m_next_position;
     //geladenes erz
     int m_ore;
+    //flag um die nächste position richtig zu setzen
+    bool m_first_turn;
     //flag ob Schiff noch zur route fliegen muss
     bool m_to_new_route;
     //flag ob Schiff zur base fliegt
