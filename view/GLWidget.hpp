@@ -27,6 +27,7 @@
 #include "util/AsteroidField.hpp"
 #include "../physics/PhysicsEngine.hpp"
 #include "HUDWidget.hpp"
+#include "io/SoundFactory.hpp"
 
 using namespace asteroids;
 using namespace std::chrono;
