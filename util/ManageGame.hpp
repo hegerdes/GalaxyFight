@@ -160,6 +160,13 @@ class ManageGame : public QObject
     void updateStats();
 
     /**
+     * @brief Checks if a change alrady exists. If not it will be created
+     * 
+     * @param planet_id 
+     */
+    void checkForChange(int planet_id);
+
+    /**
      * @brief Update the ore in base
      * 
      * @param ore Ore to add
