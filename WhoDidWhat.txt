@@ -126,3 +126,5 @@ Client-basierte Physik:             Janis Falkenhagen
 Serverseitige Physik:               Janis Falkenhagen / Lennart Kaiser  
 Mergen von Serverphysics in master  Lennart Kaiser
 Entwurf Netzwerkprotokoll:          Janis Falkenhagen  
+
+ReadMe.md                           Lennart Kaiser
