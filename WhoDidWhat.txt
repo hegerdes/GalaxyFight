@@ -78,9 +78,15 @@ Steuerung angepasst                     Luca Enz/Mario Dyczka
 
 
 ** Netzwerk**
+
 Ausgangsimplementation des Qtcpservers	Alexander Haker
-Teile der Implemntierung des Protokolls 
-	auf dem Server und Client			Alexander Haker
+
+Herstellen einer einfachen Client Server 
+Kommunikation mit dem 
+Übertragen von 3D Werten                Lennart Kaiser / Alexander Haker
+
+Teile der Implementierung des Protokolls 
+	auf dem Server und Client			Alexander Haker/Lennart Kaiser
 Teile der Client-basierten Physik		Alexander Haker
 Mergen der Teile der verschiedenen 
 	Gruppen, Abgabezustand herstellen	Alexander Haker
@@ -88,6 +94,34 @@ Debuggen der gemergten Programme		Alexander Haker
 Testen der gemergten Programme			Alexander Haker
 
 
+Weiteres auf dem Client:
+
+Auslagern der Client Daten in extra
+Klasse -> Grundstein der Asynchronität:
+
+qtclient/client.cpp                     Lennart Kaiser / Alexander Haker
+qtclient/client.h                       Lennart Kaiser / Alexander Haker
+
+Testen von Daten im GLWidget            Lennart Kaiser / Alexander Haker
+
+Weiteres auf dem Server:
+
+Loggingfunktion mit timestamp:          Lennart Kaiser
+Funktionen ausgelagert aus dem read:    Lennart Kaiser
+
+getInt(&data) [und weitere datentypen]  Lennart Kaiser
+zum lesen und verschieben von Pointern
+(Byte Array) 
+
+qtserver/client_data.h                  Alexander Haker / Lennart Kaiser / Janis Falkenhagen
+qtserver/serverphysicalobject.cpp       Lennart Kaiser / Janis Falkenhagen
+qtserver/serverphysicalobject.h         Lennart Kaiser / Janis Falkenhagen
+qtserver/loggingtype.h                  Lennart Kaiser / Janis Falkenhagen
+qtserver/flags.h                        Lennart Kaiser
+qtserver/packettypes.h                  Lennart Kaiser / Janis Falkenhagen
+
+
 Client-basierte Physik:             Janis Falkenhagen  
-Serverseitige Physik:               Janis Falkenhagen / Lennart Kaiser   
+Serverseitige Physik:               Janis Falkenhagen / Lennart Kaiser  
+Mergen von Serverphysics in master  Lennart Kaiser
 Entwurf Netzwerkprotokoll:          Janis Falkenhagen  
