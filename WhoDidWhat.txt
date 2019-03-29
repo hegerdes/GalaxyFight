@@ -21,6 +21,7 @@ loadingscreen.cpp                   Eric Neumann (erneumann)
 settingswindow.cpp                  Eric Neumann (erneumann)
 loosingscreen.cpp                   Eric Neumann (erneumann)
 winscreen.cpp                       Eric Neumann (erneumann)
+init_file.hpp                       Eric Neumann (erneumann)
 ManageGame.cpp:                     AuflistungMethodenweise
     struct attackspacecraft         Philipp Schlinge (pschlinge)
     struct transportspacecraft      Philipp Schlinge (pschlinge)
