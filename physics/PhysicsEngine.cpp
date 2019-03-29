@@ -131,6 +131,13 @@ int PhysicsEngine::removeAster()
     return n;
 }
 
+void PhysicsEngine::reset()
+{
+    m_bullets.clear();
+    m_objects.clear();
+    m_particles.reset();
+}
+
 
 int PhysicsEngine::removeBullets()
 {
