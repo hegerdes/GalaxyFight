@@ -89,13 +89,13 @@ void Client::SendPlanetChanges(int size,std::list<PlanetChanges> changes )
     {
         asteroids::PlanetChanges::Owner owner =(*it).getOwner();
         int m_id = (*it).getID();
-        int m_num_of_ore = (*it).getOre();
+        int m_num_of_ore = (*it).getOre() * -1;
         int num_factory = (*it).getFactorys();
         int num_mine = (*it).getMines();
         int num_fighters = (*it).getFighter();
         int num_transporter = (*it).getTransports();
         bool m_attack_planet =(*it).getInitFight();
-        int stored_ore = (*it).getOre();
+        int stored_ore = (*it).getOre() * -1;
         char m_attack = 0;
         if(m_attack_planet == true)
         {

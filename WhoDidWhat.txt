@@ -53,6 +53,15 @@ ManageGame.cpp:                     AuflistungMethodenweise
 ** 3D-Game **
 
 ** Netzwerk**
+Ausgangsimplementation des Qtcpservers	Alexander Haker
+Teile der Implemntierung des Protokolls 
+	auf dem Server und Client			Alexander Haker
+Teile der Client-basierten Physik		Alexander Haker
+Mergen der Teile der verschiedenen 
+	Gruppen, Abgabezustand herstellen	Alexander Haker
+Debuggen der gemergten Programme		Alexander Haker
+Testen der gemergten Programme			Alexander Haker
+
 
 Client-basierte Physik:             Janis Falkenhagen  
 Serverseitige Physik:               Janis Falkenhagen / Lennart Kaiser ||LEIDER NICHT INTEGRIERT BEKOMMEN. Zur Demo der Funktionalität in den Branch new_new_net_3d_eng    
