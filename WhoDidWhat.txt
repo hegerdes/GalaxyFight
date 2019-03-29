@@ -90,7 +90,7 @@ Teile der Implementierung des Protokolls
 Teile der Client-basierten Physik		Alexander Haker
 Mergen der Teile der verschiedenen 
 	Gruppen, Abgabezustand herstellen	Alexander Haker
-Debuggen der gemergten Programme		Alexander Haker
+Debuggen der gemergten Programme		Alexander Haker / Christoph Kehr
 Testen der gemergten Programme			Alexander Haker
 
 
@@ -120,7 +120,8 @@ qtserver/loggingtype.h                  Lennart Kaiser / Janis Falkenhagen
 qtserver/flags.h                        Lennart Kaiser
 qtserver/packettypes.h                  Lennart Kaiser / Janis Falkenhagen
 
-
+Server/Client-seitige Initalisierung des 3D Kampfes: Christoph Kehr
+Server/Client seitiges updaten der 2D Runden: Christoph Kehr
 Client-basierte Physik:             Janis Falkenhagen  
 Serverseitige Physik:               Janis Falkenhagen / Lennart Kaiser  
 Mergen von Serverphysics in master  Lennart Kaiser
