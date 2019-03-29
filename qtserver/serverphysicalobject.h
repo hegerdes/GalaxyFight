@@ -5,6 +5,9 @@
 #include <memory>
 
 namespace asteroids {
+    /**
+     * @brief The ServerPhysicalObject class small representation of Physicalobjects
+     */
     class ServerPhysicalObject
     {
         public:
@@ -25,6 +28,9 @@ namespace asteroids {
             }
     };
 
+    /**
+     * @brief The ServerBullet class small representation of Bullets on server
+     */
     class ServerBullet : public ServerPhysicalObject{
         public:
             using Ptr = std::shared_ptr<ServerBullet>;
@@ -34,6 +40,9 @@ namespace asteroids {
 
     };
 
+    /**
+     * @brief The ServerAsteroid class small representation of asteroids on server. Only for marking purposes
+     */
     class ServerAsteroid : public ServerPhysicalObject{
         public:
             using Ptr = std::shared_ptr<ServerAsteroid>;
@@ -41,6 +50,9 @@ namespace asteroids {
                 ServerPhysicalObject (pos, dir, speed, radius, id){}
     };
 
+    /**
+     * @brief The ServerSpacecraft class small representation of spacecrafts on server
+     */
     class ServerSpacecraft {
 
     public:

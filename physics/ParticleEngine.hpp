@@ -68,6 +68,11 @@ public:
      */
     void update();
 
+    /**
+     * @brief resets the particle engine
+     */
+    void reset();
+
 private:
 
     /// List of active @ref ParticleEffects

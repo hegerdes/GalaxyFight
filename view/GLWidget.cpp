@@ -311,6 +311,7 @@ void GLWidget::step(map<Qt::Key, bool>& keyStates) {
         client_global.readData();
         */
         if (client_global.init_received) {
+            m_physicsEngine->reset();
             m_actor->m_position = client_global.ownPos;
             m_actor->m_xAxis = client_global.ownxAxis;
             m_actor->m_yAxis = client_global.ownyAxis;

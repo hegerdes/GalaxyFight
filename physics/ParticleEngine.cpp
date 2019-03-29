@@ -59,4 +59,9 @@ void ParticleEngine::update()
     }
 }
 
+void ParticleEngine::reset()
+{
+    m_effects.clear();
+}
+
 } /* namespace asteroids */

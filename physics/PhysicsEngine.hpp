@@ -88,9 +88,22 @@ public:
      */ 
     void addEnemyPlayer(SpaceCraft::Ptr enemyPlayer);
 
+    /**
+     * @brief removeBullets remove marked bullets
+     * @return
+     */
     int removeBullets();
 
+    /**
+     * @brief removeAster removes marked asateroids
+     * @return
+     */
     int removeAster();
+
+    /**
+     * @brief resets the engne state
+     */
+    void reset();
 
 private:
 
