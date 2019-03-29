@@ -792,7 +792,7 @@ void Server::recvPlanetChanges(char* data, QTcpSocket* socket)
     //reset physics engine
     physics.pause();
     physics.resetPhysics();
-    for(int i = 0; i < pos_astr.length(); i ++){
+    for(int i = 0; i < 10; i ++){
         physics.addAsteroid(asteroids::ServerAsteroid::Ptr(new asteroids::ServerAsteroid(pos_astr[i], dir_astr[i], 1, size_astr[i], i)));
     }
     //physics.run();
