@@ -139,7 +139,7 @@ void ManageGame::build_fighter(int planet_id)
             }
             else
             {
-                if(m_round_changes_map[planet_id]->getFighter() == 0)
+                if(m_round_changes_map[planet_id]->getFighter() <= 0)
                 {
                     m_current_resource -= setting.value("Resourcen/Fighterkosten").toInt();
 
