@@ -315,13 +315,13 @@ void Server::sendUpdate_3D_S(QByteArray& response, QTcpSocket* socket) {
         response.append((char*)&own, 4);
         int enemy = physics.getSecondHealth();
         response.append((char*)&enemy, 4);
-        std::cerr << "++++" << own << "#" << enemy << "\n";
+        //std::cerr << "++++" << own << "#" << enemy << "\n";
     }else{
         int own = physics.getSecondHealth();
         response.append((char*)&own, 4);
         int enemy = physics.getFirstHealth();
         response.append((char*)&enemy, 4);
-        std::cerr << "**++++" << own << "#" << enemy << "\n";
+        //std::cerr << "**++++" << own << "#" << enemy << "\n";
     }
 
     //update bullets
