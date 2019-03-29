@@ -789,7 +789,10 @@ void Server::recvPlanetChanges(char* data, QTcpSocket* socket)
             this_socket_already_received = true;
         }
     }
-
+    //reset physics engine
+    physics.pause();
+    physics.resetPhysics();
+    physics.run();
     physics.setFirstHealth(10);
     physics.setSecondHealth(10);
 

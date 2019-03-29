@@ -51,24 +51,68 @@ namespace asteroids {
         client_data &m_data_socket_1;
         client_data &m_data_socket_2;
 
+        /**
+         * @brief getDelAstr1 standard getter
+         * @return
+         */
         std::vector<int> getDelAstr1();
+        /**
+         * @brief getDelBullets1 standard getter
+         * @return
+         */
         std::vector<int> getDelBullets1();
+        /**
+         * @brief getDelAstr2 standard getter
+         * @return
+         */
         std::vector<int> getDelAstr2();
+        /**
+         * @brief getDelBullets2 standard getter
+         * @return
+         */
         std::vector<int> getDelBullets2();
 
+        /**
+         * @brief getFirstHealth standard getter
+         * @return
+         */
         int getFirstHealth(){
             return m_first->m_hp;
         }
+        /**
+         * @brief getSecondHealth standard getter
+         * @return
+         */
         int getSecondHealth(){
             return m_second->m_hp;
         }
 
+        /**
+         * @brief setFirstHealth standard setter to i
+         * @param i
+         */
         void setFirstHealth(int i){
             m_first->m_hp = i;
         }
+        /**
+         * @brief setSecondHealth standard setter to i
+         * @param i
+         */
         void setSecondHealth(int i){
             m_second->m_hp = i;
         }
+
+        /**
+         * @brief resetPhysics this function resets the physic engine to "pristine" state
+         * @attention should be called after every round of 3d and should only be called when paused
+         */
+        void resetPhysics();
+
+        /**
+         * @brief pauses the physicsengine
+         * @attention is not recommended to be called when in use
+         */
+        void pause();
 
     public Q_SLOTS:
         void updateData();

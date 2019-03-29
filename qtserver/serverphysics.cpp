@@ -281,4 +281,22 @@ namespace asteroids {
         removed.health_socket_2 = m_second->m_hp;
     return removed;
     }
+    
+    void ServerPhysics::resetPhysics()
+    {
+        m_first = ServerSpacecraft::Ptr(new ServerSpacecraft());
+        m_second = ServerSpacecraft::Ptr(new ServerSpacecraft());
+        m_first_bullets.clear();
+        m_second_bullets.clear();
+        m_asteroids.clear();
+        deleted_asteroids_ids_1.clear();
+        deleted_asteroids_ids_2.clear();
+        deleted_bullets_ids_1.clear();
+        deleted_bullets_ids_2.clear();
+    }
+
+    void ServerPhysics::pause()
+    {
+        m_timer->stop();
+    }
 }

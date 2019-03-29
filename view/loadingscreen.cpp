@@ -21,7 +21,7 @@ LoadingScreen::LoadingScreen(QWidget *parent) :
 
 
     //background-picture
-    QPixmap pic(setting.value("Dateipfade/Hintergund").toString());
+    QPixmap pic(setting.value("Dateipfade/Hintergrund").toString());
     ui->picLabel->setPixmap(pic);
 
     //loading-animation as a gif
