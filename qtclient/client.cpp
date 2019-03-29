@@ -302,7 +302,7 @@ void Client::update_3D_S(char* data) {
 
     own_health = getInt(&data);
     enemy_health = getInt(&data);
-    std::cerr << "Enemy health " << enemy_health << " Own_Health: " << own_health << "\n";
+    //std::cerr << "Enemy health " << enemy_health << " Own_Health: " << own_health << "\n";
 
 
     int num_bull_ids = getInt(&data);
