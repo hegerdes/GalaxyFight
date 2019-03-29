@@ -791,7 +791,7 @@ void Server::recvPlanetChanges(char* data, QTcpSocket* socket)
     }
     //reset physics engine
     physics.pause();
-    physics.reset();
+    physics.resetPhysics();
     physics.run();
     physics.setFirstHealth(10);
     physics.setSecondHealth(10);
