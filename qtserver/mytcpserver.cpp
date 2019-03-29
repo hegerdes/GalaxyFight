@@ -315,11 +315,13 @@ void Server::sendUpdate_3D_S(QByteArray& response, QTcpSocket* socket) {
         response.append((char*)&own, 4);
         int enemy = physics.getSecondHealth();
         response.append((char*)&enemy, 4);
+        std::cerr << "++++" << own << "#" << enemy << "\n";
     }else{
         int own = physics.getSecondHealth();
         response.append((char*)&own, 4);
         int enemy = physics.getFirstHealth();
         response.append((char*)&enemy, 4);
+        std::cerr << "**++++" << own << "#" << enemy << "\n";
     }
 
     //update bullets
@@ -787,6 +789,10 @@ void Server::recvPlanetChanges(char* data, QTcpSocket* socket)
             this_socket_already_received = true;
         }
     }
+
+    physics.setFirstHealth(10);
+    physics.setSecondHealth(10);
+
     if(!this_socket_already_received){
         int size = getInt(&data);
         for(int i = 0 ; i < size ; i++)
