@@ -34,6 +34,12 @@ void Client::recivePlanetChanges(char * data)
     int size = getInt(&data);
     //std::cerr << __LINE__ << ", " <<  __PRETTY_FUNCTION__ << ", " << size << ", size of recived package\n";
     std::list<PlanetChanges> p_changes;
+
+    //RESET HEALTH::::
+
+    own_health = 10;
+    enemy_health = 10;
+
     for (int i {0} ; i < size ; i++)
     {
         PlanetChanges::Owner m_own  = (PlanetChanges::Owner)getChar(&data);
@@ -231,7 +237,6 @@ void Client::init_3d(char* data) {
         size_astr[i] = getFloat(&data);
     }
 
-
     // TODO:: TESTING___________________________________________
     player_No = (player_no) getChar(&data);
 }
@@ -297,7 +302,7 @@ void Client::update_3D_S(char* data) {
 
     own_health = getInt(&data);
     enemy_health = getInt(&data);
-    ////std::cerr << "Enemy health " << enemy_health << " Own_Health: " << own_health << "\n";
+    std::cerr << "Enemy health " << enemy_health << " Own_Health: " << own_health << "\n";
 
 
     int num_bull_ids = getInt(&data);

@@ -327,7 +327,7 @@ void GLWidget::step(map<Qt::Key, bool>& keyStates) {
             int i = 0;
             std::list<Asteroid::Ptr> asteroids;
             m_asteroidField->getAsteroids(asteroids);
-            std::cerr << "\t" << __FUNCTION__<< client_global.count_astr << " ----------------------------------\n";
+            //std::cerr << "\t" << __FUNCTION__<< client_global.count_astr << " ----------------------------------\n";
             for (auto it = asteroids.begin(); it != asteroids.end(); it++)
             {
                 if(i < client_global.count_astr)

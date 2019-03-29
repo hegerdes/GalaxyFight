@@ -62,6 +62,14 @@ namespace asteroids {
         int getSecondHealth(){
             return m_second->m_hp;
         }
+
+        void setFirstHealth(int i){
+            m_first->m_hp = i;
+        }
+        void setSecondHealth(int i){
+            m_second->m_hp = i;
+        }
+
     public Q_SLOTS:
         void updateData();
     };

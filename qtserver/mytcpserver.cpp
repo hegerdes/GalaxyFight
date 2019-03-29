@@ -779,6 +779,7 @@ void Server::recvPlanetChanges(char* data, QTcpSocket* socket)
         int size = getInt(&data);
         for(int i = 0 ; i < size ; i++)
         {
+
             pchanges_data tmp;
             tmp.m_own = (asteroids::PlanetChanges::Owner)getChar(&data);
             tmp.m_id = getInt(&data);
