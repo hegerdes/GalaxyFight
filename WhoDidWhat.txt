@@ -52,6 +52,30 @@ ManageGame.cpp:                     AuflistungMethodenweise
 
 ** 3D-Game **
 
+Zweites Raumschiff rendern/zerstören    Mario Dyczka
+Kamera upgedatet                        Luca Enz
+Bullet spawn angepasst                  Mario Dyczka
+Hitbox verbessert                       Mario Dyczka
+
+HUD
+HUDWidget gebaut                        Luca Enz
+Gegnerindikator                         Luca Enz
+Cockpit-Design                          Luca Enz
+HP-Bars                                 Luca Enz
+Velocity-Bar                            Mario Dyczka
+Distance-Bar                            Mario Dyczka
+SHOT-READY-Anzeige                      Mario Dyczka
+First-Person-View                       Luca Enz
+Crosshair                               Luca Enz
+Screen-Alerts                           Mario Dyczka
+
+Sound
+Soundfactory                            Mario Dyczka
+Sounds aufgenommen                      Mario Dyczka
+
+Steuerung angepasst                     Luca Enz/Mario Dyczka
+
+
 ** Netzwerk**
 Ausgangsimplementation des Qtcpservers	Alexander Haker
 Teile der Implemntierung des Protokolls 

@@ -315,13 +315,13 @@ void Server::sendUpdate_3D_S(QByteArray& response, QTcpSocket* socket) {
         response.append((char*)&own, 4);
         int enemy = physics.getSecondHealth();
         response.append((char*)&enemy, 4);
-        std::cerr << "++++" << own << "#" << enemy << "\n";
+        //std::cerr << "++++" << own << "#" << enemy << "\n";
     }else{
         int own = physics.getSecondHealth();
         response.append((char*)&own, 4);
         int enemy = physics.getFirstHealth();
         response.append((char*)&enemy, 4);
-        std::cerr << "**++++" << own << "#" << enemy << "\n";
+        //std::cerr << "**++++" << own << "#" << enemy << "\n";
     }
 
     //update bullets
@@ -792,7 +792,7 @@ void Server::recvPlanetChanges(char* data, QTcpSocket* socket)
     //reset physics engine
     physics.pause();
     physics.resetPhysics();
-    for(int i = 0; i < pos_astr.length(); i ++){
+    for(int i = 0; i < 10; i ++){
         physics.addAsteroid(asteroids::ServerAsteroid::Ptr(new asteroids::ServerAsteroid(pos_astr[i], dir_astr[i], 1, size_astr[i], i)));
     }
     //physics.run();
