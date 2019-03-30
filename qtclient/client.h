@@ -8,7 +8,7 @@
 #include <qtserver/flags.h>
 #include <qtserver/packettypes.h>
 #include <vector>
-#include "../rendering/2D/PlanetChanges.hpp"
+#include "../view/items/PlanetChanges.hpp"
 
 namespace asteroids {
 class Client {

@@ -2,7 +2,7 @@
 #define ITEMTYPES_H
 
 #include <QGraphicsItem>
-#include "../../rendering/2D/PlanetChanges.hpp"
+#include "../items/PlanetChanges.hpp"
 
 namespace asteroids {
 

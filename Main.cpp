@@ -11,7 +11,6 @@
 
 #include <QSettings>
 #include "view/MainWindow.hpp"
-#include "rendering/2D/MapFactory.hpp"
 #include "global_socket.h"
 #include "settings/init_file.h"
 

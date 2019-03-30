@@ -7,7 +7,7 @@
 #include <QParallelAnimationGroup>
 #include <QtMath>
 #include "../../util/ManageGame.hpp"
-#include "../../rendering/2D/MapFactory.hpp"
+#include "../../util/MapFactory.hpp"
 #include "itemtypes.h"
 #include "settings/init_file.h"
 

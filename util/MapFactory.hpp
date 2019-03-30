@@ -15,7 +15,7 @@
 #pragma once
 #include <string>
 
-#include "Map.hpp"
+#include "../view/items/Map.hpp"
 
 namespace asteroids
 {

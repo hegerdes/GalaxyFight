@@ -25,8 +25,7 @@
 #include <stdexcept>
 #include <map>
 
-#include "../rendering/2D/MapFactory.hpp"
-#include "../rendering/2D/Map.hpp"
+#include "MapFactory.hpp"
 #include "settings/init_file.h"
 
 namespace asteroids

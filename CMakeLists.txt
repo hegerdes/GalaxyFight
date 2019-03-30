@@ -147,15 +147,15 @@ set(ASTEROID_SOURCES
     rendering/Skybox.cpp
     rendering/SpaceCraft.cpp
     rendering/Asteroid.cpp
-    rendering/2D/Map.cpp
-    rendering/2D/Planet.cpp
-    rendering/2D/MapFactory.cpp
     util/AsteroidField.cpp
     util/ColorMap.cpp
     rendering/HealthBar.cpp
     rendering/Crosshair.cpp
     util/Util.cpp
     util/ManageGame.cpp
+    view/items/Map.cpp
+    view/items/Planet.cpp
+    util/MapFactory.cpp
     view/GLWidget.cpp
     view/HUDWidget.cpp
     view/MainWindow.cpp
