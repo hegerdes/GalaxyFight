@@ -2,7 +2,7 @@
 #include <QIcon>
 #include <QPixmap>
 #include <QPainter>
-#include "init_file.h"
+#include "settings/init_file.h"
 
 namespace asteroids {
 

@@ -2,7 +2,7 @@
 #define WINNINGSCREEN_H
 
 #include <QWidget>
-#include "init_file.h"
+#include "settings/init_file.h"
 
 namespace Ui {
 class winningscreen;

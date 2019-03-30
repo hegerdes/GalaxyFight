@@ -5,7 +5,7 @@
 
 #include "ui_startscreen.h"
 #include "qtclient/client.h"
-#include "init_file.h"
+#include "settings/init_file.h"
 
 namespace asteroids {
 

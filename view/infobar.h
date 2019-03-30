@@ -6,7 +6,7 @@
 #include <QMessageBox>
 #include <QTimer>
 #include "../util/ManageGame.hpp"
-#include "init_file.h"
+#include "settings/init_file.h"
 
 namespace Ui {
 class Infobar;

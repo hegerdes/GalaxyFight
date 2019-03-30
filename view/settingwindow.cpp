@@ -4,7 +4,7 @@
 #include <QScreen>
 #include <iostream>
 #include <QSettings>
-#include "init_file.h"
+#include "settings/init_file.h"
 
 settingwindow::settingwindow(QWidget *parent) :
     QWidget(parent),

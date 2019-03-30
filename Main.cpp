@@ -13,24 +13,15 @@
 #include "view/MainWindow.hpp"
 #include "rendering/2D/MapFactory.hpp"
 #include "global_socket.h"
+#include "settings/init_file.h"
 
 asteroids::Client client_global;
 
 int main(int argc, char** argv)
 {
-   //Testing Map
-//    asteroids::MapFactory& b = asteroids::MapFactory::getinstance();
-//    asteroids::Map::Ptr map = b.getMap(setting.value("Dateipfade/Map").toString().toStdString());
-
-//    //map->print();
-//    //map->printEdges();
-//    map->printNodes();
-//    auto planets = map->getPlanets();
-//    map->getPath(Vector3f(0,0,0),1,5);
-
 
     QApplication a(argc, argv);
-    client_global.connect("lennartkaiser.de", 38292);
+    client_global.connect(setting.value("Netzwerk/IP").toString(), setting.value("Netzwerk/Port").toInt());
 
     asteroids::MainWindow mainWindow;
     mainWindow.showFullScreen();

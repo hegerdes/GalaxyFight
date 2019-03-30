@@ -1,5 +1,5 @@
 #include "graphicshqitem.h"
-#include "init_file.h"
+#include "settings/init_file.h"
 
 namespace asteroids {
 

@@ -3,7 +3,7 @@
 
 #include <QSettings>
 
-    static QSettings setting("./GameSettings.ini", QSettings::IniFormat);
+    static QSettings setting("./settings/GameSettings.ini", QSettings::IniFormat);
 
 #endif // INIT_FILE_H
 

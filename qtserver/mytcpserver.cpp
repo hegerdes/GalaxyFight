@@ -603,20 +603,6 @@ void Server::log(LoggingType type, std::string msg){
 
     strftime(buffer,sizeof(buffer),"%d-%m-%Y %H:%M:%S",timeinfo);
     std::string str(buffer);
-
-    std::ofstream logfile;
-    logfile.open ("log.txt");
-    if(type == LoggingType::ERROR){
-        std::cerr << "\t" << "[" << str << " ERROR] " << msg << "\n";
-        logfile << "[" << str << " ERROR] " << msg << "\n";
-    }else if(type == LoggingType::INFO){
-        std::cout << "[" << str << " INFO] " << msg << std::endl;
-        logfile << "[" << str << " INFO] " << msg << std::endl;
-    }else if(type == LoggingType::DEBUG){
-        std::cout << "[" << str << " DEBUG] " << msg << std::endl;
-        logfile << "[" << str << " DEBUG] " << msg << std::endl;
-    }
-    logfile.close();
 }
 
 /**

@@ -16,7 +16,7 @@
 #include <iostream>
 #include <QTimer>
 #include <QKeyEvent>
-#include "init_file.h"
+#include "settings/init_file.h"
 
 namespace asteroids
 {
