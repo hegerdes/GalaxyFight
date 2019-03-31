@@ -45,8 +45,6 @@ set( CMAKE_CXX_FLAGS_DEBUG   "-g -Wall -std=c++17" )
 ###############################################################################
 
 include_directories(${CMAKE_SOURCE_DIR})
-include_directories(${CMAKE_SOURCE_DIR}/ext/load3ds)
-include_directories(${CMAKE_SOURCE_DIR}/ext/load3ds/math3d++)
 
 find_package(OpenGL REQUIRED)
 find_package(GLEW REQUIRED)
@@ -102,13 +100,6 @@ include_directories(${Qt5Concurrent_INCLUDE_DIRS})
 include_directories(${Qt5Core_INCLUDE_DIRS})
 include_directories(${Qt5Network_INCLUDE_DIRS})
 include_directories(${Qt5OpenGL_INCLUDE_DIRS})
-
-
-###############################################################################
-# Compile external libraries
-###############################################################################
-
-add_subdirectory(ext/load3ds)
 
 ###############################################################################
 # Variable for the sources of the binary. In larger projects it is often a
@@ -187,7 +178,6 @@ set(ASTEROID_DEPENDS
     ${JPEG_LIBRARIES}
     ${Qt5Widgets_LIBRARIES}
     ${Qt5Network_LIBRARIES}
-    c3dsreader
 )
 
 ###############################################################################
