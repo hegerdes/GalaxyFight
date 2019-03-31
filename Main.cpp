@@ -11,17 +11,12 @@
 
 #include <QSettings>
 #include "view/MainWindow.hpp"
-#include "global_socket.h"
 #include "settings/init_file.h"
-
-asteroids::Client client_global;
 
 int main(int argc, char** argv)
 {
 
     QApplication a(argc, argv);
-    client_global.connect("127.0.0.1", 38292);
-    //client_global.connect(setting.value("Netzwerk/IP").toString().toStdString(), setting.value("Netzwerk/Port").toInt());
 
     asteroids::MainWindow mainWindow;
     mainWindow.showFullScreen();

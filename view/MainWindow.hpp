@@ -22,7 +22,6 @@
 #define GL3_PROTOTYPES 1
 #include <GL/glew.h>
 
-#include "GLWidget.hpp"
 #include "startscreen.h"
 #include "loadingscreen.h"
 #include "scene2d.h"
@@ -30,7 +29,6 @@
 #include "settingwindow.h"
 #include "winningscreen.h"
 #include "loosingscreen.h"
-#include "io/SoundFactory.hpp"
 
 
 namespace asteroids
@@ -114,9 +112,6 @@ private:
      */
     void setupConnections();
 
-    /// gl widget
-    GLWidget*       m_3DScene;
-
     /// Layout stack used to navigate through the different Screens
     QStackedLayout* m_screenStack;
 
@@ -137,9 +132,6 @@ private:
 
     /// Settings Screen widget
     settingwindow* m_settingsScreen;
-
-    /// map with the keys and their states
-    map<Qt::Key, bool>          m_keyStates;
 
     /// 60 fps timer
     std::shared_ptr<QTimer>          m_timer;

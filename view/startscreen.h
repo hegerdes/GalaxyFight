@@ -4,7 +4,7 @@
 #include <QWidget>
 
 #include "ui_startscreen.h"
-#include "qtclient/client.h"
+#include "../util/ManageGame.hpp"
 #include "settings/init_file.h"
 
 namespace asteroids {

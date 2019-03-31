@@ -10,7 +10,6 @@
  */
 
 #include "ManageGame.hpp"
-#include "global_socket.h"
 
 namespace asteroids
 {
@@ -348,7 +347,6 @@ void ManageGame::change_transport_route(int planet_id, int transportSpaceCraft_i
 
 void ManageGame::next_round()
 {
-    std::cerr << __LINE__ << ", " << __PRETTY_FUNCTION__ << "\n";
     if(m_initialised)
     {
         //Stop Timer
@@ -422,7 +420,6 @@ void ManageGame::next_round()
         updateStats();
 
         emit updateScene();
-        std::cerr << "\t " << __LINE__ << __FUNCTION__ << " updateScene called " << __LINE__ << std::endl;
         emit updateInfobar();
         emit resetTimer();
     }
@@ -430,59 +427,10 @@ void ManageGame::next_round()
     emit updateInfobar();
     // @ahaker send initpacket
     std::list<PlanetChanges> changes;
-    std::cerr << "\t" << __LINE__ << ", size of m_round_changes_list: " << m_round_changes_list.size() << "\n" ;
     for(auto x : m_round_changes_list)
     {
         //std::cerr << "\t" << __LINE__ << __FUNCTION__ << ", size of m_round_changes_list: " << m_round_changes_list.size() << "\n" ;
         changes.push_back(*x);
-    }
-    //PlanetChanges planetchanges(PlanetChanges::Owner::UNASSIGN ,3,1,1,1,1,1,0,1);
-    //changes.push_back(planetchanges);
-    //PlanetChanges planetchangess(PlanetChanges::Owner::UNASSIGN ,1,1,1,1,1,1,0,1);
-    //changes.push_back(planetchangess);
-
-    client_global.m_planet_changes_received = false;
-    std::cerr << "\t" << __LINE__ << __FUNCTION__ << ", " << ", changes.size()" << changes.size() << "\n";
-    client_global.SendPlanetChanges(changes.size(), changes);
-    if(!changes.empty())
-    {
-        changes.erase(changes.begin());
-    }
-    client_global.readData();
-    if(client_global.init_received){
-        std::cerr << "\t" << __LINE__ << __FUNCTION__<< "----------------------------------------\n";
-        emit goto3DScene();
-    }else if (client_global.m_planet_changes_received) {
-        std::cerr << "\t" << __LINE__ << __FUNCTION__<< "----------------------------------------\n";
-        //apply changes
-    }
-    //client_global.init_received = false;
-    while(!client_global.init_received || !client_global.m_planet_changes_received) {
-        client_global.rerequest_planet_changes();
-        client_global.wait_for_readData(100);
-        if(client_global.init_received){
-            client_global.wait_for_readData(500);
-            emit goto3DScene();
-            break;
-        }else if (client_global.m_planet_changes_received) {
-        //apply changes
-            break;
-        }
-        sleep(1);
-        std::cerr << "\t" << __LINE__ << __FUNCTION__ << "\n";
-    }
-    //client_global.send_reset_planet_changes(); @ahaker beim merge wegefallen
-    //client_global.m_planet_changes_received = false; @ahaker beim merge wegefallen
-    client_global.wait_for_readData(100);
-    std::cerr << "\t" << __LINE__ << __FUNCTION__<< "\n";
-    std::cerr << "\t" << __LINE__ << __FUNCTION__<< " p_changes_current.size(): " << client_global.p_changes_current.size() << "\n";
-    // @ahaker apply all changes
-    for (auto it_c = client_global.p_changes_current.begin(); it_c != client_global.p_changes_current.end(); it_c++)
-    {
-        //std::cerr << "\t" << __LINE__ << __FUNCTION__<< " apply planet changes\n";
-        //Applay changes
-        m_planets.at((unsigned long)it_c->getID())->updatePlanet(std::make_shared<PlanetChanges>(*(it_c)));
-
     }
 
     for (auto i = m_attackSpaceCraftslist.begin(); i != m_attackSpaceCraftslist.end(); ) {
@@ -503,12 +451,6 @@ void ManageGame::next_round()
 
 void ManageGame::planet_apply_updates()
 {
-    for (auto it_c = client_global.p_changes_current.begin(); it_c != client_global.p_changes_current.end(); it_c++)
-    {
-        std::cerr << "\t" << __LINE__ << __FUNCTION__<< " apply planet changes\n";
-        //Applay changes
-        m_planets.at((unsigned long)it_c->getID())->updatePlanet(std::make_shared<PlanetChanges>(*(it_c)));
-    }
 
     for (auto i = m_attackSpaceCraftslist.begin(); i != m_attackSpaceCraftslist.end(); ) {
         if( (m_planets.at((*i)->m_position)->getOwner() == (*i)->m_owner) || (PlanetChanges::UNASSIGN == m_planets.at((*i)->m_position)->getOwner()) ){
@@ -521,7 +463,6 @@ void ManageGame::planet_apply_updates()
     }
     updateStats();
     emit updateScene();
-    std::cerr << "\t " << __LINE__ << __FUNCTION__ << " updateScene called " << __LINE__ << std::endl;
     emit updateInfobar();
 }
 

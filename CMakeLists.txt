@@ -119,47 +119,15 @@ add_subdirectory(ext/load3ds)
 
 set(ASTEROID_SOURCES
     Main.cpp
-    #io/PLYIO.cpp #old ply loader
-    io/PLYTraits.cpp
-    io/ReadPPM.cpp
-    io/ReadTGA.cpp
-    io/ReadJPG.cpp
-    io/ReadPLY.cpp
-    io/Read3DS.cpp
-    io/ReadOBJ.cpp
-    io/TextureFactory.cpp
-    io/TriangleMeshFactory.cpp
-    io/LevelParser.cpp
-    io/SoundFactory.cpp
     math/Matrix.cpp
     math/Quaternion.cpp
     math/Randomizer.cpp
-    physics/Transformable.cpp
-    physics/PhysicalObject.cpp
-    physics/PhysicsEngine.cpp
-    physics/ParticleEngine.cpp
-    rendering/Bullet.cpp
-    rendering/ParticleEffect.cpp
-    rendering/Sphere.cpp
-    rendering/Texture.cpp
-    rendering/TriangleMesh.cpp
-    rendering/TexturedMesh.cpp
-    rendering/Skybox.cpp
-    rendering/SpaceCraft.cpp
-    rendering/Asteroid.cpp
-    util/AsteroidField.cpp
-    util/ColorMap.cpp
-    rendering/HealthBar.cpp
-    rendering/Crosshair.cpp
     util/Util.cpp
     util/ManageGame.cpp
     view/items/Map.cpp
     view/items/Planet.cpp
     util/MapFactory.cpp
-    view/GLWidget.cpp
-    view/HUDWidget.cpp
     view/MainWindow.cpp
-    view/Camera.cpp
     view/startscreen.cpp
     view/settingwindow.cpp
     view/scene2d.cpp
@@ -172,7 +140,6 @@ set(ASTEROID_SOURCES
     view/2DScene/graphicsfighteritem.cpp
     view/2DScene/graphicstransporteritem.cpp
     view/2DScene/graphicshqitem.cpp
-    qtclient/client.cpp
     view/loosingscreen.cpp
     view/winningscreen.cpp
 )

@@ -6,7 +6,6 @@
 #include <QScreen>
 #include <thread>
 #include <future>
-#include "global_socket.h"
 #include <QtConcurrent>
 #include <QSettings>
 #include <QString>
@@ -46,52 +45,15 @@ StartScreen::~StartScreen()
 {
     delete ui;
 }
-}
 
 
 void StartScreen::on_playBut_clicked()
 {
-    //sends Signals when "Spielen" was clicked
-    std::cerr << __LINE__ << ", " << __PRETTY_FUNCTION__ << "\n";
-    emit gotoLoadingScreen();
-    // emit startClient();
-    QtConcurrent::run(QThreadPool::globalInstance(), [&](){
-       client_global.sendReadyT("name",4);
-       std::cerr << "\t" << __LINE__ << ", " << __PRETTY_FUNCTION__ << "\n";
-       MapFactory& b = MapFactory::getinstance();
-       std::cerr << "\t" << __LINE__ << __FUNCTION__ << "\n";
-       Map::Ptr a = b.getMap(setting.value("Dateipfade/Map").toString().toStdString());
-       std::cerr << "\t" << __LINE__ << __FUNCTION__ << "\n";
 
-       std::cerr << "\t" << __LINE__ << __FUNCTION__ << "\n";
-       auto game_inst = ManageGame::getinstance();
-       std::cerr << "\t" << __LINE__ << __FUNCTION__ << "\n";
-       bool end_loop = false;
-       while( client_global.player_No == player_no::unassigned )
-        {
-            std::cerr << "\t" << __LINE__ << __FUNCTION__ << "\n";
-            end_loop = client_global.wait_for_readData(500);
-            std::cerr << "\t" << __LINE__ << __FUNCTION__ << "\n";
-            std::cerr << "\t" << __LINE__ << __FUNCTION__ << "\n";
-            client_global.sendReadyT("name",4);
-			sleep(1);
-		}
+    auto game_inst = ManageGame::getinstance();
+    game_inst->initialize_player(PlanetChanges::PLAYER1,0);
 
-       client_global.wait_for_readData(-1);
-//TODO USE ONLY IF SERVER IS RUNNUNG
-       if(client_global.player_No == 0)
-       {
-           game_inst->initialize_player(PlanetChanges::PLAYER1,0);
-       std::cerr << "\t" << __LINE__ << __FUNCTION__ << "\n";
-       }
-       else if(client_global.player_No == 1)
-       {
-           //game_inst->initialize_player(PlanetChanges::PLAYER2,1);
-           game_inst->initialize_player(PlanetChanges::PLAYER2,a->getNumberOfPlanets()-1); //@ahaker
-       std::cerr << "\t" << __LINE__ << __FUNCTION__ << "\n";
-       }
-        emit goTo2D();
-    });
+    emit goTo2D();
 }
 
 
@@ -111,4 +73,6 @@ void StartScreen::on_settingBut_clicked()
 void StartScreen::setupConnections()
 {
     //connect(this, &StartScreen::startClient , m_client, &Client::sendReadyT);
+}
+
 }
