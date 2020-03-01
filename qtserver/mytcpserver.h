@@ -3,7 +3,7 @@
 
 #include "../math/Randomizer.hpp"
 #include "../math/Vector.hpp"
-#include "../rendering/2D/PlanetChanges.hpp"
+#include "../view/items/PlanetChanges.hpp"
 #include "flags.h"
 #include <QDebug>
 #include <QObject>
