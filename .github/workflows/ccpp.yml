@@ -16,7 +16,7 @@ jobs:
     - name: get-dependencies
       run: | 
         sudo apt update
-        sudo apt install freeglut3 freeglut3-dev libglew1.5 libglew1.5-dev libglu1-mesa libglu1-mesa-dev libgl1-mesa-glx libgl1-mesa-dev build-essential libgl1-mesa-dev g++ make cmake libsdl2-dev libjpeg-dev qttools5-dev-tools qtbase5-dev qtmultimedia5-dev libboost-all-dev -y
+        sudo apt install freeglut3 freeglut3-dev libglew1.5 libglew1.5-dev libglu1-mesa libglu1-mesa-dev libgl1-mesa-glx libgl1-mesa-dev build-essential libgl1-mesa-dev g++ make cmake libsdl2-dev libjpeg-dev qttools5-dev-tools qtbase5-dev qtmultimedia5-dev libboost-all-dev qt4-qmake -y
     - name: cmake
       run: |
         mkdir build
@@ -26,6 +26,12 @@ jobs:
       run: |
         cd build
         make -j4
+    - name: qmake
+      run: |
+        cd qtserver
+        mkdir build
+        cd build
+        make
     #- name: make check
     #  run: make check
     #- name: make distcheck
