@@ -1,0 +1,30 @@
+name: C/C++ CI
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: get-dependencies
+      run: | 
+        sudo apt update
+        sudo apt install freeglut3 freeglut3-dev libglew1.5 libglew1.5-dev libglu1-mesa libglu1-mesa-dev libgl1-mesa-glx libgl1-mesa-dev build-essential libgl1-mesa-dev g++ make cmake libsdl2-dev libjpeg-dev qttools5-dev-tools qtbase5-dev qtmultimedia5-dev libboost-all-dev -y
+    - name: cmake
+      run: |
+        mkdir build
+        cd build
+        cmake ..
+    - name: make
+      run: make -j4
+    - name: make check
+      run: make check
+    - name: make distcheck
+      run: make distcheck
